@@ -86,12 +86,12 @@ See [MULTIVERSE_LORE.md](./docs/MULTIVERSE_LORE.md) for the full multiverse syst
 
 NPCs don't store full dialogue - they store **personality vectors** and **topic weights**. When observed, the AI Oracle generates contextual dialogue.
 
-**Bring Your Own LLM Key** - works with any provider:
+**Bring Your Own LLM** - works with any provider:
 
 | Provider | Config |
 |----------|--------|
+| Google Vertex AI | `gcloud auth` (recommended) |
 | OpenAI | `OPENAI_API_KEY` |
-| Google Gemini | `GEMINI_API_KEY` |
 | Anthropic Claude | `ANTHROPIC_API_KEY` |
 | Local (Ollama) | `OLLAMA_URL` |
 

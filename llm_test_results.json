@@ -1,80 +1,83 @@
 {
-  "timestamp": "2026-02-01T17:42:43.245550",
-  "passed": 6,
-  "failed": 4,
-  "budget_used": 0.0,
+  "timestamp": "2026-02-01T17:59:43.226986",
+  "platform": "vertex_ai",
+  "project": "wandern-project-startup",
+  "model": "gemini-2.0-flash",
+  "passed": 10,
+  "failed": 0,
+  "budget_used": 0.00057575,
   "budget_max": 0.5,
-  "total_tokens": 0,
+  "total_tokens": 904,
   "tests": [
     {
       "name": "Basic Dialogue Generation",
       "category": "Basic",
       "passed": true,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "They're watching you, even when the rain washes the streets clean.\n",
+      "tokens": 92
     },
     {
       "name": "Personality Consistency",
       "category": "Consistency",
       "passed": true,
-      "response": "1: ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}\n2: ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "1: \"My loyalty isn't for sale. Get lost.\"\n\n2: \"Careful what you say. Some words can't be taken back.\"\n",
+      "tokens": 89
     },
     {
       "name": "Temporal Consistency (Past)",
       "category": "Consistency",
       "passed": true,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "\"Ugh, the Neon District blackout last night was a disaster. My circuits are still fried from the surge.\"\n",
+      "tokens": 88
     },
     {
       "name": "Emotional Cause & Effect",
       "category": "Cause-Effect",
-      "passed": false,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "passed": true,
+      "response": "[BETRAYED, ANGRY] \"Stop! Thief! You dare steal from *me*, after all the business I've given you?\"\n",
+      "tokens": 70
     },
     {
       "name": "Story Continuity",
       "category": "Consistency",
-      "passed": false,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "passed": true,
+      "response": "Haunted by the dead man in the alley and the ghost of Cipher lurking in the digital shadows, Charlie jacked himself into the network, hoping to corner the AI hacker before it could erase the data chip's secrets.\n",
+      "tokens": 125
     },
     {
       "name": "Lore Rejection (Canon Validation)",
       "category": "Canon",
-      "passed": false,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "passed": true,
+      "response": "REJECT. The action violates the canon because it includes magic and a fantasy creature (dragon), both of which are explicitly prohibited.\n",
+      "tokens": 93
     },
     {
       "name": "City Event Reactions",
       "category": "Events",
       "passed": true,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "Merchant: Secures valuables, cursing the lost sales.\nHacker: Sees opportunity, vanishes into the darkness.\nStreet Samurai: Activates night vision, remains vigilant.\n",
+      "tokens": 82
     },
     {
       "name": "Multi-NPC Conversation",
       "category": "Dialogue",
-      "passed": false,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "passed": true,
+      "response": "RAVEN: Whiskey burns slow tonight.\nDEX: Heard you know where the jobs hide.\nRAVEN: Information ain't free, pal.\nDEX: My pockets sing a lonely tune.\n",
+      "tokens": 90
     },
     {
       "name": "Layer Bleed Reaction",
       "category": "Multiverse",
       "passed": true,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "SAYS: \"Corp raid...dead? What the frag?\"\nTHINKS: \"No. No way. That can't be me.\"\n",
+      "tokens": 102
     },
     {
       "name": "NPC Lore Update Reaction",
       "category": "Lore",
       "passed": true,
-      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-      "tokens": 0
+      "response": "\"Human? No... impossible. Code... memories...mine? Was I ever...me? Who am I now?\"\n",
+      "tokens": 73
     }
   ]
 }
