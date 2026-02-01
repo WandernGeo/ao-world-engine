@@ -10,7 +10,7 @@ import hashlib
 from datetime import datetime
 
 # Whitepaper content
-WHITEPAPER_PATH = "/Users/ram/Documents/wandern/reecho-city/docs/WHITEPAPER.md"
+WHITEPAPER_PATH = "/Users/ram/Documents/wandern/ao-world-engine/docs/WHITEPAPER.md"
 
 def create_whitepaper_upload():
     """Create the upload bundle for the whitepaper."""
