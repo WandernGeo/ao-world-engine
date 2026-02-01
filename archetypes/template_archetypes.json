@@ -1,0 +1,281 @@
+{
+    "_comment": "Generic archetypes template. Customize for your world.",
+    "warrior": {
+        "name": "Warrior",
+        "description": "Combat-focused archetype that protects and fights",
+        "personality_base": {
+            "aggression": 0.6,
+            "honor": 0.7,
+            "loyalty": 0.6
+        },
+        "goals": [
+            "protect_territory",
+            "train_skills",
+            "resolve_conflicts"
+        ],
+        "routine": [
+            {
+                "time": "6-12",
+                "action": "train",
+                "location": "training_ground",
+                "probability": 0.8
+            },
+            {
+                "time": "12-22",
+                "action": "patrol",
+                "location": "territory",
+                "probability": 0.9
+            },
+            {
+                "time": "22-6",
+                "action": "R",
+                "location": "home",
+                "probability": 0.7
+            }
+        ]
+    },
+    "merchant": {
+        "name": "Merchant",
+        "description": "Trade-focused archetype that accumulates wealth",
+        "personality_base": {
+            "greed": 0.7,
+            "caution": 0.6,
+            "sociability": 0.8
+        },
+        "goals": [
+            "accumulate_wealth",
+            "build_reputation",
+            "expand_network"
+        ],
+        "routine": [
+            {
+                "time": "8-18",
+                "action": "T",
+                "location": "market",
+                "probability": 0.9
+            },
+            {
+                "time": "18-22",
+                "action": "C",
+                "location": "social_hub",
+                "probability": 0.6
+            },
+            {
+                "time": "22-8",
+                "action": "R",
+                "location": "home",
+                "probability": 0.95
+            }
+        ]
+    },
+    "explorer": {
+        "name": "Explorer",
+        "description": "Discovery-focused archetype that maps and finds",
+        "personality_base": {
+            "curiosity": 0.9,
+            "caution": 0.4,
+            "independence": 0.8
+        },
+        "goals": [
+            "discover_unknown",
+            "find_treasures",
+            "document_findings"
+        ],
+        "routine": [
+            {
+                "time": "6-18",
+                "action": "explore",
+                "location": "unknown_zone",
+                "probability": 0.8
+            },
+            {
+                "time": "18-22",
+                "action": "T",
+                "location": "market",
+                "probability": 0.4
+            },
+            {
+                "time": "22-6",
+                "action": "R",
+                "location": "camp",
+                "probability": 0.7
+            }
+        ]
+    },
+    "healer": {
+        "name": "Healer",
+        "description": "Support archetype that mends and nurtures",
+        "personality_base": {
+            "compassion": 0.9,
+            "patience": 0.7,
+            "wisdom": 0.6
+        },
+        "goals": [
+            "heal_injured",
+            "preserve_life",
+            "teach_others"
+        ],
+        "routine": [
+            {
+                "time": "6-18",
+                "action": "heal",
+                "location": "clinic",
+                "probability": 0.9
+            },
+            {
+                "time": "18-20",
+                "action": "gather",
+                "location": "resource_area",
+                "probability": 0.5
+            },
+            {
+                "time": "20-6",
+                "action": "R",
+                "location": "home",
+                "probability": 0.85
+            }
+        ]
+    },
+    "infiltrator": {
+        "name": "Infiltrator",
+        "description": "Stealth archetype that gathers info and avoids detection",
+        "personality_base": {
+            "stealth": 0.9,
+            "cunning": 0.7,
+            "paranoia": 0.8
+        },
+        "goals": [
+            "gather_intel",
+            "stay_hidden",
+            "sell_information"
+        ],
+        "routine": [
+            {
+                "time": "0-6",
+                "action": "P",
+                "location": "target_zone",
+                "probability": 0.8
+            },
+            {
+                "time": "6-14",
+                "action": "R",
+                "location": "safehouse",
+                "probability": 0.85
+            },
+            {
+                "time": "14-20",
+                "action": "H",
+                "location": "crowd",
+                "probability": 0.7
+            },
+            {
+                "time": "20-24",
+                "action": "T",
+                "location": "black_market",
+                "probability": 0.5
+            }
+        ]
+    },
+    "leader": {
+        "name": "Leader",
+        "description": "Command archetype that inspires and governs",
+        "personality_base": {
+            "charisma": 0.8,
+            "ambition": 0.7,
+            "responsibility": 0.6
+        },
+        "goals": [
+            "unite_followers",
+            "expand_influence",
+            "maintain_order"
+        ],
+        "routine": [
+            {
+                "time": "8-12",
+                "action": "plan",
+                "location": "headquarters",
+                "probability": 0.8
+            },
+            {
+                "time": "12-18",
+                "action": "C",
+                "location": "various",
+                "probability": 0.7
+            },
+            {
+                "time": "18-22",
+                "action": "rally",
+                "location": "public_space",
+                "probability": 0.4
+            }
+        ]
+    },
+    "worker": {
+        "name": "Worker",
+        "description": "General labor archetype that keeps society running",
+        "personality_base": {
+            "diligence": 0.7,
+            "conformity": 0.6,
+            "endurance": 0.7
+        },
+        "goals": [
+            "earn_living",
+            "support_family",
+            "avoid_trouble"
+        ],
+        "routine": [
+            {
+                "time": "6-18",
+                "action": "W",
+                "location": "workplace",
+                "probability": 0.95
+            },
+            {
+                "time": "18-22",
+                "action": "R",
+                "location": "social_hub",
+                "probability": 0.4
+            },
+            {
+                "time": "22-6",
+                "action": "R",
+                "location": "home",
+                "probability": 0.9
+            }
+        ]
+    },
+    "agitator": {
+        "name": "Agitator",
+        "description": "Disruptive archetype that challenges the status quo",
+        "personality_base": {
+            "passion": 0.9,
+            "recklessness": 0.6,
+            "charisma": 0.7
+        },
+        "goals": [
+            "overthrow_system",
+            "recruit_followers",
+            "expose_corruption"
+        ],
+        "routine": [
+            {
+                "time": "10-14",
+                "action": "plan",
+                "location": "safehouse",
+                "probability": 0.7
+            },
+            {
+                "time": "14-20",
+                "action": "agitate",
+                "location": "public_square",
+                "probability": 0.6
+            },
+            {
+                "time": "20-4",
+                "action": "sabotage",
+                "location": "target",
+                "probability": 0.3
+            }
+        ]
+    }
+}
