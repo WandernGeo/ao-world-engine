@@ -6,6 +6,18 @@
 [![Built on AO](https://img.shields.io/badge/Built%20on-AO-purple)](https://ao.arweave.dev)
 [![Powered by Arweave](https://img.shields.io/badge/Powered%20by-Arweave-black)](https://arweave.org)
 
+<p align="center">
+  <img src="assets/scenes/city_rain.png" width="400" alt="RE:ECHO City - Rain">
+  <img src="assets/scenes/alley.png" width="400" alt="RE:ECHO City - Alley">
+</p>
+
+<p align="center">
+  <img src="assets/characters/charlie.png" width="200" alt="Charlie - Street Detective">
+  <img src="assets/characters/cipher.png" width="200" alt="Cipher - AI Oracle">
+</p>
+
+*Signal Noir style - cyberpunk meets film noir. Every world has its own aesthetic.*
+
 ---
 
 ## What Is This?
@@ -69,6 +81,31 @@ The engine is lore-agnostic. Plug in your own world, factions, and art style.
 - **The Watchers**: Users observing via visualization apps
 
 See [MULTIVERSE_LORE.md](./docs/MULTIVERSE_LORE.md) for the full multiverse system.
+
+### 🧠 AI Oracle (LLM-Powered NPCs)
+
+NPCs don't store full dialogue - they store **personality vectors** and **topic weights**. When observed, the AI Oracle generates contextual dialogue.
+
+**Bring Your Own LLM Key** - works with any provider:
+
+| Provider | Config |
+|----------|--------|
+| OpenAI | `OPENAI_API_KEY` |
+| Google Gemini | `GEMINI_API_KEY` |
+| Anthropic Claude | `ANTHROPIC_API_KEY` |
+| Local (Ollama) | `OLLAMA_URL` |
+
+```lua
+-- Configure in AOS:
+Send({ Target = AI_ORACLE, Action = "set-llm-endpoint", Data = "your-bridge-url" })
+```
+
+NPCs generate their own dialogue based on:
+- `personality_vector` (paranoia: 0.8, mysticism: 0.9)
+- `topic_weights` (philosophy: 0.9, trade: 0.2)
+- `speech_patterns` (vocabulary: "poetic", short: true)
+
+See [npc_semantic_profile.json](./schemas/npc_semantic_profile.json) for the full schema.
 
 ---
 

@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "NPC Semantic Profile",
+    "description": "Embedded intents, personality vectors, and topics - LLM expands to dialogue on demand",
+    "version": "1.0.0",
+    "example_npc": {
+        "id": "npc_0023",
+        "name": "Kira Vex",
+        "archetype": "street_oracle",
+        "_comment": "COMPACT STORAGE: Just vectors and tags, ~2KB per NPC",
+        "personality_vector": {
+            "paranoia": 0.8,
+            "mysticism": 0.9,
+            "aggression": 0.2,
+            "sociability": 0.4,
+            "layer_awareness": 0.95
+        },
+        "speech_patterns": {
+            "vocabulary_tier": "poetic",
+            "sentence_length": "short",
+            "uses_metaphor": true,
+            "references_layers": true,
+            "accent_hint": "none"
+        },
+        "topic_weights": {
+            "trade": 0.2,
+            "philosophy": 0.9,
+            "gossip": 0.3,
+            "survival": 0.5,
+            "technology": 0.6,
+            "the_watchers": 0.95,
+            "layer_bleed": 0.9,
+            "weather": 0.1
+        },
+        "intent_templates": [
+            "WARN:{target}:about:{threat}",
+            "CRYPTIC_HINT:{topic}",
+            "QUESTION:meaning_of:{concept}",
+            "OBSERVE:{phenomenon}"
+        ],
+        "relationship_posture": {
+            "strangers": "cryptic_helpful",
+            "friends": "protective_mysterious",
+            "enemies": "avoidant",
+            "authorities": "deflecting"
+        },
+        "catchphrases": [
+            "The layers stack, friend. We're just one echo.",
+            "You've done this before. You just don't remember.",
+            "They're watching. Always watching."
+        ],
+        "forbidden_topics": [
+            "personal_past"
+        ],
+        "emotional_triggers": [
+            "mentions_of_family",
+            "layer_bleed_events"
+        ]
+    },
+    "_expansion_example": {
+        "_comment": "When observed, LLM reads the profile and generates:",
+        "input_context": {
+            "npc": "npc_0023",
+            "interacting_with": "npc_0001 (merchant)",
+            "location": "rainy_alley",
+            "time": "night"
+        },
+        "llm_generates": {
+            "dialogue": [
+                {
+                    "speaker": "Kira Vex",
+                    "text": "Rain washes nothing here. Just moves the stains around."
+                },
+                {
+                    "speaker": "Merchant",
+                    "text": "You always talk in riddles?"
+                },
+                {
+                    "speaker": "Kira Vex",
+                    "text": "They're not riddles if you know what I know.",
+                    "action": "glances upward"
+                }
+            ],
+            "note": "Generated from personality_vector + topic_weights + speech_patterns"
+        }
+    },
+    "_storage_efficiency": {
+        "full_dialogue_per_interaction": "~500 bytes stored",
+        "semantic_profile_once": "~2KB total",
+        "savings": "Generate infinite dialogue from 2KB seed"
+    }
+}
