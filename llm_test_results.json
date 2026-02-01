@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-02-01T17:42:43.245550",
+  "passed": 6,
+  "failed": 4,
+  "budget_used": 0.0,
+  "budget_max": 0.5,
+  "total_tokens": 0,
+  "tests": [
+    {
+      "name": "Basic Dialogue Generation",
+      "category": "Basic",
+      "passed": true,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Personality Consistency",
+      "category": "Consistency",
+      "passed": true,
+      "response": "1: ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}\n2: ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Temporal Consistency (Past)",
+      "category": "Consistency",
+      "passed": true,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Emotional Cause & Effect",
+      "category": "Cause-Effect",
+      "passed": false,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Story Continuity",
+      "category": "Consistency",
+      "passed": false,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Lore Rejection (Canon Validation)",
+      "category": "Canon",
+      "passed": false,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "City Event Reactions",
+      "category": "Events",
+      "passed": true,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Multi-NPC Conversation",
+      "category": "Dialogue",
+      "passed": false,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "Layer Bleed Reaction",
+      "category": "Multiverse",
+      "passed": true,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    },
+    {
+      "name": "NPC Lore Update Reaction",
+      "category": "Lore",
+      "passed": true,
+      "response": "ERROR: 403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+      "tokens": 0
+    }
+  ]
+}
