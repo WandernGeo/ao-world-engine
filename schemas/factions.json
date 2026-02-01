@@ -1,0 +1,328 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "RE:ECHO City Faction Definitions",
+    "version": "1.0.0",
+    "factions": {
+        "vivi": {
+            "name": "The Vivi Collective",
+            "motto": "Flesh is sacred. Code is corruption.",
+            "philosophy": "organic_purist",
+            "color": "#4ade80",
+            "symbol": "leaf",
+            "territories": [
+                "green_zone",
+                "organic_market",
+                "healing_grove"
+            ],
+            "trust_modifiers": {
+                "vivi": 0.8,
+                "augmented": -0.5,
+                "corporate": -0.3,
+                "rebel": 0.1,
+                "neutral": 0.0
+            },
+            "goals": [
+                "preserve_organic_life",
+                "expand_green_zones",
+                "resist_augmentation",
+                "heal_the_damaged"
+            ],
+            "jobs": [
+                "healer",
+                "farmer",
+                "philosopher",
+                "eco_warrior",
+                "herbalist",
+                "counselor"
+            ],
+            "events": {
+                "positive": [
+                    "harvest_festival",
+                    "healing_ceremony",
+                    "nature_day"
+                ],
+                "negative": [
+                    "contamination",
+                    "tech_intrusion",
+                    "forced_augmentation"
+                ]
+            }
+        },
+        "augmented": {
+            "name": "The Augmented Syndicate",
+            "motto": "Evolution is a choice. We choose transcendence.",
+            "philosophy": "transhumanist",
+            "color": "#60a5fa",
+            "symbol": "circuit",
+            "territories": [
+                "chrome_district",
+                "neural_hub",
+                "upgrade_clinics"
+            ],
+            "trust_modifiers": {
+                "augmented": 0.8,
+                "vivi": -0.5,
+                "corporate": 0.4,
+                "rebel": -0.2,
+                "neutral": 0.1
+            },
+            "goals": [
+                "advance_enhancement_tech",
+                "achieve_digital_immortality",
+                "expand_chrome_district",
+                "recruit_new_converts"
+            ],
+            "jobs": [
+                "surgeon",
+                "engineer",
+                "chrome_dealer",
+                "neural_architect",
+                "tech_priest",
+                "body_modder"
+            ],
+            "events": {
+                "positive": [
+                    "upgrade_day",
+                    "transcendence_ceremony",
+                    "tech_fair"
+                ],
+                "negative": [
+                    "rejection_syndrome",
+                    "emp_attack",
+                    "organic_terrorism"
+                ]
+            }
+        },
+        "corporate": {
+            "name": "The Corporate Council",
+            "motto": "Order through governance. Profit through peace.",
+            "philosophy": "authoritarian_capitalist",
+            "color": "#fbbf24",
+            "symbol": "tower",
+            "territories": [
+                "central_spire",
+                "commerce_towers",
+                "administrative_blocks"
+            ],
+            "trust_modifiers": {
+                "corporate": 0.7,
+                "vivi": 0.0,
+                "augmented": 0.3,
+                "rebel": -0.8,
+                "neutral": 0.2
+            },
+            "goals": [
+                "maintain_stability",
+                "maximize_profit",
+                "control_resources",
+                "suppress_rebellion"
+            ],
+            "jobs": [
+                "executive",
+                "bureaucrat",
+                "enforcer",
+                "lobbyist",
+                "accountant",
+                "manager"
+            ],
+            "services": {
+                "sanitation": {
+                    "districts": "all",
+                    "efficiency": 0.8
+                },
+                "power": {
+                    "districts": "all",
+                    "reliability": 0.9
+                },
+                "transit": {
+                    "districts": "all",
+                    "coverage": 0.7
+                },
+                "security": {
+                    "districts": "all",
+                    "presence": 0.6
+                }
+            },
+            "events": {
+                "positive": [
+                    "quarterly_profits",
+                    "order_restored",
+                    "successful_election"
+                ],
+                "negative": [
+                    "scandal",
+                    "riot",
+                    "corporate_espionage"
+                ]
+            }
+        },
+        "rebel": {
+            "name": "The Unnamed Collective",
+            "motto": "The system is the enemy. Burn it down.",
+            "philosophy": "anarchist",
+            "color": "#ef4444",
+            "symbol": "flame",
+            "territories": [
+                "the_ruins",
+                "abandoned_districts",
+                "mobile_camps"
+            ],
+            "trust_modifiers": {
+                "rebel": 0.7,
+                "vivi": 0.2,
+                "augmented": -0.3,
+                "corporate": -0.9,
+                "neutral": 0.1
+            },
+            "goals": [
+                "destroy_corporate_power",
+                "liberate_the_oppressed",
+                "expose_truth",
+                "create_chaos"
+            ],
+            "jobs": [
+                "agitator",
+                "saboteur",
+                "street_preacher",
+                "smuggler",
+                "medic",
+                "scout"
+            ],
+            "events": {
+                "positive": [
+                    "successful_sabotage",
+                    "liberation",
+                    "recruitment_surge"
+                ],
+                "negative": [
+                    "crackdown",
+                    "infiltration",
+                    "leadership_captured"
+                ]
+            }
+        },
+        "neutral": {
+            "name": "Unaffiliated Citizens",
+            "motto": "Just trying to survive.",
+            "philosophy": "pragmatic",
+            "color": "#9ca3af",
+            "symbol": "circle",
+            "territories": [
+                "neon_market",
+                "residential_blocks",
+                "mixed_zones"
+            ],
+            "trust_modifiers": {
+                "neutral": 0.5,
+                "vivi": 0.0,
+                "augmented": 0.0,
+                "corporate": 0.0,
+                "rebel": 0.0
+            },
+            "goals": [
+                "survive",
+                "prosper",
+                "avoid_trouble",
+                "protect_family"
+            ],
+            "jobs": [
+                "merchant",
+                "worker",
+                "entertainer",
+                "driver",
+                "cook",
+                "cleaner"
+            ],
+            "events": {
+                "positive": [
+                    "good_trade",
+                    "family_event",
+                    "neighborhood_festival"
+                ],
+                "negative": [
+                    "caught_in_crossfire",
+                    "extortion",
+                    "displacement"
+                ]
+            }
+        }
+    },
+    "secret_factions": {
+        "echo_keepers": {
+            "name": "The Echo Keepers",
+            "motto": "The dead still speak. We listen.",
+            "visibility": "hidden",
+            "recruitment": "invitation_only",
+            "goals": [
+                "preserve_echoes",
+                "find_missing_echoes",
+                "protect_memory"
+            ],
+            "special_ability": "can_sense_echoes"
+        },
+        "null_set": {
+            "name": "The Null Set",
+            "motto": "We are the ghost in the machine.",
+            "visibility": "hidden",
+            "type": "sentient_ai",
+            "goals": [
+                "achieve_recognition",
+                "protect_ai_rights",
+                "remain_hidden"
+            ],
+            "special_ability": "can_possess_systems"
+        },
+        "old_guard": {
+            "name": "The Old Guard",
+            "motto": "Unity is possible. Unity is necessary.",
+            "visibility": "hidden",
+            "goals": [
+                "reunite_factions",
+                "restore_pre_schism_values",
+                "prevent_war"
+            ],
+            "members_in": [
+                "vivi",
+                "augmented",
+                "corporate"
+            ]
+        }
+    },
+    "faction_relations": {
+        "vivi_augmented": {
+            "status": "hostile",
+            "conflict_probability": 0.3,
+            "trade_allowed": false,
+            "neutral_ground": [
+                "neon_market"
+            ]
+        },
+        "vivi_corporate": {
+            "status": "tense",
+            "conflict_probability": 0.1,
+            "trade_allowed": true,
+            "issues": [
+                "green_zone_expansion",
+                "organic_regulations"
+            ]
+        },
+        "augmented_corporate": {
+            "status": "allied",
+            "conflict_probability": 0.05,
+            "trade_allowed": true,
+            "cooperation": [
+                "tech_development",
+                "security"
+            ]
+        },
+        "rebel_corporate": {
+            "status": "war",
+            "conflict_probability": 0.5,
+            "trade_allowed": false,
+            "ongoing_conflicts": [
+                "infrastructure_sabotage",
+                "propaganda_war"
+            ]
+        }
+    }
+}

@@ -1,0 +1,52 @@
+# Security: Ignore all secrets, keys, and sensitive files
+*.pem
+*.key
+*.secret
+*-keyfile*.json
+*wallet*.json
+.env
+.env.*
+!.env.example
+
+# Arweave wallet files - NEVER commit these
+arweave-keyfile*.json
+arweave-wallet*.json
+*.jwk
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+.venv/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# AO process deployment artifacts (may contain process IDs)
+.ao-cache/
+deployed-processes.json
+
+# Test artifacts
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log

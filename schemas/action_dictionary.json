@@ -1,0 +1,188 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "RE:ECHO City Action Dictionary",
+    "description": "Shorthand codes that LLMs expand during visualization. Store compact, render rich.",
+    "version": "1.0.0",
+    "actions": {
+        "T": {
+            "name": "Trade",
+            "format": "T:{target}:{item}:{credits}",
+            "expand": "TRADE with {target}, exchanging {item} for {credits} credits",
+            "animation": "trade_gesture",
+            "requires_proximity": true,
+            "examples": [
+                "T:b3k2:crystal:500",
+                "T:merchant_01:synth_food:25",
+                "T:fixer_x:data_chip:1000"
+            ]
+        },
+        "M": {
+            "name": "Move",
+            "format": "M:{destination}",
+            "expand": "MOVE to {destination}",
+            "animation": "walk_cycle",
+            "requires_proximity": false,
+            "examples": [
+                "M:shadow_district",
+                "M:neon_market",
+                "M:home"
+            ]
+        },
+        "R": {
+            "name": "Rest",
+            "format": "R:{location}:{duration}",
+            "expand": "REST at {location} for {duration}",
+            "animation": "idle_sit",
+            "requires_proximity": false,
+            "examples": [
+                "R:tavern:2h",
+                "R:home:8h",
+                "R:park:30m"
+            ]
+        },
+        "A": {
+            "name": "Attack",
+            "format": "A:{target}:{weapon}",
+            "expand": "ATTACK {target} with {weapon}",
+            "animation": "combat_strike",
+            "requires_proximity": true,
+            "triggers_event": "conflict",
+            "examples": [
+                "A:rival_01:fists",
+                "A:guard_02:blade",
+                "A:drone_x:emp"
+            ]
+        },
+        "C": {
+            "name": "Conversation",
+            "format": "C:{target}:{topic}",
+            "expand": "CONVERSATION with {target} about {topic}",
+            "animation": "dialogue",
+            "requires_proximity": true,
+            "examples": [
+                "C:friend_01:weather",
+                "C:contact_x:job_offer",
+                "C:stranger:directions"
+            ]
+        },
+        "H": {
+            "name": "Hide",
+            "format": "H:{threat}",
+            "expand": "HIDE from {threat}",
+            "animation": "stealth_crouch",
+            "requires_proximity": false,
+            "modifies_visibility": -0.8,
+            "examples": [
+                "H:patrol",
+                "H:drone",
+                "H:rival"
+            ]
+        },
+        "P": {
+            "name": "Probe",
+            "format": "P:{target}",
+            "expand": "PROBE network node {target}",
+            "animation": "hacking_gesture",
+            "requires_proximity": false,
+            "requires_skill": "hacking",
+            "examples": [
+                "P:corp_server_01",
+                "P:public_terminal",
+                "P:secure_node_x"
+            ]
+        },
+        "S": {
+            "name": "Spy",
+            "format": "S:{target}:{activity}",
+            "expand": "SPY on {target}, observing {activity}",
+            "animation": "observe_hidden",
+            "requires_proximity": true,
+            "modifies_visibility": -0.5,
+            "examples": [
+                "S:exec_01:meeting",
+                "S:rival:routine",
+                "S:target_x:transaction"
+            ]
+        },
+        "W": {
+            "name": "Work",
+            "format": "W:{job_type}:{location}",
+            "expand": "WORK as {job_type} at {location}",
+            "animation": "work_routine",
+            "requires_proximity": false,
+            "generates_income": true,
+            "examples": [
+                "W:clerk:corp_office",
+                "W:mechanic:garage",
+                "W:bartender:tavern"
+            ]
+        },
+        "B": {
+            "name": "Buy",
+            "format": "B:{item}:{vendor}:{price}",
+            "expand": "BUY {item} from {vendor} for {price} credits",
+            "animation": "purchase_gesture",
+            "requires_proximity": true,
+            "examples": [
+                "B:ammo:dealer_01:50",
+                "B:food:vendor_x:10",
+                "B:upgrade:tech_shop:200"
+            ]
+        },
+        "X": {
+            "name": "Message",
+            "format": "X:{target}:{content_hash}",
+            "expand": "SEND MESSAGE to {target}",
+            "animation": "use_device",
+            "requires_proximity": false,
+            "async": true,
+            "examples": [
+                "X:contact_01:meet_tonight",
+                "X:friend_x:warning",
+                "X:boss:report"
+            ]
+        },
+        "L": {
+            "name": "Call",
+            "format": "L:{target}:{duration}",
+            "expand": "CALL {target} for {duration}",
+            "animation": "phone_call",
+            "requires_proximity": false,
+            "blocks_other_actions": true,
+            "examples": [
+                "L:family:5m",
+                "L:contact:2m",
+                "L:emergency:1m"
+            ]
+        }
+    },
+    "composite_actions": {
+        "MEET": {
+            "description": "Arrange and execute a meeting",
+            "sequence": [
+                "X:{target}:arrange_meet",
+                "M:{location}",
+                "C:{target}:{topic}"
+            ],
+            "examples": [
+                "MEET:contact_01:tavern:job"
+            ]
+        },
+        "HEIST": {
+            "description": "Plan and execute a heist",
+            "sequence": [
+                "S:{target}:security",
+                "P:{target}",
+                "H:guards",
+                "T:{loot}"
+            ],
+            "requires_team": true
+        }
+    },
+    "meta": {
+        "separator": ":",
+        "null_value": "_",
+        "timestamp_format": "tick_number",
+        "encoding": "utf-8"
+    }
+}
