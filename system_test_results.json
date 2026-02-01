@@ -1,0 +1,188 @@
+{
+  "timestamp": "2026-02-01T18:20:28.704623",
+  "passed": 6,
+  "total": 6,
+  "results": [
+    {
+      "test": "Arweave Accessibility",
+      "passed": true,
+      "files": {
+        "whitepaper": {
+          "accessible": true,
+          "size": 17956,
+          "tx_id": "M5YYsm41RJ4F9MNYh1kP6rshen_6LoSONNLVcBEq0rE"
+        },
+        "action_dictionary": {
+          "accessible": true,
+          "size": 5973,
+          "tx_id": "ac_yWEEYWbF6Py0L5J9n4CEIrImApWYtnHNUsb30Hxo"
+        },
+        "district_lua": {
+          "accessible": true,
+          "size": 12513,
+          "tx_id": "80iu-wBI7obh5cOZ5tJ5LUeMdMTT4MdiYe7BZ6CydgQ"
+        },
+        "ai_oracle_lua": {
+          "accessible": true,
+          "size": 14826,
+          "tx_id": "_6fCf5Q5c1dG75QyZijp07hnePrTbVMz2OU3gfYDKC8"
+        },
+        "npc_semantic_profile": {
+          "accessible": true,
+          "size": 3116,
+          "tx_id": "XmlqPa1RNFvipxnvyZTgbpx8EjOZNzNNI2tMGjQ3eb4"
+        }
+      }
+    },
+    {
+      "test": "Action Dictionary Parsing",
+      "passed": true,
+      "checks": [
+        [
+          "Has required actions (T, M, R, A)",
+          true
+        ],
+        [
+          "Each action has format + expand",
+          true
+        ],
+        [
+          "Trade action format is parseable",
+          true
+        ]
+      ],
+      "sample_data": {
+        "action_count": 12,
+        "trade_format": "T:{target}:{item}:{credits}"
+      }
+    },
+    {
+      "test": "NPC Profile Schema",
+      "passed": true,
+      "checks": [
+        [
+          "Schema defines personality_vector",
+          true
+        ],
+        [
+          "Schema defines topic_weights",
+          true
+        ],
+        [
+          "Schema defines intent_templates",
+          true
+        ]
+      ]
+    },
+    {
+      "test": "Deterministic Hash Logic",
+      "passed": true,
+      "sample_results": {
+        "seed": "npc_001_tick_100",
+        "result": 45
+      }
+    },
+    {
+      "test": "State Machine A\u2192B\u2192C\u2192D",
+      "passed": true,
+      "checks": [
+        [
+          "A: Inventory lost item",
+          true
+        ],
+        [
+          "B: Angry \u2192 won't trade",
+          true
+        ],
+        [
+          "C: Angry + aggression > 0.5 \u2192 seeks revenge",
+          true
+        ],
+        [
+          "D: Relationship decreased",
+          true
+        ],
+        [
+          "Chain: All 4 events logged",
+          true
+        ]
+      ],
+      "chain_log": [
+        {
+          "step": "A",
+          "trigger": "theft",
+          "result": "mood\u2192angry, inventory-=data_chip"
+        },
+        {
+          "step": "B",
+          "trigger": "mood=angry",
+          "result": "will_trade=False"
+        },
+        {
+          "step": "C",
+          "trigger": "angry AND aggression(0.7)>0.5",
+          "result": "seeks_revenge=True"
+        },
+        {
+          "step": "D",
+          "trigger": "seeks_revenge=True",
+          "result": "relationship: 0.5\u2192-0.30000000000000004"
+        }
+      ],
+      "final_state": {
+        "tick": 4,
+        "npc": {
+          "id": "npc_001",
+          "location": "market",
+          "mood": "angry",
+          "energy": 1.0,
+          "inventory": [],
+          "relationships": {
+            "npc_002": -0.30000000000000004
+          }
+        },
+        "events": [
+          {
+            "tick": 1,
+            "type": "theft",
+            "item_lost": "data_chip"
+          },
+          {
+            "tick": 2,
+            "type": "behavior_change",
+            "will_trade": false
+          },
+          {
+            "tick": 3,
+            "type": "decision",
+            "seeks_revenge": true
+          },
+          {
+            "tick": 4,
+            "type": "relationship_change",
+            "old": 0.5,
+            "new": -0.30000000000000004
+          }
+        ]
+      }
+    },
+    {
+      "test": "Action Code Encode/Decode",
+      "passed": true,
+      "checks": [
+        [
+          "Decode 'T:npc_002:data_chip:500'",
+          true
+        ],
+        [
+          "Decode 'M:safehouse:fast'",
+          true
+        ],
+        [
+          "Decode 'C:npc_003:blackout'",
+          true
+        ]
+      ]
+    }
+  ]
+}
