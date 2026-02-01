@@ -13,6 +13,17 @@ Events = Events or {}
 Tick = Tick or 0
 DistrictId = DistrictId or "unknown"
 GLOBAL_BUS = GLOBAL_BUS or nil
+LAYER_BUS = LAYER_BUS or nil  -- Multiverse layer event bus
+
+-- Bleed manifestation types (when layers overlap)
+BLEED_TYPES = {
+  "dream_vision",      -- NPC dreams of alternate self
+  "deja_vu",           -- Moment feels familiar from elsewhere
+  "echo_whisper",      -- Hears voice from another layer
+  "glitched_memory",   -- Memory that didn't happen in this layer
+  "parallel_glimpse",  -- Brief vision of other layer
+  "watcher_sense"      -- Feeling of being observed from above
+}
 
 -- Action Dictionary (shorthand codes)
 ACTIONS = {
@@ -248,6 +259,29 @@ Handlers.add("tick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(m
         tick = Tick
       })
     end
+    
+    -- MULTIVERSE: Check for layer bleed (0.1% chance per NPC per tick)
+    local bleed_seed = hash_to_number(npc_id .. tostring(Tick) .. "bleed", 10000)
+    if bleed_seed < 10 then  -- 0.1% probability
+      local bleed_event = {
+        type = "layer_bleed",
+        npc = npc_id,
+        tick = Tick,
+        district = DistrictId,
+        manifestation = get_bleed_manifestation(bleed_seed),
+        intensity = bleed_seed / 10
+      }
+      table.insert(tick_events, bleed_event)
+      
+      -- Notify layer event bus if registered
+      if LAYER_BUS then
+        ao.send({
+          Target = LAYER_BUS,
+          Action = "bleed-event",
+          Data = json.encode(bleed_event)
+        })
+      end
+    end
   end
   
   -- Store events
@@ -356,9 +390,37 @@ function persist_events()
   print("Would persist " .. #Events .. " event batches to Arweave")
 end
 
+--[[
+  MULTIVERSE: Bleed Manifestation Helper
+  
+  Determines how a layer bleed manifests for an NPC.
+]]--
+function get_bleed_manifestation(seed)
+  return BLEED_TYPES[(seed % #BLEED_TYPES) + 1]
+end
+
+-- Register with layer event bus (multiverse backbone)
+Handlers.add("register-layer-bus", Handlers.utils.hasMatchingTag("Action", "register-layer-bus"), function(msg)
+  LAYER_BUS = msg.From
+  ao.send({
+    Target = LAYER_BUS,
+    Action = "register-layer",
+    Data = json.encode({
+      layer_id = DistrictId .. "_layer",
+      layer_number = 0,
+      parent_layer = "prime",
+      status = "active",
+      description = "District " .. DistrictId .. " in prime layer",
+      districts = { DistrictId }
+    })
+  })
+  print("Registered with Layer Event Bus: " .. LAYER_BUS)
+end)
+
 -- Export for testing
 return {
   calculate_npc_location = calculate_npc_location,
   can_interact = can_interact,
-  decide_action = decide_action
+  decide_action = decide_action,
+  get_bleed_manifestation = get_bleed_manifestation
 }

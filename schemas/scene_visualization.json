@@ -1,0 +1,300 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "RE:ECHO City - Scene Visualization Schema",
+    "description": "Schema for rendering scenes from event logs via Wandern/StudioRam",
+    "version": "1.0.0",
+    "scene_request": {
+        "description": "What the Watcher (user) requests to see",
+        "properties": {
+            "layer": {
+                "type": "string",
+                "description": "Layer ID to observe (default: prime)",
+                "examples": [
+                    "prime",
+                    "utopia_fork",
+                    "shadow_echo"
+                ]
+            },
+            "location": {
+                "type": "string",
+                "description": "District or specific location",
+                "examples": [
+                    "neon_market",
+                    "shadow_district",
+                    "sync_core"
+                ]
+            },
+            "tick_range": {
+                "start": "integer",
+                "end": "integer",
+                "description": "Time range to reconstruct"
+            },
+            "focus_npc": {
+                "type": "string",
+                "description": "Optional NPC to follow"
+            },
+            "style": {
+                "type": "string",
+                "enum": [
+                    "signal_noir",
+                    "dreamlike",
+                    "glitch",
+                    "neutral"
+                ],
+                "default": "signal_noir"
+            }
+        }
+    },
+    "scene_response": {
+        "description": "Structured data for visualization pipeline",
+        "properties": {
+            "metadata": {
+                "layer": "string",
+                "location": "string",
+                "tick_start": "integer",
+                "tick_end": "integer",
+                "generated_at": "timestamp"
+            },
+            "atmosphere": {
+                "time_of_day": {
+                    "type": "string",
+                    "enum": [
+                        "night",
+                        "dawn",
+                        "day",
+                        "dusk"
+                    ]
+                },
+                "weather": {
+                    "type": "string",
+                    "enum": [
+                        "rain",
+                        "fog",
+                        "haze",
+                        "clear",
+                        "storm"
+                    ]
+                },
+                "mood": {
+                    "type": "string",
+                    "enum": [
+                        "noir",
+                        "tense",
+                        "melancholy",
+                        "hopeful",
+                        "dread"
+                    ]
+                },
+                "description": {
+                    "type": "string",
+                    "description": "One-line atmospheric description for LLM/render"
+                }
+            },
+            "npcs": {
+                "type": "array",
+                "items": {
+                    "npc_id": "string",
+                    "name": "string",
+                    "archetype": "string",
+                    "position": "string",
+                    "action": "string",
+                    "emotion": "string",
+                    "faction": "string",
+                    "accent_color": "string"
+                }
+            },
+            "events": {
+                "type": "array",
+                "items": {
+                    "tick": "integer",
+                    "type": "string",
+                    "npcs_involved": [
+                        "string"
+                    ],
+                    "description": "string",
+                    "importance": {
+                        "type": "string",
+                        "enum": [
+                            "background",
+                            "notable",
+                            "dramatic",
+                            "critical"
+                        ]
+                    }
+                }
+            },
+            "dialogue": {
+                "type": "array",
+                "description": "Generated dialogue for the scene",
+                "items": {
+                    "speaker": "string",
+                    "text": "string",
+                    "mood": "string",
+                    "action": "string"
+                }
+            },
+            "layer_effects": {
+                "has_bleed": "boolean",
+                "bleed_type": {
+                    "type": "string",
+                    "enum": [
+                        "dream_vision",
+                        "deja_vu",
+                        "echo_whisper",
+                        "glitched_memory",
+                        "parallel_glimpse",
+                        "watcher_sense"
+                    ]
+                },
+                "bleed_intensity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "visual_glitches": "boolean",
+                "target_layer": "string"
+            },
+            "render_hints": {
+                "camera_style": {
+                    "type": "string",
+                    "enum": [
+                        "wide_establishing",
+                        "street_level",
+                        "character_close",
+                        "surveillance",
+                        "watcher_pov"
+                    ]
+                },
+                "transitions": [
+                    "string"
+                ],
+                "effects": {
+                    "grain": "boolean",
+                    "chromatic_aberration": "boolean",
+                    "vignette": "boolean",
+                    "glitch_overlay": "boolean"
+                },
+                "accent_colors": {
+                    "description": "Only allowed colors for tech/neon elements",
+                    "allowed": [
+                        "cyan",
+                        "magenta_pink",
+                        "gold_amber",
+                        "purple"
+                    ]
+                }
+            }
+        }
+    },
+    "example_scene": {
+        "metadata": {
+            "layer": "prime",
+            "location": "neon_market",
+            "tick_start": 847290,
+            "tick_end": 847300,
+            "generated_at": "2026-02-01T19:07:00Z"
+        },
+        "atmosphere": {
+            "time_of_day": "night",
+            "weather": "rain",
+            "mood": "noir",
+            "description": "Rain-slicked alleys flicker under failing neon"
+        },
+        "npcs": [
+            {
+                "npc_id": "kira_merchant_042",
+                "name": "Kira",
+                "archetype": "merchant",
+                "position": "leaning against data stall",
+                "action": "smoking synth-smoke",
+                "emotion": "contemplative",
+                "faction": "neutral",
+                "accent_color": "cyan"
+            },
+            {
+                "npc_id": "oracle_street_007",
+                "name": "The Oracle",
+                "archetype": "street_oracle",
+                "position": "sitting on crate",
+                "action": "reading holo-cards",
+                "emotion": "cryptic",
+                "faction": "mystic",
+                "accent_color": "purple"
+            }
+        ],
+        "events": [
+            {
+                "tick": 847293,
+                "type": "conversation",
+                "npcs_involved": [
+                    "kira_merchant_042",
+                    "oracle_street_007"
+                ],
+                "description": "Philosophical discussion about the nature of reality",
+                "importance": "notable"
+            },
+            {
+                "tick": 847297,
+                "type": "layer_bleed",
+                "npcs_involved": [
+                    "kira_merchant_042"
+                ],
+                "description": "Kira glimpses alternate timeline where she died",
+                "importance": "dramatic"
+            }
+        ],
+        "dialogue": [
+            {
+                "speaker": "Kira",
+                "text": "Another cycle, same trades. But last night... I felt it. A shift. Like this city's just one layer in a stack.",
+                "mood": "thoughtful",
+                "action": "exhales smoke"
+            },
+            {
+                "speaker": "The Oracle",
+                "text": "The Echo Layers, yeah? Old net myth. Layer 0's the 'real' one—whatever that means. We're echoes, sims in some Watcher's game. Or maybe we dreamed the code.",
+                "mood": "knowing",
+                "action": "shuffles cards"
+            },
+            {
+                "speaker": "Kira",
+                "text": "If it's a sim... why give us purpose? Wealth, love, revenge. Feels too cruel for code.",
+                "mood": "conflicted",
+                "action": "glances upward"
+            },
+            {
+                "speaker": "The Oracle",
+                "text": "Or too kind. Maybe the Watchers just wanna see what happens when you let a billion souls run free.",
+                "mood": "philosophical",
+                "action": "draws a card"
+            }
+        ],
+        "layer_effects": {
+            "has_bleed": true,
+            "bleed_type": "parallel_glimpse",
+            "bleed_intensity": 0.7,
+            "visual_glitches": true,
+            "target_layer": "war_echo"
+        },
+        "render_hints": {
+            "camera_style": "street_level",
+            "transitions": [
+                "slow_push_in",
+                "hold_on_face",
+                "glitch_flash"
+            ],
+            "effects": {
+                "grain": true,
+                "chromatic_aberration": true,
+                "vignette": true,
+                "glitch_overlay": true
+            },
+            "accent_colors": {
+                "allowed": [
+                    "cyan",
+                    "purple"
+                ]
+            }
+        }
+    }
+}

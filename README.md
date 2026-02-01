@@ -60,6 +60,16 @@ Once deployed, the world simulates autonomously on AO cron jobs. No servers need
 ### 🔌 Bring Your Own Lore
 The engine is lore-agnostic. Plug in your own world, factions, and art style.
 
+### 🌀 Echo Layers (Multiverse System)
+**NEW**: Worlds can fork into parallel dimensions (layers). NPCs experience rare "bleed" events where they glimpse alternate realities. Users "Watch" like higher beings observing the simulation.
+
+- **Layer 0 (Prime)**: Your official canon world
+- **Layer 1+**: Community-created alternate timelines
+- **The Veil**: Thin barriers between layers (0.1% bleed chance per tick)
+- **The Watchers**: Users observing via visualization apps
+
+See [MULTIVERSE_LORE.md](./docs/MULTIVERSE_LORE.md) for the full multiverse system.
+
 ---
 
 ## Quick Start
