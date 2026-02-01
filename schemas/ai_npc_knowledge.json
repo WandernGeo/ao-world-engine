@@ -1,0 +1,296 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "RE:ECHO City - AI NPC Knowledge Architecture",
+    "description": "Chunked knowledge base for AI NPCs within Arweave's 100KB limit",
+    "version": "1.0.0",
+    "_architecture": {
+        "principle": "Small event JSONs (<5KB) reference larger knowledge chunks",
+        "storage": {
+            "arweave": "Event JSONs, NPC states, compact dialogue logs (<100KB each)",
+            "knowledge_cloud": "Dialogue rules, dialects, archetypes, schedules (chunked)",
+            "runtime_cache": "Assembled knowledge for active NPCs"
+        },
+        "flow": "Event → Fetch relevant chunks → AI generates → Store compact result"
+    },
+    "event_json": {
+        "_comment": "What gets stored on Arweave per interaction (<5KB target)",
+        "max_size_bytes": 5000,
+        "schema": {
+            "event_id": "string",
+            "tick": "integer",
+            "type": "dialogue|decision|bleed|action",
+            "npcs": [
+                "npc_id_1",
+                "npc_id_2"
+            ],
+            "location": "district_id",
+            "outcome": {
+                "summary": "One sentence max",
+                "relationship_delta": "number",
+                "triggered_event": "event_id or null"
+            },
+            "knowledge_refs": {
+                "_comment": "Links to knowledge chunks used (for replay)",
+                "archetype_chunk": "ar://tx_id",
+                "dialect_chunk": "ar://tx_id",
+                "context_chunk": "ar://tx_id"
+            },
+            "llm_tag": "ai_generated:timestamp or template:id",
+            "dialogue_hash": "hash of full dialogue (stored separately if >1KB)"
+        }
+    },
+    "knowledge_chunks": {
+        "_comment": "Larger JSON files that NPCs reference. Stored once, read many times.",
+        "archetype_chunk": {
+            "description": "Character archetype with dialogue patterns",
+            "max_size_bytes": 50000,
+            "example_id": "archetype:philosopher_hacker",
+            "schema": {
+                "archetype_id": "string",
+                "personality_traits": [
+                    "string"
+                ],
+                "speech_patterns": {
+                    "greetings": [
+                        "template strings with {variables}"
+                    ],
+                    "farewells": [
+                        "..."
+                    ],
+                    "reactions": {
+                        "positive": [
+                            "..."
+                        ],
+                        "negative": [
+                            "..."
+                        ],
+                        "neutral": [
+                            "..."
+                        ]
+                    },
+                    "layer_musings": [
+                        "Rare existential dialogue"
+                    ],
+                    "bleed_reactions": [
+                        "Reactions to layer bleed events"
+                    ]
+                },
+                "vocabulary_bias": {
+                    "preferred_words": [
+                        "..."
+                    ],
+                    "avoided_words": [
+                        "..."
+                    ],
+                    "slang_level": "0.0-1.0"
+                },
+                "decision_weights": {
+                    "action_type": "probability"
+                }
+            }
+        },
+        "dialect_chunk": {
+            "description": "Regional/faction speech patterns",
+            "max_size_bytes": 30000,
+            "example_id": "dialect:shadow_district",
+            "schema": {
+                "dialect_id": "string",
+                "region": "district or faction",
+                "transformations": [
+                    {
+                        "pattern": "regex",
+                        "replacement": "string"
+                    }
+                ],
+                "common_phrases": {
+                    "phrase_key": "localized version"
+                },
+                "accent_markers": [
+                    "phonetic hints for TTS"
+                ],
+                "formality_level": "0.0-1.0"
+            }
+        },
+        "schedule_chunk": {
+            "description": "NPC routine patterns",
+            "max_size_bytes": 20000,
+            "example_id": "schedule:merchant_standard",
+            "schema": {
+                "schedule_id": "string",
+                "time_slots": [
+                    {
+                        "start_hour": "integer",
+                        "end_hour": "integer",
+                        "location": "string",
+                        "action": "string",
+                        "probability": "number",
+                        "interruptible": "boolean",
+                        "dialogue_context": "What they talk about during this time"
+                    }
+                ],
+                "weekly_variations": {
+                    "day_of_week": "modified_schedule_id"
+                }
+            }
+        },
+        "context_chunk": {
+            "description": "Current world state relevant to dialogue",
+            "max_size_bytes": 40000,
+            "example_id": "context:current_events",
+            "schema": {
+                "context_id": "string",
+                "valid_from_tick": "integer",
+                "valid_until_tick": "integer",
+                "world_events": [
+                    {
+                        "event_id": "string",
+                        "summary": "string",
+                        "npcs_aware": [
+                            "npc_ids or 'all'"
+                        ],
+                        "dialogue_hooks": [
+                            "Things NPCs might say about this"
+                        ]
+                    }
+                ],
+                "faction_tensions": {
+                    "faction_pair": "tension_level"
+                },
+                "economic_state": "prosperity|recession|crisis",
+                "weather": "rain|fog|haze|clear"
+            }
+        },
+        "dialogue_rules_chunk": {
+            "description": "Grammar and generation rules for AI",
+            "max_size_bytes": 60000,
+            "example_id": "rules:signal_noir_style",
+            "schema": {
+                "style_id": "string",
+                "tone_guidelines": [
+                    "string"
+                ],
+                "prohibited_content": [
+                    "string"
+                ],
+                "max_dialogue_length": "integer (words)",
+                "layer_reference_probability": "number",
+                "watcher_reference_probability": "number",
+                "sentence_templates": {
+                    "context": [
+                        "template with {placeholders}"
+                    ]
+                },
+                "relationship_progression": {
+                    "delta_range": {
+                        "min": "number",
+                        "max": "number"
+                    },
+                    "triggers": {
+                        "bond_formed": "threshold",
+                        "conflict_started": "threshold"
+                    }
+                }
+            }
+        }
+    },
+    "chunk_linking": {
+        "_comment": "How small events link to knowledge chunks",
+        "npc_state_json": {
+            "description": "Compact NPC state on Arweave (<10KB)",
+            "schema": {
+                "npc_id": "string",
+                "name": "string",
+                "current_tick": "integer",
+                "location": "string",
+                "mood": "string",
+                "knowledge_links": {
+                    "archetype": "ar://tx_archetype_chunk",
+                    "dialect": "ar://tx_dialect_chunk",
+                    "schedule": "ar://tx_schedule_chunk",
+                    "faction_rules": "ar://tx_faction_chunk"
+                },
+                "recent_events": [
+                    "last 5 event_ids"
+                ],
+                "relationship_summary": {
+                    "npc_id": "affinity_score"
+                }
+            }
+        },
+        "chunk_index": {
+            "description": "Master index of all knowledge chunks (updated periodically)",
+            "schema": {
+                "index_version": "integer",
+                "updated_at": "timestamp",
+                "chunks": {
+                    "chunk_type": {
+                        "chunk_id": {
+                            "tx_id": "ar://...",
+                            "size_bytes": "integer",
+                            "valid_from": "tick",
+                            "deprecated": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "runtime_assembly": {
+        "_comment": "How the server assembles knowledge for AI generation",
+        "flow": [
+            "1. Event triggers dialogue need (NPC A meets NPC B)",
+            "2. Fetch NPC A state (small JSON from Arweave cache)",
+            "3. Fetch NPC B state (small JSON)",
+            "4. Read knowledge_links from both NPCs",
+            "5. Fetch referenced chunks (archetype, dialect, context)",
+            "6. Assemble prompt with chunk data",
+            "7. Call AI with assembled context",
+            "8. Store compact result (<5KB) on Arweave",
+            "9. Cache full dialogue in temporary storage"
+        ],
+        "caching_strategy": {
+            "knowledge_chunks": "Cache for 1 hour (rarely change)",
+            "npc_states": "Cache for 5 minutes (change per tick)",
+            "context": "Cache for 10 minutes (world events update slowly)",
+            "dialogue_results": "Cache for 1 hour (replayable)"
+        },
+        "chunk_server": {
+            "description": "Optional server that pre-assembles chunks for faster access",
+            "endpoints": {
+                "/npc/:id/context": "Returns assembled knowledge for NPC",
+                "/dialogue/:event_id": "Returns full dialogue from compact event",
+                "/chunks/:type/:id": "Returns specific knowledge chunk"
+            }
+        }
+    },
+    "arweave_storage_budget": {
+        "_comment": "Staying under 100KB free tier per upload",
+        "event_json": "~3-5KB",
+        "npc_state_update": "~8-10KB",
+        "knowledge_chunk": "~30-60KB (uploaded once, referenced many times)",
+        "batch_events": "Up to 20 events per upload = ~60-80KB"
+    },
+    "example_event_json": {
+        "event_id": "dialogue_847293_001",
+        "tick": 847293,
+        "type": "dialogue",
+        "npcs": [
+            "kira_042",
+            "oracle_007"
+        ],
+        "location": "neon_market",
+        "outcome": {
+            "summary": "Philosophical discussion about layers",
+            "relationship_delta": 0.15,
+            "triggered_event": null
+        },
+        "knowledge_refs": {
+            "archetype_chunk_1": "ar://Tx1234...",
+            "archetype_chunk_2": "ar://Tx5678...",
+            "dialect_chunk": "ar://TxABCD...",
+            "context_chunk": "ar://TxEFGH..."
+        },
+        "llm_tag": "ai_generated:1706810172",
+        "dialogue_hash": "sha256:abc123..."
+    }
+}
