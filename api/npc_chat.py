@@ -148,40 +148,44 @@ def query_arweave_npcs(app_name: str = "AO-World-Engine") -> list:
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
-    from data.founding_npcs import FOUNDING_NPCS, LOCATIONS
+    # Try local import first (for Cloud Run deployment)
+    from founding_npcs import FOUNDING_NPCS, LOCATIONS
 except ImportError:
-    # Fallback if import fails (e.g., running from different directory)
-    FOUNDING_NPCS = {
-        "kira": {
-            "id": "npc_0002",
-            "name": "Kira Ōmura",
-            "gender": "female",
-            "archetype": "Street Oracle",
-            "personality_vector": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
-            "location_home": "neon_market",
-            "topic_weights": {"philosophy": 0.9, "the_watchers": 0.95, "trade": 0.2},
-            "catchphrases": ["The layers stack. We're just one echo.", "Eyes from outside the frame..."],
-        },
-        "cipher": {
-            "id": "npc_0001",
-            "name": "Cipher",
-            "gender": "male",
-            "archetype": "AI Hacker Entity",
-            "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
-            "location_home": "shadow_grid",
-            "topic_weights": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3},
-            "catchphrases": ["Data is the only truth.", "I probe, therefore I am."],
+    try:
+        # Then try package import (for local dev)
+        from data.founding_npcs import FOUNDING_NPCS, LOCATIONS
+    except ImportError:
+        # Fallback if import fails (e.g., running from different directory)
+        FOUNDING_NPCS = {
+            "kira": {
+                "id": "npc_0002",
+                "name": "Kira Ōmura",
+                "gender": "female",
+                "archetype": "Street Oracle",
+                "personality_vector": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
+                "location_home": "neon_market",
+                "topic_weights": {"philosophy": 0.9, "the_watchers": 0.95, "trade": 0.2},
+                "catchphrases": ["The layers stack. We're just one echo.", "Eyes from outside the frame..."],
+            },
+            "cipher": {
+                "id": "npc_0001",
+                "name": "Cipher",
+                "gender": "male",
+                "archetype": "AI Hacker Entity",
+                "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
+                "location_home": "shadow_grid",
+                "topic_weights": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3},
+                "catchphrases": ["Data is the only truth.", "I probe, therefore I am."],
+            }
         }
-    }
-    LOCATIONS = {
-        "neon_market": "crowded night market with holographic signs and rain puddles",
-        "shadow_grid": "abandoned server farm with flickering lights",
-        "rain_soaked_alley": "dark alley with fire escapes and steam vents",
-        "dojo": "traditional training hall with dim amber lighting",
-        "rooftop": "high rooftop overlooking the city skyline"
-    }
+        LOCATIONS = {
+            "neon_market": "crowded night market with holographic signs and rain puddles",
+            "shadow_grid": "abandoned server farm with flickering lights",
+            "rain_soaked_alley": "dark alley with fire escapes and steam vents",
+            "dojo": "traditional training hall with dim amber lighting",
+            "rooftop": "high rooftop overlooking the city skyline"
+        }
 
-}
 
 
 def get_tick_state(tick: int) -> dict:
