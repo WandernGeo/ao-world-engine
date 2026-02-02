@@ -1,0 +1,666 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO World Codec",
+        "description": "Deterministic knowledge dictionary - decode world state from tick seeds",
+        "encoding": "Unique codes map to full entries. Use hash(npc+tick) % len(category) to select."
+    },
+    "actions": {
+        "_desc": "Things entities can DO (60 unique)",
+        "A01": "meet",
+        "A02": "trade",
+        "A03": "fight",
+        "A04": "hack",
+        "A05": "steal",
+        "A06": "heal",
+        "A07": "install",
+        "A08": "repair",
+        "A09": "break",
+        "A10": "flip",
+        "A11": "throw",
+        "A12": "shoot",
+        "A13": "run",
+        "A14": "hide",
+        "A15": "walk",
+        "A16": "talk",
+        "A17": "whisper",
+        "A18": "scream",
+        "A19": "sleep",
+        "A20": "wake",
+        "A21": "eat",
+        "A22": "drink",
+        "A23": "smoke",
+        "A24": "inject",
+        "A25": "scan",
+        "A26": "upload",
+        "A27": "download",
+        "A28": "encrypt",
+        "A29": "decrypt",
+        "A30": "jam",
+        "A31": "bypass",
+        "A32": "override",
+        "A33": "lock",
+        "A34": "unlock",
+        "A35": "open",
+        "A36": "close",
+        "A37": "push",
+        "A38": "pull",
+        "A39": "lift",
+        "A40": "drop",
+        "A41": "give",
+        "A42": "take",
+        "A43": "buy",
+        "A44": "sell",
+        "A45": "bet",
+        "A46": "win",
+        "A47": "lose",
+        "A48": "cheat",
+        "A49": "lie",
+        "A50": "confess",
+        "A51": "accuse",
+        "A52": "defend",
+        "A53": "attack",
+        "A54": "block",
+        "A55": "dodge",
+        "A56": "parry",
+        "A57": "grab",
+        "A58": "kick",
+        "A59": "punch",
+        "A60": "slash"
+    },
+    "objects": {
+        "_desc": "Physical things (100 unique)",
+        "O01": "table",
+        "O02": "chair",
+        "O03": "bed",
+        "O04": "desk",
+        "O05": "shelf",
+        "O06": "cabinet",
+        "O07": "mirror",
+        "O08": "lamp",
+        "O09": "door",
+        "O10": "window",
+        "O11": "datapad",
+        "O12": "terminal",
+        "O13": "hologram",
+        "O14": "drone",
+        "O15": "scanner",
+        "O16": "camera",
+        "O17": "sensor",
+        "O18": "transmitter",
+        "O19": "antenna",
+        "O20": "server",
+        "O21": "router",
+        "O22": "visor",
+        "O23": "earpiece",
+        "O24": "wristcomp",
+        "O25": "implant",
+        "O26": "pistol",
+        "O27": "rifle",
+        "O28": "shotgun",
+        "O29": "smg",
+        "O30": "sniper",
+        "O31": "knife",
+        "O32": "sword",
+        "O33": "baton",
+        "O34": "stunner",
+        "O35": "laser",
+        "O36": "plasma",
+        "O37": "emp",
+        "O38": "grenade",
+        "O39": "mine",
+        "O40": "bomb",
+        "O41": "box",
+        "O42": "crate",
+        "O43": "bag",
+        "O44": "case",
+        "O45": "safe",
+        "O46": "locker",
+        "O47": "barrel",
+        "O48": "tank",
+        "O49": "container",
+        "O50": "vehicle",
+        "O51": "food",
+        "O52": "water",
+        "O53": "stim",
+        "O54": "medkit",
+        "O55": "ammo",
+        "O56": "battery",
+        "O57": "fuel",
+        "O58": "chip",
+        "O59": "keycard",
+        "O60": "credits",
+        "O61": "cigarette",
+        "O62": "bottle",
+        "O63": "glass",
+        "O64": "syringe",
+        "O65": "vial",
+        "O66": "document",
+        "O67": "photograph",
+        "O68": "recording",
+        "O69": "map",
+        "O70": "blueprint",
+        "O71": "toolkit",
+        "O72": "wire",
+        "O73": "circuit",
+        "O74": "motor",
+        "O75": "generator",
+        "O76": "handcuffs",
+        "O77": "rope",
+        "O78": "flashlight",
+        "O79": "binoculars",
+        "O80": "radio",
+        "O81": "clothes",
+        "O82": "armor",
+        "O83": "helmet",
+        "O84": "boots",
+        "O85": "gloves",
+        "O86": "mask",
+        "O87": "goggles",
+        "O88": "backpack",
+        "O89": "holster",
+        "O90": "belt",
+        "O91": "canteen",
+        "O92": "rations",
+        "O93": "blanket",
+        "O94": "tent",
+        "O95": "medpack",
+        "O96": "toolbox",
+        "O97": "keyring",
+        "O98": "wallet",
+        "O99": "watch",
+        "O00": "ring"
+    },
+    "locations": {
+        "_desc": "Places in RE:ECHO City (30 unique)",
+        "L01": {
+            "n": "neon_bar",
+            "d": "Smoky bar with cyan neon, neutral ground"
+        },
+        "L02": {
+            "n": "resistance_hideout",
+            "d": "Underground bunker with rebel symbols"
+        },
+        "L03": {
+            "n": "tech_clinic",
+            "d": "Back-alley cybernetics shop"
+        },
+        "L04": {
+            "n": "temple_tower",
+            "d": "Golden spire of Temple authority"
+        },
+        "L05": {
+            "n": "black_market",
+            "d": "Hidden bazaar for illegal goods"
+        },
+        "L06": {
+            "n": "dojo",
+            "d": "Traditional training hall with amber lights"
+        },
+        "L07": {
+            "n": "rooftop",
+            "d": "High vantage point overlooking city"
+        },
+        "L08": {
+            "n": "alley",
+            "d": "Rain-soaked back alley with fire escapes"
+        },
+        "L09": {
+            "n": "warehouse",
+            "d": "Abandoned storage facility"
+        },
+        "L10": {
+            "n": "sewer",
+            "d": "Underground tunnels and drainage"
+        },
+        "L11": {
+            "n": "metro",
+            "d": "Decrepit subway system"
+        },
+        "L12": {
+            "n": "hospital",
+            "d": "Crumbling medical facility"
+        },
+        "L13": {
+            "n": "prison",
+            "d": "High-security detention center"
+        },
+        "L14": {
+            "n": "lab",
+            "d": "Research facility with dangerous experiments"
+        },
+        "L15": {
+            "n": "neon_district",
+            "d": "Commercial zone with holographic billboards"
+        },
+        "L16": {
+            "n": "shadow_grid",
+            "d": "Abandoned server farms and data centers"
+        },
+        "L17": {
+            "n": "temple_quarter",
+            "d": "Golden spires of Temple control"
+        },
+        "L18": {
+            "n": "undercity_market",
+            "d": "Black market tunnels below streets"
+        },
+        "L19": {
+            "n": "industrial_ring",
+            "d": "Factories and processing plants"
+        },
+        "L20": {
+            "n": "residential_core",
+            "d": "High-density housing blocks"
+        },
+        "L21": {
+            "n": "corp_plaza",
+            "d": "Corporate headquarters and towers"
+        },
+        "L22": {
+            "n": "waterfront_docks",
+            "d": "Shipping and smuggling hub"
+        },
+        "L23": {
+            "n": "outzone",
+            "d": "Lawless territories beyond city walls"
+        },
+        "L24": {
+            "n": "mystic_sanctum",
+            "d": "Purple energy crystals, reality shifts"
+        },
+        "L25": {
+            "n": "strategy_room",
+            "d": "Holographic maps, tactical displays"
+        },
+        "L26": {
+            "n": "safehouse",
+            "d": "Minimal furnishing, multiple exits"
+        },
+        "L27": {
+            "n": "tech_den",
+            "d": "Chaotic workshop, screens everywhere"
+        },
+        "L28": {
+            "n": "command_center",
+            "d": "Fortified HQ with strategy displays"
+        },
+        "L29": {
+            "n": "underground_kitchen",
+            "d": "Warm space lit by cooking fires"
+        },
+        "L30": {
+            "n": "network",
+            "d": "Pure data space, infinite cyan grids"
+        }
+    },
+    "npcs": {
+        "_desc": "Character registry (12 founders + slots for 88)",
+        "C01": {
+            "n": "charlie",
+            "f": "Charlie",
+            "r": "Protagonist"
+        },
+        "C02": {
+            "n": "kai_vance",
+            "f": "Kai Vance",
+            "r": "Tactician"
+        },
+        "C03": {
+            "n": "orion_thane",
+            "f": "Orion Thane",
+            "r": "Mystic"
+        },
+        "C04": {
+            "n": "felix",
+            "f": "Felix",
+            "r": "Bartender"
+        },
+        "C05": {
+            "n": "nova_chen",
+            "f": "Nova Chen",
+            "r": "Operative"
+        },
+        "C06": {
+            "n": "selene_voss",
+            "f": "Selene Voss",
+            "r": "Ghost-Child"
+        },
+        "C07": {
+            "n": "sister_mira",
+            "f": "Sister Mira",
+            "r": "Priestess"
+        },
+        "C08": {
+            "n": "mama_indira",
+            "f": "Mama Indira",
+            "r": "Matriarch"
+        },
+        "C09": {
+            "n": "aiche",
+            "f": "Aiche",
+            "r": "AI Interface"
+        },
+        "C10": {
+            "n": "pixel",
+            "f": "Pixel",
+            "r": "Tech Genius"
+        },
+        "C11": {
+            "n": "cipher",
+            "f": "Cipher",
+            "r": "Unknown Entity"
+        },
+        "C12": {
+            "n": "zero_chen",
+            "f": "Zero Chen",
+            "r": "Leader"
+        }
+    },
+    "cybernetics": {
+        "_desc": "Body modification types (40 unique)",
+        "Y01": "mechanical_arm",
+        "Y02": "holographic_arm",
+        "Y03": "combat_arm",
+        "Y04": "utility_arm",
+        "Y05": "mechanical_leg",
+        "Y06": "speed_leg",
+        "Y07": "stealth_leg",
+        "Y08": "combat_leg",
+        "Y09": "reinforced_spine",
+        "Y10": "flexible_spine",
+        "Y11": "neural_spine",
+        "Y12": "combat_spine",
+        "Y13": "thermal_eye",
+        "Y14": "zoom_eye",
+        "Y15": "hud_eye",
+        "Y16": "recording_eye",
+        "Y17": "holographic_monocle",
+        "Y18": "targeting_eye",
+        "Y19": "nightvision_eye",
+        "Y20": "xray_eye",
+        "Y21": "amplified_ears",
+        "Y22": "filtered_ears",
+        "Y23": "radio_ears",
+        "Y24": "sonar_ears",
+        "Y25": "neural_link",
+        "Y26": "memory_chip",
+        "Y27": "reflex_boost",
+        "Y28": "pain_inhibitor",
+        "Y29": "adrenaline_pump",
+        "Y30": "hacking_suite",
+        "Y31": "armor_weave",
+        "Y32": "camo_skin",
+        "Y33": "emp_shield",
+        "Y34": "toxin_filter",
+        "Y35": "voice_modulator",
+        "Y36": "subdermal_armor",
+        "Y37": "claws_retractable",
+        "Y38": "hand_blade",
+        "Y39": "data_glove",
+        "Y40": "neural_jack"
+    },
+    "medical": {
+        "_desc": "Medical conditions and treatments (40 unique)",
+        "M01": "injured",
+        "M02": "critical",
+        "M03": "poisoned",
+        "M04": "addicted",
+        "M05": "infected",
+        "M06": "bleeding",
+        "M07": "broken_bone",
+        "M08": "burned",
+        "M09": "shocked",
+        "M10": "paralyzed",
+        "M11": "unconscious",
+        "M12": "dead",
+        "M13": "exhausted",
+        "M14": "malnourished",
+        "M15": "dehydrated",
+        "M16": "concussed",
+        "M17": "bandage",
+        "M18": "stitch",
+        "M19": "splint",
+        "M20": "injection",
+        "M21": "surgery",
+        "M22": "transfusion",
+        "M23": "defibrillate",
+        "M24": "purge",
+        "M25": "sedate",
+        "M26": "resuscitate",
+        "M27": "painkiller",
+        "M28": "stimulant",
+        "M29": "sedative",
+        "M30": "antidote",
+        "M31": "adrenaline",
+        "M32": "neuro_boost",
+        "M33": "regenerator",
+        "M34": "slowmo_drug",
+        "M35": "focus_drug",
+        "M36": "berserker_drug",
+        "M37": "hallucination",
+        "M38": "withdrawal",
+        "M39": "overdose",
+        "M40": "immunity"
+    },
+    "electronics": {
+        "_desc": "Tech systems and hacking (30 unique)",
+        "E01": "security_system",
+        "E02": "alarm",
+        "E03": "camera_network",
+        "E04": "lock_system",
+        "E05": "power_grid",
+        "E06": "comms_network",
+        "E07": "data_server",
+        "E08": "ai_system",
+        "E09": "drone_control",
+        "E10": "vehicle_system",
+        "E11": "breach",
+        "E12": "bypass",
+        "E13": "override",
+        "E14": "spoof",
+        "E15": "jam",
+        "E16": "trace",
+        "E17": "wipe",
+        "E18": "copy",
+        "E19": "encrypt",
+        "E20": "decrypt",
+        "E21": "backdoor",
+        "E22": "virus",
+        "E23": "firewall",
+        "E24": "intrusion",
+        "E25": "sec_level_open",
+        "E26": "sec_level_basic",
+        "E27": "sec_level_standard",
+        "E28": "sec_level_secure",
+        "E29": "sec_level_hardened",
+        "E30": "sec_level_black_ice"
+    },
+    "factions": {
+        "_desc": "Power groups (7 unique)",
+        "F01": {
+            "n": "Resistance",
+            "c": "cyan",
+            "g": "freedom"
+        },
+        "F02": {
+            "n": "Temple",
+            "c": "gold",
+            "g": "control"
+        },
+        "F03": {
+            "n": "Corps",
+            "c": "white",
+            "g": "profit"
+        },
+        "F04": {
+            "n": "Mystics",
+            "c": "purple",
+            "g": "truth"
+        },
+        "F05": {
+            "n": "Underground",
+            "c": "gray",
+            "g": "survival"
+        },
+        "F06": {
+            "n": "Neutral",
+            "c": "silver",
+            "g": "personal"
+        },
+        "F07": {
+            "n": "Unknown",
+            "c": "black",
+            "g": "unknown"
+        }
+    },
+    "relationships": {
+        "_desc": "Types of connections (16 unique)",
+        "R01": "ally",
+        "R02": "enemy",
+        "R03": "rival",
+        "R04": "friend",
+        "R05": "lover",
+        "R06": "family",
+        "R07": "mentor",
+        "R08": "student",
+        "R09": "boss",
+        "R10": "subordinate",
+        "R11": "client",
+        "R12": "contact",
+        "R13": "informant",
+        "R14": "debtor",
+        "R15": "creditor",
+        "R16": "stranger"
+    },
+    "emotions": {
+        "_desc": "Emotional states (20 unique)",
+        "X01": "angry",
+        "X02": "afraid",
+        "X03": "sad",
+        "X04": "happy",
+        "X05": "suspicious",
+        "X06": "trusting",
+        "X07": "calm",
+        "X08": "agitated",
+        "X09": "desperate",
+        "X10": "hopeful",
+        "X11": "guilty",
+        "X12": "proud",
+        "X13": "ashamed",
+        "X14": "jealous",
+        "X15": "lonely",
+        "X16": "confident",
+        "X17": "paranoid",
+        "X18": "relieved",
+        "X19": "disgusted",
+        "X20": "curious"
+    },
+    "weather": {
+        "_desc": "Environmental conditions (10 unique)",
+        "W01": "clear",
+        "W02": "rain",
+        "W03": "storm",
+        "W04": "fog",
+        "W05": "smog",
+        "W06": "acid_rain",
+        "W07": "blackout",
+        "W08": "dust",
+        "W09": "hail",
+        "W10": "radiation"
+    },
+    "time_of_day": {
+        "_desc": "Time periods (8 unique)",
+        "T01": "dawn",
+        "T02": "morning",
+        "T03": "noon",
+        "T04": "afternoon",
+        "T05": "dusk",
+        "T06": "evening",
+        "T07": "night",
+        "T08": "midnight"
+    },
+    "skills": {
+        "_desc": "Acquirable abilities (24 unique)",
+        "S01": "melee",
+        "S02": "ranged",
+        "S03": "heavy_weapons",
+        "S04": "martial_arts",
+        "S05": "tactics",
+        "S06": "defense",
+        "S07": "hacking",
+        "S08": "electronics",
+        "S09": "mechanics",
+        "S10": "cybernetics",
+        "S11": "drones",
+        "S12": "security",
+        "S13": "negotiation",
+        "S14": "intimidation",
+        "S15": "persuasion",
+        "S16": "deception",
+        "S17": "empathy",
+        "S18": "leadership",
+        "S19": "stealth",
+        "S20": "tracking",
+        "S21": "scavenging",
+        "S22": "medicine",
+        "S23": "navigation",
+        "S24": "endurance"
+    },
+    "event_templates": {
+        "_desc": "Pre-defined event structures - decode from seed",
+        "EVT_MEET": [
+            "A01",
+            "C??",
+            "L??",
+            "T???"
+        ],
+        "EVT_TRADE": [
+            "A02",
+            "C??",
+            "O??",
+            "T???"
+        ],
+        "EVT_FIGHT": [
+            "A03",
+            "C??",
+            "L??",
+            "T???"
+        ],
+        "EVT_HACK": [
+            "A04",
+            "E??",
+            "L??",
+            "T???"
+        ],
+        "EVT_INSTALL": [
+            "A07",
+            "Y??",
+            "T???"
+        ],
+        "EVT_DISCOVER": [
+            "A25",
+            "O??",
+            "L??",
+            "T???"
+        ],
+        "EVT_HEAL": [
+            "A06",
+            "C??",
+            "M??",
+            "T???"
+        ],
+        "EVT_LEARN": [
+            "A16",
+            "S??",
+            "C??",
+            "T???"
+        ]
+    },
+    "_codec_usage": {
+        "description": "How to decode events from tick seeds",
+        "example": "hash('charlie_50_events') % 60 = action_idx, >> 8 % 100 = object_idx, etc.",
+        "event_format": "[ACTION]-[TARGET]-[OBJECT/LOCATION]-[TICK]",
+        "sample_decoded": "A01-C09-L08-T050 = 'Charlie met Aiche in alley at tick 50'"
+    }
+}

@@ -117,29 +117,40 @@ FOUNDING_NPCS = {
         "gender": "male",
         "generation": 0,
         "archetype": "Protagonist / Resistance Fighter",
-        "role": "Leadership/Combat",
-        "age_at_founding": 28,
+        "role": "Investigation/Combat",
+        "age_at_founding": 45,
         "faction": "Resistance",
         "accent_color": "Cyan",
-        "ethnicity": "mixed_asian_european",
-        "voice": {"pitch": 0.4, "roughness": 0.3, "speed": 0.5},
+        "ethnicity": "mixed_european",
+        "voice": {"pitch": 0.35, "roughness": 0.5, "speed": 0.45},
         "morphology": create_morphology(
-            height=0.6, build=0.55, shoulders=0.65,
-            face_width=0.5, jaw_width=0.55, cheekbones=0.6,
-            eye_size=0.5, eye_slant=0.4, eye_color="dark_brown",
+            height=0.6, build=0.55, shoulders=0.6,
+            face_width=0.5, jaw_width=0.55, cheekbones=0.55,
+            eye_size=0.5, eye_slant=0.45, eye_color="dark_brown",
             brow_thickness=0.6, brow_arch=0.4,
             nose_length=0.5, nose_width=0.45,
             lip_fullness=0.4, mouth_width=0.5,
-            hair_style="short_messy", hair_color="black",
+            hair_style="short_messy", hair_color="salt_pepper",
             skin_tone=0.4, scars=[{"location": "left_cheek", "type": "slash", "size": 0.3}],
-            wrinkles=0.1, eye_bags=0.2,
-            cybernetics=[{"type": "neural_jack", "location": "temple_right", "visible": True}]
+            wrinkles=0.35, eye_bags=0.4, grey_hair=0.3,
+            cybernetics=[
+                {"type": "holographic_arm", "location": "right_arm", "visible": True,
+                 "desc": "Translucent cyan shell with visible tech internals, segmented joints"},
+                {"type": "holographic_monocle", "location": "right_eye", "visible": True,
+                 "desc": "Cyan holographic monocle with mechanical frame, HUD display"}
+            ]
         ),
-        "personality_vector": {"paranoia": 0.5, "mysticism": 0.3, "aggression": 0.6, "intelligence": 0.75, "empathy": 0.7},
+        "visual_description": "Noir detective, rugged mid-40s, salt-and-pepper stubble. Long gray weathered trench coat, dark charcoal v-neck, black boots. Right arm is a translucent cyan holographic cybernetic with visible tech internals. Wears a mechanical-framed cyan holographic monocle over right eye.",
+        "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.55, "intelligence": 0.75, "empathy": 0.7},
         "location_home": "resistance_hideout",
-        "catchphrases": ["We fight because no one else will.", "The Temple's lies end here."],
-        "backstory": "The heart of the Resistance. Rose from nothing to become a symbol of hope."
+        "catchphrases": [
+            "Rain washes nothing clean here. Just moves the stains around.",
+            "We fight because no one else will.",
+            "Another case, another alley."
+        ],
+        "backstory": "Former detective who lost his arm fighting ECHO forces. Now leads the Resistance. The holographic arm is a constant reminder of what was taken."
     },
+
     
     "kai_vance": {
         "id": "npc_0002",
