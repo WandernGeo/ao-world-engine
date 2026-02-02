@@ -637,26 +637,35 @@
         // Configuration - Use localhost for local dev and file:// protocol
         const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '' || window.location.protocol === 'file:')
             ? 'http://localhost:8080'
-            : 'https://ao-npc-chat-YOUR_PROJECT.run.app'; // Replace after deploy
+            : 'https://ao-npc-chat-zdku5kri5a-uc.a.run.app'; // Cloud Run deployed API
 
-        // NPC Data
+        // 12 Founding NPCs - now on Arweave permanently!
         const npcs = {
-            kira: { name: "Kira Ōmura", archetype: "Street Oracle", icon: "🔮", personality: { paranoia: 0.8, mysticism: 0.9, aggression: 0.2 } },
-            cipher: { name: "Cipher", archetype: "AI Hacker Entity", icon: "🤖", personality: { paranoia: 0.6, mysticism: 0.3, aggression: 0.4 } },
-            marco: { name: "Marco Chen", archetype: "Street Merchant", icon: "💰", personality: { paranoia: 0.4, mysticism: 0.1, aggression: 0.3 } },
-            charlie: { name: "Charlie Vex", archetype: "Noir Detective", icon: "🕵️", personality: { paranoia: 0.7, mysticism: 0.2, aggression: 0.5 } },
-            blade: { name: "Blade Tanaka", archetype: "Street Samurai", icon: "⚔️", personality: { paranoia: 0.3, mysticism: 0.4, aggression: 0.8 } }
+            charlie: { name: "Charlie", archetype: "Protagonist / Resistance Fighter", icon: "⚔️", faction: "Resistance", gender: "male", personality: { paranoia: 0.5, mysticism: 0.3, aggression: 0.6 } },
+            kai_vance: { name: "Kai Vance", archetype: "Tactician", icon: "🧠", faction: "Resistance", gender: "male", personality: { paranoia: 0.7, mysticism: 0.2, aggression: 0.4 } },
+            orion_thane: { name: "Orion Thane", archetype: "Mystic", icon: "🔮", faction: "Mystic", gender: "male", personality: { paranoia: 0.4, mysticism: 0.95, aggression: 0.2 } },
+            felix: { name: "Felix", archetype: "Bartender / Info Broker", icon: "🍸", faction: "Neutral", gender: "male", personality: { paranoia: 0.5, mysticism: 0.2, aggression: 0.3 } },
+            nova_chen: { name: "Nova Chen", archetype: "Operative", icon: "🎯", faction: "Neutral", gender: "female", personality: { paranoia: 0.7, mysticism: 0.2, aggression: 0.7 } },
+            selene_voss: { name: "Selene Voss", archetype: "Ghost-Child", icon: "👻", faction: "Special", gender: "female", personality: { paranoia: 0.6, mysticism: 0.9, aggression: 0.2 } },
+            sister_mira: { name: "Sister Mira", archetype: "Temple Priestess", icon: "✨", faction: "Temple", gender: "female", personality: { paranoia: 0.3, mysticism: 0.8, aggression: 0.1 } },
+            mama_indira: { name: "Mama Indira", archetype: "Underground Matriarch", icon: "🍲", faction: "Resistance", gender: "female", personality: { paranoia: 0.4, mysticism: 0.6, aggression: 0.2 } },
+            aiche: { name: "Aiche", archetype: "AI Interface", icon: "💠", faction: "Neutral", gender: "female", personality: { paranoia: 0.3, mysticism: 0.4, aggression: 0.1 } },
+            pixel: { name: "Pixel", archetype: "Tech Genius", icon: "💻", faction: "Resistance", gender: "female", personality: { paranoia: 0.6, mysticism: 0.1, aggression: 0.3 } },
+            cipher: { name: "Cipher", archetype: "Unknown Entity", icon: "🔐", faction: "Unknown", gender: "female", personality: { paranoia: 0.8, mysticism: 0.7, aggression: 0.4 } },
+            zero_chen: { name: "Zero Chen", archetype: "Resistance Leader", icon: "👑", faction: "Resistance", gender: "female", personality: { paranoia: 0.6, mysticism: 0.2, aggression: 0.5 } }
         };
 
-        let currentNpc = 'kira';
+
+        let currentNpc = 'charlie';
         let currentTick = 100;
 
         // Initialize
         function init() {
             renderNpcList();
             updateTick(100);
-            selectNpc('kira');
+            selectNpc('charlie');
         }
+
 
         function renderNpcList() {
             const list = document.getElementById('npcList');
