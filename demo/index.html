@@ -634,8 +634,8 @@
     </div>
 
     <script>
-        // Configuration
-        const API_BASE = window.location.hostname === 'localhost'
+        // Configuration - Use localhost for local dev and file:// protocol
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '' || window.location.protocol === 'file:')
             ? 'http://localhost:8080'
             : 'https://ao-npc-chat-YOUR_PROJECT.run.app'; // Replace after deploy
 
