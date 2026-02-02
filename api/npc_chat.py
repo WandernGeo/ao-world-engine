@@ -139,65 +139,48 @@ def query_arweave_npcs(app_name: str = "AO-World-Engine") -> list:
 
 
 # ============================================================
-# FALLBACK NPC PROFILES (until Arweave data is uploaded)
-# These are the "founding" NPCs - seed characters
+# FOUNDING NPC PROFILES
+# 12 Founders (4 Male / 8 Female) - scientifically designed for
+# genetic diversity based on minimum viable population research.
+# See data/founding_npcs.py for full profiles.
 # ============================================================
 
-FOUNDING_NPCS = {
-    "kira": {
-        "id": "npc_0023",
-        "name": "Kira Ōmura",
-        "archetype": "Street Oracle",
-        "personality_vector": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
-        "location_home": "neon_market",
-        "topic_weights": {"philosophy": 0.9, "the_watchers": 0.95, "trade": 0.2},
-        "catchphrases": ["The layers stack. We're just one echo.", "Eyes from outside the frame..."],
-    },
-    "cipher": {
-        "id": "npc_0001",
-        "name": "Cipher",
-        "archetype": "AI Hacker Entity",
-        "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
-        "location_home": "shadow_grid",
-        "topic_weights": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3},
-        "catchphrases": ["Data is the only truth.", "I probe, therefore I am."],
-    },
-    "marco": {
-        "id": "npc_0045",
-        "name": "Marco Chen",
-        "archetype": "Street Merchant",
-        "personality_vector": {"paranoia": 0.4, "mysticism": 0.1, "aggression": 0.3},
-        "location_home": "neon_market",
-        "topic_weights": {"trade": 0.9, "gossip": 0.7, "philosophy": 0.2},
-        "catchphrases": ["Everything has a price.", "Credits talk, debt walks."],
-    },
-    "charlie": {
-        "id": "npc_0067",
-        "name": "Charlie Vex",
-        "archetype": "Noir Detective",
-        "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.5},
-        "location_home": "rain_soaked_alley",
-        "topic_weights": {"investigation": 0.9, "crime": 0.8, "philosophy": 0.4},
-        "catchphrases": ["Rain washes nothing here.", "Everybody's got a secret."],
-    },
-    "blade": {
-        "id": "npc_0089",
-        "name": "Blade Tanaka",
-        "archetype": "Street Samurai",
-        "personality_vector": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.8},
-        "location_home": "dojo",
-        "topic_weights": {"combat": 0.9, "honor": 0.8, "philosophy": 0.5},
-        "catchphrases": ["Steel speaks truth.", "Honor is the only code worth following."],
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from data.founding_npcs import FOUNDING_NPCS, LOCATIONS
+except ImportError:
+    # Fallback if import fails (e.g., running from different directory)
+    FOUNDING_NPCS = {
+        "kira": {
+            "id": "npc_0002",
+            "name": "Kira Ōmura",
+            "gender": "female",
+            "archetype": "Street Oracle",
+            "personality_vector": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
+            "location_home": "neon_market",
+            "topic_weights": {"philosophy": 0.9, "the_watchers": 0.95, "trade": 0.2},
+            "catchphrases": ["The layers stack. We're just one echo.", "Eyes from outside the frame..."],
+        },
+        "cipher": {
+            "id": "npc_0001",
+            "name": "Cipher",
+            "gender": "male",
+            "archetype": "AI Hacker Entity",
+            "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
+            "location_home": "shadow_grid",
+            "topic_weights": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3},
+            "catchphrases": ["Data is the only truth.", "I probe, therefore I am."],
+        }
     }
-}
+    LOCATIONS = {
+        "neon_market": "crowded night market with holographic signs and rain puddles",
+        "shadow_grid": "abandoned server farm with flickering lights",
+        "rain_soaked_alley": "dark alley with fire escapes and steam vents",
+        "dojo": "traditional training hall with dim amber lighting",
+        "rooftop": "high rooftop overlooking the city skyline"
+    }
 
-# Location descriptions
-LOCATIONS = {
-    "neon_market": "crowded night market with holographic signs and rain puddles",
-    "shadow_grid": "abandoned server farm with flickering lights",
-    "rain_soaked_alley": "dark alley with fire escapes and steam vents",
-    "dojo": "traditional training hall with dim amber lighting",
-    "rooftop": "high rooftop overlooking the city skyline"
 }
 
 
