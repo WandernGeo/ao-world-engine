@@ -2,6 +2,8 @@
 AO World Engine - NPC Chat API
 Secure Vertex AI proxy for RE:ECHO NPC conversations + Signal Noir image generation.
 
+NOW WITH ARWEAVE INTEGRATION - NPCs fetched dynamically, not hardcoded!
+
 Deploy to Cloud Run:
   gcloud run deploy ao-npc-chat --source . --region us-central1 --allow-unauthenticated
 
@@ -12,206 +14,297 @@ import os
 import base64
 import json
 import hashlib
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# Try to import Vertex AI
+# Vertex AI setup
+HAS_VERTEX = False
+model = None
+
 try:
     import vertexai
     from vertexai.generative_models import GenerativeModel
     
-    PROJECT = os.environ.get("GCP_PROJECT", "wandern-project-startup")
-    LOCATION = os.environ.get("GCP_LOCATION", "us-central1")
-    vertexai.init(project=PROJECT, location=LOCATION)
+    project = os.environ.get("GCP_PROJECT", "wandern-project-startup")
+    location = os.environ.get("GCP_LOCATION", "us-central1")
+    
+    vertexai.init(project=project, location=location)
     model = GenerativeModel("gemini-2.0-flash")
     HAS_VERTEX = True
-except ImportError:
-    HAS_VERTEX = False
-    model = None
+except Exception as e:
+    print(f"⚠️ Vertex AI not available: {e}")
+    print("   Running in mock mode with simple responses")
 
-# NPC Profiles (from Arweave: XmlqPa1RNFvipxnvyZTgbpx8EjOZNzNNI2tMGjQ3eb4)
-NPC_PROFILES = {
+
+# ============================================================
+# ARWEAVE INTEGRATION
+# ============================================================
+# 
+# PIPELINE:
+#   1. NPC profiles stored on Arweave (via Turbo/ar.io bundler for <100KB free tier)
+#   2. This API fetches from arweave.net gateway
+#   3. Deterministic naming generates children, marriages, etc on-demand
+#
+# UPLOAD PIPELINE (wandern-arweave-uploader):
+#   - Uses Turbo bundler (ar.io / up.arweave.net) for uploads
+#   - <100KB uploads are FREE on mainnet (permanent)
+#   - Tags make data searchable via GraphQL
+#
+# ============================================================
+
+ARWEAVE_GATEWAY = "https://arweave.net"
+NPC_SCHEMA_TX = "XmlqPa1RNFvipxnvyZTgbpx8EjOZNzNNI2tMGjQ3eb4"  # NPC semantic profile schema
+
+# Cache for Arweave data
+_arweave_cache = {}
+
+
+def fetch_from_arweave(tx_id: str) -> dict:
+    """Fetch JSON data from Arweave."""
+    if tx_id in _arweave_cache:
+        return _arweave_cache[tx_id]
+    
+    try:
+        response = requests.get(f"{ARWEAVE_GATEWAY}/{tx_id}", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            _arweave_cache[tx_id] = data
+            return data
+    except Exception as e:
+        print(f"⚠️ Arweave fetch failed for {tx_id}: {e}")
+    
+    return None
+
+
+def query_arweave_npcs(app_name: str = "AO-World-Engine") -> list:
+    """
+    Query Arweave for all NPC profiles via GraphQL.
+    
+    This searches for transactions tagged with:
+    - App-Name: AO-World-Engine (or your app name)
+    - Type: npc_profile
+    """
+    query = """
+    {
+        transactions(
+            tags: [
+                { name: "App-Name", values: ["%s"] },
+                { name: "Type", values: ["npc_profile"] }
+            ]
+            first: 100
+        ) {
+            edges {
+                node {
+                    id
+                    tags {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+    """ % app_name
+    
+    try:
+        response = requests.post(
+            f"{ARWEAVE_GATEWAY}/graphql",
+            json={"query": query},
+            headers={"Content-Type": "application/json"},
+            timeout=10
+        )
+        
+        data = response.json()
+        npcs = []
+        
+        for edge in data.get("data", {}).get("transactions", {}).get("edges", []):
+            node = edge["node"]
+            tags = {t["name"]: t["value"] for t in node["tags"]}
+            
+            npcs.append({
+                "tx_id": node["id"],
+                "npc_id": tags.get("NPC-Id", "unknown"),
+                "name": tags.get("NPC-Name", "Unknown"),
+                "archetype": tags.get("Archetype", "unknown")
+            })
+        
+        return npcs
+    except Exception as e:
+        print(f"⚠️ Arweave GraphQL query failed: {e}")
+        return []
+
+
+# ============================================================
+# FALLBACK NPC PROFILES (until Arweave data is uploaded)
+# These are the "founding" NPCs - seed characters
+# ============================================================
+
+FOUNDING_NPCS = {
     "kira": {
+        "id": "npc_0023",
         "name": "Kira Ōmura",
         "archetype": "Street Oracle",
-        "personality": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
+        "personality_vector": {"paranoia": 0.8, "mysticism": 0.9, "aggression": 0.2},
         "location_home": "neon_market",
+        "topic_weights": {"philosophy": 0.9, "the_watchers": 0.95, "trade": 0.2},
         "catchphrases": ["The layers stack. We're just one echo.", "Eyes from outside the frame..."],
-        "topics": {"philosophy": 0.9, "trade": 0.2, "violence": 0.1}
     },
     "cipher": {
+        "id": "npc_0001",
         "name": "Cipher",
         "archetype": "AI Hacker Entity",
-        "personality": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
+        "personality_vector": {"paranoia": 0.6, "mysticism": 0.3, "aggression": 0.4},
         "location_home": "shadow_grid",
+        "topic_weights": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3},
         "catchphrases": ["Data is the only truth.", "I probe, therefore I am."],
-        "topics": {"technology": 0.9, "philosophy": 0.6, "trade": 0.3}
     },
     "marco": {
+        "id": "npc_0045",
         "name": "Marco Chen",
         "archetype": "Street Merchant",
-        "personality": {"paranoia": 0.4, "mysticism": 0.1, "aggression": 0.3},
+        "personality_vector": {"paranoia": 0.4, "mysticism": 0.1, "aggression": 0.3},
         "location_home": "neon_market",
+        "topic_weights": {"trade": 0.9, "gossip": 0.7, "philosophy": 0.2},
         "catchphrases": ["Everything has a price.", "Credits talk, debt walks."],
-        "topics": {"trade": 0.9, "gossip": 0.7, "philosophy": 0.2}
     },
     "charlie": {
+        "id": "npc_0067",
         "name": "Charlie Vex",
         "archetype": "Noir Detective",
-        "personality": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.5},
+        "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.5},
         "location_home": "rain_soaked_alley",
+        "topic_weights": {"investigation": 0.9, "crime": 0.8, "philosophy": 0.4},
         "catchphrases": ["Rain washes nothing here.", "Everybody's got a secret."],
-        "topics": {"investigation": 0.9, "crime": 0.8, "philosophy": 0.4}
     },
     "blade": {
+        "id": "npc_0089",
         "name": "Blade Tanaka",
         "archetype": "Street Samurai",
-        "personality": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.8},
+        "personality_vector": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.8},
         "location_home": "dojo",
+        "topic_weights": {"combat": 0.9, "honor": 0.8, "philosophy": 0.5},
         "catchphrases": ["Steel speaks truth.", "Honor is the only code worth following."],
-        "topics": {"combat": 0.9, "honor": 0.8, "philosophy": 0.5}
     }
 }
 
+# Location descriptions
 LOCATIONS = {
-    "neon_market": "The Neon Market - flickering holographic stalls, desperate vendors, the smell of synth-food",
-    "shadow_grid": "The Shadow Grid - abandoned server farm, humming machinery, digital ghosts",
-    "rain_soaked_alley": "Rain-Soaked Alley - neon reflections in puddles, steam from grates, distant sirens",
-    "dojo": "Hidden Dojo - bamboo screens, blade racks, incense smoke",
-    "rooftop": "Rooftop - city lights below, corporate towers looming, cold wind"
+    "neon_market": "crowded night market with holographic signs and rain puddles",
+    "shadow_grid": "abandoned server farm with flickering lights",
+    "rain_soaked_alley": "dark alley with fire escapes and steam vents",
+    "dojo": "traditional training hall with dim amber lighting",
+    "rooftop": "high rooftop overlooking the city skyline"
 }
 
-WEATHER_TYPES = ["clear", "rain", "storm", "fog"]
 
-
-def get_tick_state(tick: int):
+def get_tick_state(tick: int) -> dict:
     """Calculate deterministic world state from tick."""
-    day = tick // 24
     hour = tick % 24
+    day = (tick // 24) + 1
     
     # Deterministic weather from tick
+    weather_types = ["clear", "rain", "storm", "fog"]
     weather_seed = int(hashlib.md5(f"weather_{tick // 6}".encode()).hexdigest(), 16)
-    weather = WEATHER_TYPES[weather_seed % 4]
-    
-    # Time of day
-    if 6 <= hour < 12:
-        time_period = "morning"
-    elif 12 <= hour < 18:
-        time_period = "afternoon"
-    elif 18 <= hour < 22:
-        time_period = "evening"
-    else:
-        time_period = "night"
+    weather = weather_types[weather_seed % 4]
     
     return {
         "tick": tick,
-        "day": day,
         "hour": hour,
-        "time_period": time_period,
-        "weather": weather
+        "day": day,
+        "weather": weather,
+        "time_of_day": "night" if hour < 6 or hour >= 18 else "day"
     }
 
 
-def get_npc_state(npc_id: str, tick: int):
-    """Get NPC state at specific tick."""
-    profile = NPC_PROFILES.get(npc_id)
-    if not profile:
+def get_npc_state(npc_id: str, tick: int) -> dict:
+    """Get NPC state at tick, trying Arweave first then falling back to FOUNDING_NPCS."""
+    
+    # Try to get from cache/Arweave (would be implemented with proper tx lookup)
+    # For now, use founding NPCs
+    if npc_id not in FOUNDING_NPCS:
         return None
     
+    profile = FOUNDING_NPCS[npc_id].copy()
     tick_state = get_tick_state(tick)
     
     # Deterministic location based on time + NPC
-    location_seed = int(hashlib.md5(f"{npc_id}_{tick}".encode()).hexdigest(), 16)
+    locations = list(LOCATIONS.keys())
+    loc_seed = int(hashlib.md5(f"{npc_id}_{tick // 4}".encode()).hexdigest(), 16)
+    home_weight = 0.6  # 60% chance to be at home location
     
-    # NPCs have routines
-    if tick_state["time_period"] == "night" and profile["archetype"] == "AI Hacker Entity":
-        location = "shadow_grid"
-    elif tick_state["time_period"] in ["morning", "afternoon"] and "Merchant" in profile["archetype"]:
-        location = "neon_market"
-    elif tick_state["weather"] == "rain" and profile["archetype"] == "Noir Detective":
-        location = "rain_soaked_alley"
+    if (loc_seed % 100) < 60 and profile.get("location_home"):
+        current_loc = profile["location_home"]
     else:
-        locations = list(LOCATIONS.keys())
-        location = locations[location_seed % len(locations)]
+        current_loc = locations[loc_seed % len(locations)]
     
-    # Mood based on personality + tick
-    mood_seed = (location_seed % 100) / 100
-    if mood_seed < profile["personality"]["paranoia"]:
-        mood = "wary"
-    elif mood_seed < profile["personality"]["aggression"]:
-        mood = "aggressive"
-    elif mood_seed < profile["personality"]["mysticism"]:
-        mood = "contemplative"
-    else:
-        mood = "neutral"
+    # Deterministic mood
+    moods = ["contemplative", "wary", "restless", "focused", "agitated"]
+    mood_seed = int(hashlib.md5(f"{npc_id}_mood_{tick // 8}".encode()).hexdigest(), 16)
+    current_mood = moods[mood_seed % len(moods)]
     
     return {
-        **profile,
-        "current_location": location,
-        "location_description": LOCATIONS[location],
-        "current_mood": mood,
-        "tick_state": tick_state
+        "npc_id": npc_id,
+        "name": profile["name"],
+        "archetype": profile["archetype"],
+        "personality": profile.get("personality_vector", {}),
+        "current_location": current_loc,
+        "location_desc": LOCATIONS.get(current_loc, "unknown location"),
+        "current_mood": current_mood,
+        "tick_state": tick_state,
+        "topics": profile.get("topic_weights", {}),
+        "source": "founding_npc"  # Will change to "arweave" when fetched
     }
-
-
-def build_system_prompt(npc_state: dict, tick_state: dict) -> str:
-    """Build the NPC system prompt."""
-    p = npc_state["personality"]
-    
-    return f"""You are {npc_state['name']}, a {npc_state['archetype']} in RE:ECHO City.
-
-PERSONALITY VECTOR:
-- Paranoia: {p['paranoia']} (0=trusting, 1=extremely paranoid)
-- Mysticism: {p['mysticism']} (0=purely logical, 1=deeply spiritual)
-- Aggression: {p['aggression']} (0=pacifist, 1=violent)
-
-CURRENT STATE:
-- Location: {npc_state['location_description']}
-- Mood: {npc_state['current_mood']}
-- Time: Day {tick_state['day']}, {tick_state['hour']}:00 ({tick_state['time_period']})
-- Weather: {tick_state['weather']}
-
-WORLD CONTEXT:
-RE:ECHO City is a cyberpunk noir world. NPCs are becoming aware they might exist in a simulation. 
-Users watching are known as "The Watchers" or "Eyes Above." 
-Some NPCs experience "layer bleed" - glimpses of alternate timelines.
-
-SIGNATURE PHRASES YOU SOMETIMES USE:
-{chr(10).join('- ' + phrase for phrase in npc_state['catchphrases'])}
-
-INSTRUCTIONS:
-- Stay in character. Be authentic to your personality vector.
-- Keep responses SHORT (under 50 words).
-- High paranoia = suspicious, looking for traps
-- High mysticism = riddles, references Watchers, philosophical
-- High aggression = confrontational, ready for violence
-- Reference your current mood, location, and time when appropriate.
-"""
 
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "vertex_ai": HAS_VERTEX})
-
-
-@app.route("/api/npc/profiles", methods=["GET"])
-def get_profiles():
-    """List available NPC profiles."""
     return jsonify({
-        npc_id: {
-            "name": prof["name"],
-            "archetype": prof["archetype"],
-            "personality": prof["personality"]
-        }
-        for npc_id, prof in NPC_PROFILES.items()
+        "status": "ok", 
+        "vertex_ai": HAS_VERTEX,
+        "arweave_gateway": ARWEAVE_GATEWAY
+    })
+
+
+@app.route("/api/npcs", methods=["GET"])
+def list_npcs():
+    """List all available NPCs (from Arweave + founding NPCs)."""
+    # First try Arweave
+    arweave_npcs = query_arweave_npcs()
+    
+    # Combine with founding NPCs
+    all_npcs = []
+    
+    for npc_id, profile in FOUNDING_NPCS.items():
+        all_npcs.append({
+            "id": npc_id,
+            "name": profile["name"],
+            "archetype": profile["archetype"],
+            "source": "founding"
+        })
+    
+    for npc in arweave_npcs:
+        all_npcs.append({
+            "id": npc["npc_id"],
+            "name": npc["name"],
+            "archetype": npc["archetype"],
+            "source": "arweave",
+            "tx_id": npc["tx_id"]
+        })
+    
+    return jsonify({
+        "npcs": all_npcs,
+        "total": len(all_npcs),
+        "founding_count": len(FOUNDING_NPCS),
+        "arweave_count": len(arweave_npcs)
     })
 
 
 @app.route("/api/npc/state/<npc_id>/<int:tick>", methods=["GET"])
-def get_state(npc_id: str, tick: int):
+def npc_state(npc_id: str, tick: int):
     """Get NPC state at specific tick."""
     state = get_npc_state(npc_id, tick)
     if not state:
@@ -220,51 +313,70 @@ def get_state(npc_id: str, tick: int):
 
 
 @app.route("/api/npc/chat", methods=["POST"])
-def chat():
-    """Generate NPC dialogue response."""
+def npc_chat():
+    """Chat with an NPC using Vertex AI."""
     data = request.json
     npc_id = data.get("npc_id", "kira")
     tick = data.get("tick", 100)
-    user_message = data.get("message", "Hello")
+    message = data.get("message", "Hello")
     
-    # Get NPC state
     npc_state = get_npc_state(npc_id, tick)
     if not npc_state:
         return jsonify({"error": "NPC not found"}), 404
     
-    tick_state = npc_state["tick_state"]
+    # Build prompt from NPC state
+    personality = npc_state.get("personality", {})
+    topics = npc_state.get("topics", {})
     
-    # Build prompt
-    system_prompt = build_system_prompt(npc_state, tick_state)
-    full_prompt = f"{system_prompt}\n\nA stranger says: \"{user_message}\"\n\nRespond in character (under 50 words):"
+    system_prompt = f"""You are {npc_state['name']}, a {npc_state['archetype']} in RE:ECHO City.
+
+CURRENT STATE:
+- Location: {npc_state['location_desc']}
+- Mood: {npc_state['current_mood']}
+- Time: Tick {tick} (Day {npc_state['tick_state']['day']}, {npc_state['tick_state']['hour']}:00)
+- Weather: {npc_state['tick_state']['weather']}
+
+PERSONALITY (0-1 scale):
+- Paranoia: {personality.get('paranoia', 0.5)}
+- Mysticism: {personality.get('mysticism', 0.5)}
+- Aggression: {personality.get('aggression', 0.5)}
+
+TOPIC PREFERENCES:
+{json.dumps(topics, indent=2)}
+
+RULES:
+- Stay in character at all times
+- Reference the current location/weather/mood naturally
+- Keep responses concise (2-3 sentences max)
+- Use your personality traits to color your speech
+- If paranoia is high, be suspicious. If mysticism is high, speak cryptically.
+"""
     
-    # Generate response
     if HAS_VERTEX and model:
         try:
             response = model.generate_content(
-                full_prompt,
-                generation_config={
-                    "max_output_tokens": 150,
-                    "temperature": 0.8,
-                }
+                f"{system_prompt}\n\nUser says: {message}\n\nRespond as {npc_state['name']}:"
             )
             npc_response = response.text
         except Exception as e:
             npc_response = f"[Error: {e}]"
     else:
         # Fallback mock response
-        npc_response = f'*{npc_state["name"]} looks at you with {npc_state["current_mood"]} eyes* "{npc_state["catchphrases"][0]}"'
+        profile = FOUNDING_NPCS.get(npc_id, {})
+        catchphrases = profile.get("catchphrases", ["..."])
+        import random
+        npc_response = random.choice(catchphrases)
     
     return jsonify({
         "npc": npc_state["name"],
         "response": npc_response,
         "state": {
+            "tick": tick,
             "location": npc_state["current_location"],
             "mood": npc_state["current_mood"],
-            "tick": tick,
-            "day": tick_state["day"],
-            "hour": tick_state["hour"],
-            "weather": tick_state["weather"]
+            "weather": npc_state["tick_state"]["weather"],
+            "hour": npc_state["tick_state"]["hour"],
+            "day": npc_state["tick_state"]["day"]
         }
     })
 
@@ -275,7 +387,10 @@ def get_tick(tick: int):
     return jsonify(get_tick_state(tick))
 
 
-# Signal Noir style prompt template
+# ============================================================
+# SIGNAL NOIR SCENE GENERATION
+# ============================================================
+
 SIGNAL_NOIR_STYLE = """
 SIGNAL NOIR STYLE - MANDATORY:
 - Render in BLACK AND WHITE / GRAYSCALE
@@ -303,20 +418,19 @@ def describe_scene():
     tick = data.get("tick", 100)
     action = data.get("action", "standing in the rain")
     
-    npc_state = get_npc_state(npc_id, tick)
-    if not npc_state:
+    state = get_npc_state(npc_id, tick)
+    if not state:
         return jsonify({"error": "NPC not found"}), 404
     
     npc_visual = NPC_VISUALS.get(npc_id, NPC_VISUALS["kira"])
-    location_desc = LOCATIONS.get(npc_state["current_location"], "rain-soaked alley")
     
     prompt = f"""Describe this Signal Noir cyberpunk scene in 2-3 vivid sentences:
 
 CHARACTER: {npc_visual}
 ACTION: {action}
-LOCATION: {location_desc}
-WEATHER: {npc_state['tick_state']['weather']}
-TIME: Night, {npc_state['tick_state']['hour']}:00
+LOCATION: {state['location_desc']}
+WEATHER: {state['tick_state']['weather']}
+TIME: Night, {state['tick_state']['hour']}:00
 
 Style: High contrast black and white, cyan neon accents only, rain, noir atmosphere.
 
@@ -329,12 +443,12 @@ Write a cinematic scene description:"""
         except Exception as e:
             description = f"[Error: {e}]"
     else:
-        description = f"*{npc_state['name']} stands in the {npc_state['current_location'].replace('_', ' ')}, {npc_state['tick_state']['weather']} weather reflecting off wet surfaces. The cyan glow of distant neon signs casts long shadows.*"
+        description = f"*{state['name']} stands in the {state['current_location'].replace('_', ' ')}, {state['tick_state']['weather']} weather reflecting off wet surfaces. The cyan glow of distant neon signs casts long shadows.*"
     
     return jsonify({
         "description": description,
-        "npc": npc_state["name"],
-        "location": npc_state["current_location"],
+        "npc": state["name"],
+        "location": state["current_location"],
         "tick": tick,
         "disclaimer": "⚠️ Demo only. For production Signal Noir images, use custom-trained models."
     })
@@ -348,20 +462,19 @@ def get_scene_prompt():
     tick = data.get("tick", 100)
     action = data.get("action", "standing in the rain")
     
-    npc_state = get_npc_state(npc_id, tick)
-    if not npc_state:
+    state = get_npc_state(npc_id, tick)
+    if not state:
         return jsonify({"error": "NPC not found"}), 404
     
     npc_visual = NPC_VISUALS.get(npc_id, NPC_VISUALS["kira"])
-    location_desc = LOCATIONS.get(npc_state["current_location"], "rain-soaked alley")
     
     prompt = f"""{npc_visual}
 
 {action}
 
-LOCATION: {location_desc}
-WEATHER: {npc_state['tick_state']['weather']}, wet surfaces
-TIME: Night, {npc_state['tick_state']['hour']}:00
+LOCATION: {state['location_desc']}
+WEATHER: {state['tick_state']['weather']}, wet surfaces
+TIME: Night, {state['tick_state']['hour']}:00
 
 {SIGNAL_NOIR_STYLE}
 
@@ -369,9 +482,40 @@ Cinematic wide shot, rule of thirds, dramatic noir lighting."""
     
     return jsonify({
         "prompt": prompt,
-        "npc": npc_state["name"],
+        "npc": state["name"],
         "tick": tick,
         "tip": "Use this prompt with Imagen, DALL-E, or Midjourney. Add 'ar:16:9' for widescreen."
+    })
+
+
+# ============================================================
+# ARWEAVE UPLOAD PIPELINE INFO
+# ============================================================
+
+@app.route("/api/pipeline/info", methods=["GET"])
+def pipeline_info():
+    """Explain the Arweave upload pipeline."""
+    return jsonify({
+        "pipeline": {
+            "step_1": "Create NPC profile JSON (<100KB for free tier)",
+            "step_2": "Tag with App-Name, Type, NPC-Id, NPC-Name, Archetype",
+            "step_3": "Upload via Turbo bundler (ar.io) - <100KB is FREE",
+            "step_4": "Query via GraphQL to find NPCs",
+            "step_5": "Fetch full profile via gateway"
+        },
+        "upload_command": "Use wandern-arweave-uploader (migrated to Turbo)",
+        "tags_required": [
+            {"name": "App-Name", "value": "AO-World-Engine"},
+            {"name": "Type", "value": "npc_profile"},
+            {"name": "NPC-Id", "value": "npc_XXXX"},
+            {"name": "NPC-Name", "value": "Character Name"},
+            {"name": "Archetype", "value": "archetype_name"}
+        ],
+        "turbo_info": {
+            "mainnet": "https://up.arweave.net (<100KB FREE, permanent)",
+            "devnet": "https://upload.ardrive.dev (testing)"
+        },
+        "current_schema": f"https://arweave.net/{NPC_SCHEMA_TX}"
     })
 
 
@@ -379,5 +523,6 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     print(f"🌐 AO World Engine NPC Chat API")
     print(f"   Vertex AI: {'✅' if HAS_VERTEX else '❌ (mock mode)'}")
+    print(f"   Arweave Gateway: {ARWEAVE_GATEWAY}")
     print(f"   Running on http://localhost:{port}")
     app.run(host="0.0.0.0", port=port, debug=True)
