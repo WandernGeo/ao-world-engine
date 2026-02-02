@@ -1,0 +1,381 @@
+{
+    "_chunk": {
+        "id": "chunk_04_chemistry",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "chemistry",
+        "prev_chunk": "chunk_03_tech",
+        "next_chunk": "chunk_05_lore"
+    },
+    "compounds": {
+        "_desc": "Chemical compounds and materials (50 unique)",
+        "_encoding": "CC### where ### is 001-050",
+        "explosives": {
+            "CC001": {
+                "n": "thermite",
+                "type": "incendiary",
+                "stability": 0.8,
+                "damage": 7,
+                "craft_skill": 3
+            },
+            "CC002": {
+                "n": "rdx",
+                "type": "explosive",
+                "stability": 0.9,
+                "damage": 9,
+                "craft_skill": 4
+            },
+            "CC003": {
+                "n": "ammonium_nitrate",
+                "type": "explosive",
+                "stability": 0.6,
+                "damage": 7,
+                "craft_skill": 2
+            },
+            "CC004": {
+                "n": "c4_compound",
+                "type": "plastic_explosive",
+                "stability": 0.95,
+                "damage": 10,
+                "craft_skill": 5
+            },
+            "CC005": {
+                "n": "flash_powder",
+                "type": "pyrotechnic",
+                "stability": 0.4,
+                "damage": 3,
+                "craft_skill": 1
+            },
+            "CC006": {
+                "n": "smoke_compound",
+                "type": "obscurant",
+                "stability": 0.9,
+                "damage": 0,
+                "craft_skill": 1
+            }
+        },
+        "toxins": {
+            "CC007": {
+                "n": "neurotoxin_A",
+                "type": "nerve_agent",
+                "lethality": 9,
+                "onset": 5,
+                "antidote": "MD004"
+            },
+            "CC008": {
+                "n": "paralytic_agent",
+                "type": "muscle",
+                "lethality": 3,
+                "onset": 2,
+                "antidote": "MD004"
+            },
+            "CC009": {
+                "n": "knockout_gas",
+                "type": "sedative",
+                "lethality": 1,
+                "onset": 1,
+                "antidote": null
+            },
+            "CC010": {
+                "n": "corrosive_acid",
+                "type": "chemical",
+                "lethality": 6,
+                "onset": 0,
+                "antidote": null
+            },
+            "CC011": {
+                "n": "hallucinogen",
+                "type": "psychoactive",
+                "lethality": 1,
+                "onset": 15,
+                "antidote": null
+            },
+            "CC012": {
+                "n": "truth_serum",
+                "type": "psychoactive",
+                "lethality": 0,
+                "onset": 10,
+                "antidote": null
+            }
+        },
+        "fuels": {
+            "CC013": {
+                "n": "synth_gasoline",
+                "type": "fuel",
+                "energy_density": 7,
+                "availability": 0.5
+            },
+            "CC014": {
+                "n": "hydrogen_cell",
+                "type": "fuel",
+                "energy_density": 9,
+                "availability": 0.3
+            },
+            "CC015": {
+                "n": "bio_diesel",
+                "type": "fuel",
+                "energy_density": 5,
+                "availability": 0.7
+            },
+            "CC016": {
+                "n": "plasma_core",
+                "type": "fuel",
+                "energy_density": 10,
+                "availability": 0.1
+            },
+            "CC017": {
+                "n": "battery_acid",
+                "type": "fuel",
+                "energy_density": 3,
+                "availability": 0.8
+            }
+        },
+        "materials": {
+            "CC018": {
+                "n": "carbon_fiber",
+                "type": "structural",
+                "strength": 9,
+                "weight": 2
+            },
+            "CC019": {
+                "n": "titanium_alloy",
+                "type": "structural",
+                "strength": 10,
+                "weight": 5
+            },
+            "CC020": {
+                "n": "ceramic_plate",
+                "type": "armor",
+                "strength": 7,
+                "weight": 4
+            },
+            "CC021": {
+                "n": "smart_fabric",
+                "type": "textile",
+                "strength": 3,
+                "weight": 1
+            },
+            "CC022": {
+                "n": "optical_cable",
+                "type": "data",
+                "strength": 2,
+                "weight": 1
+            },
+            "CC023": {
+                "n": "superconductor",
+                "type": "electrical",
+                "strength": 2,
+                "weight": 1
+            },
+            "CC024": {
+                "n": "nanomaterial",
+                "type": "advanced",
+                "strength": 8,
+                "weight": 1
+            }
+        },
+        "drug_synthesis": {
+            "CC025": {
+                "n": "stim_base",
+                "type": "precursor",
+                "creates": [
+                    "MD002",
+                    "MD011"
+                ],
+                "skill": 2
+            },
+            "CC026": {
+                "n": "painkiller_base",
+                "type": "precursor",
+                "creates": [
+                    "MD007",
+                    "MD023"
+                ],
+                "skill": 2
+            },
+            "CC027": {
+                "n": "hallucinogen_base",
+                "type": "precursor",
+                "creates": [
+                    "MD019",
+                    "MD022"
+                ],
+                "skill": 3
+            },
+            "CC028": {
+                "n": "euphoric_base",
+                "type": "precursor",
+                "creates": [
+                    "MD018",
+                    "MD023"
+                ],
+                "skill": 3
+            },
+            "CC029": {
+                "n": "neural_compound",
+                "type": "precursor",
+                "creates": [
+                    "MD026",
+                    "MD028"
+                ],
+                "skill": 4
+            },
+            "CC030": {
+                "n": "stabilizer",
+                "type": "additive",
+                "creates": [
+                    "all"
+                ],
+                "skill": 1
+            }
+        }
+    },
+    "crafting_recipes": {
+        "_desc": "How to create items from components",
+        "explosives": {
+            "frag_grenade": {
+                "components": [
+                    "CC002",
+                    "metal_case",
+                    "detonator"
+                ],
+                "skill_req": 3,
+                "time_min": 30,
+                "creates": "O031"
+            },
+            "emp_grenade": {
+                "components": [
+                    "CC023",
+                    "battery",
+                    "capacitor"
+                ],
+                "skill_req": 4,
+                "time_min": 45,
+                "creates": "O034"
+            },
+            "smoke_grenade": {
+                "components": [
+                    "CC006",
+                    "canister",
+                    "igniter"
+                ],
+                "skill_req": 2,
+                "time_min": 15,
+                "creates": "O033"
+            }
+        },
+        "drugs": {
+            "stim_pack": {
+                "components": [
+                    "CC025",
+                    "CC030",
+                    "syringe"
+                ],
+                "skill_req": 2,
+                "time_min": 20,
+                "creates": "MD002"
+            },
+            "reflex_boost": {
+                "components": [
+                    "CC025",
+                    "CC029",
+                    "injector"
+                ],
+                "skill_req": 3,
+                "time_min": 45,
+                "creates": "MD011"
+            },
+            "bliss": {
+                "components": [
+                    "CC028",
+                    "CC030",
+                    "pill_press"
+                ],
+                "skill_req": 3,
+                "time_min": 60,
+                "creates": "MD018"
+            }
+        },
+        "medical": {
+            "medipen": {
+                "components": [
+                    "nanobots",
+                    "CC030",
+                    "injector"
+                ],
+                "skill_req": 3,
+                "time_min": 30,
+                "creates": "MD001"
+            },
+            "antidote": {
+                "components": [
+                    "activated_charcoal",
+                    "CC030",
+                    "syringe"
+                ],
+                "skill_req": 2,
+                "time_min": 15,
+                "creates": "MD004"
+            }
+        }
+    },
+    "hazards": {
+        "_desc": "Environmental chemical hazards",
+        "acid_rain": {
+            "damage_per_minute": 1,
+            "protection": [
+                "mask_gas",
+                "shelter",
+                "syn_lungs"
+            ],
+            "frequency": "30% of rainy days",
+            "locations": [
+                "outdoor"
+            ]
+        },
+        "toxic_air": {
+            "damage_per_minute": 2,
+            "protection": [
+                "mask_gas",
+                "syn_lungs",
+                "toxin_binder"
+            ],
+            "frequency": "constant",
+            "locations": [
+                "L005",
+                "L009",
+                "L046"
+            ]
+        },
+        "radiation_zones": {
+            "damage_per_minute": 5,
+            "protection": [
+                "rad_suit",
+                "rad_away_preemptive"
+            ],
+            "frequency": "constant",
+            "locations": [
+                "L039",
+                "L009"
+            ]
+        }
+    },
+    "chemistry_npcs": {
+        "_desc": "NPCs with chemistry knowledge",
+        "pixel": {
+            "skill": 4,
+            "specialty": "drug_synthesis",
+            "willing": true
+        },
+        "ripperdoc_chen": {
+            "skill": 5,
+            "specialty": "medical_compounds",
+            "willing": true
+        },
+        "mama_indira": {
+            "skill": 2,
+            "specialty": "traditional_remedies",
+            "willing": true
+        }
+    }
+}

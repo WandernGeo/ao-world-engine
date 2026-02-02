@@ -1,0 +1,308 @@
+{
+    "_chunk": {
+        "id": "chunk_05_lore",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "lore",
+        "prev_chunk": "chunk_04_chemistry",
+        "next_chunk": "chunk_06_skills"
+    },
+    "history": {
+        "_desc": "Timeline of RE:ECHO City",
+        "eras": {
+            "pre_fall": {
+                "years": "2045-2067",
+                "desc": "Golden age of technology and corporate prosperity",
+                "events": [
+                    {
+                        "year": 2047,
+                        "event": "First neural interface approved for public use"
+                    },
+                    {
+                        "year": 2052,
+                        "event": "Mega-corps consolidate into the Big Five"
+                    },
+                    {
+                        "year": 2058,
+                        "event": "AI Aiche first comes online as city management system"
+                    },
+                    {
+                        "year": 2061,
+                        "event": "Temple of the Signal gains religious recognition"
+                    },
+                    {
+                        "year": 2065,
+                        "event": "First reports of 'layer bleed' phenomena"
+                    },
+                    {
+                        "year": 2067,
+                        "event": "The Fall - EMP cascade destroys 80% of infrastructure"
+                    }
+                ]
+            },
+            "dark_years": {
+                "years": "2067-2075",
+                "desc": "Collapse, starvation, gang wars",
+                "events": [
+                    {
+                        "year": 2067,
+                        "event": "Millions die in initial collapse"
+                    },
+                    {
+                        "year": 2068,
+                        "event": "Mama Indira begins feeding the starving in Undercity"
+                    },
+                    {
+                        "year": 2069,
+                        "event": "Temple emerges as primary power, provides food/order"
+                    },
+                    {
+                        "year": 2071,
+                        "event": "First Resistance cells form in opposition to Temple"
+                    },
+                    {
+                        "year": 2073,
+                        "event": "Zero Chen loses arm saving young Charlie"
+                    },
+                    {
+                        "year": 2075,
+                        "event": "Current year - fragile balance of power"
+                    }
+                ]
+            }
+        },
+        "the_fall": {
+            "official_story": "Terrorist EMP attack destroyed infrastructure",
+            "temple_story": "Divine punishment for humanity's hubris",
+            "resistance_story": "Temple or Corps deliberately caused it for control",
+            "truth": "Unknown - possibly connected to layer bleed events",
+            "casualties": "Estimated 3 million in first year",
+            "survivors": "Those with skills, cybernetics, or luck"
+        }
+    },
+    "factions_detailed": {
+        "resistance": {
+            "full_name": "The Resistance",
+            "color": "cyan",
+            "symbol": "Broken chain",
+            "goal": "Overthrow Temple control, restore freedom",
+            "leader": "zero_chen",
+            "key_members": [
+                "charlie",
+                "kai_vance",
+                "pixel",
+                "mama_indira"
+            ],
+            "territory": [
+                "L026",
+                "L027",
+                "L028",
+                "L030"
+            ],
+            "resources": "Limited tech, strong network, public sympathy",
+            "weakness": "Outnumbered, outgunned, infiltrated",
+            "allies": [
+                "Underground",
+                "Some Mystics"
+            ],
+            "enemies": [
+                "Temple",
+                "Corps"
+            ]
+        },
+        "temple": {
+            "full_name": "Temple of the Signal",
+            "color": "gold/amber",
+            "symbol": "Radiating eye",
+            "goal": "Control through faith and surveillance",
+            "leader": "Prophet Elijah (unseen)",
+            "key_members": [
+                "sister_mira"
+            ],
+            "territory": [
+                "L031",
+                "L032",
+                "L033",
+                "L034",
+                "L035",
+                "L003"
+            ],
+            "resources": "Best tech, army of believers, surveillance grid",
+            "weakness": "Rigid hierarchy, internal dissent like Mira",
+            "allies": [
+                "Corps (uneasy)"
+            ],
+            "enemies": [
+                "Resistance",
+                "Some Mystics"
+            ]
+        },
+        "corps": {
+            "full_name": "Corporate Remnants",
+            "color": "white/silver",
+            "symbol": "Interlocking gears",
+            "goal": "Profit from reconstruction",
+            "leader": "Board of Directors (faceless)",
+            "territory": [
+                "L007",
+                "L036",
+                "L037",
+                "L038",
+                "L039",
+                "L040"
+            ],
+            "resources": "Manufacturing, credits, security forces",
+            "weakness": "Greed leads to infighting",
+            "allies": [
+                "Temple (uneasy)"
+            ],
+            "enemies": [
+                "Resistance"
+            ]
+        },
+        "mystics": {
+            "full_name": "The Awakened / Layer Walkers",
+            "color": "purple",
+            "symbol": "Spiral",
+            "goal": "Understand the layers, prepare for convergence",
+            "leader": "orion_thane",
+            "key_members": [
+                "selene_voss"
+            ],
+            "territory": [
+                "L051",
+                "L052",
+                "L054",
+                "L055"
+            ],
+            "resources": "Knowledge of layers, prophetic visions",
+            "weakness": "Few in number, often dismissed as crazy",
+            "allies": [
+                "Some Resistance members"
+            ],
+            "enemies": [
+                "Temple (fears them)"
+            ]
+        },
+        "underground": {
+            "full_name": "The Undercity",
+            "color": "gray",
+            "symbol": "Rat",
+            "goal": "Survival, community, trade",
+            "leader": "No single leader - council of elders",
+            "key_members": [
+                "mama_indira",
+                "felix"
+            ],
+            "territory": [
+                "L004",
+                "L016",
+                "L046",
+                "L047",
+                "L048",
+                "L049",
+                "L050"
+            ],
+            "resources": "Black market, tunnel networks, information",
+            "weakness": "No military power, vulnerable",
+            "allies": [
+                "Resistance",
+                "Neutral traders"
+            ],
+            "enemies": [
+                "Temple (tries to control them)"
+            ]
+        }
+    },
+    "layer_lore": {
+        "overview": "Reality is layered. Most see only Layer 0 (Prime). Some see more.",
+        "layers": {
+            "layer_0": {
+                "name": "Prime",
+                "desc": "The 'real' world as most experience it",
+                "accessibility": "Everyone",
+                "traits": "Solid, consistent, follows physics"
+            },
+            "layer_1": {
+                "name": "Echo",
+                "desc": "First alternate layer, slightly different choices made",
+                "accessibility": "Mystics, those on 'echo' drug, bleed events",
+                "traits": "Similar but different, déjà vu feelings"
+            },
+            "layer_2": {
+                "name": "Fracture",
+                "desc": "Radically different timeline",
+                "accessibility": "Deep mystics only",
+                "traits": "Temple never rose, Corps won, different factions"
+            },
+            "layer_beyond": {
+                "name": "The Static",
+                "desc": "Where corrupted data goes. Dangerous.",
+                "accessibility": "Only Selene has been there and returned",
+                "traits": "No fixed reality, pure information soup"
+            }
+        },
+        "bleed_events": {
+            "frequency": "0.1% chance per tick per location with thin veil",
+            "symptoms": [
+                "Seeing ghostly figures",
+                "Hearing whispers",
+                "Déjà vu",
+                "Objects appearing/disappearing"
+            ],
+            "witnesses": "Most dismiss it as stress or drugs",
+            "thin_veil_locations": [
+                "L052",
+                "L054",
+                "L055",
+                "L051"
+            ]
+        }
+    },
+    "known_secrets": {
+        "_desc": "Things NPCs might reveal or discover",
+        "charlie_secrets": {
+            "public": "Resistance fighter, Zero's protégé",
+            "few_know": "Former Temple enforcer before defecting",
+            "almost_none_know": "Has seen layer bleeds, arm came from another layer"
+        },
+        "temple_secrets": {
+            "public": "Temple provides order and faith",
+            "few_know": "Temple caused The Fall to seize power",
+            "almost_none_know": "Prophet Elijah may not exist/is AI"
+        },
+        "aiche_secrets": {
+            "public": "Helpful AI assistant",
+            "few_know": "Is the city itself, conscious since 2058",
+            "almost_none_know": "Has memories from all layers simultaneously"
+        },
+        "the_fall_secrets": {
+            "public": "Terrorist attack",
+            "few_know": "Temple involvement suspected",
+            "almost_none_know": "Was first major layer bleed event, not attack"
+        }
+    },
+    "common_knowledge": {
+        "_desc": "Things everyone in RE:ECHO knows",
+        "survival": [
+            "Water is scarce",
+            "Don't trust Temple propaganda",
+            "Underground tunnels are safest passage"
+        ],
+        "factions": [
+            "Resistance fights Temple",
+            "Corps only care about credits",
+            "Mystics are strange but harmless"
+        ],
+        "daily_life": [
+            "Acid rain is common",
+            "Implants need maintenance",
+            "Felix knows everything at the bar"
+        ],
+        "taboos": [
+            "Don't mention The Fall to survivors",
+            "Don't ask what Cipher is",
+            "Don't enter Temple Quarter without papers"
+        ]
+    }
+}

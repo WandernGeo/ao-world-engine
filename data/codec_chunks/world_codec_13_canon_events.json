@@ -1,0 +1,287 @@
+{
+    "_chunk": {
+        "id": "chunk_13_canon_events",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "canon_events",
+        "prev_chunk": "chunk_12_geospatial",
+        "next_chunk": null
+    },
+    "_meta": {
+        "description": "Official canon story events permanently stored on Arweave",
+        "authority": "Only events signed by canon authorities become official lore",
+        "queryable": true,
+        "anyone_can_query": "Yes - Arweave is public, anyone can pull official story",
+        "immutable": "Once uploaded, canon events cannot be changed"
+    },
+    "canon_event_schema": {
+        "_desc": "Required format for all canon events",
+        "required_fields": {
+            "event_id": "Unique ID (format: CE_YYYYMMDD_XXX)",
+            "tick": "Simulation tick when event occurs",
+            "type": "Event type code from events chunk",
+            "participants": "Array of NPC IDs involved",
+            "location": "Location code where it happens",
+            "description": "Human-readable description",
+            "outcome": "What happened",
+            "consequences": "Effects on world state",
+            "canon_level": "core | major | minor | supplemental",
+            "episode_ref": "Episode/scene reference if from animation"
+        },
+        "arweave_tags": [
+            {
+                "name": "App-Name",
+                "value": "AO-World-Engine"
+            },
+            {
+                "name": "Type",
+                "value": "canon_event"
+            },
+            {
+                "name": "Event-ID",
+                "value": "CE_XXXXXXXX_XXX"
+            },
+            {
+                "name": "Tick",
+                "value": "NUMBER"
+            },
+            {
+                "name": "Canon-Level",
+                "value": "core|major|minor"
+            },
+            {
+                "name": "Participants",
+                "value": "npc1,npc2,npc3"
+            },
+            {
+                "name": "Signed-By",
+                "value": "WALLET_ADDRESS"
+            }
+        ]
+    },
+    "founding_canon_events": {
+        "_desc": "Core story events that define RE:ECHO lore",
+        "CE_20670101_001": {
+            "event_id": "CE_20670101_001",
+            "tick": 0,
+            "type": "EVT_WORLD",
+            "name": "The Fall",
+            "participants": [
+                "all"
+            ],
+            "location": "global",
+            "description": "EMP cascade destroys 80% of global infrastructure",
+            "outcome": "collapse_of_civilization",
+            "consequences": {
+                "deaths": 3000000,
+                "infrastructure_destroyed": 0.8,
+                "power_vacuum": true,
+                "temple_rises": true
+            },
+            "canon_level": "core",
+            "episode_ref": "Prologue"
+        },
+        "CE_20730615_001": {
+            "event_id": "CE_20730615_001",
+            "tick": 52560,
+            "type": "EVT_MEET",
+            "name": "Zero Saves Charlie",
+            "participants": [
+                "zero_chen",
+                "charlie"
+            ],
+            "location": "L028",
+            "description": "Zero Chen loses his right arm saving young Charlie during a Temple raid",
+            "outcome": "bond_formed",
+            "consequences": {
+                "zero_chen": {
+                    "loses_arm": true,
+                    "gains_protege": "charlie"
+                },
+                "charlie": {
+                    "owes_life_debt": "zero_chen",
+                    "joins_resistance": true
+                }
+            },
+            "canon_level": "core",
+            "episode_ref": "S01E01"
+        },
+        "CE_20750312_001": {
+            "event_id": "CE_20750312_001",
+            "tick": 70080,
+            "type": "EVT_MEET",
+            "name": "Charlie Meets Aiche",
+            "participants": [
+                "charlie",
+                "aiche"
+            ],
+            "location": "L052",
+            "description": "Charlie accidentally discovers Aiche's core consciousness at a layer tear",
+            "outcome": "revelation",
+            "consequences": {
+                "charlie": {
+                    "learns_secret": "aiche_is_city",
+                    "trust_with_aiche": 0.6,
+                    "layer_sense_awakening": true
+                },
+                "aiche": {
+                    "reveals_to_human": true,
+                    "secret_shared_count": 1
+                }
+            },
+            "canon_level": "core",
+            "episode_ref": "S01E05",
+            "dialogue_snippet": {
+                "charlie": "What... what are you?",
+                "aiche": "I am the city, Charlie. I have been watching you since you were born."
+            }
+        },
+        "CE_20750415_001": {
+            "event_id": "CE_20750415_001",
+            "tick": 70920,
+            "type": "EVT_MEET",
+            "name": "Kai Vance Joins Charlie",
+            "participants": [
+                "charlie",
+                "kai_vance"
+            ],
+            "location": "L011",
+            "description": "Former military tactician Kai Vance offers to join resistance after Temple kills his family",
+            "outcome": "alliance_formed",
+            "consequences": {
+                "kai_vance": {
+                    "joins_faction": "resistance",
+                    "relationship_with_charlie": {
+                        "type": "ally",
+                        "trust": 0.8
+                    }
+                },
+                "resistance": {
+                    "gains_member": "kai_vance",
+                    "tactical_capability": "+0.3"
+                }
+            },
+            "canon_level": "major",
+            "episode_ref": "S01E07"
+        },
+        "CE_20750520_001": {
+            "event_id": "CE_20750520_001",
+            "tick": 71760,
+            "type": "EVT_FIGHT",
+            "name": "First Temple Confrontation",
+            "participants": [
+                "charlie",
+                "sister_mira"
+            ],
+            "location": "L003",
+            "description": "Charlie infiltrates Temple, confronts Sister Mira, discovers her doubts",
+            "outcome": "standoff",
+            "consequences": {
+                "charlie": {
+                    "wounded": true,
+                    "learns_mira_conflicted": true
+                },
+                "sister_mira": {
+                    "faith_shaken": 0.2,
+                    "lets_charlie_escape": true
+                }
+            },
+            "canon_level": "major",
+            "episode_ref": "S01E10"
+        }
+    },
+    "arweave_query_examples": {
+        "_desc": "How anyone can query canon events from Arweave",
+        "get_all_canon_events": {
+            "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"canon_event\"]}], first: 100) { edges { node { id tags { name value } } } } }"
+        },
+        "get_events_for_npc": {
+            "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"canon_event\"]}, {name: \"Participants\", values: [\"charlie\"]}]) { edges { node { id } } } }"
+        },
+        "get_core_events_only": {
+            "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"canon_event\"]}, {name: \"Canon-Level\", values: [\"core\"]}]) { edges { node { id } } } }"
+        },
+        "get_events_at_location": {
+            "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"canon_event\"]}, {name: \"Location\", values: [\"L011\"]}]) { edges { node { id } } } }"
+        }
+    },
+    "canon_authority": {
+        "_desc": "Who can create official canon",
+        "official_signers": {
+            "studioram_main": {
+                "wallet": "ARWEAVE_WALLET_ADDRESS_HERE",
+                "authority": "core",
+                "can_create": [
+                    "core",
+                    "major",
+                    "minor",
+                    "supplemental"
+                ]
+            },
+            "studioram_writers": {
+                "wallet": "WRITER_WALLET_ADDRESS",
+                "authority": "major",
+                "can_create": [
+                    "major",
+                    "minor",
+                    "supplemental"
+                ]
+            }
+        },
+        "community_canon": {
+            "enabled": true,
+            "canon_level": "community",
+            "requires_votes": 100,
+            "review_by_official": true
+        }
+    },
+    "timeline_integration": {
+        "_desc": "How canon events integrate with simulation",
+        "at_tick_lookup": {
+            "description": "When simulation reaches a tick with canon event, that event MUST happen",
+            "example": "At tick 70080, if charlie is near L052, the Aiche revelation triggers",
+            "override_rng": true
+        },
+        "post_event_state": {
+            "description": "After canon event, NPC states update accordingly",
+            "example": "After CE_20750312_001, charlie.knows('aiche_is_city') = true"
+        }
+    },
+    "event_propagation": {
+        "_desc": "How NPCs learn about events they weren't present for",
+        "gossip_system": {
+            "witnesses_tell": 3,
+            "per_tick": 0.1,
+            "decay": 0.05,
+            "secret_events_spread_slower": true
+        },
+        "example": {
+            "event": "CE_20750312_001 - Charlie meets Aiche",
+            "tick_0": {
+                "knows": [
+                    "charlie",
+                    "aiche"
+                ]
+            },
+            "tick_100": {
+                "knows": [
+                    "charlie",
+                    "aiche",
+                    "felix"
+                ],
+                "felix_knows_limited": true
+            },
+            "tick_500": {
+                "knows": [
+                    "charlie",
+                    "aiche",
+                    "felix",
+                    "pixel"
+                ]
+            },
+            "never_knows": [
+                "temple_members"
+            ]
+        }
+    }
+}

@@ -1,0 +1,405 @@
+{
+    "_chunk": {
+        "id": "chunk_07_events",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "events",
+        "prev_chunk": "chunk_06_skills",
+        "next_chunk": null
+    },
+    "event_templates": {
+        "_desc": "Pre-defined event structures for deterministic generation",
+        "social": {
+            "EVT_MEET": {
+                "code": "EV01",
+                "desc": "Two NPCs meet at a location",
+                "schema": [
+                    "npc_a",
+                    "npc_b",
+                    "location",
+                    "time"
+                ],
+                "outcomes": [
+                    "became_friends",
+                    "neutral",
+                    "tension",
+                    "conflict"
+                ],
+                "triggers": [
+                    "relationship_change",
+                    "gossip",
+                    "info_exchange"
+                ]
+            },
+            "EVT_TRADE": {
+                "code": "EV02",
+                "desc": "NPCs exchange goods or services",
+                "schema": [
+                    "npc_seller",
+                    "npc_buyer",
+                    "item",
+                    "price",
+                    "location"
+                ],
+                "outcomes": [
+                    "fair_deal",
+                    "rip_off",
+                    "haggled",
+                    "refused"
+                ],
+                "triggers": [
+                    "item_transfer",
+                    "credits_transfer",
+                    "rep_change"
+                ]
+            },
+            "EVT_CONVERSATION": {
+                "code": "EV03",
+                "desc": "NPCs discuss a topic",
+                "schema": [
+                    "npc_a",
+                    "npc_b",
+                    "topic",
+                    "location"
+                ],
+                "outcomes": [
+                    "agreement",
+                    "disagreement",
+                    "revelation",
+                    "argument"
+                ],
+                "triggers": [
+                    "info_learned",
+                    "relationship_change",
+                    "secret_revealed"
+                ]
+            }
+        },
+        "combat": {
+            "EVT_FIGHT": {
+                "code": "EV10",
+                "desc": "Physical confrontation between NPCs",
+                "schema": [
+                    "npc_attacker",
+                    "npc_defender",
+                    "location",
+                    "reason"
+                ],
+                "outcomes": [
+                    "attacker_wins",
+                    "defender_wins",
+                    "draw",
+                    "interrupted"
+                ],
+                "triggers": [
+                    "injury",
+                    "reputation",
+                    "grudge",
+                    "arrest"
+                ]
+            },
+            "EVT_AMBUSH": {
+                "code": "EV11",
+                "desc": "Surprise attack",
+                "schema": [
+                    "npc_ambusher",
+                    "npc_victim",
+                    "location"
+                ],
+                "outcomes": [
+                    "success",
+                    "failed",
+                    "mutual_injury"
+                ],
+                "triggers": [
+                    "injury",
+                    "theft",
+                    "death"
+                ]
+            },
+            "EVT_RAID": {
+                "code": "EV12",
+                "desc": "Group assault on location",
+                "schema": [
+                    "faction_attacker",
+                    "location",
+                    "objective"
+                ],
+                "outcomes": [
+                    "success",
+                    "failure",
+                    "pyrrhic"
+                ],
+                "triggers": [
+                    "territory_change",
+                    "casualties",
+                    "loot"
+                ]
+            }
+        },
+        "tech": {
+            "EVT_HACK": {
+                "code": "EV20",
+                "desc": "Attempting to breach a system",
+                "schema": [
+                    "npc_hacker",
+                    "target_system",
+                    "ice_level"
+                ],
+                "outcomes": [
+                    "success",
+                    "partial",
+                    "detected",
+                    "traced",
+                    "fried"
+                ],
+                "triggers": [
+                    "data_obtained",
+                    "alarm",
+                    "injury",
+                    "credits"
+                ]
+            },
+            "EVT_INSTALL": {
+                "code": "EV21",
+                "desc": "Installing cybernetics",
+                "schema": [
+                    "npc_doc",
+                    "npc_patient",
+                    "implant"
+                ],
+                "outcomes": [
+                    "success",
+                    "complications",
+                    "rejection"
+                ],
+                "triggers": [
+                    "cyberware_gained",
+                    "injury",
+                    "humanity_loss"
+                ]
+            },
+            "EVT_REPAIR": {
+                "code": "EV22",
+                "desc": "Fixing equipment or implants",
+                "schema": [
+                    "npc_tech",
+                    "item_or_implant"
+                ],
+                "outcomes": [
+                    "fixed",
+                    "partial",
+                    "worse"
+                ],
+                "triggers": [
+                    "item_restored",
+                    "item_lost"
+                ]
+            }
+        },
+        "medical": {
+            "EVT_HEAL": {
+                "code": "EV30",
+                "desc": "Medical treatment",
+                "schema": [
+                    "npc_healer",
+                    "npc_patient",
+                    "condition"
+                ],
+                "outcomes": [
+                    "healed",
+                    "stabilized",
+                    "no_effect",
+                    "worsened"
+                ],
+                "triggers": [
+                    "condition_change",
+                    "cost",
+                    "gratitude"
+                ]
+            },
+            "EVT_OVERDOSE": {
+                "code": "EV31",
+                "desc": "Drug overdose event",
+                "schema": [
+                    "npc_victim",
+                    "drug",
+                    "severity"
+                ],
+                "outcomes": [
+                    "survived",
+                    "hospitalized",
+                    "coma",
+                    "death"
+                ],
+                "triggers": [
+                    "injury",
+                    "addiction_up",
+                    "death"
+                ]
+            }
+        },
+        "mystic": {
+            "EVT_BLEED": {
+                "code": "EV40",
+                "desc": "Layer bleed event",
+                "schema": [
+                    "location",
+                    "severity",
+                    "witnesses"
+                ],
+                "outcomes": [
+                    "minor_glimpse",
+                    "major_vision",
+                    "lasting_effect"
+                ],
+                "triggers": [
+                    "layer_sense_xp",
+                    "sanity_check",
+                    "prophecy"
+                ]
+            },
+            "EVT_VISION": {
+                "code": "EV41",
+                "desc": "Prophetic vision",
+                "schema": [
+                    "npc_mystic",
+                    "vision_content"
+                ],
+                "outcomes": [
+                    "clear",
+                    "cryptic",
+                    "overwhelming"
+                ],
+                "triggers": [
+                    "info_learned",
+                    "quest_hook",
+                    "madness"
+                ]
+            }
+        },
+        "world": {
+            "EVT_WEATHER": {
+                "code": "EV50",
+                "desc": "Weather change",
+                "schema": [
+                    "from_weather",
+                    "to_weather",
+                    "duration"
+                ],
+                "outcomes": [
+                    "transition"
+                ],
+                "triggers": [
+                    "environment_change"
+                ]
+            },
+            "EVT_FACTION": {
+                "code": "EV51",
+                "desc": "Faction-level event",
+                "schema": [
+                    "faction",
+                    "event_type"
+                ],
+                "outcomes": [
+                    "power_shift",
+                    "alliance",
+                    "conflict"
+                ],
+                "triggers": [
+                    "territory_change",
+                    "reputation_change"
+                ]
+            }
+        }
+    },
+    "event_generation": {
+        "_desc": "How to generate events from seeds",
+        "algorithm": {
+            "step1": "seed = hash(npc_id + tick)",
+            "step2": "event_type = seed % num_event_types",
+            "step3": "parameters = extract_from_seed(event_schema)",
+            "step4": "outcome = seed >> 24 % num_outcomes",
+            "step5": "store_event(npc_id, tick, event_full)"
+        },
+        "probability_per_tick": {
+            "social": 0.03,
+            "combat": 0.01,
+            "tech": 0.02,
+            "medical": 0.005,
+            "mystic": 0.001,
+            "world": 0.01
+        },
+        "sample_generation": {
+            "input": "hash('charlie_100_event')",
+            "seed": "0xA3F2B1C4E5D6...",
+            "event_type_bits": "0-7 → 15 → EVT_MEET",
+            "npc_b_bits": "8-15 → 4 → felix",
+            "location_bits": "16-23 → 11 → neon_bar",
+            "outcome_bits": "24-31 → 0 → became_friends",
+            "result": "Charlie met Felix at Neon Bar, became_friends"
+        }
+    },
+    "quest_hooks": {
+        "_desc": "Events that can spawn quests",
+        "types": {
+            "fetch": {
+                "desc": "Retrieve an item",
+                "events": [
+                    "EV02"
+                ]
+            },
+            "kill": {
+                "desc": "Eliminate a target",
+                "events": [
+                    "EV10",
+                    "EV11"
+                ]
+            },
+            "rescue": {
+                "desc": "Save someone",
+                "events": [
+                    "EV30",
+                    "EV12"
+                ]
+            },
+            "investigate": {
+                "desc": "Discover information",
+                "events": [
+                    "EV20",
+                    "EV03"
+                ]
+            },
+            "escort": {
+                "desc": "Protect during travel",
+                "events": [
+                    "EV10"
+                ]
+            },
+            "sabotage": {
+                "desc": "Destroy or disrupt",
+                "events": [
+                    "EV20",
+                    "EV12"
+                ]
+            }
+        }
+    },
+    "consequences": {
+        "_desc": "Long-term effects of events",
+        "relationship_changes": {
+            "positive_interaction": "+0.1 trust",
+            "helped_in_need": "+0.2 trust",
+            "saved_life": "+0.4 trust",
+            "negative_interaction": "-0.1 trust",
+            "betrayal": "-0.5 trust",
+            "attack": "-0.3 trust"
+        },
+        "reputation_changes": {
+            "completed_job": "+10 rep with employer",
+            "failed_job": "-15 rep with employer",
+            "killed_faction_member": "-50 rep with faction",
+            "helped_faction": "+20 rep with faction"
+        }
+    }
+}

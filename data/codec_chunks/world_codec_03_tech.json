@@ -1,0 +1,722 @@
+{
+    "_chunk": {
+        "id": "chunk_03_tech",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "tech",
+        "prev_chunk": "chunk_02_medical",
+        "next_chunk": "chunk_04_chemistry"
+    },
+    "cybernetics": {
+        "_desc": "Body modification implants (100 unique)",
+        "_encoding": "CY### where ### is 001-100",
+        "neural": {
+            "CY001": {
+                "n": "neural_link_basic",
+                "slot": "brain",
+                "tier": 1,
+                "cost": 5000,
+                "humanity_cost": 5,
+                "effect": "Basic brain-computer interface"
+            },
+            "CY002": {
+                "n": "neural_link_advanced",
+                "slot": "brain",
+                "tier": 3,
+                "cost": 25000,
+                "humanity_cost": 15,
+                "effect": "High-bandwidth neural interface"
+            },
+            "CY003": {
+                "n": "memory_chip",
+                "slot": "brain",
+                "tier": 2,
+                "cost": 8000,
+                "humanity_cost": 8,
+                "effect": "+50% memory capacity"
+            },
+            "CY004": {
+                "n": "reflex_booster",
+                "slot": "spine",
+                "tier": 2,
+                "cost": 12000,
+                "humanity_cost": 10,
+                "effect": "+20% reaction speed"
+            },
+            "CY005": {
+                "n": "kerenzikov_system",
+                "slot": "spine",
+                "tier": 4,
+                "cost": 50000,
+                "humanity_cost": 20,
+                "effect": "Bullet-time reflexes"
+            },
+            "CY006": {
+                "n": "sandevistan",
+                "slot": "spine",
+                "tier": 5,
+                "cost": 100000,
+                "humanity_cost": 30,
+                "effect": "Extreme time dilation"
+            },
+            "CY007": {
+                "n": "pain_editor",
+                "slot": "brain",
+                "tier": 2,
+                "cost": 15000,
+                "humanity_cost": 12,
+                "effect": "Toggle pain sensation"
+            },
+            "CY008": {
+                "n": "braindance_recorder",
+                "slot": "brain",
+                "tier": 3,
+                "cost": 20000,
+                "humanity_cost": 10,
+                "effect": "Record experiences"
+            },
+            "CY009": {
+                "n": "skill_chip_slot",
+                "slot": "brain",
+                "tier": 2,
+                "cost": 10000,
+                "humanity_cost": 8,
+                "effect": "Slot for skill chips"
+            },
+            "CY010": {
+                "n": "hacking_suite",
+                "slot": "brain",
+                "tier": 3,
+                "cost": 35000,
+                "humanity_cost": 15,
+                "effect": "Built-in hacking tools"
+            }
+        },
+        "optics": {
+            "CY011": {
+                "n": "cybereyes_basic",
+                "slot": "eyes",
+                "tier": 1,
+                "cost": 3000,
+                "humanity_cost": 5,
+                "effect": "Digital vision, low-light"
+            },
+            "CY012": {
+                "n": "cybereyes_kiroshi",
+                "slot": "eyes",
+                "tier": 3,
+                "cost": 25000,
+                "humanity_cost": 12,
+                "effect": "Zoom, threat detection, recording"
+            },
+            "CY013": {
+                "n": "thermal_vision",
+                "slot": "eyes",
+                "tier": 2,
+                "cost": 8000,
+                "humanity_cost": 6,
+                "effect": "See heat signatures"
+            },
+            "CY014": {
+                "n": "infrared_vision",
+                "slot": "eyes",
+                "tier": 2,
+                "cost": 7000,
+                "humanity_cost": 6,
+                "effect": "Night vision"
+            },
+            "CY015": {
+                "n": "tactical_hud",
+                "slot": "eyes",
+                "tier": 2,
+                "cost": 10000,
+                "humanity_cost": 8,
+                "effect": "Combat overlay"
+            },
+            "CY016": {
+                "n": "scan_module",
+                "slot": "eyes",
+                "tier": 3,
+                "cost": 18000,
+                "humanity_cost": 10,
+                "effect": "Analyze objects/people"
+            },
+            "CY017": {
+                "n": "holographic_monocle",
+                "slot": "eye_r",
+                "tier": 2,
+                "cost": 12000,
+                "humanity_cost": 5,
+                "effect": "AR display, data overlay"
+            },
+            "CY018": {
+                "n": "recording_eye",
+                "slot": "eyes",
+                "tier": 2,
+                "cost": 8000,
+                "humanity_cost": 6,
+                "effect": "Always-on recording"
+            }
+        },
+        "audio": {
+            "CY019": {
+                "n": "cyberears_basic",
+                "slot": "ears",
+                "tier": 1,
+                "cost": 2500,
+                "humanity_cost": 4,
+                "effect": "Enhanced hearing range"
+            },
+            "CY020": {
+                "n": "audio_amplifier",
+                "slot": "ears",
+                "tier": 2,
+                "cost": 6000,
+                "humanity_cost": 5,
+                "effect": "Hear whispers at distance"
+            },
+            "CY021": {
+                "n": "frequency_filter",
+                "slot": "ears",
+                "tier": 2,
+                "cost": 5000,
+                "humanity_cost": 4,
+                "effect": "Block specific sounds"
+            },
+            "CY022": {
+                "n": "comm_link",
+                "slot": "ears",
+                "tier": 1,
+                "cost": 2000,
+                "humanity_cost": 3,
+                "effect": "Built-in radio"
+            },
+            "CY023": {
+                "n": "sonar_implant",
+                "slot": "ears",
+                "tier": 3,
+                "cost": 15000,
+                "humanity_cost": 8,
+                "effect": "Echolocation"
+            },
+            "CY024": {
+                "n": "lie_detector",
+                "slot": "ears",
+                "tier": 3,
+                "cost": 20000,
+                "humanity_cost": 10,
+                "effect": "Analyze voice stress"
+            }
+        },
+        "limbs": {
+            "CY025": {
+                "n": "cyberarm_basic",
+                "slot": "arm",
+                "tier": 1,
+                "cost": 8000,
+                "humanity_cost": 10,
+                "effect": "Replacement arm"
+            },
+            "CY026": {
+                "n": "cyberarm_gorilla",
+                "slot": "arm",
+                "tier": 3,
+                "cost": 35000,
+                "humanity_cost": 20,
+                "effect": "+100% strength"
+            },
+            "CY027": {
+                "n": "cyberarm_mantis",
+                "slot": "arm",
+                "tier": 4,
+                "cost": 60000,
+                "humanity_cost": 25,
+                "effect": "Retractable blades"
+            },
+            "CY028": {
+                "n": "cyberarm_holographic",
+                "slot": "arm",
+                "tier": 3,
+                "cost": 40000,
+                "humanity_cost": 15,
+                "effect": "Translucent tech aesthetic"
+            },
+            "CY029": {
+                "n": "hand_blade",
+                "slot": "hand",
+                "tier": 2,
+                "cost": 12000,
+                "humanity_cost": 8,
+                "effect": "Pop-out blade"
+            },
+            "CY030": {
+                "n": "grapple_hand",
+                "slot": "hand",
+                "tier": 2,
+                "cost": 10000,
+                "humanity_cost": 6,
+                "effect": "Launch grappling line"
+            },
+            "CY031": {
+                "n": "cyberleg_basic",
+                "slot": "leg",
+                "tier": 1,
+                "cost": 7000,
+                "humanity_cost": 8,
+                "effect": "Replacement leg"
+            },
+            "CY032": {
+                "n": "cyberleg_reinforced",
+                "slot": "leg",
+                "tier": 2,
+                "cost": 15000,
+                "humanity_cost": 12,
+                "effect": "Jump boost, kicks harder"
+            },
+            "CY033": {
+                "n": "cyberleg_silent",
+                "slot": "leg",
+                "tier": 3,
+                "cost": 25000,
+                "humanity_cost": 15,
+                "effect": "Near-silent movement"
+            }
+        },
+        "dermal": {
+            "CY034": {
+                "n": "subdermal_armor",
+                "slot": "skin",
+                "tier": 2,
+                "cost": 15000,
+                "humanity_cost": 15,
+                "effect": "Built-in armor plating"
+            },
+            "CY035": {
+                "n": "camo_skin",
+                "slot": "skin",
+                "tier": 4,
+                "cost": 80000,
+                "humanity_cost": 25,
+                "effect": "Optical camouflage"
+            },
+            "CY036": {
+                "n": "heat_dispersal",
+                "slot": "skin",
+                "tier": 2,
+                "cost": 12000,
+                "humanity_cost": 8,
+                "effect": "Mask thermal signature"
+            },
+            "CY037": {
+                "n": "fireproof_coating",
+                "slot": "skin",
+                "tier": 2,
+                "cost": 10000,
+                "humanity_cost": 6,
+                "effect": "Resist burns"
+            },
+            "CY038": {
+                "n": "toxin_binder",
+                "slot": "blood",
+                "tier": 2,
+                "cost": 8000,
+                "humanity_cost": 5,
+                "effect": "Resist poisons"
+            }
+        },
+        "internal": {
+            "CY039": {
+                "n": "blood_pump",
+                "slot": "heart",
+                "tier": 2,
+                "cost": 18000,
+                "humanity_cost": 12,
+                "effect": "+stamina, faster healing"
+            },
+            "CY040": {
+                "n": "second_heart",
+                "slot": "torso",
+                "tier": 4,
+                "cost": 75000,
+                "humanity_cost": 25,
+                "effect": "Survive lethal damage once"
+            },
+            "CY041": {
+                "n": "syn_lungs",
+                "slot": "lungs",
+                "tier": 2,
+                "cost": 12000,
+                "humanity_cost": 8,
+                "effect": "Filter toxins, hold breath"
+            },
+            "CY042": {
+                "n": "titanium_spine",
+                "slot": "spine",
+                "tier": 3,
+                "cost": 30000,
+                "humanity_cost": 15,
+                "effect": "Unbreakable backbone"
+            },
+            "CY043": {
+                "n": "adrenaline_pump",
+                "slot": "adrenal",
+                "tier": 3,
+                "cost": 25000,
+                "humanity_cost": 12,
+                "effect": "Controlled adrenaline surge"
+            }
+        }
+    },
+    "hacking": {
+        "_desc": "Netrunning and hacking systems (50 unique)",
+        "_encoding": "HK### where ### is 001-050",
+        "quickhacks": {
+            "HK001": {
+                "n": "ping",
+                "type": "recon",
+                "difficulty": 1,
+                "ram_cost": 1,
+                "effect": "Reveal connected devices"
+            },
+            "HK002": {
+                "n": "short_circuit",
+                "type": "damage",
+                "difficulty": 2,
+                "ram_cost": 4,
+                "effect": "Electrical damage to target"
+            },
+            "HK003": {
+                "n": "overheat",
+                "type": "damage",
+                "difficulty": 2,
+                "ram_cost": 5,
+                "effect": "Target catches fire"
+            },
+            "HK004": {
+                "n": "cyberpsychosis",
+                "type": "control",
+                "difficulty": 5,
+                "ram_cost": 12,
+                "effect": "Target attacks allies"
+            },
+            "HK005": {
+                "n": "suicide",
+                "type": "ultimate",
+                "difficulty": 6,
+                "ram_cost": 16,
+                "effect": "Target eliminates self"
+            },
+            "HK006": {
+                "n": "system_reset",
+                "type": "control",
+                "difficulty": 4,
+                "ram_cost": 10,
+                "effect": "Disable all cyberware"
+            },
+            "HK007": {
+                "n": "weapon_glitch",
+                "type": "control",
+                "difficulty": 2,
+                "ram_cost": 4,
+                "effect": "Jam target's weapon"
+            },
+            "HK008": {
+                "n": "blind",
+                "type": "control",
+                "difficulty": 2,
+                "ram_cost": 5,
+                "effect": "Disable optics"
+            },
+            "HK009": {
+                "n": "deafen",
+                "type": "control",
+                "difficulty": 2,
+                "ram_cost": 4,
+                "effect": "Disable audio"
+            },
+            "HK010": {
+                "n": "memory_wipe",
+                "type": "stealth",
+                "difficulty": 3,
+                "ram_cost": 8,
+                "effect": "Target forgets last minute"
+            },
+            "HK011": {
+                "n": "whistle",
+                "type": "distract",
+                "difficulty": 1,
+                "ram_cost": 2,
+                "effect": "Lure target to location"
+            },
+            "HK012": {
+                "n": "contagion",
+                "type": "damage",
+                "difficulty": 3,
+                "ram_cost": 6,
+                "effect": "Spreads to nearby targets"
+            }
+        },
+        "breach_protocols": {
+            "HK013": {
+                "n": "ice_pick",
+                "type": "breach",
+                "difficulty": 2,
+                "effect": "Lower ICE by 1 tier"
+            },
+            "HK014": {
+                "n": "mass_vulnerability",
+                "type": "breach",
+                "difficulty": 3,
+                "effect": "All quickhacks cost less"
+            },
+            "HK015": {
+                "n": "datamine_v1",
+                "type": "breach",
+                "difficulty": 1,
+                "effect": "Extract 1000 credits"
+            },
+            "HK016": {
+                "n": "datamine_v2",
+                "type": "breach",
+                "difficulty": 2,
+                "effect": "Extract 5000 credits"
+            },
+            "HK017": {
+                "n": "datamine_v3",
+                "type": "breach",
+                "difficulty": 3,
+                "effect": "Extract 10000 credits + data"
+            },
+            "HK018": {
+                "n": "daemon_upload",
+                "type": "breach",
+                "difficulty": 4,
+                "effect": "Install persistent backdoor"
+            }
+        },
+        "ice_types": {
+            "HK019": {
+                "n": "ice_white",
+                "tier": 1,
+                "desc": "Basic protection, easily bypassed"
+            },
+            "HK020": {
+                "n": "ice_gray",
+                "tier": 2,
+                "desc": "Standard corporate protection"
+            },
+            "HK021": {
+                "n": "ice_black",
+                "tier": 4,
+                "desc": "Lethal countermeasures, causes brain damage"
+            },
+            "HK022": {
+                "n": "ice_red",
+                "tier": 3,
+                "desc": "Traces attacker, alerts security"
+            },
+            "HK023": {
+                "n": "ice_gold",
+                "tier": 5,
+                "desc": "Temple-grade, extremely dangerous"
+            }
+        },
+        "systems": {
+            "HK024": {
+                "n": "camera_network",
+                "type": "surveillance",
+                "difficulty": 2,
+                "effect": "Access all cameras"
+            },
+            "HK025": {
+                "n": "turret_control",
+                "type": "weapon",
+                "difficulty": 3,
+                "effect": "Control automated turrets"
+            },
+            "HK026": {
+                "n": "door_control",
+                "type": "access",
+                "difficulty": 1,
+                "effect": "Open/lock doors"
+            },
+            "HK027": {
+                "n": "alarm_system",
+                "type": "security",
+                "difficulty": 2,
+                "effect": "Trigger or silence alarms"
+            },
+            "HK028": {
+                "n": "comm_intercept",
+                "type": "surveillance",
+                "difficulty": 2,
+                "effect": "Listen to communications"
+            },
+            "HK029": {
+                "n": "vehicle_control",
+                "type": "control",
+                "difficulty": 3,
+                "effect": "Remote control vehicles"
+            },
+            "HK030": {
+                "n": "power_grid",
+                "type": "infrastructure",
+                "difficulty": 4,
+                "effect": "Control power to areas"
+            }
+        }
+    },
+    "electronics": {
+        "_desc": "Electronic systems and devices (50 unique)",
+        "_encoding": "EL### where ### is 001-050",
+        "computing": {
+            "EL001": {
+                "n": "personal_terminal",
+                "tier": 1,
+                "desc": "Basic computer access"
+            },
+            "EL002": {
+                "n": "corporate_terminal",
+                "tier": 2,
+                "desc": "Encrypted corp access"
+            },
+            "EL003": {
+                "n": "black_terminal",
+                "tier": 4,
+                "desc": "Untraceable hacking station"
+            },
+            "EL004": {
+                "n": "server_rack",
+                "tier": 3,
+                "desc": "Data storage/processing"
+            },
+            "EL005": {
+                "n": "quantum_core",
+                "tier": 5,
+                "desc": "Extreme processing power"
+            },
+            "EL006": {
+                "n": "ai_core",
+                "tier": 5,
+                "desc": "Artificial intelligence housing"
+            }
+        },
+        "security": {
+            "EL007": {
+                "n": "camera_standard",
+                "tier": 1,
+                "desc": "Basic surveillance"
+            },
+            "EL008": {
+                "n": "camera_thermal",
+                "tier": 2,
+                "desc": "Heat detection camera"
+            },
+            "EL009": {
+                "n": "motion_sensor",
+                "tier": 1,
+                "desc": "Movement detection"
+            },
+            "EL010": {
+                "n": "pressure_plate",
+                "tier": 1,
+                "desc": "Weight-based trigger"
+            },
+            "EL011": {
+                "n": "laser_grid",
+                "tier": 3,
+                "desc": "Visible/invisible beams"
+            },
+            "EL012": {
+                "n": "biometric_lock",
+                "tier": 2,
+                "desc": "Fingerprint/retina/voice"
+            },
+            "EL013": {
+                "n": "keycard_reader",
+                "tier": 1,
+                "desc": "Card-based access"
+            },
+            "EL014": {
+                "n": "turret_auto",
+                "tier": 3,
+                "desc": "Automated weapon platform"
+            },
+            "EL015": {
+                "n": "drone_security",
+                "tier": 3,
+                "desc": "Patrol drone"
+            }
+        },
+        "communication": {
+            "EL016": {
+                "n": "radio_basic",
+                "tier": 1,
+                "desc": "Short-range voice"
+            },
+            "EL017": {
+                "n": "radio_encrypted",
+                "tier": 2,
+                "desc": "Secure communication"
+            },
+            "EL018": {
+                "n": "jammer",
+                "tier": 2,
+                "desc": "Block local signals"
+            },
+            "EL019": {
+                "n": "signal_booster",
+                "tier": 1,
+                "desc": "Extend range"
+            },
+            "EL020": {
+                "n": "satellite_uplink",
+                "tier": 4,
+                "desc": "Global communication"
+            }
+        }
+    },
+    "tech_npcs": {
+        "_desc": "NPCs with tech knowledge/roles",
+        "pixel": {
+            "skill": 6,
+            "specialty": "hacking",
+            "faction": "Resistance",
+            "services": [
+                "hack",
+                "decrypt",
+                "install"
+            ]
+        },
+        "cipher": {
+            "skill": 7,
+            "specialty": "netrunning",
+            "faction": "Unknown",
+            "services": [
+                "data",
+                "secrets",
+                "traces"
+            ]
+        },
+        "kai_vance": {
+            "skill": 5,
+            "specialty": "systems",
+            "faction": "Resistance",
+            "services": [
+                "analysis",
+                "planning",
+                "intel"
+            ]
+        },
+        "aiche": {
+            "skill": 8,
+            "specialty": "AI",
+            "faction": "Neutral",
+            "services": [
+                "processing",
+                "prediction",
+                "network"
+            ]
+        }
+    }
+}

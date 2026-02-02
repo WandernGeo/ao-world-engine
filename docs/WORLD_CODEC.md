@@ -1,172 +1,136 @@
 # World Codec System
 
-> Deterministic knowledge dictionary for RE:ECHO City simulation
+The World Codec is a comprehensive, chunked knowledge system for deterministic world simulation.
 
 ## Overview
 
-The World Codec is a compressed encoding system that allows the simulation to:
-1. **Store all world knowledge** in ~15KB (under Arweave free tier)
-2. **Generate deterministic events** from tick seeds
-3. **Reveal NPC memories** without storing actual event logs
+The codec consists of **14 JSON chunks** (~312KB total) that define:
+- Actions, objects, and locations
+- NPCs with relationships and reaction matrices
+- Medical, tech, chemistry systems
+- Skills, events, and lore
+- Multilingual support
+- Geospatial coordinates (NYC/Brooklyn)
+- Canon events for permanent story
 
-## Core Concept
+## Chunk Structure
+
+| Chunk | Size | Contents |
+|-------|------|----------|
+| 00_core | 28KB | 200 actions, 200 objects, 55 locations |
+| 01_npcs | 32KB | 12 NPCs, relationships, reaction matrix |
+| 02_medical | 28KB | 60 conditions, 30 treatments, 30 drugs |
+| 03_tech | 24KB | 43 cybernetics, 30 hacking skills |
+| 04_chemistry | 12KB | Compounds, crafting, drug synthesis |
+| 05_lore | 12KB | History, factions, layer mythology |
+| 06_skills | 20KB | 26 skills with progression |
+| 07_events | 12KB | Event templates, quest hooks |
+| 08_infrastructure | 36KB | Power, solar, 80 sensors, HVAC |
+| 09_verbs | 16KB | 500 action verbs |
+| 10_objects | 24KB | 572 objects |
+| 11_languages | 16KB | Multilingual + custom language slots |
+| 12_geospatial | 8KB | PostGIS coords (NYC/Brooklyn) |
+| 13_canon_events | 12KB | Official story events |
+
+## How Writers Avoid Contradictions
+
+The system prevents contradictions through:
+
+1. **Immutable Canon Events** - Once uploaded to Arweave, canon events cannot be changed
+2. **Tick-based Timeline** - Every event has a specific tick, ordering is deterministic
+3. **Automatic Propagation** - When a canon event is added, all NPCs learn about it through the gossip system
+4. **Schema Enforcement** - New content must follow the defined schemas
+
+## How NPCs Learn About New Characters
+
+When a new character (e.g., "Ghost") is introduced:
 
 ```
-The universe is pre-baked. We don't COMPUTE events - we REVEAL them.
+1. New Character Defined:
+   Ghost = {archetype: "hacker", traits: ["temple_tattoo", "cybernetics"]}
 
-hash("charlie_tick_50_event") → 0xA3F2B1C4...
-                                    ↓
-                              Decode bits:
-                              Action = bits[0:6] % 60  → "meet"
-                              Target = bits[8:16] % 12 → "aiche"  
-                              Location = bits[16:24] % 30 → "alley"
+2. Canon Event Created:
+   "Charlie meets Ghost at tick 80000 in Neon Bar"
+
+3. System Calculates Reaction:
+   - Charlie's archetype_defaults[hacker] = trust 0.5
+   - trait_modifier[temple_tattoo] = -0.3
+   - trait_modifier[cybernetics] = +0.05
+   - Final: trust 0.25, stance: suspicious
+
+4. Event Stored on Arweave:
+   Anyone querying "Charlie's relationships" now sees Ghost
 ```
 
-## File Structure
-
-```
-data/
-├── world_codec.json    # Knowledge dictionary (~15KB)
-├── event_engine.py     # Deterministic event generator
-└── founding_npcs.py    # Character profiles
-```
-
-## Codec Categories
-
-| Category | Codes | Example |
-|----------|-------|---------|
-| Actions | A01-A60 | A01 = "meet", A03 = "fight" |
-| Objects | O01-O100 | O11 = "datapad", O26 = "pistol" |
-| Locations | L01-L30 | L01 = "neon_bar", L08 = "alley" |
-| NPCs | C01-C12 | C01 = "charlie", C09 = "aiche" |
-| Cybernetics | Y01-Y40 | Y02 = "holographic_arm" |
-| Medical | M01-M40 | M01 = "injured", M27 = "painkiller" |
-| Electronics | E01-E30 | E11 = "breach", E22 = "virus" |
-
-## How Events Are Generated
+## Usage
 
 ```python
-from data.event_engine import get_events_before_tick
+from codec_chunks.chunk_loader import get_codec
 
-# Get what Charlie remembers at tick 100
-events = get_events_before_tick("charlie", 100)
+codec = get_codec()
 
-# Returns deterministic events like:
-# [
-#   {"tick": 45, "action": "meet", "target": "aiche", "location": "alley"},
-#   {"tick": 72, "action": "trade", "target": "felix", "location": "neon_bar"}
-# ]
+# Decode any code
+action = codec.decode_action("A086")  # → "hack"
+location = codec.decode_location("L011")  # → "Felix's Neon Bar"
+
+# Get NPC with relationships
+charlie = codec.get_npc("charlie")
+relationship = codec.get_npc_relationship("charlie", "felix")
+
+# Calculate reaction to new character
+reaction = codec.calculate_reaction("charlie", new_character_traits)
 ```
 
-## Event Probability
+## Arweave Integration
 
-```python
-def does_event_occur(npc_id: str, tick: int) -> bool:
-    seed = hash(f"{npc_id}_event_check_{tick}")
-    return (seed % 1000) < 50  # 5% chance per tick
+Each chunk can be uploaded separately:
+
+```bash
+# Upload with proper tags
+arweave deploy world_codec_00_core.json \
+  --tag App-Name "AO-World-Engine" \
+  --tag Type "world_codec_chunk" \
+  --tag Chunk-ID "chunk_00_core"
 ```
 
-- **5% event probability** per tick
-- ~500 ticks scanned = ~25 memorable events per NPC
-- Same seed → same events every time
-
-## Memory Context for LLM
-
-```python
-def get_npc_memory_context(npc_id: str, tick: int) -> str:
-    """Generate natural language memories for LLM prompt."""
-    events = get_events_before_tick(npc_id, tick, max_events=5)
-    
-    # Returns:
-    # "Recent memories:
-    #  - 55 ticks ago: Met Aiche at alley
-    #  - 28 ticks ago: Traded with Felix at neon bar"
-```
-
-## Relationship System
-
-```python
-def get_relationship_at_tick(npc_a: str, npc_b: str, tick: int) -> dict:
-    # Deterministic relationship based on:
-    # 1. Base seed (relationship type)
-    # 2. Number of shared events (trust level)
-    
-    return {
-        "type": "ally",      # From codec R01-R16
-        "trust": 0.75,       # 0.0-1.0 based on interactions
-        "met_count": 3,      # Deterministic meeting count
-        "since_tick": 12     # When relationship started
-    }
-```
-
-## Event Encoding
-
-Compact format for storage:
-```
-A01-C09-L08-T00050
- │    │    │    │
- │    │    │    └── Tick 50
- │    │    └─────── Location: alley
- │    └──────────── Target: aiche
- └───────────────── Action: meet
-
-Decoded: "Charlie met Aiche in alley at tick 50"
-```
-
-## Integration with NPC Chat
-
-```python
-# In npc_chat.py
-from data.event_engine import get_npc_memory_context
-
-@app.route("/api/npc/chat", methods=["POST"])
-def chat():
-    npc_id = request.json["npc_id"]
-    tick = request.json["tick"]
-    
-    # Get deterministic memories
-    memories = get_npc_memory_context(npc_id, tick)
-    
-    # Include in LLM prompt
-    prompt = f"""
-    You are {npc_name}...
-    
-    {memories}
-    
-    User says: {message}
-    """
-```
-
-## Why This Works
-
-1. **Deterministic**: Same tick always produces same events
-2. **Compact**: All knowledge in ~15KB JSON
-3. **Permanent**: Codec stored on Arweave
-4. **Scalable**: No event logs needed - events are computed on demand
-5. **Consistent**: All clients see the same world state
-
-## On Arweave
-
-```
-world_codec.json  → TX: [transaction_id]
-├── actions (60)
-├── objects (100)
-├── locations (30)
-├── npcs (12+)
-├── cybernetics (40)
-├── medical (40)
-├── electronics (30)
-└── event_templates
-```
-
-Query via GraphQL:
+Query all chunks:
 ```graphql
 {
   transactions(tags: [
     {name: "App-Name", values: ["AO-World-Engine"]},
-    {name: "Type", values: ["world_codec"]}
+    {name: "Type", values: ["world_codec_chunk"]}
   ]) {
     edges { node { id } }
   }
+}
+```
+
+## Extending the Codec
+
+### Adding a New Language
+
+```json
+{
+  "code": "klingon",
+  "type": "fictional",
+  "script": "custom_pIqaD",
+  "vocabulary_chunk": "TX_ID_HERE"
+}
+```
+
+### Adding a New NPC
+
+New NPCs automatically work with existing NPCs through the reaction matrix - no need to update existing characters.
+
+### Adding Canon Events
+
+```json
+{
+  "event_id": "CE_20760101_001",
+  "tick": 85000,
+  "type": "EVT_MEET",
+  "participants": ["charlie", "ghost"],
+  "location": "L011",
+  "outcome": "tension"
 }
 ```

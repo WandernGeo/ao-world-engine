@@ -1,0 +1,952 @@
+{
+    "_chunk": {
+        "id": "chunk_02_medical",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "medical",
+        "prev_chunk": "chunk_01_npcs",
+        "next_chunk": "chunk_03_tech"
+    },
+    "conditions": {
+        "_desc": "Medical conditions and injuries (100 unique)",
+        "_encoding": "MC### where ### is 001-100",
+        "trauma": {
+            "MC001": {
+                "n": "bruise_minor",
+                "severity": 1,
+                "heals_in": 2,
+                "desc": "Light contusion, cosmetic"
+            },
+            "MC002": {
+                "n": "bruise_major",
+                "severity": 2,
+                "heals_in": 5,
+                "desc": "Deep tissue damage, painful"
+            },
+            "MC003": {
+                "n": "laceration_minor",
+                "severity": 2,
+                "heals_in": 3,
+                "desc": "Surface cut, bleeding controlled"
+            },
+            "MC004": {
+                "n": "laceration_major",
+                "severity": 4,
+                "heals_in": 10,
+                "desc": "Deep cut requiring stitches"
+            },
+            "MC005": {
+                "n": "puncture_wound",
+                "severity": 4,
+                "heals_in": 12,
+                "desc": "Penetrating injury, infection risk"
+            },
+            "MC006": {
+                "n": "gunshot_graze",
+                "severity": 3,
+                "heals_in": 7,
+                "desc": "Bullet grazed skin"
+            },
+            "MC007": {
+                "n": "gunshot_through",
+                "severity": 6,
+                "heals_in": 30,
+                "desc": "Clean through-and-through"
+            },
+            "MC008": {
+                "n": "gunshot_lodged",
+                "severity": 7,
+                "heals_in": 45,
+                "desc": "Bullet lodged, requires surgery"
+            },
+            "MC009": {
+                "n": "fracture_hairline",
+                "severity": 3,
+                "heals_in": 20,
+                "desc": "Small crack in bone"
+            },
+            "MC010": {
+                "n": "fracture_complete",
+                "severity": 5,
+                "heals_in": 60,
+                "desc": "Bone fully broken"
+            },
+            "MC011": {
+                "n": "fracture_compound",
+                "severity": 7,
+                "heals_in": 90,
+                "desc": "Bone pierced skin"
+            },
+            "MC012": {
+                "n": "concussion_mild",
+                "severity": 3,
+                "heals_in": 5,
+                "desc": "Light head trauma"
+            },
+            "MC013": {
+                "n": "concussion_severe",
+                "severity": 6,
+                "heals_in": 21,
+                "desc": "Serious brain impact"
+            },
+            "MC014": {
+                "n": "internal_bleeding",
+                "severity": 8,
+                "heals_in": 30,
+                "desc": "Bleeding in body cavity, critical"
+            },
+            "MC015": {
+                "n": "organ_damage",
+                "severity": 8,
+                "heals_in": 60,
+                "desc": "Internal organ injured"
+            }
+        },
+        "burns": {
+            "MC016": {
+                "n": "burn_first_degree",
+                "severity": 2,
+                "heals_in": 7,
+                "desc": "Surface burn, red skin"
+            },
+            "MC017": {
+                "n": "burn_second_degree",
+                "severity": 4,
+                "heals_in": 21,
+                "desc": "Blistering, partial thickness"
+            },
+            "MC018": {
+                "n": "burn_third_degree",
+                "severity": 7,
+                "heals_in": 90,
+                "desc": "Full thickness, scarring"
+            },
+            "MC019": {
+                "n": "chemical_burn",
+                "severity": 5,
+                "heals_in": 30,
+                "desc": "Caustic substance damage"
+            },
+            "MC020": {
+                "n": "electrical_burn",
+                "severity": 6,
+                "heals_in": 45,
+                "desc": "Internal damage from current"
+            }
+        },
+        "toxicological": {
+            "MC021": {
+                "n": "poisoned_mild",
+                "severity": 3,
+                "heals_in": 3,
+                "desc": "Nausea, weakness"
+            },
+            "MC022": {
+                "n": "poisoned_severe",
+                "severity": 6,
+                "heals_in": 14,
+                "desc": "Organ stress, potential failure"
+            },
+            "MC023": {
+                "n": "radiation_exposure",
+                "severity": 5,
+                "heals_in": 30,
+                "desc": "Cellular damage from rads"
+            },
+            "MC024": {
+                "n": "radiation_sickness",
+                "severity": 7,
+                "heals_in": 60,
+                "desc": "Acute radiation syndrome"
+            },
+            "MC025": {
+                "n": "drug_overdose",
+                "severity": 7,
+                "heals_in": 7,
+                "desc": "System overload from substance"
+            },
+            "MC026": {
+                "n": "alcohol_poisoning",
+                "severity": 5,
+                "heals_in": 2,
+                "desc": "Acute intoxication"
+            },
+            "MC027": {
+                "n": "neurotoxin",
+                "severity": 8,
+                "heals_in": 21,
+                "desc": "Nerve agent exposure"
+            },
+            "MC028": {
+                "n": "heavy_metal_poisoning",
+                "severity": 5,
+                "heals_in": 60,
+                "desc": "Accumulated toxic metals"
+            }
+        },
+        "biological": {
+            "MC029": {
+                "n": "infection_minor",
+                "severity": 2,
+                "heals_in": 7,
+                "desc": "Localized bacterial infection"
+            },
+            "MC030": {
+                "n": "infection_major",
+                "severity": 5,
+                "heals_in": 21,
+                "desc": "Spreading infection"
+            },
+            "MC031": {
+                "n": "sepsis",
+                "severity": 9,
+                "heals_in": 30,
+                "desc": "Blood infection, life-threatening"
+            },
+            "MC032": {
+                "n": "virus_common",
+                "severity": 2,
+                "heals_in": 7,
+                "desc": "Flu-like viral illness"
+            },
+            "MC033": {
+                "n": "virus_engineered",
+                "severity": 6,
+                "heals_in": 30,
+                "desc": "Weaponized viral agent"
+            },
+            "MC034": {
+                "n": "parasite",
+                "severity": 4,
+                "heals_in": 14,
+                "desc": "Internal parasitic infection"
+            },
+            "MC035": {
+                "n": "fungal_infection",
+                "severity": 3,
+                "heals_in": 21,
+                "desc": "Mycotic growth"
+            }
+        },
+        "cybernetic": {
+            "MC036": {
+                "n": "implant_rejection",
+                "severity": 5,
+                "heals_in": 14,
+                "desc": "Body rejecting cybernetics"
+            },
+            "MC037": {
+                "n": "neural_overload",
+                "severity": 6,
+                "heals_in": 7,
+                "desc": "Brain interface burnout"
+            },
+            "MC038": {
+                "n": "cyberpsychosis_early",
+                "severity": 4,
+                "heals_in": 30,
+                "desc": "Dissociation from humanity"
+            },
+            "MC039": {
+                "n": "cyberpsychosis_advanced",
+                "severity": 8,
+                "heals_in": 90,
+                "desc": "Severe identity dissociation"
+            },
+            "MC040": {
+                "n": "phantom_limb",
+                "severity": 2,
+                "heals_in": 60,
+                "desc": "Neural ghost of lost limb"
+            },
+            "MC041": {
+                "n": "system_malfunction",
+                "severity": 4,
+                "heals_in": 3,
+                "desc": "Implant software errors"
+            },
+            "MC042": {
+                "n": "power_drain",
+                "severity": 3,
+                "heals_in": 1,
+                "desc": "Implant battery depleted"
+            },
+            "MC043": {
+                "n": "emp_damage",
+                "severity": 5,
+                "heals_in": 7,
+                "desc": "Electromagnetic pulse effects"
+            }
+        },
+        "psychological": {
+            "MC044": {
+                "n": "stress_acute",
+                "severity": 2,
+                "heals_in": 3,
+                "desc": "Short-term stress response"
+            },
+            "MC045": {
+                "n": "stress_chronic",
+                "severity": 4,
+                "heals_in": 30,
+                "desc": "Long-term stress damage"
+            },
+            "MC046": {
+                "n": "ptsd",
+                "severity": 5,
+                "heals_in": 90,
+                "desc": "Post-traumatic stress disorder"
+            },
+            "MC047": {
+                "n": "anxiety_disorder",
+                "severity": 3,
+                "heals_in": 60,
+                "desc": "Chronic anxiety"
+            },
+            "MC048": {
+                "n": "depression",
+                "severity": 4,
+                "heals_in": 60,
+                "desc": "Clinical depression"
+            },
+            "MC049": {
+                "n": "insomnia",
+                "severity": 3,
+                "heals_in": 14,
+                "desc": "Sleep disorder"
+            },
+            "MC050": {
+                "n": "addiction_mild",
+                "severity": 3,
+                "heals_in": 30,
+                "desc": "Developing dependency"
+            },
+            "MC051": {
+                "n": "addiction_severe",
+                "severity": 6,
+                "heals_in": 90,
+                "desc": "Full chemical dependency"
+            },
+            "MC052": {
+                "n": "withdrawal",
+                "severity": 5,
+                "heals_in": 7,
+                "desc": "Detox symptoms"
+            }
+        },
+        "status": {
+            "MC053": {
+                "n": "exhaustion",
+                "severity": 2,
+                "heals_in": 1,
+                "desc": "Physical fatigue"
+            },
+            "MC054": {
+                "n": "malnutrition",
+                "severity": 3,
+                "heals_in": 14,
+                "desc": "Nutrient deficiency"
+            },
+            "MC055": {
+                "n": "dehydration",
+                "severity": 3,
+                "heals_in": 1,
+                "desc": "Fluid deficiency"
+            },
+            "MC056": {
+                "n": "hypothermia",
+                "severity": 5,
+                "heals_in": 2,
+                "desc": "Dangerous cold exposure"
+            },
+            "MC057": {
+                "n": "hyperthermia",
+                "severity": 5,
+                "heals_in": 1,
+                "desc": "Dangerous heat exposure"
+            },
+            "MC058": {
+                "n": "unconscious",
+                "severity": 4,
+                "heals_in": 1,
+                "desc": "Knocked out"
+            },
+            "MC059": {
+                "n": "coma",
+                "severity": 8,
+                "heals_in": 90,
+                "desc": "Deep unconsciousness"
+            },
+            "MC060": {
+                "n": "dead",
+                "severity": 10,
+                "heals_in": -1,
+                "desc": "Life functions ceased"
+            }
+        }
+    },
+    "treatments": {
+        "_desc": "Medical treatments and procedures (60 unique)",
+        "_encoding": "MT### where ### is 001-060",
+        "first_aid": {
+            "MT001": {
+                "n": "bandage_apply",
+                "skill_req": 1,
+                "time": 2,
+                "heals": [
+                    "MC001",
+                    "MC002",
+                    "MC003"
+                ]
+            },
+            "MT002": {
+                "n": "wound_clean",
+                "skill_req": 1,
+                "time": 3,
+                "heals": [
+                    "MC003",
+                    "MC004",
+                    "MC029"
+                ]
+            },
+            "MT003": {
+                "n": "tourniquet",
+                "skill_req": 2,
+                "time": 1,
+                "heals": [
+                    "MC004",
+                    "MC014"
+                ]
+            },
+            "MT004": {
+                "n": "splint_apply",
+                "skill_req": 2,
+                "time": 5,
+                "heals": [
+                    "MC009",
+                    "MC010"
+                ]
+            },
+            "MT005": {
+                "n": "cpr",
+                "skill_req": 2,
+                "time": 10,
+                "heals": [
+                    "MC058"
+                ]
+            },
+            "MT006": {
+                "n": "heimlich",
+                "skill_req": 1,
+                "time": 1,
+                "heals": []
+            },
+            "MT007": {
+                "n": "pressure_apply",
+                "skill_req": 1,
+                "time": 5,
+                "heals": [
+                    "MC004",
+                    "MC005"
+                ]
+            },
+            "MT008": {
+                "n": "ice_pack",
+                "skill_req": 1,
+                "time": 15,
+                "heals": [
+                    "MC001",
+                    "MC002"
+                ]
+            }
+        },
+        "surgical": {
+            "MT009": {
+                "n": "suture",
+                "skill_req": 3,
+                "time": 20,
+                "heals": [
+                    "MC004",
+                    "MC005"
+                ]
+            },
+            "MT010": {
+                "n": "bullet_extraction",
+                "skill_req": 4,
+                "time": 45,
+                "heals": [
+                    "MC008"
+                ]
+            },
+            "MT011": {
+                "n": "bone_setting",
+                "skill_req": 4,
+                "time": 30,
+                "heals": [
+                    "MC010"
+                ]
+            },
+            "MT012": {
+                "n": "internal_surgery",
+                "skill_req": 5,
+                "time": 120,
+                "heals": [
+                    "MC014",
+                    "MC015"
+                ]
+            },
+            "MT013": {
+                "n": "amputation",
+                "skill_req": 5,
+                "time": 60,
+                "heals": [
+                    "MC011",
+                    "MC031"
+                ]
+            },
+            "MT014": {
+                "n": "organ_transplant",
+                "skill_req": 6,
+                "time": 360,
+                "heals": [
+                    "MC015"
+                ]
+            },
+            "MT015": {
+                "n": "skin_graft",
+                "skill_req": 5,
+                "time": 90,
+                "heals": [
+                    "MC018"
+                ]
+            }
+        },
+        "cybernetic": {
+            "MT016": {
+                "n": "implant_install",
+                "skill_req": 4,
+                "time": 60,
+                "heals": []
+            },
+            "MT017": {
+                "n": "implant_remove",
+                "skill_req": 4,
+                "time": 45,
+                "heals": [
+                    "MC036",
+                    "MC038"
+                ]
+            },
+            "MT018": {
+                "n": "implant_calibrate",
+                "skill_req": 3,
+                "time": 20,
+                "heals": [
+                    "MC041"
+                ]
+            },
+            "MT019": {
+                "n": "neural_reset",
+                "skill_req": 5,
+                "time": 30,
+                "heals": [
+                    "MC037",
+                    "MC038"
+                ]
+            },
+            "MT020": {
+                "n": "prosthetic_attach",
+                "skill_req": 4,
+                "time": 90,
+                "heals": []
+            },
+            "MT021": {
+                "n": "system_reboot",
+                "skill_req": 2,
+                "time": 5,
+                "heals": [
+                    "MC041",
+                    "MC042"
+                ]
+            }
+        },
+        "pharmaceutical": {
+            "MT022": {
+                "n": "inject_stimulant",
+                "skill_req": 1,
+                "time": 1,
+                "heals": [
+                    "MC053",
+                    "MC058"
+                ]
+            },
+            "MT023": {
+                "n": "inject_painkiller",
+                "skill_req": 1,
+                "time": 1,
+                "heals": []
+            },
+            "MT024": {
+                "n": "inject_antibiotic",
+                "skill_req": 2,
+                "time": 1,
+                "heals": [
+                    "MC029",
+                    "MC030"
+                ]
+            },
+            "MT025": {
+                "n": "inject_antidote",
+                "skill_req": 2,
+                "time": 1,
+                "heals": [
+                    "MC021",
+                    "MC022"
+                ]
+            },
+            "MT026": {
+                "n": "inject_sedative",
+                "skill_req": 2,
+                "time": 1,
+                "heals": [
+                    "MC044",
+                    "MC047"
+                ]
+            },
+            "MT027": {
+                "n": "iv_fluids",
+                "skill_req": 2,
+                "time": 30,
+                "heals": [
+                    "MC055",
+                    "MC026"
+                ]
+            },
+            "MT028": {
+                "n": "blood_transfusion",
+                "skill_req": 3,
+                "time": 60,
+                "heals": [
+                    "MC014"
+                ]
+            },
+            "MT029": {
+                "n": "anti_rad",
+                "skill_req": 2,
+                "time": 1,
+                "heals": [
+                    "MC023",
+                    "MC024"
+                ]
+            },
+            "MT030": {
+                "n": "detox_treatment",
+                "skill_req": 3,
+                "time": 120,
+                "heals": [
+                    "MC052"
+                ]
+            }
+        }
+    },
+    "drugs": {
+        "_desc": "Pharmaceuticals and street drugs (80 unique)",
+        "_encoding": "MD### where ### is 001-080",
+        "medical": {
+            "MD001": {
+                "n": "medipen",
+                "type": "heal",
+                "effect": "Rapid tissue repair",
+                "duration": 30,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD002": {
+                "n": "stim_pack",
+                "type": "stimulant",
+                "effect": "Ignore fatigue, +speed",
+                "duration": 60,
+                "addiction": 0.1,
+                "legal": true
+            },
+            "MD003": {
+                "n": "trauma_kit",
+                "type": "heal",
+                "effect": "Stabilize critical injuries",
+                "duration": 0,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD004": {
+                "n": "antidote_universal",
+                "type": "cure",
+                "effect": "Neutralize most poisons",
+                "duration": 0,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD005": {
+                "n": "rad_away",
+                "type": "cure",
+                "effect": "Flush radiation",
+                "duration": 0,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD006": {
+                "n": "antibiotics",
+                "type": "cure",
+                "effect": "Fight bacterial infection",
+                "duration": 168,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD007": {
+                "n": "painblocker",
+                "type": "painkiller",
+                "effect": "Numbs all pain",
+                "duration": 120,
+                "addiction": 0.2,
+                "legal": true
+            },
+            "MD008": {
+                "n": "anticoagulant",
+                "type": "medical",
+                "effect": "Prevent blood clots",
+                "duration": 24,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD009": {
+                "n": "coagulant",
+                "type": "medical",
+                "effect": "Stop bleeding fast",
+                "duration": 1,
+                "addiction": 0.0,
+                "legal": true
+            },
+            "MD010": {
+                "n": "nanobots_medical",
+                "type": "heal",
+                "effect": "Microscopic repair drones",
+                "duration": 72,
+                "addiction": 0.0,
+                "legal": true
+            }
+        },
+        "performance": {
+            "MD011": {
+                "n": "reflex_boost",
+                "type": "enhancement",
+                "effect": "+30% reaction time",
+                "duration": 60,
+                "addiction": 0.3,
+                "legal": false
+            },
+            "MD012": {
+                "n": "muscle_enhancer",
+                "type": "enhancement",
+                "effect": "+50% strength",
+                "duration": 30,
+                "addiction": 0.2,
+                "legal": false
+            },
+            "MD013": {
+                "n": "focus_drug",
+                "type": "cognitive",
+                "effect": "+intelligence, tunnel vision",
+                "duration": 120,
+                "addiction": 0.4,
+                "legal": false
+            },
+            "MD014": {
+                "n": "berserker",
+                "type": "combat",
+                "effect": "+damage, -pain, -reasoning",
+                "duration": 15,
+                "addiction": 0.5,
+                "legal": false
+            },
+            "MD015": {
+                "n": "slowmo",
+                "type": "perception",
+                "effect": "Time feels slower",
+                "duration": 10,
+                "addiction": 0.6,
+                "legal": false
+            },
+            "MD016": {
+                "n": "adrenaline_shot",
+                "type": "stimulant",
+                "effect": "Burst of energy/strength",
+                "duration": 5,
+                "addiction": 0.1,
+                "legal": true
+            },
+            "MD017": {
+                "n": "stealth_enhancer",
+                "type": "enhancement",
+                "effect": "Dampened biosigns",
+                "duration": 60,
+                "addiction": 0.2,
+                "legal": false
+            }
+        },
+        "recreational": {
+            "MD018": {
+                "n": "bliss",
+                "type": "euphoric",
+                "effect": "Intense pleasure, dissociation",
+                "duration": 180,
+                "addiction": 0.7,
+                "legal": false
+            },
+            "MD019": {
+                "n": "synth_dream",
+                "type": "hallucinogen",
+                "effect": "Vivid waking dreams",
+                "duration": 300,
+                "addiction": 0.4,
+                "legal": false
+            },
+            "MD020": {
+                "n": "neon_dust",
+                "type": "stimulant",
+                "effect": "Energy rush, colors brighter",
+                "duration": 120,
+                "addiction": 0.5,
+                "legal": false
+            },
+            "MD021": {
+                "n": "void",
+                "type": "depressant",
+                "effect": "Emotional numbness",
+                "duration": 240,
+                "addiction": 0.6,
+                "legal": false
+            },
+            "MD022": {
+                "n": "echo",
+                "type": "hallucinogen",
+                "effect": "See layer bleeds (alleged)",
+                "duration": 60,
+                "addiction": 0.3,
+                "legal": false
+            },
+            "MD023": {
+                "n": "chrome_kiss",
+                "type": "euphoric",
+                "effect": "Synergy with implants",
+                "duration": 90,
+                "addiction": 0.8,
+                "legal": false
+            },
+            "MD024": {
+                "n": "ghost",
+                "type": "depressant",
+                "effect": "Out of body feeling",
+                "duration": 120,
+                "addiction": 0.5,
+                "legal": false
+            },
+            "MD025": {
+                "n": "temple_incense",
+                "type": "mild",
+                "effect": "Mild calming, spiritual",
+                "duration": 30,
+                "addiction": 0.1,
+                "legal": true
+            }
+        },
+        "cyber_drugs": {
+            "MD026": {
+                "n": "neural_boost",
+                "type": "cognitive",
+                "effect": "Faster neural processing",
+                "duration": 60,
+                "addiction": 0.4,
+                "legal": false
+            },
+            "MD027": {
+                "n": "firewall_breaker",
+                "type": "hacking",
+                "effect": "Enhanced ICE penetration",
+                "duration": 30,
+                "addiction": 0.3,
+                "legal": false
+            },
+            "MD028": {
+                "n": "synapse_fire",
+                "type": "cognitive",
+                "effect": "Overclocked brain",
+                "duration": 15,
+                "addiction": 0.6,
+                "legal": false
+            },
+            "MD029": {
+                "n": "machine_empathy",
+                "type": "perception",
+                "effect": "Feel electronic systems",
+                "duration": 120,
+                "addiction": 0.2,
+                "legal": false
+            },
+            "MD030": {
+                "n": "disconnect",
+                "type": "protection",
+                "effect": "Block neural hacking",
+                "duration": 60,
+                "addiction": 0.1,
+                "legal": true
+            }
+        }
+    },
+    "body_parts": {
+        "_desc": "Body locations for injury/treatment",
+        "BP01": "head",
+        "BP02": "face",
+        "BP03": "neck",
+        "BP04": "throat",
+        "BP05": "shoulder_l",
+        "BP06": "shoulder_r",
+        "BP07": "arm_upper_l",
+        "BP08": "arm_upper_r",
+        "BP09": "arm_lower_l",
+        "BP10": "arm_lower_r",
+        "BP11": "hand_l",
+        "BP12": "hand_r",
+        "BP13": "chest",
+        "BP14": "back",
+        "BP15": "abdomen",
+        "BP16": "pelvis",
+        "BP17": "leg_upper_l",
+        "BP18": "leg_upper_r",
+        "BP19": "leg_lower_l",
+        "BP20": "leg_lower_r",
+        "BP21": "foot_l",
+        "BP22": "foot_r",
+        "BP23": "spine",
+        "BP24": "organs_internal"
+    },
+    "medical_npcs": {
+        "_desc": "NPCs with medical knowledge/roles",
+        "sister_mira": {
+            "skill": 5,
+            "specialty": "trauma",
+            "faction": "Temple",
+            "legal_only": true
+        },
+        "ripperdoc_chen": {
+            "skill": 4,
+            "specialty": "cybernetics",
+            "faction": "Underground",
+            "legal_only": false
+        },
+        "aiche": {
+            "skill": 3,
+            "specialty": "diagnostics",
+            "faction": "Neutral",
+            "legal_only": true
+        }
+    }
+}

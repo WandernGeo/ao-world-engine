@@ -1,0 +1,298 @@
+{
+    "_chunk": {
+        "id": "chunk_12_geospatial",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "geospatial",
+        "prev_chunk": "chunk_11_languages",
+        "next_chunk": "chunk_13_canon_events"
+    },
+    "_meta": {
+        "description": "Geospatial data for RE:ECHO world, mapped to alternate Earth coordinates",
+        "coordinate_system": "WGS84 (EPSG:4326) - same as GPS/PostGIS",
+        "philosophy": "RE:ECHO Earth mirrors our Earth but with key differences post-Fall"
+    },
+    "world_geography": {
+        "_desc": "Alternate Earth continents and regions",
+        "continents": {
+            "north_america": {
+                "name": "Nova Terra",
+                "status": "fragmented into city-states",
+                "capital": null,
+                "major_changes": "Coastal flooding reduced landmass 15%"
+            },
+            "south_america": {
+                "name": "Amazonia",
+                "status": "jungle reclaimed most cities",
+                "capital": "New Brasilia",
+                "major_changes": "Rainforest expanded"
+            },
+            "europe": {
+                "name": "Europa Unified",
+                "status": "corporate federation",
+                "capital": "Neo-Berlin",
+                "major_changes": "Mediterranean dried"
+            },
+            "asia": {
+                "name": "Pan-Asia Collective",
+                "status": "mixed corporate/temple control",
+                "capital": "Shanghai Prime",
+                "major_changes": "Korean peninsula unified"
+            },
+            "africa": {
+                "name": "Afrikana",
+                "status": "resource wars ongoing",
+                "capital": "Kinshasa Megaplex",
+                "major_changes": "Sahara has solar farms"
+            },
+            "oceania": {
+                "name": "Pacific Rim",
+                "status": "island federation",
+                "capital": "Neo Sydney",
+                "major_changes": "Many islands submerged"
+            }
+        }
+    },
+    "reecho_city": {
+        "_desc": "RE:ECHO City - primary setting, mapped to NYC/Brooklyn",
+        "global_position": {
+            "real_world_analog": "New York City, primarily Brooklyn",
+            "center": {
+                "lat": 40.6782,
+                "lon": -73.9442
+            },
+            "geojson": {
+                "type": "Point",
+                "coordinates": [
+                    -73.9442,
+                    40.6782
+                ]
+            },
+            "bounding_box": {
+                "north": 40.75,
+                "south": 40.57,
+                "east": -73.85,
+                "west": -74.05
+            },
+            "area_sq_km": 180,
+            "population": 4200000,
+            "postgis_query": "ST_MakeEnvelope(-74.05, 40.57, -73.85, 40.75, 4326)"
+        },
+        "districts": {
+            "temple_quarter": {
+                "code": "D01",
+                "center": {
+                    "lat": 40.7128,
+                    "lon": -74.0060
+                },
+                "radius_km": 1.5,
+                "real_analog": "Financial District / Wall Street",
+                "elevation_m": 10,
+                "danger_level": 3
+            },
+            "neon_district": {
+                "code": "D02",
+                "center": {
+                    "lat": 40.6892,
+                    "lon": -73.9857
+                },
+                "radius_km": 2.0,
+                "real_analog": "DUMBO / Brooklyn Heights",
+                "elevation_m": 15,
+                "danger_level": 5
+            },
+            "undercity": {
+                "code": "D03",
+                "center": {
+                    "lat": 40.6501,
+                    "lon": -73.9496
+                },
+                "radius_km": 3.0,
+                "real_analog": "Crown Heights / Abandoned subway tunnels",
+                "depth_m": -50,
+                "danger_level": 7
+            },
+            "corporate_zone": {
+                "code": "D04",
+                "center": {
+                    "lat": 40.7580,
+                    "lon": -73.9855
+                },
+                "radius_km": 1.0,
+                "real_analog": "Midtown Manhattan",
+                "elevation_m": 300,
+                "restricted": true,
+                "danger_level": 2
+            },
+            "docks": {
+                "code": "D05",
+                "center": {
+                    "lat": 40.6784,
+                    "lon": -74.0169
+                },
+                "radius_km": 1.5,
+                "real_analog": "Red Hook / Brooklyn waterfront",
+                "elevation_m": 3,
+                "danger_level": 6
+            },
+            "old_town": {
+                "code": "D06",
+                "center": {
+                    "lat": 40.6872,
+                    "lon": -73.9418
+                },
+                "radius_km": 1.5,
+                "real_analog": "Bedford-Stuyvesant",
+                "elevation_m": 20,
+                "danger_level": 4
+            },
+            "williamsburg": {
+                "code": "D07",
+                "center": {
+                    "lat": 40.7081,
+                    "lon": -73.9571
+                },
+                "radius_km": 1.2,
+                "real_analog": "Williamsburg",
+                "elevation_m": 10,
+                "danger_level": 4
+            },
+            "bushwick": {
+                "code": "D08",
+                "center": {
+                    "lat": 40.6944,
+                    "lon": -73.9213
+                },
+                "radius_km": 1.5,
+                "real_analog": "Bushwick",
+                "elevation_m": 25,
+                "danger_level": 5
+            }
+        },
+        "named_locations_geo": {
+            "L011_neon_bar": {
+                "code": "L011",
+                "name": "Felix's Neon Bar",
+                "lat": 40.6892,
+                "lon": -73.9857,
+                "district": "D02",
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        -73.9857,
+                        40.6892
+                    ]
+                }
+            },
+            "L003_temple_main": {
+                "code": "L003",
+                "name": "Temple of the Signal - Main Cathedral",
+                "lat": 40.7128,
+                "lon": -74.0060,
+                "district": "D01",
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        -74.0060,
+                        40.7128
+                    ]
+                }
+            },
+            "L027_safe_house": {
+                "code": "L027",
+                "name": "Resistance Safe House Alpha",
+                "lat": 40.6501,
+                "lon": -73.9496,
+                "district": "D03",
+                "floor": -2,
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        -73.9496,
+                        40.6501
+                    ]
+                }
+            },
+            "L052_veil_tear": {
+                "code": "L052",
+                "name": "The Veil Tear - Layer Bleed Zone",
+                "lat": 40.6872,
+                "lon": -73.9418,
+                "district": "D06",
+                "anomaly_radius_m": 50,
+                "geojson": {
+                    "type": "Point",
+                    "coordinates": [
+                        -73.9418,
+                        40.6872
+                    ]
+                }
+            }
+        }
+    },
+    "other_cities": {
+        "neo_tokyo": {
+            "real_analog": "Tokyo, Japan",
+            "center": {
+                "lat": 35.6762,
+                "lon": 139.6503
+            },
+            "status": "isolated megacity",
+            "population": 15000000
+        },
+        "shanghai_prime": {
+            "real_analog": "Shanghai, China",
+            "center": {
+                "lat": 31.2304,
+                "lon": 121.4737
+            },
+            "status": "pan-asia hub",
+            "population": 30000000
+        },
+        "neo_berlin": {
+            "real_analog": "Berlin, Germany",
+            "center": {
+                "lat": 52.5200,
+                "lon": 13.4050
+            },
+            "status": "europa capital",
+            "population": 8000000
+        },
+        "new_lagos": {
+            "real_analog": "Lagos, Nigeria",
+            "center": {
+                "lat": 6.5244,
+                "lon": 3.3792
+            },
+            "status": "tech hub rising",
+            "population": 25000000
+        }
+    },
+    "spatial_queries": {
+        "_desc": "Example PostGIS queries for this data",
+        "find_locations_in_district": "SELECT * FROM locations WHERE ST_Within(geom, (SELECT geom FROM districts WHERE code = 'D02'))",
+        "find_nearest_safe_house": "SELECT *, ST_Distance(geom, ST_MakePoint(-73.9857, 40.6892)) as dist FROM locations WHERE type = 'safe_house' ORDER BY dist LIMIT 1",
+        "find_locations_within_radius": "SELECT * FROM locations WHERE ST_DWithin(geom, ST_MakePoint(-73.9857, 40.6892)::geography, 500)",
+        "check_if_in_danger_zone": "SELECT danger_level FROM districts WHERE ST_Contains(geom, ST_MakePoint(:lon, :lat))"
+    },
+    "npc_location_tracking": {
+        "_desc": "NPCs have home locations and movement patterns",
+        "charlie": {
+            "home_location": "L027",
+            "home_coords": {
+                "lat": 40.6501,
+                "lon": -73.9496
+            },
+            "frequent_locations": [
+                "L011",
+                "L026",
+                "L028"
+            ],
+            "movement_radius_km": 5,
+            "avoids_districts": [
+                "D01",
+                "D04"
+            ]
+        }
+    }
+}

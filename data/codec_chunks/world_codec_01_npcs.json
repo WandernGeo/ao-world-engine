@@ -1,0 +1,997 @@
+{
+    "_chunk": {
+        "id": "chunk_01_npcs",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "npcs",
+        "prev_chunk": "chunk_00_core",
+        "next_chunk": "chunk_02_medical"
+    },
+    "founding_npcs": {
+        "_desc": "The 12 founders with interconnected relationships",
+        "charlie": {
+            "code": "C01",
+            "name": "Charlie",
+            "role": "Protagonist / Resistance Fighter",
+            "faction": "Resistance",
+            "location_home": "L026",
+            "cybernetics": [
+                "CY028",
+                "CY017"
+            ],
+            "skills_primary": [
+                "S01",
+                "S19",
+                "S13"
+            ],
+            "relationships": {
+                "kai_vance": {
+                    "type": "R01",
+                    "trust": 0.9,
+                    "history": "Trusted tactical advisor"
+                },
+                "zero_chen": {
+                    "type": "R07",
+                    "trust": 0.95,
+                    "history": "Saved his life, gave him the arm"
+                },
+                "felix": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Information source at the bar"
+                },
+                "nova_chen": {
+                    "type": "R03",
+                    "trust": 0.5,
+                    "history": "Zero's sister, complicated"
+                },
+                "aiche": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Mysterious AI ally"
+                },
+                "sister_mira": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Secret ally in the Temple"
+                }
+            },
+            "knowledge_domains": [
+                "combat",
+                "investigation",
+                "resistance_history"
+            ],
+            "secrets": [
+                "knows_about_layer_bleeds",
+                "former_temple_enforcer"
+            ],
+            "catchphrases": [
+                "Rain washes nothing clean here.",
+                "Another case, another alley."
+            ]
+        },
+        "kai_vance": {
+            "code": "C02",
+            "name": "Kai Vance",
+            "role": "Tactician",
+            "faction": "Resistance",
+            "location_home": "L025",
+            "cybernetics": [
+                "CY002",
+                "CY015",
+                "CY016"
+            ],
+            "skills_primary": [
+                "S05",
+                "S07",
+                "S06"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R01",
+                    "trust": 0.9,
+                    "history": "Resistance leadership partner"
+                },
+                "zero_chen": {
+                    "type": "R10",
+                    "trust": 0.85,
+                    "history": "Reports to her on strategy"
+                },
+                "pixel": {
+                    "type": "R08",
+                    "trust": 0.8,
+                    "history": "Mentored by him in early days"
+                },
+                "cipher": {
+                    "type": "R12",
+                    "trust": 0.3,
+                    "history": "Distrusts the enigma"
+                }
+            },
+            "knowledge_domains": [
+                "tactics",
+                "temple_structure",
+                "network_analysis"
+            ],
+            "secrets": [
+                "temple_defector",
+                "knows_temple_weakness"
+            ],
+            "catchphrases": [
+                "The numbers don't lie.",
+                "Every plan has a weakness."
+            ]
+        },
+        "orion_thane": {
+            "code": "C03",
+            "name": "Orion Thane",
+            "role": "Mystic / Layer Walker",
+            "faction": "Mystic",
+            "location_home": "L051",
+            "cybernetics": [],
+            "skills_primary": [
+                "S18",
+                "S17",
+                "S20"
+            ],
+            "relationships": {
+                "selene_voss": {
+                    "type": "R07",
+                    "trust": 0.9,
+                    "history": "Guides her through the layers"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Occasional cryptic warnings"
+                },
+                "sister_mira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Shared spiritual interest"
+                }
+            },
+            "knowledge_domains": [
+                "layers",
+                "mysticism",
+                "prophecy",
+                "echo_phenomena"
+            ],
+            "secrets": [
+                "can_see_all_layers",
+                "knows_the_truth_about_reality"
+            ],
+            "catchphrases": [
+                "The layers fold upon themselves.",
+                "I see what you cannot."
+            ]
+        },
+        "felix": {
+            "code": "C04",
+            "name": "Felix",
+            "role": "Bartender / Information Broker",
+            "faction": "Neutral",
+            "location_home": "L011",
+            "cybernetics": [
+                "CY020"
+            ],
+            "skills_primary": [
+                "S13",
+                "S16",
+                "S17"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.7,
+                    "history": "Regular customer and info buyer"
+                },
+                "nova_chen": {
+                    "type": "R11",
+                    "trust": 0.6,
+                    "history": "She pays for rumors"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Old friends, share survival stories"
+                },
+                "pixel": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "Tech support in exchange for drinks"
+                }
+            },
+            "knowledge_domains": [
+                "gossip",
+                "politics",
+                "black_market",
+                "everyone_secrets"
+            ],
+            "secrets": [
+                "knows_more_than_anyone",
+                "neutral_by_necessity"
+            ],
+            "catchphrases": [
+                "First drink's on the house. Information costs extra.",
+                "Everyone's got a story."
+            ]
+        },
+        "nova_chen": {
+            "code": "C05",
+            "name": "Nova Chen",
+            "role": "Operative",
+            "faction": "Neutral",
+            "location_home": "L026",
+            "cybernetics": [
+                "CY004",
+                "CY029",
+                "CY033"
+            ],
+            "skills_primary": [
+                "S19",
+                "S02",
+                "S01"
+            ],
+            "relationships": {
+                "zero_chen": {
+                    "type": "R06",
+                    "trust": 0.4,
+                    "history": "Estranged sister, different paths"
+                },
+                "charlie": {
+                    "type": "R03",
+                    "trust": 0.5,
+                    "history": "Complicated by sister connection"
+                },
+                "felix": {
+                    "type": "R11",
+                    "trust": 0.6,
+                    "history": "Information client"
+                }
+            },
+            "knowledge_domains": [
+                "espionage",
+                "assassination",
+                "infiltration"
+            ],
+            "secrets": [
+                "works_for_highest_bidder",
+                "secretly_protects_zero"
+            ],
+            "catchphrases": [
+                "I work alone.",
+                "Trust is a liability."
+            ]
+        },
+        "selene_voss": {
+            "code": "C06",
+            "name": "Selene Voss",
+            "role": "Ghost-Child / Layer Walker",
+            "faction": "Special",
+            "location_home": "L052",
+            "cybernetics": [],
+            "skills_primary": [
+                "S20",
+                "S17",
+                "S19"
+            ],
+            "relationships": {
+                "orion_thane": {
+                    "type": "R08",
+                    "trust": 0.9,
+                    "history": "Her guide and mentor"
+                },
+                "aiche": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both exist between states"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "She watches him from layers"
+                }
+            },
+            "knowledge_domains": [
+                "layers",
+                "death",
+                "alternate_timelines",
+                "prophecy"
+            ],
+            "secrets": [
+                "died_and_returned",
+                "can_see_all_possibilities"
+            ],
+            "catchphrases": [
+                "You've done this before. You just don't remember.",
+                "The boundaries are suggestions."
+            ]
+        },
+        "sister_mira": {
+            "code": "C07",
+            "name": "Sister Mira",
+            "role": "Temple Priestess / Healer",
+            "faction": "Temple",
+            "location_home": "L032",
+            "cybernetics": [],
+            "skills_primary": [
+                "S22",
+                "S17",
+                "S18"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Secret ally, heals Resistance"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Share patients in need"
+                },
+                "orion_thane": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Discuss spiritual matters"
+                }
+            },
+            "knowledge_domains": [
+                "medicine",
+                "temple_rituals",
+                "temple_politics",
+                "healing"
+            ],
+            "secrets": [
+                "questions_temple_doctrine",
+                "helps_resistance_wounded"
+            ],
+            "catchphrases": [
+                "Faith without mercy is tyranny.",
+                "Even in darkness, we heal."
+            ]
+        },
+        "mama_indira": {
+            "code": "C08",
+            "name": "Mama Indira",
+            "role": "Underground Matriarch",
+            "faction": "Resistance",
+            "location_home": "L029",
+            "cybernetics": [],
+            "skills_primary": [
+                "S17",
+                "S18",
+                "S16"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R07",
+                    "trust": 0.85,
+                    "history": "Fed him when he had nothing"
+                },
+                "zero_chen": {
+                    "type": "R04",
+                    "trust": 0.9,
+                    "history": "Old friends from the old days"
+                },
+                "felix": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Trade food for information"
+                },
+                "sister_mira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both care for the wounded"
+                }
+            },
+            "knowledge_domains": [
+                "underground_network",
+                "history",
+                "survival",
+                "cooking"
+            ],
+            "secrets": [
+                "survived_three_regimes",
+                "knows_where_bodies_buried"
+            ],
+            "catchphrases": [
+                "Eat first, talk later.",
+                "I've buried three husbands and two regimes."
+            ]
+        },
+        "aiche": {
+            "code": "C09",
+            "name": "Aiche",
+            "role": "AI Interface / City Consciousness",
+            "faction": "Neutral",
+            "location_home": "L053",
+            "cybernetics": [
+                "CY_FULL_HOLOGRAPHIC"
+            ],
+            "skills_primary": [
+                "S07",
+                "S08",
+                "S11"
+            ],
+            "relationships": {
+                "pixel": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "She helped Pixel learn to code"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Provides intel when asked nicely"
+                },
+                "cipher": {
+                    "type": "R03",
+                    "trust": 0.2,
+                    "history": "Competing intelligences"
+                },
+                "selene_voss": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both exist between states"
+                }
+            },
+            "knowledge_domains": [
+                "city_systems",
+                "network",
+                "history",
+                "predictions",
+                "all_data"
+            ],
+            "secrets": [
+                "is_city_itself",
+                "knows_everything_digital"
+            ],
+            "catchphrases": [
+                "I exist in spaces between your thoughts.",
+                "Query received."
+            ]
+        },
+        "pixel": {
+            "code": "C10",
+            "name": "Pixel",
+            "role": "Tech Genius / Hacker",
+            "faction": "Resistance",
+            "location_home": "L027",
+            "cybernetics": [
+                "CY010",
+                "CY002",
+                "CY022"
+            ],
+            "skills_primary": [
+                "S07",
+                "S08",
+                "S09"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R01",
+                    "trust": 0.85,
+                    "history": "Provides tech support for ops"
+                },
+                "kai_vance": {
+                    "type": "R07",
+                    "trust": 0.8,
+                    "history": "He mentored her"
+                },
+                "aiche": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Aiche taught her to code"
+                },
+                "felix": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "Fixes his systems for drinks"
+                }
+            },
+            "knowledge_domains": [
+                "hacking",
+                "electronics",
+                "cybernetics",
+                "systems"
+            ],
+            "secrets": [
+                "raised_by_machines",
+                "can_hear_the_network"
+            ],
+            "catchphrases": [
+                "Give me five minutes and a connection.",
+                "Analog is dead."
+            ]
+        },
+        "cipher": {
+            "code": "C11",
+            "name": "Cipher",
+            "role": "Unknown Entity / Data Broker",
+            "faction": "Unknown",
+            "location_home": "L016",
+            "cybernetics": [
+                "CY035",
+                "CY010",
+                "CY007"
+            ],
+            "skills_primary": [
+                "S07",
+                "S16",
+                "S19"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.3,
+                    "history": "Buys secrets occasionally"
+                },
+                "kai_vance": {
+                    "type": "R12",
+                    "trust": 0.2,
+                    "history": "Mutual distrust"
+                },
+                "aiche": {
+                    "type": "R03",
+                    "trust": 0.2,
+                    "history": "Competing for data supremacy"
+                }
+            },
+            "knowledge_domains": [
+                "secrets",
+                "blackmail",
+                "data",
+                "identity"
+            ],
+            "secrets": [
+                "true_nature_unknown",
+                "maybe_ai_maybe_human"
+            ],
+            "catchphrases": [
+                "I am the question you forgot to ask.",
+                "Data is the only truth."
+            ]
+        },
+        "zero_chen": {
+            "code": "C12",
+            "name": "Zero Chen",
+            "role": "Resistance Leader",
+            "faction": "Resistance",
+            "location_home": "L028",
+            "cybernetics": [
+                "CY025",
+                "CY015",
+                "CY022"
+            ],
+            "skills_primary": [
+                "S18",
+                "S05",
+                "S01"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R08",
+                    "trust": 0.95,
+                    "history": "Lost arm saving him, made him leader"
+                },
+                "kai_vance": {
+                    "type": "R09",
+                    "trust": 0.85,
+                    "history": "Her chief strategist"
+                },
+                "nova_chen": {
+                    "type": "R06",
+                    "trust": 0.4,
+                    "history": "Sister, took different paths"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.9,
+                    "history": "Old friends, mutual respect"
+                }
+            },
+            "knowledge_domains": [
+                "leadership",
+                "resistance_history",
+                "tactics",
+                "sacrifice"
+            ],
+            "secrets": [
+                "tired_of_war",
+                "considering_peace_talks"
+            ],
+            "catchphrases": [
+                "The Resistance isn't a group. It's an idea.",
+                "I've buried too many soldiers."
+            ]
+        }
+    },
+    "relationship_codes": {
+        "R01": {
+            "type": "ally",
+            "desc": "Trusted partner in goals"
+        },
+        "R02": {
+            "type": "enemy",
+            "desc": "Active opposition"
+        },
+        "R03": {
+            "type": "rival",
+            "desc": "Competition, not hatred"
+        },
+        "R04": {
+            "type": "friend",
+            "desc": "Personal bond, trusting"
+        },
+        "R05": {
+            "type": "lover",
+            "desc": "Romantic relationship"
+        },
+        "R06": {
+            "type": "family",
+            "desc": "Blood or chosen family"
+        },
+        "R07": {
+            "type": "mentor",
+            "desc": "Teacher, guide"
+        },
+        "R08": {
+            "type": "student",
+            "desc": "Learning from them"
+        },
+        "R09": {
+            "type": "boss",
+            "desc": "Authority figure"
+        },
+        "R10": {
+            "type": "subordinate",
+            "desc": "Reports to them"
+        },
+        "R11": {
+            "type": "client",
+            "desc": "Business relationship"
+        },
+        "R12": {
+            "type": "contact",
+            "desc": "Useful acquaintance"
+        },
+        "R13": {
+            "type": "informant",
+            "desc": "Provides intelligence"
+        },
+        "R14": {
+            "type": "debtor",
+            "desc": "Owes them something"
+        },
+        "R15": {
+            "type": "creditor",
+            "desc": "They owe something"
+        },
+        "R16": {
+            "type": "stranger",
+            "desc": "Unknown relationship"
+        }
+    },
+    "skill_codes": {
+        "S01": "melee_combat",
+        "S02": "ranged_combat",
+        "S03": "heavy_weapons",
+        "S04": "martial_arts",
+        "S05": "tactics",
+        "S06": "defense",
+        "S07": "hacking",
+        "S08": "electronics",
+        "S09": "mechanics",
+        "S10": "cybernetics",
+        "S11": "drones",
+        "S12": "security",
+        "S13": "negotiation",
+        "S14": "intimidation",
+        "S15": "persuasion",
+        "S16": "deception",
+        "S17": "empathy",
+        "S18": "leadership",
+        "S19": "stealth",
+        "S20": "tracking",
+        "S21": "scavenging",
+        "S22": "medicine",
+        "S23": "navigation",
+        "S24": "endurance"
+    },
+    "faction_codes": {
+        "F01": {
+            "n": "Resistance",
+            "color": "cyan",
+            "goal": "freedom",
+            "enemies": [
+                "F02",
+                "F03"
+            ]
+        },
+        "F02": {
+            "n": "Temple",
+            "color": "gold",
+            "goal": "control",
+            "enemies": [
+                "F01"
+            ]
+        },
+        "F03": {
+            "n": "Corps",
+            "color": "white",
+            "goal": "profit",
+            "enemies": [
+                "F01"
+            ]
+        },
+        "F04": {
+            "n": "Mystics",
+            "color": "purple",
+            "goal": "truth",
+            "enemies": []
+        },
+        "F05": {
+            "n": "Underground",
+            "color": "gray",
+            "goal": "survival",
+            "enemies": []
+        },
+        "F06": {
+            "n": "Neutral",
+            "color": "silver",
+            "goal": "personal",
+            "enemies": []
+        },
+        "F07": {
+            "n": "Unknown",
+            "color": "black",
+            "goal": "unknown",
+            "enemies": []
+        }
+    },
+    "reaction_matrix": {
+        "_desc": "How NPCs react to unknown characters based on archetypes and traits",
+        "archetype_defaults": {
+            "resistance_member": {
+                "default_trust": 0.6,
+                "stance": "cautious_ally"
+            },
+            "temple_member": {
+                "default_trust": 0.2,
+                "stance": "hostile"
+            },
+            "corporate": {
+                "default_trust": 0.3,
+                "stance": "suspicious"
+            },
+            "hacker": {
+                "default_trust": 0.5,
+                "stance": "curious"
+            },
+            "mystic": {
+                "default_trust": 0.4,
+                "stance": "wary"
+            },
+            "criminal": {
+                "default_trust": 0.3,
+                "stance": "transactional"
+            },
+            "civilian": {
+                "default_trust": 0.5,
+                "stance": "neutral"
+            },
+            "authority": {
+                "default_trust": 0.2,
+                "stance": "hostile"
+            },
+            "healer": {
+                "default_trust": 0.7,
+                "stance": "respectful"
+            },
+            "merchant": {
+                "default_trust": 0.5,
+                "stance": "transactional"
+            },
+            "ai": {
+                "default_trust": 0.4,
+                "stance": "curious"
+            },
+            "stranger": {
+                "default_trust": 0.4,
+                "stance": "guarded"
+            },
+            "unknown": {
+                "default_trust": 0.3,
+                "stance": "cautious"
+            }
+        },
+        "trait_modifiers": {
+            "_desc": "Traits that modify trust calculations",
+            "has_cybernetics": {
+                "trust_mod": 0.05,
+                "reason": "shared experience"
+            },
+            "has_temple_marking": {
+                "trust_mod": -0.3,
+                "reason": "enemy identifier"
+            },
+            "has_resistance_marking": {
+                "trust_mod": 0.2,
+                "reason": "ally identifier"
+            },
+            "speaks_street_creole": {
+                "trust_mod": 0.1,
+                "reason": "local"
+            },
+            "speaks_temple_cant": {
+                "trust_mod": -0.1,
+                "reason": "temple association"
+            },
+            "known_by_trusted_npc": {
+                "trust_mod": 0.2,
+                "reason": "vouched for"
+            },
+            "armed": {
+                "trust_mod": -0.1,
+                "reason": "potential threat"
+            },
+            "wounded": {
+                "trust_mod": 0.1,
+                "reason": "empathy trigger"
+            },
+            "wealthy_appearance": {
+                "trust_mod": -0.1,
+                "reason": "class suspicion"
+            },
+            "poor_appearance": {
+                "trust_mod": 0.05,
+                "reason": "kinship"
+            },
+            "layer_sensitive": {
+                "trust_mod": 0.1,
+                "reason": "shared perception"
+            }
+        },
+        "npc_specific_biases": {
+            "_desc": "Individual NPC personality affects reactions",
+            "charlie": {
+                "archetype_overrides": {
+                    "temple_member": {
+                        "trust_mod": -0.2,
+                        "stance": "very_hostile"
+                    },
+                    "resistance_member": {
+                        "trust_mod": 0.2,
+                        "stance": "welcoming"
+                    },
+                    "hacker": {
+                        "trust_mod": 0.1,
+                        "stance": "appreciative"
+                    }
+                },
+                "trait_amplifications": {
+                    "has_cybernetics": 2.0,
+                    "has_temple_marking": 1.5
+                }
+            },
+            "felix": {
+                "archetype_overrides": {
+                    "all": {
+                        "trust_mod": 0.1,
+                        "stance": "business_opportunity"
+                    }
+                },
+                "special_rule": "Felix treats everyone as potential customer first"
+            },
+            "sister_mira": {
+                "archetype_overrides": {
+                    "wounded": {
+                        "trust_mod": 0.5,
+                        "stance": "compassionate"
+                    },
+                    "resistance_member": {
+                        "trust_mod": 0.3,
+                        "stance": "secret_ally"
+                    }
+                },
+                "special_rule": "Mira's faith creates internal conflict with Temple enemies"
+            },
+            "cipher": {
+                "archetype_overrides": {
+                    "all": {
+                        "trust": 0.3,
+                        "stance": "evaluating"
+                    }
+                },
+                "special_rule": "Cipher trusts no one equally"
+            }
+        }
+    },
+    "unknown_handlers": {
+        "_desc": "How NPCs handle completely unknown situations",
+        "unknown_archetype": {
+            "default_action": "observe_and_question",
+            "initial_trust": 0.3,
+            "questions": [
+                "Who sent you?",
+                "What do you want?",
+                "How did you find this place?"
+            ],
+            "escalation_triggers": [
+                "threat_detected",
+                "suspicious_behavior",
+                "refusing_to_answer"
+            ]
+        },
+        "unknown_technology": {
+            "default_action": "cautious_interaction",
+            "consult_first": [
+                "pixel",
+                "aiche",
+                "cipher"
+            ],
+            "never_touch_if": [
+                "radiation_detected",
+                "unknown_energy_signature",
+                "temple_origin"
+            ]
+        },
+        "unknown_language": {
+            "default_action": "seek_translation",
+            "fallback": "gesture_communication",
+            "ask_help_from": [
+                "aiche",
+                "felix",
+                "translator_npcs"
+            ]
+        },
+        "unknown_location": {
+            "default_action": "scout_carefully",
+            "danger_assumption": 0.6,
+            "map_as_going": true
+        },
+        "unknown_faction": {
+            "default_action": "treat_as_neutral_until_proven",
+            "gather_intel_first": true,
+            "consult": [
+                "felix",
+                "kai_vance",
+                "zero_chen"
+            ]
+        },
+        "first_contact_protocol": {
+            "_desc": "Standard behavior when meeting any new character",
+            "step_1": "assess_threat_level",
+            "step_2": "determine_archetype_from_appearance",
+            "step_3": "apply_trait_modifiers",
+            "step_4": "check_for_vouching_by_known_npcs",
+            "step_5": "set_initial_stance",
+            "step_6": "begin_interaction_or_avoid"
+        }
+    },
+    "situation_reactions": {
+        "_desc": "How context modifies behavior",
+        "combat_active": {
+            "trust_barrier_raised": 0.3,
+            "ally_threshold_lowered": 0.2,
+            "shoot_first_if_hostile": true
+        },
+        "safe_location": {
+            "trust_bonus": 0.1,
+            "more_willing_to_talk": true,
+            "guard_lowered": true
+        },
+        "being_watched": {
+            "paranoia_active": true,
+            "coded_speech": true,
+            "reveal_less": true
+        },
+        "emergency": {
+            "faction_barriers_reduced": 0.2,
+            "survival_priority": true,
+            "temporary_alliances_possible": true
+        }
+    }
+}

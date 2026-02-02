@@ -1,0 +1,719 @@
+{
+    "_chunk": {
+        "id": "chunk_06_skills",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "skills",
+        "prev_chunk": "chunk_05_lore",
+        "next_chunk": "chunk_07_events"
+    },
+    "skills": {
+        "_desc": "All learnable skills with progression (50 unique)",
+        "_encoding": "SK### where ### is 001-050",
+        "combat": {
+            "SK001": {
+                "n": "melee_combat",
+                "desc": "Close-quarters fighting with weapons or fists",
+                "levels": [
+                    "Brawler",
+                    "Fighter",
+                    "Warrior",
+                    "Master",
+                    "Lethal"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    600,
+                    1000
+                ],
+                "synergies": [
+                    "SK002",
+                    "SK004"
+                ],
+                "trainers": [
+                    "charlie",
+                    "zero_chen"
+                ]
+            },
+            "SK002": {
+                "n": "ranged_combat",
+                "desc": "Proficiency with firearms and projectiles",
+                "levels": [
+                    "Shooter",
+                    "Marksman",
+                    "Sniper",
+                    "Expert",
+                    "Deadshot"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    350,
+                    700,
+                    1200
+                ],
+                "synergies": [
+                    "SK001",
+                    "SK003"
+                ],
+                "trainers": [
+                    "nova_chen",
+                    "zero_chen"
+                ]
+            },
+            "SK003": {
+                "n": "heavy_weapons",
+                "desc": "Machine guns, rocket launchers, explosives",
+                "levels": [
+                    "Handler",
+                    "Gunner",
+                    "Specialist",
+                    "Expert",
+                    "Devastator"
+                ],
+                "xp_per_level": [
+                    0,
+                    150,
+                    400,
+                    800,
+                    1500
+                ],
+                "synergies": [
+                    "SK002"
+                ],
+                "trainers": []
+            },
+            "SK004": {
+                "n": "martial_arts",
+                "desc": "Unarmed combat techniques",
+                "levels": [
+                    "Student",
+                    "Practitioner",
+                    "Adept",
+                    "Master",
+                    "Grandmaster"
+                ],
+                "xp_per_level": [
+                    0,
+                    200,
+                    500,
+                    1000,
+                    2000
+                ],
+                "synergies": [
+                    "SK001"
+                ],
+                "trainers": []
+            },
+            "SK005": {
+                "n": "tactics",
+                "desc": "Combat planning and situational awareness",
+                "levels": [
+                    "Recruit",
+                    "Soldier",
+                    "Sergeant",
+                    "Officer",
+                    "Commander"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    700,
+                    1200
+                ],
+                "synergies": [
+                    "SK018",
+                    "SK006"
+                ],
+                "trainers": [
+                    "kai_vance",
+                    "zero_chen"
+                ]
+            },
+            "SK006": {
+                "n": "defense",
+                "desc": "Blocking, dodging, taking cover",
+                "levels": [
+                    "Cautious",
+                    "Defensive",
+                    "Guardian",
+                    "Protector",
+                    "Immovable"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    250,
+                    500,
+                    900
+                ],
+                "synergies": [
+                    "SK001",
+                    "SK004"
+                ],
+                "trainers": [
+                    "charlie"
+                ]
+            }
+        },
+        "tech": {
+            "SK007": {
+                "n": "hacking",
+                "desc": "Breaking into computer systems",
+                "levels": [
+                    "Script Kiddie",
+                    "Hacker",
+                    "Netrunner",
+                    "Ghost",
+                    "Daemon"
+                ],
+                "xp_per_level": [
+                    0,
+                    150,
+                    400,
+                    900,
+                    1800
+                ],
+                "synergies": [
+                    "SK008",
+                    "SK012"
+                ],
+                "trainers": [
+                    "pixel",
+                    "cipher",
+                    "aiche"
+                ]
+            },
+            "SK008": {
+                "n": "electronics",
+                "desc": "Working with circuits and devices",
+                "levels": [
+                    "Tinkerer",
+                    "Technician",
+                    "Engineer",
+                    "Expert",
+                    "Genius"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    600,
+                    1100
+                ],
+                "synergies": [
+                    "SK007",
+                    "SK009"
+                ],
+                "trainers": [
+                    "pixel"
+                ]
+            },
+            "SK009": {
+                "n": "mechanics",
+                "desc": "Repair and modification of machines",
+                "levels": [
+                    "Fixer",
+                    "Mechanic",
+                    "Engineer",
+                    "Master",
+                    "Architect"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    280,
+                    550,
+                    1000
+                ],
+                "synergies": [
+                    "SK008",
+                    "SK010"
+                ],
+                "trainers": [
+                    "pixel"
+                ]
+            },
+            "SK010": {
+                "n": "cybernetics",
+                "desc": "Installing and maintaining implants",
+                "levels": [
+                    "Amateur",
+                    "Installer",
+                    "Ripperdoc",
+                    "Surgeon",
+                    "Architect"
+                ],
+                "xp_per_level": [
+                    0,
+                    200,
+                    500,
+                    1000,
+                    2000
+                ],
+                "synergies": [
+                    "SK022",
+                    "SK009"
+                ],
+                "trainers": [
+                    "ripperdoc_chen"
+                ]
+            },
+            "SK011": {
+                "n": "drones",
+                "desc": "Controlling and deploying drones",
+                "levels": [
+                    "Pilot",
+                    "Operator",
+                    "Commander",
+                    "Swarm Master",
+                    "Overmind"
+                ],
+                "xp_per_level": [
+                    0,
+                    120,
+                    350,
+                    700,
+                    1300
+                ],
+                "synergies": [
+                    "SK007",
+                    "SK008"
+                ],
+                "trainers": [
+                    "pixel"
+                ]
+            },
+            "SK012": {
+                "n": "security",
+                "desc": "Understanding and bypassing security systems",
+                "levels": [
+                    "Observer",
+                    "Analyst",
+                    "Specialist",
+                    "Expert",
+                    "Ghost"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    650,
+                    1200
+                ],
+                "synergies": [
+                    "SK007",
+                    "SK019"
+                ],
+                "trainers": [
+                    "kai_vance",
+                    "cipher"
+                ]
+            }
+        },
+        "social": {
+            "SK013": {
+                "n": "negotiation",
+                "desc": "Reaching mutually beneficial deals",
+                "levels": [
+                    "Talker",
+                    "Negotiator",
+                    "Diplomat",
+                    "Ambassador",
+                    "Arbiter"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    240,
+                    500,
+                    900
+                ],
+                "synergies": [
+                    "SK015",
+                    "SK017"
+                ],
+                "trainers": [
+                    "felix",
+                    "mama_indira"
+                ]
+            },
+            "SK014": {
+                "n": "intimidation",
+                "desc": "Coercing through fear",
+                "levels": [
+                    "Threatening",
+                    "Scary",
+                    "Terrifying",
+                    "Nightmare",
+                    "Dread"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    220,
+                    450,
+                    850
+                ],
+                "synergies": [
+                    "SK001",
+                    "SK016"
+                ],
+                "trainers": [
+                    "cipher"
+                ]
+            },
+            "SK015": {
+                "n": "persuasion",
+                "desc": "Convincing others of your viewpoint",
+                "levels": [
+                    "Convincing",
+                    "Persuasive",
+                    "Eloquent",
+                    "Silver Tongue",
+                    "Legendary"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    240,
+                    500,
+                    950
+                ],
+                "synergies": [
+                    "SK013",
+                    "SK017"
+                ],
+                "trainers": [
+                    "felix",
+                    "sister_mira"
+                ]
+            },
+            "SK016": {
+                "n": "deception",
+                "desc": "Lying and misdirection",
+                "levels": [
+                    "Fibber",
+                    "Liar",
+                    "Con Artist",
+                    "Mastermind",
+                    "Shadow"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    280,
+                    600,
+                    1100
+                ],
+                "synergies": [
+                    "SK015",
+                    "SK019"
+                ],
+                "trainers": [
+                    "cipher",
+                    "nova_chen"
+                ]
+            },
+            "SK017": {
+                "n": "empathy",
+                "desc": "Understanding and connecting with others",
+                "levels": [
+                    "Aware",
+                    "Sensitive",
+                    "Empathic",
+                    "Intuitive",
+                    "Soulreader"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    220,
+                    450,
+                    850
+                ],
+                "synergies": [
+                    "SK015",
+                    "SK022"
+                ],
+                "trainers": [
+                    "mama_indira",
+                    "sister_mira",
+                    "orion_thane"
+                ]
+            },
+            "SK018": {
+                "n": "leadership",
+                "desc": "Inspiring and directing others",
+                "levels": [
+                    "Vocal",
+                    "Leader",
+                    "Commander",
+                    "General",
+                    "Legend"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    700,
+                    1400
+                ],
+                "synergies": [
+                    "SK005",
+                    "SK013"
+                ],
+                "trainers": [
+                    "zero_chen",
+                    "charlie"
+                ]
+            }
+        },
+        "survival": {
+            "SK019": {
+                "n": "stealth",
+                "desc": "Moving unseen and unheard",
+                "levels": [
+                    "Sneaky",
+                    "Shadow",
+                    "Ghost",
+                    "Phantom",
+                    "Invisible"
+                ],
+                "xp_per_level": [
+                    0,
+                    100,
+                    300,
+                    650,
+                    1200
+                ],
+                "synergies": [
+                    "SK020",
+                    "SK016"
+                ],
+                "trainers": [
+                    "nova_chen"
+                ]
+            },
+            "SK020": {
+                "n": "tracking",
+                "desc": "Following trails and finding targets",
+                "levels": [
+                    "Observer",
+                    "Tracker",
+                    "Hunter",
+                    "Predator",
+                    "Inevitable"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    250,
+                    550,
+                    1000
+                ],
+                "synergies": [
+                    "SK019",
+                    "SK023"
+                ],
+                "trainers": []
+            },
+            "SK021": {
+                "n": "scavenging",
+                "desc": "Finding useful items in the wasteland",
+                "levels": [
+                    "Picker",
+                    "Scavenger",
+                    "Salvager",
+                    "Expert",
+                    "Finder"
+                ],
+                "xp_per_level": [
+                    0,
+                    60,
+                    180,
+                    400,
+                    750
+                ],
+                "synergies": [
+                    "SK023",
+                    "SK009"
+                ],
+                "trainers": [
+                    "mama_indira"
+                ]
+            },
+            "SK022": {
+                "n": "medicine",
+                "desc": "Healing wounds and treating illness",
+                "levels": [
+                    "First Aid",
+                    "Medic",
+                    "Doctor",
+                    "Surgeon",
+                    "Miracle Worker"
+                ],
+                "xp_per_level": [
+                    0,
+                    150,
+                    400,
+                    850,
+                    1600
+                ],
+                "synergies": [
+                    "SK017",
+                    "SK010"
+                ],
+                "trainers": [
+                    "sister_mira"
+                ]
+            },
+            "SK023": {
+                "n": "navigation",
+                "desc": "Finding your way in the city",
+                "levels": [
+                    "Local",
+                    "Guide",
+                    "Navigator",
+                    "Pathfinder",
+                    "Omniscient"
+                ],
+                "xp_per_level": [
+                    0,
+                    60,
+                    180,
+                    380,
+                    700
+                ],
+                "synergies": [
+                    "SK020",
+                    "SK021"
+                ],
+                "trainers": [
+                    "mama_indira",
+                    "felix"
+                ]
+            },
+            "SK024": {
+                "n": "endurance",
+                "desc": "Physical stamina and pain resistance",
+                "levels": [
+                    "Tough",
+                    "Hardy",
+                    "Resilient",
+                    "Unstoppable",
+                    "Immortal"
+                ],
+                "xp_per_level": [
+                    0,
+                    80,
+                    240,
+                    500,
+                    950
+                ],
+                "synergies": [
+                    "SK006",
+                    "SK022"
+                ],
+                "trainers": [
+                    "charlie",
+                    "zero_chen"
+                ]
+            }
+        },
+        "mystic": {
+            "SK025": {
+                "n": "layer_sense",
+                "desc": "Perceiving the boundaries between layers",
+                "levels": [
+                    "Glimpser",
+                    "Seer",
+                    "Walker",
+                    "Strider",
+                    "Transcendent"
+                ],
+                "xp_per_level": [
+                    0,
+                    300,
+                    800,
+                    1800,
+                    4000
+                ],
+                "synergies": [
+                    "SK026"
+                ],
+                "trainers": [
+                    "orion_thane",
+                    "selene_voss"
+                ]
+            },
+            "SK026": {
+                "n": "layer_walking",
+                "desc": "Moving between layers of reality",
+                "levels": [
+                    "Stumbler",
+                    "Crosser",
+                    "Walker",
+                    "Master",
+                    "Architect"
+                ],
+                "xp_per_level": [
+                    0,
+                    500,
+                    1500,
+                    4000,
+                    10000
+                ],
+                "synergies": [
+                    "SK025"
+                ],
+                "trainers": [
+                    "selene_voss"
+                ]
+            }
+        }
+    },
+    "skill_xp_sources": {
+        "combat": [
+            "winning_fights",
+            "training",
+            "sparring"
+        ],
+        "tech": [
+            "successful_hacks",
+            "repairs",
+            "installations"
+        ],
+        "social": [
+            "successful_negotiations",
+            "conversations",
+            "deals"
+        ],
+        "survival": [
+            "exploration",
+            "scavenging",
+            "healing"
+        ],
+        "mystic": [
+            "layer_bleed_exposure",
+            "meditation",
+            "rituals"
+        ]
+    },
+    "skill_checks": {
+        "_desc": "How skills are tested",
+        "formula": "roll(1-100) + skill_level * 15 vs difficulty",
+        "difficulties": {
+            "trivial": 20,
+            "easy": 40,
+            "medium": 60,
+            "hard": 80,
+            "very_hard": 100,
+            "legendary": 120,
+            "impossible": 150
+        }
+    }
+}

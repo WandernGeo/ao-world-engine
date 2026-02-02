@@ -1,0 +1,468 @@
+{
+    "_chunk": {
+        "id": "chunk_11_languages",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "languages",
+        "prev_chunk": "chunk_10_objects_expanded",
+        "next_chunk": null
+    },
+    "_meta": {
+        "description": "Extensible language system supporting human languages, in-world languages, and custom invented languages",
+        "extensibility": "New languages can be added by following the schema below. Each language has a unique code, grammar rules, and vocabulary mappings."
+    },
+    "language_schema": {
+        "_desc": "Schema for defining any language (human, fictional, or invented)",
+        "required_fields": {
+            "code": "Unique 3-6 character code (e.g., 'en', 'klingon', 'reecho_street')",
+            "name": "Human-readable name",
+            "type": "human | fictional | conlang | pidgin | machine",
+            "script": "Writing system (latin, cyrillic, custom, etc.)",
+            "direction": "ltr | rtl | vertical",
+            "base_language": "Parent language code, or null if original",
+            "vocabulary_chunk": "TX ID or file path to vocabulary chunk"
+        },
+        "optional_fields": {
+            "phonology": "Sound system rules",
+            "grammar": "Grammatical structures",
+            "honorifics": "Social register systems",
+            "slang_level": "0-1 formality scale",
+            "tech_terms": "Technical vocabulary additions",
+            "cultural_notes": "Usage context"
+        }
+    },
+    "language_registry": {
+        "_desc": "All registered languages in the system",
+        "human_languages": {
+            "en": {
+                "name": "English",
+                "type": "human",
+                "script": "latin",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 50000
+            },
+            "es": {
+                "name": "Spanish",
+                "type": "human",
+                "script": "latin",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 45000
+            },
+            "zh": {
+                "name": "Chinese (Mandarin)",
+                "type": "human",
+                "script": "hanzi",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 60000
+            },
+            "ja": {
+                "name": "Japanese",
+                "type": "human",
+                "script": "kanji_kana",
+                "direction": "ltr_vertical",
+                "supported": true,
+                "vocabulary_entries": 50000
+            },
+            "ko": {
+                "name": "Korean",
+                "type": "human",
+                "script": "hangul",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 40000
+            },
+            "ar": {
+                "name": "Arabic",
+                "type": "human",
+                "script": "arabic",
+                "direction": "rtl",
+                "supported": true,
+                "vocabulary_entries": 35000
+            },
+            "hi": {
+                "name": "Hindi",
+                "type": "human",
+                "script": "devanagari",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 30000
+            },
+            "pt": {
+                "name": "Portuguese",
+                "type": "human",
+                "script": "latin",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 40000
+            },
+            "ru": {
+                "name": "Russian",
+                "type": "human",
+                "script": "cyrillic",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 35000
+            },
+            "de": {
+                "name": "German",
+                "type": "human",
+                "script": "latin",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 45000
+            },
+            "fr": {
+                "name": "French",
+                "type": "human",
+                "script": "latin",
+                "direction": "ltr",
+                "supported": true,
+                "vocabulary_entries": 40000
+            }
+        },
+        "reecho_languages": {
+            "street_creole": {
+                "name": "Street Creole",
+                "type": "pidgin",
+                "script": "latin",
+                "direction": "ltr",
+                "base_languages": [
+                    "en",
+                    "zh",
+                    "es",
+                    "ja"
+                ],
+                "description": "Mixed street language of RE:ECHO City, borrowing from all immigrant communities",
+                "slang_level": 0.9,
+                "tech_integration": "high",
+                "sample": {
+                    "hello": "yo-yo / wei-hey",
+                    "goodbye": "fade-out / mata-ne",
+                    "thanks": "owe-ya / xie-one",
+                    "money": "creds / yuan-scratch",
+                    "danger": "red-wire / yabai"
+                }
+            },
+            "temple_cant": {
+                "name": "Temple Cant",
+                "type": "conlang",
+                "script": "custom_glyphs",
+                "direction": "vertical",
+                "base_languages": [
+                    "en",
+                    "latin",
+                    "sanskrit"
+                ],
+                "description": "Ritualized language of the Temple of the Signal",
+                "slang_level": 0.0,
+                "sacred": true,
+                "sample": {
+                    "greeting": "Signal-blessings unto thee",
+                    "farewell": "Walk within the Signal's grace",
+                    "yes": "The Signal wills it",
+                    "no": "The Signal forbids"
+                }
+            },
+            "net_speak": {
+                "name": "Netrunner Code",
+                "type": "machine",
+                "script": "mixed_ascii",
+                "direction": "ltr",
+                "base_languages": [
+                    "en",
+                    "binary"
+                ],
+                "description": "Compressed hacker slang for fast communication",
+                "slang_level": 0.95,
+                "sample": {
+                    "hello": "ping",
+                    "goodbye": "disconnect",
+                    "understood": "ack",
+                    "problem": "error_state",
+                    "police": "ice_incoming"
+                }
+            }
+        },
+        "fictional_languages": {
+            "klingon": {
+                "name": "Klingon (tlhIngan Hol)",
+                "type": "fictional",
+                "script": "custom_pIqaD",
+                "direction": "ltr",
+                "source": "Star Trek",
+                "supported": "via_extension",
+                "extension_tx": null,
+                "grammar": {
+                    "word_order": "OVS",
+                    "case_system": true,
+                    "verb_affixes": "extensive"
+                },
+                "integration_notes": "Load vocabulary from separate licensed extension chunk"
+            },
+            "elvish_sindarin": {
+                "name": "Sindarin Elvish",
+                "type": "fictional",
+                "script": "tengwar",
+                "direction": "ltr",
+                "source": "Tolkien",
+                "supported": "via_extension",
+                "extension_tx": null
+            },
+            "dothraki": {
+                "name": "Dothraki",
+                "type": "fictional",
+                "script": "latin",
+                "direction": "ltr",
+                "source": "Game of Thrones",
+                "supported": "via_extension",
+                "extension_tx": null
+            }
+        },
+        "custom_language_slots": {
+            "_desc": "Reserved slots for user-created languages",
+            "custom_001": null,
+            "custom_002": null,
+            "custom_003": null,
+            "custom_004": null,
+            "custom_005": null
+        }
+    },
+    "custom_language_template": {
+        "_desc": "Template for creating a new language",
+        "example": {
+            "code": "my_lang",
+            "name": "My Custom Language",
+            "type": "conlang",
+            "script": "latin",
+            "direction": "ltr",
+            "base_language": "en",
+            "phonology": {
+                "consonants": [
+                    "p",
+                    "t",
+                    "k",
+                    "m",
+                    "n",
+                    "s",
+                    "l",
+                    "r"
+                ],
+                "vowels": [
+                    "a",
+                    "e",
+                    "i",
+                    "o",
+                    "u"
+                ],
+                "syllable_structure": "CV(C)",
+                "stress_pattern": "penultimate"
+            },
+            "grammar": {
+                "word_order": "SVO",
+                "case_system": false,
+                "number": [
+                    "singular",
+                    "plural"
+                ],
+                "tense": [
+                    "past",
+                    "present",
+                    "future"
+                ],
+                "aspect": [
+                    "perfective",
+                    "imperfective"
+                ],
+                "articles": false,
+                "gender": false
+            },
+            "vocabulary": {
+                "core_words": {
+                    "i": "mi",
+                    "you": "ti",
+                    "we": "nos",
+                    "they": "elos",
+                    "yes": "si",
+                    "no": "ne",
+                    "hello": "sala",
+                    "goodbye": "vale",
+                    "good": "bona",
+                    "bad": "mala",
+                    "water": "akwa",
+                    "fire": "piro",
+                    "earth": "tera",
+                    "air": "aero"
+                },
+                "extensions": {
+                    "tech": {},
+                    "combat": {},
+                    "medical": {},
+                    "slang": {}
+                }
+            },
+            "translation_rules": {
+                "verb_conjugation": "suffix based on tense",
+                "plural_formation": "add -s or -es",
+                "adjective_placement": "after noun"
+            }
+        }
+    },
+    "translation_system": {
+        "_desc": "How to translate between languages in the codec",
+        "universal_concept_codes": {
+            "_desc": "Language-agnostic concept identifiers. Each verb/noun/etc has a universal code that maps to all languages.",
+            "example": {
+                "UC_WALK": {
+                    "en": "walk",
+                    "es": "caminar",
+                    "zh": "走",
+                    "street_creole": "step-step"
+                },
+                "UC_RUN": {
+                    "en": "run",
+                    "es": "correr",
+                    "zh": "跑",
+                    "street_creole": "jet"
+                },
+                "UC_HELLO": {
+                    "en": "hello",
+                    "es": "hola",
+                    "zh": "你好",
+                    "street_creole": "yo-yo"
+                },
+                "UC_DANGER": {
+                    "en": "danger",
+                    "es": "peligro",
+                    "zh": "危险",
+                    "street_creole": "red-wire"
+                }
+            }
+        },
+        "translation_api": {
+            "input": {
+                "text": "string to translate",
+                "from_lang": "source language code",
+                "to_lang": "target language code",
+                "context": "optional context for disambiguation"
+            },
+            "output": {
+                "translated": "translated text",
+                "confidence": "0-1 confidence score",
+                "alternatives": [
+                    "other possible translations"
+                ],
+                "notes": "translation notes or warnings"
+            }
+        },
+        "multilingual_npc_support": {
+            "_desc": "How NPCs handle multiple languages",
+            "npc_language_profile": {
+                "native_language": "Primary language code",
+                "fluent": [
+                    "List of fluent language codes"
+                ],
+                "partial": [
+                    "List of partial understanding codes"
+                ],
+                "learning": [
+                    "List of languages being learned"
+                ],
+                "accent": "Accent when speaking non-native languages"
+            },
+            "example_charlie": {
+                "native_language": "en",
+                "fluent": [
+                    "en",
+                    "street_creole"
+                ],
+                "partial": [
+                    "zh"
+                ],
+                "learning": [],
+                "accent": "Gruff, clipped consonants"
+            },
+            "example_pixel": {
+                "native_language": "en",
+                "fluent": [
+                    "en",
+                    "net_speak",
+                    "street_creole"
+                ],
+                "partial": [
+                    "ja"
+                ],
+                "learning": [
+                    "zh"
+                ],
+                "accent": "Rapid, technical"
+            }
+        }
+    },
+    "vocabulary_chunk_format": {
+        "_desc": "Format for vocabulary extension chunks",
+        "format": {
+            "language_code": "lang_code",
+            "version": "1.0.0",
+            "word_count": 1000,
+            "categories": {
+                "nouns": {
+                    "word": "translation"
+                },
+                "verbs": {
+                    "word": "translation"
+                },
+                "adjectives": {
+                    "word": "translation"
+                },
+                "adverbs": {
+                    "word": "translation"
+                },
+                "phrases": {
+                    "phrase": "translation"
+                }
+            }
+        },
+        "arweave_tags": [
+            {
+                "name": "App-Name",
+                "value": "AO-World-Engine"
+            },
+            {
+                "name": "Type",
+                "value": "vocabulary_chunk"
+            },
+            {
+                "name": "Language-Code",
+                "value": "LANG_CODE"
+            },
+            {
+                "name": "Word-Count",
+                "value": "1000"
+            }
+        ]
+    },
+    "language_detection": {
+        "_desc": "Auto-detect language from text input",
+        "methods": [
+            "character_set_analysis",
+            "n_gram_frequency",
+            "word_recognition",
+            "script_identification"
+        ],
+        "fallback": "en"
+    },
+    "display_preferences": {
+        "_desc": "User language settings",
+        "user_settings": {
+            "ui_language": "en",
+            "npc_speech_language": "original",
+            "subtitles": true,
+            "subtitle_language": "en",
+            "translate_all": false,
+            "show_original_with_translation": true
+        }
+    }
+}

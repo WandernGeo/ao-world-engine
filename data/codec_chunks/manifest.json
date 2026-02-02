@@ -1,88 +1,124 @@
 {
     "_meta": {
-        "chunk_id": "codec_manifest_v1",
-        "type": "manifest",
-        "version": "1.0.0",
-        "description": "Master manifest linking all World Codec chunks",
-        "total_chunks": 8,
-        "total_size_estimate_kb": 600,
-        "created_at": "2026-02-02"
+        "version": "2.0.0",
+        "name": "RE:ECHO World Codec - Chunked Encyclopedia",
+        "description": "Comprehensive world knowledge in chained chunks for Arweave storage",
+        "total_chunks": 14,
+        "total_size_estimate_kb": 312,
+        "created_at": "2026-02-02",
+        "location": "NYC / Brooklyn"
     },
-    "chunks": {
-        "core": {
+    "chunks": [
+        {
             "id": "chunk_00_core",
-            "desc": "Core codec - actions, base objects, locations",
             "file": "world_codec_00_core.json",
-            "tx_id": null,
-            "size_kb": 90,
+            "size_kb": 28,
+            "category": "core",
             "required": true
         },
-        "npcs": {
+        {
             "id": "chunk_01_npcs",
-            "desc": "NPC registry and relationships",
             "file": "world_codec_01_npcs.json",
-            "tx_id": null,
-            "size_kb": 80,
+            "size_kb": 32,
+            "category": "characters",
             "required": true
         },
-        "medical": {
+        {
             "id": "chunk_02_medical",
-            "desc": "Medical encyclopedia - conditions, treatments, drugs",
             "file": "world_codec_02_medical.json",
-            "tx_id": null,
-            "size_kb": 90,
-            "required": false
+            "size_kb": 28,
+            "category": "medical"
         },
-        "tech": {
+        {
             "id": "chunk_03_tech",
-            "desc": "Technology - hacking, electronics, cybernetics",
             "file": "world_codec_03_tech.json",
-            "tx_id": null,
-            "size_kb": 90,
-            "required": false
+            "size_kb": 24,
+            "category": "technology"
         },
-        "chemistry": {
+        {
             "id": "chunk_04_chemistry",
-            "desc": "Chemistry - drugs, compounds, reactions",
             "file": "world_codec_04_chemistry.json",
-            "tx_id": null,
-            "size_kb": 70,
-            "required": false
+            "size_kb": 12,
+            "category": "chemistry"
         },
-        "lore": {
+        {
             "id": "chunk_05_lore",
-            "desc": "History, factions, world events",
             "file": "world_codec_05_lore.json",
-            "tx_id": null,
-            "size_kb": 90,
-            "required": false
+            "size_kb": 12,
+            "category": "history"
         },
-        "skills": {
+        {
             "id": "chunk_06_skills",
-            "desc": "Skills, abilities, progression",
             "file": "world_codec_06_skills.json",
-            "tx_id": null,
-            "size_kb": 50,
-            "required": false
+            "size_kb": 20,
+            "category": "progression"
         },
-        "events": {
+        {
             "id": "chunk_07_events",
-            "desc": "Event templates and scenarios",
             "file": "world_codec_07_events.json",
-            "tx_id": null,
-            "size_kb": 40,
-            "required": false
+            "size_kb": 12,
+            "category": "simulation"
+        },
+        {
+            "id": "chunk_08_infrastructure",
+            "file": "world_codec_08_infrastructure.json",
+            "size_kb": 36,
+            "category": "infrastructure"
+        },
+        {
+            "id": "chunk_09_verbs_expanded",
+            "file": "world_codec_09_verbs_expanded.json",
+            "size_kb": 16,
+            "category": "verbs"
+        },
+        {
+            "id": "chunk_10_objects_expanded",
+            "file": "world_codec_10_objects_expanded.json",
+            "size_kb": 24,
+            "category": "objects"
+        },
+        {
+            "id": "chunk_11_languages",
+            "file": "world_codec_11_languages.json",
+            "size_kb": 16,
+            "category": "languages"
+        },
+        {
+            "id": "chunk_12_geospatial",
+            "file": "world_codec_12_geospatial.json",
+            "size_kb": 8,
+            "category": "geospatial"
+        },
+        {
+            "id": "chunk_13_canon_events",
+            "file": "world_codec_13_canon_events.json",
+            "size_kb": 12,
+            "category": "canon"
         }
+    ],
+    "totals": {
+        "actions_verbs": 700,
+        "objects": 772,
+        "locations": 55,
+        "npcs": 12,
+        "skills": 26,
+        "cybernetics": 43,
+        "medical_conditions": 60,
+        "sensors": 80,
+        "languages": 11
     },
-    "chain_format": {
-        "description": "Each chunk contains a 'next_chunk' field pointing to the next TX ID",
-        "example": {
-            "chunk_id": "chunk_00_core",
-            "next_chunk": "TX_ID_OF_CHUNK_01",
-            "prev_chunk": null
+    "arweave_tags": [
+        {
+            "name": "App-Name",
+            "value": "AO-World-Engine"
+        },
+        {
+            "name": "Type",
+            "value": "world_codec_chunk"
+        },
+        {
+            "name": "Version",
+            "value": "2.0.0"
         }
-    },
-    "query_pattern": {
-        "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"world_codec_chunk\"]}]) { edges { node { id tags { name value } } } } }"
-    }
+    ]
 }

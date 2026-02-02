@@ -1,0 +1,1219 @@
+{
+    "_chunk": {
+        "id": "chunk_08_infrastructure",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "infrastructure",
+        "prev_chunk": "chunk_07_events",
+        "next_chunk": "chunk_09_verbs_expanded"
+    },
+    "power_systems": {
+        "_desc": "Energy generation and distribution (100 entries)",
+        "generators": {
+            "GEN01": {
+                "n": "diesel_generator",
+                "output_kw": 50,
+                "fuel": "CC013",
+                "noise": 8,
+                "reliability": 0.9
+            },
+            "GEN02": {
+                "n": "gas_generator",
+                "output_kw": 30,
+                "fuel": "natural_gas",
+                "noise": 6,
+                "reliability": 0.85
+            },
+            "GEN03": {
+                "n": "fusion_micro",
+                "output_kw": 500,
+                "fuel": "hydrogen",
+                "noise": 2,
+                "reliability": 0.95
+            },
+            "GEN04": {
+                "n": "fusion_reactor",
+                "output_kw": 50000,
+                "fuel": "hydrogen",
+                "noise": 1,
+                "reliability": 0.99
+            },
+            "GEN05": {
+                "n": "fission_reactor",
+                "output_kw": 100000,
+                "fuel": "uranium",
+                "noise": 1,
+                "reliability": 0.98
+            },
+            "GEN06": {
+                "n": "geothermal_tap",
+                "output_kw": 1000,
+                "fuel": null,
+                "noise": 3,
+                "reliability": 0.92
+            },
+            "GEN07": {
+                "n": "steam_turbine",
+                "output_kw": 200,
+                "fuel": "steam",
+                "noise": 7,
+                "reliability": 0.88
+            },
+            "GEN08": {
+                "n": "wind_turbine",
+                "output_kw": 15,
+                "fuel": null,
+                "noise": 4,
+                "reliability": 0.6
+            },
+            "GEN09": {
+                "n": "hydro_turbine",
+                "output_kw": 100,
+                "fuel": null,
+                "noise": 5,
+                "reliability": 0.85
+            },
+            "GEN10": {
+                "n": "biogas_reactor",
+                "output_kw": 20,
+                "fuel": "organic_waste",
+                "noise": 4,
+                "reliability": 0.7
+            },
+            "GEN11": {
+                "n": "hand_crank",
+                "output_kw": 0.05,
+                "fuel": "human",
+                "noise": 2,
+                "reliability": 1.0
+            },
+            "GEN12": {
+                "n": "kinetic_harvester",
+                "output_kw": 0.1,
+                "fuel": "movement",
+                "noise": 0,
+                "reliability": 0.9
+            }
+        },
+        "solar": {
+            "SOL01": {
+                "n": "solar_panel_small",
+                "output_w": 100,
+                "efficiency": 0.18,
+                "size_sqm": 0.5
+            },
+            "SOL02": {
+                "n": "solar_panel_standard",
+                "output_w": 400,
+                "efficiency": 0.20,
+                "size_sqm": 2.0
+            },
+            "SOL03": {
+                "n": "solar_panel_high_eff",
+                "output_w": 500,
+                "efficiency": 0.25,
+                "size_sqm": 2.0
+            },
+            "SOL04": {
+                "n": "solar_panel_flexible",
+                "output_w": 150,
+                "efficiency": 0.15,
+                "size_sqm": 1.0
+            },
+            "SOL05": {
+                "n": "solar_concentrator",
+                "output_w": 2000,
+                "efficiency": 0.35,
+                "size_sqm": 10.0
+            },
+            "SOL06": {
+                "n": "solar_roof_tile",
+                "output_w": 50,
+                "efficiency": 0.12,
+                "size_sqm": 0.3
+            },
+            "SOL07": {
+                "n": "solar_window",
+                "output_w": 30,
+                "efficiency": 0.10,
+                "size_sqm": 1.5
+            },
+            "SOL08": {
+                "n": "solar_paint",
+                "output_w": 10,
+                "efficiency": 0.05,
+                "size_sqm": 1.0
+            },
+            "SOL09": {
+                "n": "solar_farm_array",
+                "output_kw": 50,
+                "efficiency": 0.22,
+                "size_sqm": 500
+            },
+            "SOL10": {
+                "n": "orbital_solar_relay",
+                "output_kw": 10000,
+                "efficiency": 0.40,
+                "desc": "Beamed power from orbit"
+            }
+        },
+        "batteries": {
+            "BAT01": {
+                "n": "battery_aa",
+                "capacity_wh": 3,
+                "recharge_cycles": 500,
+                "chemistry": "alkaline"
+            },
+            "BAT02": {
+                "n": "battery_power_cell",
+                "capacity_wh": 50,
+                "recharge_cycles": 1000,
+                "chemistry": "lithium"
+            },
+            "BAT03": {
+                "n": "battery_pack_small",
+                "capacity_wh": 200,
+                "recharge_cycles": 2000,
+                "chemistry": "lithium_polymer"
+            },
+            "BAT04": {
+                "n": "battery_pack_large",
+                "capacity_wh": 2000,
+                "recharge_cycles": 3000,
+                "chemistry": "solid_state"
+            },
+            "BAT05": {
+                "n": "power_bank",
+                "capacity_wh": 100,
+                "recharge_cycles": 1500,
+                "chemistry": "lithium"
+            },
+            "BAT06": {
+                "n": "vehicle_battery",
+                "capacity_kwh": 60,
+                "recharge_cycles": 5000,
+                "chemistry": "solid_state"
+            },
+            "BAT07": {
+                "n": "building_battery",
+                "capacity_kwh": 500,
+                "recharge_cycles": 10000,
+                "chemistry": "flow"
+            },
+            "BAT08": {
+                "n": "grid_battery",
+                "capacity_mwh": 100,
+                "recharge_cycles": 20000,
+                "chemistry": "sodium_sulfur"
+            },
+            "BAT09": {
+                "n": "nuclear_battery",
+                "capacity_wh": 10,
+                "runtime_years": 20,
+                "chemistry": "rtg"
+            },
+            "BAT10": {
+                "n": "capacitor_bank",
+                "capacity_wh": 50,
+                "discharge_time_s": 0.1,
+                "chemistry": "supercap"
+            },
+            "BAT11": {
+                "n": "implant_battery",
+                "capacity_wh": 5,
+                "recharge_cycles": 10000,
+                "chemistry": "bio_compatible"
+            }
+        },
+        "distribution": {
+            "PWR01": {
+                "n": "power_cable_low",
+                "voltage": 120,
+                "max_amps": 50,
+                "insulation": "rubber"
+            },
+            "PWR02": {
+                "n": "power_cable_high",
+                "voltage": 480,
+                "max_amps": 200,
+                "insulation": "armored"
+            },
+            "PWR03": {
+                "n": "power_cable_grid",
+                "voltage": 10000,
+                "max_amps": 500,
+                "insulation": "underground"
+            },
+            "PWR04": {
+                "n": "transformer_step_down",
+                "ratio": "10:1",
+                "capacity_kva": 100
+            },
+            "PWR05": {
+                "n": "transformer_step_up",
+                "ratio": "1:10",
+                "capacity_kva": 100
+            },
+            "PWR06": {
+                "n": "inverter",
+                "dc_to_ac": true,
+                "efficiency": 0.95
+            },
+            "PWR07": {
+                "n": "rectifier",
+                "ac_to_dc": true,
+                "efficiency": 0.92
+            },
+            "PWR08": {
+                "n": "power_conditioner",
+                "surge_protection": true,
+                "clean_output": true
+            },
+            "PWR09": {
+                "n": "circuit_breaker",
+                "max_amps": 100,
+                "trip_type": "thermal"
+            },
+            "PWR10": {
+                "n": "fuse_box",
+                "circuits": 24,
+                "main_breaker": true
+            },
+            "PWR11": {
+                "n": "junction_box",
+                "connections": 8,
+                "weatherproof": true
+            },
+            "PWR12": {
+                "n": "power_meter",
+                "digital": true,
+                "accuracy": 0.99
+            },
+            "PWR13": {
+                "n": "smart_grid_node",
+                "ai_managed": true,
+                "load_balancing": true
+            },
+            "PWR14": {
+                "n": "wireless_charger",
+                "output_w": 50,
+                "range_m": 0.1
+            },
+            "PWR15": {
+                "n": "induction_pad",
+                "output_w": 100,
+                "efficiency": 0.85
+            }
+        }
+    },
+    "building_components": {
+        "_desc": "Architectural and construction elements (150 entries)",
+        "windows": {
+            "WIN01": {
+                "n": "window_standard",
+                "material": "glass",
+                "thickness_mm": 6,
+                "insulation": 0.3
+            },
+            "WIN02": {
+                "n": "window_double_pane",
+                "material": "glass_glass",
+                "thickness_mm": 24,
+                "insulation": 0.6
+            },
+            "WIN03": {
+                "n": "window_triple_pane",
+                "material": "glass_3x",
+                "thickness_mm": 40,
+                "insulation": 0.8
+            },
+            "WIN04": {
+                "n": "window_bulletproof",
+                "material": "polycarbonate_laminate",
+                "thickness_mm": 50,
+                "armor_rating": 3
+            },
+            "WIN05": {
+                "n": "window_smart",
+                "material": "electrochromic",
+                "tint_adjustable": true,
+                "opacity": "0-100%"
+            },
+            "WIN06": {
+                "n": "window_privacy",
+                "material": "liquid_crystal",
+                "modes": [
+                    "clear",
+                    "frosted",
+                    "mirror"
+                ]
+            },
+            "WIN07": {
+                "n": "window_solar",
+                "material": "photovoltaic_glass",
+                "output_w_sqm": 50,
+                "transparency": 0.5
+            },
+            "WIN08": {
+                "n": "window_holographic",
+                "material": "smart_glass",
+                "display_capable": true
+            },
+            "WIN09": {
+                "n": "window_blast_resistant",
+                "material": "laminated_security",
+                "blast_rating": "high"
+            },
+            "WIN10": {
+                "n": "window_one_way",
+                "material": "mirrored",
+                "visible_inside_only": true
+            },
+            "WIN11": {
+                "n": "skylight",
+                "material": "tempered",
+                "uv_blocking": 0.9
+            },
+            "WIN12": {
+                "n": "window_emergency",
+                "material": "breakaway_glass",
+                "fire_escape": true
+            }
+        },
+        "doors": {
+            "DOR01": {
+                "n": "door_interior",
+                "material": "wood",
+                "thickness_mm": 35,
+                "lock_type": "knob"
+            },
+            "DOR02": {
+                "n": "door_exterior",
+                "material": "steel_core",
+                "thickness_mm": 45,
+                "lock_type": "deadbolt"
+            },
+            "DOR03": {
+                "n": "door_security",
+                "material": "reinforced_steel",
+                "thickness_mm": 80,
+                "lock_type": "multi_point"
+            },
+            "DOR04": {
+                "n": "door_vault",
+                "material": "composite_armor",
+                "thickness_mm": 200,
+                "lock_type": "biometric_dial"
+            },
+            "DOR05": {
+                "n": "door_airlock",
+                "material": "sealed_alloy",
+                "pressure_rated": true,
+                "cycles": "automatic"
+            },
+            "DOR06": {
+                "n": "door_sliding",
+                "material": "glass",
+                "mechanism": "motorized",
+                "sensor": true
+            },
+            "DOR07": {
+                "n": "door_revolving",
+                "material": "glass_steel",
+                "segments": 4,
+                "speed_control": true
+            },
+            "DOR08": {
+                "n": "door_garage",
+                "material": "steel_panel",
+                "mechanism": "chain_drive",
+                "remote": true
+            },
+            "DOR09": {
+                "n": "door_fire",
+                "material": "fire_rated_steel",
+                "rating_hours": 2,
+                "auto_close": true
+            },
+            "DOR10": {
+                "n": "door_blast",
+                "material": "reinforced_concrete",
+                "blast_rating": "nuclear"
+            },
+            "DOR11": {
+                "n": "door_hidden",
+                "material": "matching_wall",
+                "mechanism": "concealed",
+                "trigger": "secret"
+            },
+            "DOR12": {
+                "n": "gate_chain_link",
+                "material": "galvanized_steel",
+                "height_m": 2.5,
+                "barbed_top": true
+            },
+            "DOR13": {
+                "n": "gate_vehicle",
+                "material": "steel_bar",
+                "width_m": 5,
+                "mechanism": "swing"
+            },
+            "DOR14": {
+                "n": "gate_barrier",
+                "material": "steel_arm",
+                "mechanism": "counterweight"
+            }
+        },
+        "walls": {
+            "WAL01": {
+                "n": "wall_drywall",
+                "material": "gypsum",
+                "thickness_mm": 12,
+                "fire_rating": 0.5
+            },
+            "WAL02": {
+                "n": "wall_brick",
+                "material": "clay_brick",
+                "thickness_mm": 200,
+                "fire_rating": 4
+            },
+            "WAL03": {
+                "n": "wall_concrete",
+                "material": "reinforced_concrete",
+                "thickness_mm": 300,
+                "fire_rating": 6
+            },
+            "WAL04": {
+                "n": "wall_steel",
+                "material": "corrugated_steel",
+                "thickness_mm": 3,
+                "fire_rating": 2
+            },
+            "WAL05": {
+                "n": "wall_glass",
+                "material": "tempered_glass",
+                "thickness_mm": 12,
+                "transparency": 0.9
+            },
+            "WAL06": {
+                "n": "wall_partition",
+                "material": "modular_panel",
+                "thickness_mm": 50,
+                "movable": true
+            },
+            "WAL07": {
+                "n": "wall_blast",
+                "material": "reinforced_composite",
+                "thickness_mm": 500,
+                "blast_rating": "high"
+            },
+            "WAL08": {
+                "n": "wall_sound_proof",
+                "material": "acoustic_foam_drywall",
+                "thickness_mm": 100,
+                "db_reduction": 45
+            },
+            "WAL09": {
+                "n": "wall_faraday",
+                "material": "copper_mesh",
+                "em_shielding": true,
+                "db_reduction": 80
+            },
+            "WAL10": {
+                "n": "wall_led",
+                "material": "light_panel",
+                "display_capable": true,
+                "lumens_sqm": 500
+            }
+        },
+        "floors": {
+            "FLR01": {
+                "n": "floor_concrete",
+                "material": "poured_concrete",
+                "load_kg_sqm": 2000
+            },
+            "FLR02": {
+                "n": "floor_wood",
+                "material": "hardwood",
+                "load_kg_sqm": 400
+            },
+            "FLR03": {
+                "n": "floor_tile",
+                "material": "ceramic",
+                "load_kg_sqm": 600
+            },
+            "FLR04": {
+                "n": "floor_carpet",
+                "material": "synthetic_fiber",
+                "sound_absorption": 0.6
+            },
+            "FLR05": {
+                "n": "floor_metal_grate",
+                "material": "steel",
+                "drainage": true,
+                "anti_slip": true
+            },
+            "FLR06": {
+                "n": "floor_raised",
+                "material": "modular_panel",
+                "cable_space_mm": 300
+            },
+            "FLR07": {
+                "n": "floor_heated",
+                "material": "radiant_panel",
+                "temp_control": true
+            },
+            "FLR08": {
+                "n": "floor_anti_static",
+                "material": "conductive_vinyl",
+                "esd_safe": true
+            },
+            "FLR09": {
+                "n": "floor_industrial",
+                "material": "epoxy_coated",
+                "chemical_resistant": true
+            },
+            "FLR10": {
+                "n": "floor_pressure_sensor",
+                "material": "sensor_array",
+                "intrusion_detect": true
+            }
+        },
+        "roofs": {
+            "ROF01": {
+                "n": "roof_shingle",
+                "material": "asphalt",
+                "lifespan_years": 20,
+                "slope": "pitched"
+            },
+            "ROF02": {
+                "n": "roof_metal",
+                "material": "steel_sheet",
+                "lifespan_years": 50,
+                "slope": "any"
+            },
+            "ROF03": {
+                "n": "roof_flat",
+                "material": "membrane",
+                "lifespan_years": 25,
+                "slope": "flat"
+            },
+            "ROF04": {
+                "n": "roof_green",
+                "material": "vegetation_soil",
+                "insulation": 0.9,
+                "drainage": true
+            },
+            "ROF05": {
+                "n": "roof_solar",
+                "material": "integrated_pv",
+                "output_kw": 10,
+                "seamless": true
+            },
+            "ROF06": {
+                "n": "roof_retractable",
+                "material": "motorized_panel",
+                "mechanism": "track",
+                "open_sky": true
+            },
+            "ROF07": {
+                "n": "roof_dome",
+                "material": "geodesic_glass",
+                "snow_load": "self_clearing"
+            },
+            "ROF08": {
+                "n": "roof_armored",
+                "material": "ballistic_plate",
+                "protection_level": 4
+            }
+        },
+        "stairs_elevators": {
+            "STA01": {
+                "n": "stairs_standard",
+                "material": "concrete",
+                "rise_mm": 180,
+                "run_mm": 280
+            },
+            "STA02": {
+                "n": "stairs_spiral",
+                "material": "steel",
+                "radius_m": 1.5,
+                "rotation": 360
+            },
+            "STA03": {
+                "n": "stairs_emergency",
+                "material": "steel_grate",
+                "enclosed": true,
+                "fire_rated": 2
+            },
+            "STA04": {
+                "n": "stairs_retractable",
+                "material": "aluminum",
+                "mechanism": "spring_loaded"
+            },
+            "STA05": {
+                "n": "escalator",
+                "material": "steel_steps",
+                "speed_mps": 0.5,
+                "capacity": 50
+            },
+            "ELV01": {
+                "n": "elevator_passenger",
+                "capacity_kg": 1000,
+                "floors": 20,
+                "speed_mps": 2
+            },
+            "ELV02": {
+                "n": "elevator_freight",
+                "capacity_kg": 5000,
+                "floors": 10,
+                "speed_mps": 1
+            },
+            "ELV03": {
+                "n": "elevator_service",
+                "capacity_kg": 500,
+                "floors": 50,
+                "key_required": true
+            },
+            "ELV04": {
+                "n": "lift_platform",
+                "capacity_kg": 300,
+                "vertical_m": 3,
+                "hydraulic": true
+            },
+            "ELV05": {
+                "n": "dumbwaiter",
+                "capacity_kg": 50,
+                "floors": 5,
+                "food_service": true
+            }
+        }
+    },
+    "sensors": {
+        "_desc": "Detection and monitoring devices (80 entries)",
+        "motion_presence": {
+            "SEN01": {
+                "n": "sensor_pir",
+                "type": "passive_infrared",
+                "range_m": 12,
+                "angle_deg": 110,
+                "detects": "heat_motion"
+            },
+            "SEN02": {
+                "n": "sensor_microwave",
+                "type": "microwave_doppler",
+                "range_m": 20,
+                "angle_deg": 360,
+                "detects": "motion"
+            },
+            "SEN03": {
+                "n": "sensor_ultrasonic",
+                "type": "ultrasound",
+                "range_m": 10,
+                "angle_deg": 90,
+                "detects": "presence"
+            },
+            "SEN04": {
+                "n": "sensor_tomographic",
+                "type": "rf_imaging",
+                "range_m": 30,
+                "through_walls": true,
+                "detects": "motion"
+            },
+            "SEN05": {
+                "n": "sensor_vibration",
+                "type": "seismic",
+                "range_m": 50,
+                "detects": "footsteps_vehicles"
+            },
+            "SEN06": {
+                "n": "sensor_pressure_mat",
+                "type": "pressure",
+                "range_m": 0,
+                "discrete": true,
+                "detects": "weight"
+            }
+        },
+        "environmental": {
+            "SEN10": {
+                "n": "sensor_temperature",
+                "type": "thermistor",
+                "range_c": "-40_to_125",
+                "accuracy_c": 0.5
+            },
+            "SEN11": {
+                "n": "sensor_humidity",
+                "type": "capacitive",
+                "range_percent": "0-100",
+                "accuracy": 3
+            },
+            "SEN12": {
+                "n": "sensor_pressure_atm",
+                "type": "barometric",
+                "range_hpa": "300-1100",
+                "accuracy": 1
+            },
+            "SEN13": {
+                "n": "sensor_air_quality",
+                "type": "mox",
+                "detects": [
+                    "co2",
+                    "voc",
+                    "pm25",
+                    "pm10"
+                ]
+            },
+            "SEN14": {
+                "n": "sensor_gas",
+                "type": "electrochemical",
+                "detects": [
+                    "co",
+                    "h2s",
+                    "methane",
+                    "propane"
+                ]
+            },
+            "SEN15": {
+                "n": "sensor_smoke",
+                "type": "photoelectric",
+                "sensitivity": "high",
+                "alarm": true
+            },
+            "SEN16": {
+                "n": "sensor_fire",
+                "type": "ir_uv",
+                "detects": "flame",
+                "range_m": 30
+            },
+            "SEN17": {
+                "n": "sensor_radiation",
+                "type": "geiger",
+                "range_usv": "0.01-10000",
+                "alarm_threshold": 50
+            },
+            "SEN18": {
+                "n": "sensor_water_leak",
+                "type": "conductivity",
+                "cable_length_m": 10,
+                "instant_alert": true
+            },
+            "SEN19": {
+                "n": "sensor_wind",
+                "type": "anemometer",
+                "range_mps": "0-60",
+                "direction": true
+            }
+        },
+        "biometric": {
+            "SEN30": {
+                "n": "sensor_fingerprint",
+                "type": "capacitive",
+                "accuracy": 0.9999,
+                "speed_ms": 500
+            },
+            "SEN31": {
+                "n": "sensor_retina",
+                "type": "ir_scanner",
+                "accuracy": 0.999999,
+                "speed_ms": 2000
+            },
+            "SEN32": {
+                "n": "sensor_facial",
+                "type": "3d_depth",
+                "accuracy": 0.9995,
+                "liveness_check": true
+            },
+            "SEN33": {
+                "n": "sensor_voice",
+                "type": "voiceprint",
+                "accuracy": 0.99,
+                "phrase_required": false
+            },
+            "SEN34": {
+                "n": "sensor_palm",
+                "type": "vein_pattern",
+                "accuracy": 0.99999,
+                "contactless": true
+            },
+            "SEN35": {
+                "n": "sensor_gait",
+                "type": "floor_pressure",
+                "accuracy": 0.95,
+                "continuous": true
+            },
+            "SEN36": {
+                "n": "sensor_heartbeat",
+                "type": "radar",
+                "contactless": true,
+                "range_m": 10
+            },
+            "SEN37": {
+                "n": "sensor_dna",
+                "type": "rapid_pcr",
+                "time_min": 5,
+                "accuracy": 0.9999999
+            }
+        },
+        "electromagnetic": {
+            "SEN40": {
+                "n": "sensor_rf",
+                "type": "spectrum_analyzer",
+                "range_mhz": "1-6000",
+                "detect_devices": true
+            },
+            "SEN41": {
+                "n": "sensor_magnetic",
+                "type": "magnetometer",
+                "sensitivity_nt": 10,
+                "detect_metal": true
+            },
+            "SEN42": {
+                "n": "sensor_em_field",
+                "type": "emi_detector",
+                "detect_electronics": true
+            },
+            "SEN43": {
+                "n": "sensor_bug_detector",
+                "type": "rf_lens",
+                "detect_bugs": true,
+                "range_m": 5
+            },
+            "SEN44": {
+                "n": "sensor_xray",
+                "type": "backscatter",
+                "penetration_mm": 50,
+                "see_concealed": true
+            },
+            "SEN45": {
+                "n": "sensor_terahertz",
+                "type": "thz_wave",
+                "see_through_clothes": true,
+                "range_m": 3
+            }
+        },
+        "industrial": {
+            "SEN50": {
+                "n": "sensor_level",
+                "type": "ultrasonic",
+                "range_m": 10,
+                "liquid_solid": "both"
+            },
+            "SEN51": {
+                "n": "sensor_flow",
+                "type": "electromagnetic",
+                "range_lpm": "0-1000",
+                "accuracy": 0.5
+            },
+            "SEN52": {
+                "n": "sensor_ph",
+                "type": "electrode",
+                "range": "0-14",
+                "accuracy": 0.1
+            },
+            "SEN53": {
+                "n": "sensor_conductivity",
+                "type": "inductive",
+                "range_ms": "0-200",
+                "temp_compensated": true
+            },
+            "SEN54": {
+                "n": "sensor_load",
+                "type": "strain_gauge",
+                "range_kg": "0-10000",
+                "accuracy": 0.1
+            },
+            "SEN55": {
+                "n": "sensor_torque",
+                "type": "rotary",
+                "range_nm": "0-500",
+                "speed_rpm": 10000
+            },
+            "SEN56": {
+                "n": "sensor_position",
+                "type": "encoder",
+                "resolution_deg": 0.01,
+                "absolute": true
+            }
+        }
+    },
+    "hvac_plumbing": {
+        "_desc": "Climate control and water systems",
+        "hvac": {
+            "HVC01": {
+                "n": "ac_unit_window",
+                "cooling_btu": 12000,
+                "power_w": 1200
+            },
+            "HVC02": {
+                "n": "ac_unit_split",
+                "cooling_btu": 24000,
+                "power_w": 2000,
+                "heating": true
+            },
+            "HVC03": {
+                "n": "ac_unit_central",
+                "cooling_tons": 5,
+                "duct_system": true
+            },
+            "HVC04": {
+                "n": "heater_space",
+                "heating_w": 1500,
+                "type": "radiant"
+            },
+            "HVC05": {
+                "n": "heater_baseboard",
+                "heating_w": 2000,
+                "type": "convection"
+            },
+            "HVC06": {
+                "n": "furnace_gas",
+                "heating_btu": 100000,
+                "efficiency": 0.95
+            },
+            "HVC07": {
+                "n": "heat_pump",
+                "heating_btu": 36000,
+                "cooling_btu": 36000,
+                "cop": 3.5
+            },
+            "HVC08": {
+                "n": "fan_ceiling",
+                "airflow_cfm": 5000,
+                "speeds": 6
+            },
+            "HVC09": {
+                "n": "fan_exhaust",
+                "airflow_cfm": 200,
+                "duct_connected": true
+            },
+            "HVC10": {
+                "n": "vent_supply",
+                "adjustable": true,
+                "size_inches": 8
+            },
+            "HVC11": {
+                "n": "vent_return",
+                "filter": true,
+                "size_inches": 12
+            },
+            "HVC12": {
+                "n": "air_purifier",
+                "hepa": true,
+                "uv_c": true,
+                "coverage_sqm": 50
+            },
+            "HVC13": {
+                "n": "dehumidifier",
+                "capacity_l_day": 20,
+                "coverage_sqm": 40
+            },
+            "HVC14": {
+                "n": "humidifier",
+                "capacity_l_day": 10,
+                "ultrasonic": true
+            }
+        },
+        "plumbing": {
+            "PLB01": {
+                "n": "pipe_copper",
+                "diameter_mm": 22,
+                "pressure_bar": 10,
+                "temp_c": 95
+            },
+            "PLB02": {
+                "n": "pipe_pvc",
+                "diameter_mm": 50,
+                "pressure_bar": 6,
+                "drain": true
+            },
+            "PLB03": {
+                "n": "pipe_stainless",
+                "diameter_mm": 25,
+                "pressure_bar": 20,
+                "food_safe": true
+            },
+            "PLB04": {
+                "n": "valve_ball",
+                "diameter_mm": 25,
+                "shutoff": "quarter_turn"
+            },
+            "PLB05": {
+                "n": "valve_gate",
+                "diameter_mm": 50,
+                "shutoff": "multi_turn"
+            },
+            "PLB06": {
+                "n": "valve_check",
+                "diameter_mm": 25,
+                "backflow_prevention": true
+            },
+            "PLB07": {
+                "n": "pump_water",
+                "flow_lpm": 50,
+                "head_m": 20,
+                "power_w": 500
+            },
+            "PLB08": {
+                "n": "pump_sump",
+                "flow_lpm": 100,
+                "automatic": true,
+                "backup_battery": true
+            },
+            "PLB09": {
+                "n": "water_heater_tank",
+                "capacity_l": 200,
+                "power_w": 3000
+            },
+            "PLB10": {
+                "n": "water_heater_tankless",
+                "flow_lpm": 15,
+                "power_w": 18000
+            },
+            "PLB11": {
+                "n": "water_filter",
+                "type": "activated_carbon",
+                "microns": 5
+            },
+            "PLB12": {
+                "n": "water_softener",
+                "capacity_grains": 50000,
+                "salt_tank": true
+            },
+            "PLB13": {
+                "n": "toilet_standard",
+                "flush_l": 6,
+                "type": "gravity"
+            },
+            "PLB14": {
+                "n": "toilet_low_flow",
+                "flush_l": 3,
+                "type": "pressure_assist"
+            },
+            "PLB15": {
+                "n": "sink_standard",
+                "basins": 1,
+                "faucet_type": "mixer"
+            },
+            "PLB16": {
+                "n": "shower_head",
+                "flow_lpm": 10,
+                "adjustable": true
+            },
+            "PLB17": {
+                "n": "drain_floor",
+                "diameter_mm": 100,
+                "trap": true
+            }
+        }
+    },
+    "lighting": {
+        "_desc": "Illumination systems",
+        "sources": {
+            "LIT01": {
+                "n": "bulb_incandescent",
+                "lumens": 800,
+                "watts": 60,
+                "cri": 100,
+                "lifespan_h": 1000
+            },
+            "LIT02": {
+                "n": "bulb_cfl",
+                "lumens": 800,
+                "watts": 15,
+                "cri": 80,
+                "lifespan_h": 8000
+            },
+            "LIT03": {
+                "n": "bulb_led",
+                "lumens": 800,
+                "watts": 10,
+                "cri": 90,
+                "lifespan_h": 25000
+            },
+            "LIT04": {
+                "n": "tube_fluorescent",
+                "lumens": 3000,
+                "watts": 32,
+                "cri": 75,
+                "lifespan_h": 20000
+            },
+            "LIT05": {
+                "n": "tube_led",
+                "lumens": 2000,
+                "watts": 18,
+                "cri": 85,
+                "lifespan_h": 50000
+            },
+            "LIT06": {
+                "n": "panel_led",
+                "lumens": 4000,
+                "watts": 40,
+                "cri": 90,
+                "flat": true
+            },
+            "LIT07": {
+                "n": "spotlight",
+                "lumens": 1000,
+                "watts": 15,
+                "beam_deg": 30,
+                "adjustable": true
+            },
+            "LIT08": {
+                "n": "floodlight",
+                "lumens": 10000,
+                "watts": 100,
+                "beam_deg": 120,
+                "outdoor": true
+            },
+            "LIT09": {
+                "n": "strip_led",
+                "lumens_m": 500,
+                "watts_m": 5,
+                "rgb": true,
+                "addressable": true
+            },
+            "LIT10": {
+                "n": "emergency_light",
+                "lumens": 400,
+                "battery_min": 90,
+                "auto_on": true
+            },
+            "LIT11": {
+                "n": "exit_sign",
+                "lumens": 50,
+                "battery_backup": true,
+                "photoluminescent": true
+            }
+        },
+        "controls": {
+            "LIT20": {
+                "n": "switch_standard",
+                "poles": 1,
+                "type": "toggle"
+            },
+            "LIT21": {
+                "n": "switch_dimmer",
+                "type": "rotary",
+                "range_percent": "0-100"
+            },
+            "LIT22": {
+                "n": "switch_motion",
+                "sensor": "pir",
+                "delay_min": 5,
+                "daylight_sensor": true
+            },
+            "LIT23": {
+                "n": "switch_smart",
+                "wireless": true,
+                "app_control": true,
+                "schedule": true
+            },
+            "LIT24": {
+                "n": "timer",
+                "programmable": true,
+                "outlets": 2,
+                "random_mode": true
+            }
+        }
+    }
+}
