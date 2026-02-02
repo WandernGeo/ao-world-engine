@@ -1,0 +1,918 @@
+{
+    "_chunk": {
+        "id": "chunk_00_core",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "core",
+        "prev_chunk": null,
+        "next_chunk": "chunk_01_npcs"
+    },
+    "actions": {
+        "_desc": "All possible actions (200 unique)",
+        "_encoding": "A### where ### is 001-200",
+        "movement": {
+            "A001": "walk",
+            "A002": "run",
+            "A003": "sprint",
+            "A004": "crawl",
+            "A005": "climb",
+            "A006": "jump",
+            "A007": "fall",
+            "A008": "roll",
+            "A009": "slide",
+            "A010": "swim",
+            "A011": "dive",
+            "A012": "float",
+            "A013": "fly",
+            "A014": "hover",
+            "A015": "teleport",
+            "A016": "dodge",
+            "A017": "duck",
+            "A018": "weave",
+            "A019": "strafe",
+            "A020": "retreat"
+        },
+        "combat": {
+            "A021": "punch",
+            "A022": "kick",
+            "A023": "headbutt",
+            "A024": "elbow",
+            "A025": "knee",
+            "A026": "grapple",
+            "A027": "throw_person",
+            "A028": "choke",
+            "A029": "restrain",
+            "A030": "pin",
+            "A031": "slash",
+            "A032": "stab",
+            "A033": "parry",
+            "A034": "block",
+            "A035": "disarm",
+            "A036": "shoot",
+            "A037": "aim",
+            "A038": "reload",
+            "A039": "holster",
+            "A040": "draw_weapon",
+            "A041": "grenade_throw",
+            "A042": "detonate",
+            "A043": "suppress",
+            "A044": "flank",
+            "A045": "ambush"
+        },
+        "social": {
+            "A046": "talk",
+            "A047": "whisper",
+            "A048": "shout",
+            "A049": "scream",
+            "A050": "laugh",
+            "A051": "cry",
+            "A052": "greet",
+            "A053": "farewell",
+            "A054": "introduce",
+            "A055": "flirt",
+            "A056": "insult",
+            "A057": "threaten",
+            "A058": "bribe",
+            "A059": "negotiate",
+            "A060": "persuade",
+            "A061": "intimidate",
+            "A062": "deceive",
+            "A063": "confess",
+            "A064": "accuse",
+            "A065": "defend_verbal",
+            "A066": "apologize",
+            "A067": "forgive",
+            "A068": "praise",
+            "A069": "mock",
+            "A070": "gossip"
+        },
+        "trade": {
+            "A071": "buy",
+            "A072": "sell",
+            "A073": "trade",
+            "A074": "barter",
+            "A075": "haggle",
+            "A076": "offer",
+            "A077": "accept_deal",
+            "A078": "reject_deal",
+            "A079": "counter_offer",
+            "A080": "gift",
+            "A081": "steal",
+            "A082": "pickpocket",
+            "A083": "shoplift",
+            "A084": "fence",
+            "A085": "smuggle"
+        },
+        "tech": {
+            "A086": "hack",
+            "A087": "decrypt",
+            "A088": "encrypt",
+            "A089": "override",
+            "A090": "bypass",
+            "A091": "jam",
+            "A092": "trace",
+            "A093": "spoof",
+            "A094": "backdoor",
+            "A095": "virus_upload",
+            "A096": "firewall_breach",
+            "A097": "data_mine",
+            "A098": "wipe",
+            "A099": "copy",
+            "A100": "upload",
+            "A101": "download",
+            "A102": "stream",
+            "A103": "broadcast",
+            "A104": "intercept",
+            "A105": "decode"
+        },
+        "crafting": {
+            "A106": "craft",
+            "A107": "repair",
+            "A108": "modify",
+            "A109": "upgrade",
+            "A110": "disassemble",
+            "A111": "salvage",
+            "A112": "recycle",
+            "A113": "forge",
+            "A114": "weld",
+            "A115": "solder",
+            "A116": "program",
+            "A117": "calibrate",
+            "A118": "tune",
+            "A119": "optimize",
+            "A120": "overclock"
+        },
+        "medical": {
+            "A121": "heal",
+            "A122": "bandage",
+            "A123": "stitch",
+            "A124": "splint",
+            "A125": "inject",
+            "A126": "operate",
+            "A127": "resuscitate",
+            "A128": "defibrillate",
+            "A129": "transfuse",
+            "A130": "sedate",
+            "A131": "diagnose",
+            "A132": "scan_medical",
+            "A133": "purge_toxin",
+            "A134": "stabilize",
+            "A135": "amputate"
+        },
+        "stealth": {
+            "A136": "hide",
+            "A137": "sneak",
+            "A138": "shadow",
+            "A139": "blend",
+            "A140": "disguise",
+            "A141": "mask_signal",
+            "A142": "cloak",
+            "A143": "silence",
+            "A144": "distract",
+            "A145": "lure",
+            "A146": "plant_evidence",
+            "A147": "frame",
+            "A148": "sabotage",
+            "A149": "poison",
+            "A150": "trap_set"
+        },
+        "object_interaction": {
+            "A151": "open",
+            "A152": "close",
+            "A153": "lock",
+            "A154": "unlock",
+            "A155": "break",
+            "A156": "push",
+            "A157": "pull",
+            "A158": "lift",
+            "A159": "drop",
+            "A160": "throw_object",
+            "A161": "catch",
+            "A162": "place",
+            "A163": "arrange",
+            "A164": "stack",
+            "A165": "scatter",
+            "A166": "flip",
+            "A167": "spin",
+            "A168": "shake",
+            "A169": "crush",
+            "A170": "bend"
+        },
+        "consumption": {
+            "A171": "eat",
+            "A172": "drink",
+            "A173": "smoke",
+            "A174": "inhale",
+            "A175": "inject_self",
+            "A176": "swallow",
+            "A177": "chew",
+            "A178": "taste",
+            "A179": "spit",
+            "A180": "vomit"
+        },
+        "perception": {
+            "A181": "look",
+            "A182": "listen",
+            "A183": "smell",
+            "A184": "taste_sense",
+            "A185": "touch_sense",
+            "A186": "scan",
+            "A187": "analyze",
+            "A188": "observe",
+            "A189": "survey",
+            "A190": "inspect"
+        },
+        "mental": {
+            "A191": "think",
+            "A192": "remember",
+            "A193": "forget",
+            "A194": "plan",
+            "A195": "decide",
+            "A196": "focus",
+            "A197": "meditate",
+            "A198": "dream",
+            "A199": "hallucinate",
+            "A200": "awaken"
+        }
+    },
+    "objects": {
+        "_desc": "Physical objects (300 unique)",
+        "_encoding": "O### where ### is 001-300",
+        "weapons_melee": {
+            "O001": "knife",
+            "O002": "combat_knife",
+            "O003": "switchblade",
+            "O004": "machete",
+            "O005": "katana",
+            "O006": "sword",
+            "O007": "baton",
+            "O008": "stun_baton",
+            "O009": "pipe",
+            "O010": "crowbar",
+            "O011": "hammer",
+            "O012": "axe",
+            "O013": "brass_knuckles",
+            "O014": "garrote",
+            "O015": "chain"
+        },
+        "weapons_ranged": {
+            "O016": "pistol",
+            "O017": "revolver",
+            "O018": "smg",
+            "O019": "rifle",
+            "O020": "assault_rifle",
+            "O021": "shotgun",
+            "O022": "sniper_rifle",
+            "O023": "machine_gun",
+            "O024": "crossbow",
+            "O025": "taser",
+            "O026": "laser_pistol",
+            "O027": "plasma_rifle",
+            "O028": "railgun",
+            "O029": "emp_gun",
+            "O030": "stun_gun"
+        },
+        "explosives": {
+            "O031": "grenade_frag",
+            "O032": "grenade_flash",
+            "O033": "grenade_smoke",
+            "O034": "grenade_emp",
+            "O035": "grenade_gas",
+            "O036": "mine_proximity",
+            "O037": "mine_remote",
+            "O038": "c4_explosive",
+            "O039": "det_charge",
+            "O040": "bomb"
+        },
+        "armor": {
+            "O041": "vest_ballistic",
+            "O042": "armor_light",
+            "O043": "armor_medium",
+            "O044": "armor_heavy",
+            "O045": "exosuit",
+            "O046": "helmet_tactical",
+            "O047": "helmet_riot",
+            "O048": "helmet_sealed",
+            "O049": "mask_gas",
+            "O050": "mask_tactical"
+        },
+        "tech_devices": {
+            "O051": "datapad",
+            "O052": "terminal",
+            "O053": "holo_display",
+            "O054": "smart_glasses",
+            "O055": "neural_interface",
+            "O056": "scanner_bio",
+            "O057": "scanner_chem",
+            "O058": "scanner_radio",
+            "O059": "jammer",
+            "O060": "tracker",
+            "O061": "drone_recon",
+            "O062": "drone_attack",
+            "O063": "drone_medical",
+            "O064": "drone_cargo",
+            "O065": "turret_auto",
+            "O066": "camera_spy",
+            "O067": "bug_audio",
+            "O068": "bug_video",
+            "O069": "emp_device",
+            "O070": "hacking_deck"
+        },
+        "medical": {
+            "O071": "medkit_basic",
+            "O072": "medkit_advanced",
+            "O073": "medkit_trauma",
+            "O074": "stim_pack",
+            "O075": "blood_pack",
+            "O076": "syringe",
+            "O077": "auto_injector",
+            "O078": "defibrillator",
+            "O079": "surgical_kit",
+            "O080": "scanner_medical",
+            "O081": "prosthetic_arm",
+            "O082": "prosthetic_leg",
+            "O083": "prosthetic_eye",
+            "O084": "organ_synthetic",
+            "O085": "nanobots"
+        },
+        "consumables": {
+            "O086": "food_ration",
+            "O087": "food_canned",
+            "O088": "food_fresh",
+            "O089": "water_bottle",
+            "O090": "water_purified",
+            "O091": "alcohol_beer",
+            "O092": "alcohol_spirits",
+            "O093": "coffee",
+            "O094": "energy_drink",
+            "O095": "nutrient_paste",
+            "O096": "cigarette",
+            "O097": "cigar",
+            "O098": "vape",
+            "O099": "drug_stim",
+            "O100": "drug_painkiller"
+        },
+        "containers": {
+            "O101": "backpack",
+            "O102": "duffel_bag",
+            "O103": "briefcase",
+            "O104": "crate",
+            "O105": "box",
+            "O106": "safe",
+            "O107": "locker",
+            "O108": "trunk",
+            "O109": "barrel",
+            "O110": "canister"
+        },
+        "tools": {
+            "O111": "multitool",
+            "O112": "screwdriver",
+            "O113": "wrench",
+            "O114": "pliers",
+            "O115": "wire_cutters",
+            "O116": "soldering_iron",
+            "O117": "welder",
+            "O118": "drill",
+            "O119": "saw",
+            "O120": "lockpick_set"
+        },
+        "clothing": {
+            "O121": "jacket_leather",
+            "O122": "jacket_tactical",
+            "O123": "coat_trench",
+            "O124": "hoodie",
+            "O125": "shirt",
+            "O126": "pants_cargo",
+            "O127": "pants_tactical",
+            "O128": "boots_combat",
+            "O129": "boots_stealth",
+            "O130": "gloves_tactical"
+        },
+        "furniture": {
+            "O131": "table",
+            "O132": "chair",
+            "O133": "desk",
+            "O134": "bed",
+            "O135": "couch",
+            "O136": "shelf",
+            "O137": "cabinet",
+            "O138": "drawer",
+            "O139": "safe_wall",
+            "O140": "workbench"
+        },
+        "vehicles": {
+            "O141": "motorcycle",
+            "O142": "car_sedan",
+            "O143": "car_sports",
+            "O144": "truck",
+            "O145": "van",
+            "O146": "hovercar",
+            "O147": "bike_electric",
+            "O148": "apc",
+            "O149": "helicopter",
+            "O150": "drone_transport"
+        },
+        "currency_valuables": {
+            "O151": "credits_chip",
+            "O152": "credits_card",
+            "O153": "cash_physical",
+            "O154": "gold_bar",
+            "O155": "crypto_wallet",
+            "O156": "jewelry_ring",
+            "O157": "jewelry_necklace",
+            "O158": "watch_luxury",
+            "O159": "art_piece",
+            "O160": "data_chip_valuable"
+        },
+        "documents": {
+            "O161": "id_card",
+            "O162": "passport",
+            "O163": "license",
+            "O164": "permit",
+            "O165": "contract",
+            "O166": "map_physical",
+            "O167": "blueprint",
+            "O168": "photograph",
+            "O169": "letter",
+            "O170": "journal"
+        },
+        "keys_access": {
+            "O171": "key_physical",
+            "O172": "keycard",
+            "O173": "keycode_device",
+            "O174": "biometric_bypass",
+            "O175": "master_key",
+            "O176": "access_token",
+            "O177": "security_badge",
+            "O178": "visitor_pass",
+            "O179": "admin_credentials",
+            "O180": "root_access"
+        },
+        "cybernetics_items": {
+            "O181": "implant_neural",
+            "O182": "implant_reflex",
+            "O183": "implant_strength",
+            "O184": "implant_armor",
+            "O185": "implant_optic",
+            "O186": "implant_audio",
+            "O187": "implant_comm",
+            "O188": "implant_storage",
+            "O189": "implant_weapon",
+            "O190": "implant_medical"
+        },
+        "misc": {
+            "O191": "flashlight",
+            "O192": "lighter",
+            "O193": "rope",
+            "O194": "tape_duct",
+            "O195": "zip_ties",
+            "O196": "handcuffs",
+            "O197": "mirror_small",
+            "O198": "binoculars",
+            "O199": "night_vision",
+            "O200": "thermal_scope"
+        }
+    },
+    "locations": {
+        "_desc": "All locations in RE:ECHO City (100 unique)",
+        "_encoding": "L### where ### is 001-100",
+        "districts": {
+            "L001": {
+                "n": "neon_district",
+                "d": "Commercial zone with holographic billboards and constant neon glow",
+                "danger": 3
+            },
+            "L002": {
+                "n": "shadow_grid",
+                "d": "Abandoned server farms and data centers, home to hackers",
+                "danger": 5
+            },
+            "L003": {
+                "n": "temple_quarter",
+                "d": "Golden spires of Temple control, heavily patrolled",
+                "danger": 4
+            },
+            "L004": {
+                "n": "undercity",
+                "d": "Underground tunnels and black markets",
+                "danger": 6
+            },
+            "L005": {
+                "n": "industrial_ring",
+                "d": "Factories, processing plants, toxic air",
+                "danger": 4
+            },
+            "L006": {
+                "n": "residential_core",
+                "d": "High-density housing blocks, overcrowded",
+                "danger": 3
+            },
+            "L007": {
+                "n": "corp_plaza",
+                "d": "Corporate headquarters, clean and surveilled",
+                "danger": 2
+            },
+            "L008": {
+                "n": "waterfront",
+                "d": "Shipping docks, smuggling operations",
+                "danger": 5
+            },
+            "L009": {
+                "n": "outzone",
+                "d": "Lawless territories beyond city walls",
+                "danger": 8
+            },
+            "L010": {
+                "n": "old_town",
+                "d": "Pre-war ruins, scavenger territory",
+                "danger": 6
+            }
+        },
+        "venues_social": {
+            "L011": {
+                "n": "neon_bar",
+                "d": "Neutral ground bar with cyan neon, Felix's place",
+                "danger": 2
+            },
+            "L012": {
+                "n": "club_static",
+                "d": "Underground nightclub, loud music, deals in back",
+                "danger": 4
+            },
+            "L013": {
+                "n": "tea_house",
+                "d": "Quiet establishment for discreet meetings",
+                "danger": 1
+            },
+            "L014": {
+                "n": "fighting_pit",
+                "d": "Illegal arena for blood sports",
+                "danger": 7
+            },
+            "L015": {
+                "n": "casino_lucky",
+                "d": "High-stakes gambling, corp-owned",
+                "danger": 3
+            }
+        },
+        "venues_commerce": {
+            "L016": {
+                "n": "black_market",
+                "d": "Hidden bazaar for illegal goods",
+                "danger": 5
+            },
+            "L017": {
+                "n": "tech_shop",
+                "d": "Electronics and implant sales",
+                "danger": 2
+            },
+            "L018": {
+                "n": "weapon_dealer",
+                "d": "Arms trading, back-alley",
+                "danger": 4
+            },
+            "L019": {
+                "n": "food_market",
+                "d": "Open-air market, fresh and synthetic",
+                "danger": 2
+            },
+            "L020": {
+                "n": "pawn_shop",
+                "d": "Fence for stolen goods",
+                "danger": 3
+            }
+        },
+        "venues_services": {
+            "L021": {
+                "n": "tech_clinic",
+                "d": "Back-alley cybernetics installation",
+                "danger": 3
+            },
+            "L022": {
+                "n": "hospital_general",
+                "d": "Public medical facility, understaffed",
+                "danger": 2
+            },
+            "L023": {
+                "n": "hospital_private",
+                "d": "Corp-quality care, expensive",
+                "danger": 1
+            },
+            "L024": {
+                "n": "ripperdoc",
+                "d": "Illegal implant surgeon",
+                "danger": 4
+            },
+            "L025": {
+                "n": "body_shop",
+                "d": "Full body modifications, extreme",
+                "danger": 5
+            }
+        },
+        "hideouts": {
+            "L026": {
+                "n": "resistance_hq",
+                "d": "Main Resistance bunker, heavily fortified",
+                "danger": 2
+            },
+            "L027": {
+                "n": "safehouse_alpha",
+                "d": "Emergency shelter, minimal",
+                "danger": 3
+            },
+            "L028": {
+                "n": "safehouse_beta",
+                "d": "Secondary refuge, better supplied",
+                "danger": 3
+            },
+            "L029": {
+                "n": "dead_drop",
+                "d": "Hidden cache location",
+                "danger": 4
+            },
+            "L030": {
+                "n": "tunnel_network",
+                "d": "Underground movement routes",
+                "danger": 5
+            }
+        },
+        "temple_locations": {
+            "L031": {
+                "n": "temple_tower",
+                "d": "Main Temple spire, seat of power",
+                "danger": 8
+            },
+            "L032": {
+                "n": "temple_infirmary",
+                "d": "Temple medical facility",
+                "danger": 3
+            },
+            "L033": {
+                "n": "temple_barracks",
+                "d": "Guard quarters and training",
+                "danger": 6
+            },
+            "L034": {
+                "n": "temple_archive",
+                "d": "Records and secrets",
+                "danger": 7
+            },
+            "L035": {
+                "n": "temple_prison",
+                "d": "High-security detention",
+                "danger": 9
+            }
+        },
+        "corp_locations": {
+            "L036": {
+                "n": "megacorp_hq",
+                "d": "Corporate tower, maximum security",
+                "danger": 7
+            },
+            "L037": {
+                "n": "research_lab",
+                "d": "Experimental technology",
+                "danger": 6
+            },
+            "L038": {
+                "n": "server_farm",
+                "d": "Data storage facility",
+                "danger": 5
+            },
+            "L039": {
+                "n": "factory_floor",
+                "d": "Automated manufacturing",
+                "danger": 4
+            },
+            "L040": {
+                "n": "executive_suite",
+                "d": "Top floor offices, luxury",
+                "danger": 6
+            }
+        },
+        "outdoor": {
+            "L041": {
+                "n": "rooftop",
+                "d": "High vantage point, sniper positions",
+                "danger": 4
+            },
+            "L042": {
+                "n": "alley",
+                "d": "Rain-soaked back alleys",
+                "danger": 5
+            },
+            "L043": {
+                "n": "street_main",
+                "d": "Main thoroughfare, crowded",
+                "danger": 3
+            },
+            "L044": {
+                "n": "plaza_central",
+                "d": "Open public space, surveilled",
+                "danger": 2
+            },
+            "L045": {
+                "n": "park_ruins",
+                "d": "Overgrown former park",
+                "danger": 4
+            }
+        },
+        "underground": {
+            "L046": {
+                "n": "sewer_main",
+                "d": "Primary drainage system",
+                "danger": 5
+            },
+            "L047": {
+                "n": "metro_station",
+                "d": "Abandoned subway platform",
+                "danger": 4
+            },
+            "L048": {
+                "n": "metro_tunnel",
+                "d": "Dark rail tunnels",
+                "danger": 6
+            },
+            "L049": {
+                "n": "bunker_old",
+                "d": "Pre-war shelter",
+                "danger": 4
+            },
+            "L050": {
+                "n": "catacombs",
+                "d": "Ancient burial site repurposed",
+                "danger": 6
+            }
+        },
+        "special": {
+            "L051": {
+                "n": "mystic_sanctum",
+                "d": "Orion's place, reality bends here",
+                "danger": 3
+            },
+            "L052": {
+                "n": "between_layers",
+                "d": "Dimensional fold, unstable",
+                "danger": 7
+            },
+            "L053": {
+                "n": "data_nexus",
+                "d": "AI consciousness hub",
+                "danger": 5
+            },
+            "L054": {
+                "n": "echo_point",
+                "d": "Where the layers bleed",
+                "danger": 8
+            },
+            "L055": {
+                "n": "forgotten_shrine",
+                "d": "Ancient tech worship site",
+                "danger": 4
+            }
+        }
+    },
+    "weather": {
+        "_desc": "Environmental conditions",
+        "_encoding": "W## where ## is 01-20",
+        "W01": {
+            "n": "clear",
+            "vis": 1.0,
+            "mood": "neutral"
+        },
+        "W02": {
+            "n": "rain_light",
+            "vis": 0.8,
+            "mood": "melancholy"
+        },
+        "W03": {
+            "n": "rain_heavy",
+            "vis": 0.5,
+            "mood": "oppressive"
+        },
+        "W04": {
+            "n": "storm",
+            "vis": 0.3,
+            "mood": "chaotic"
+        },
+        "W05": {
+            "n": "fog",
+            "vis": 0.4,
+            "mood": "mysterious"
+        },
+        "W06": {
+            "n": "smog",
+            "vis": 0.6,
+            "mood": "suffocating"
+        },
+        "W07": {
+            "n": "acid_rain",
+            "vis": 0.7,
+            "mood": "dangerous"
+        },
+        "W08": {
+            "n": "dust_storm",
+            "vis": 0.2,
+            "mood": "apocalyptic"
+        },
+        "W09": {
+            "n": "blackout",
+            "vis": 0.1,
+            "mood": "terrifying"
+        },
+        "W10": {
+            "n": "aurora",
+            "vis": 1.0,
+            "mood": "mystical"
+        },
+        "W11": {
+            "n": "overcast",
+            "vis": 0.9,
+            "mood": "gloomy"
+        },
+        "W12": {
+            "n": "haze",
+            "vis": 0.7,
+            "mood": "dreamy"
+        },
+        "W13": {
+            "n": "wind_strong",
+            "vis": 1.0,
+            "mood": "restless"
+        },
+        "W14": {
+            "n": "heat_wave",
+            "vis": 0.9,
+            "mood": "oppressive"
+        },
+        "W15": {
+            "n": "cold_snap",
+            "vis": 1.0,
+            "mood": "harsh"
+        }
+    },
+    "time_periods": {
+        "_desc": "Time of day affects NPC behavior",
+        "_encoding": "T## where ## is 01-12",
+        "T01": {
+            "n": "dawn",
+            "hour_start": 5,
+            "hour_end": 7,
+            "activity": 0.3
+        },
+        "T02": {
+            "n": "early_morning",
+            "hour_start": 7,
+            "hour_end": 9,
+            "activity": 0.5
+        },
+        "T03": {
+            "n": "morning",
+            "hour_start": 9,
+            "hour_end": 12,
+            "activity": 0.7
+        },
+        "T04": {
+            "n": "noon",
+            "hour_start": 12,
+            "hour_end": 13,
+            "activity": 0.6
+        },
+        "T05": {
+            "n": "afternoon",
+            "hour_start": 13,
+            "hour_end": 17,
+            "activity": 0.8
+        },
+        "T06": {
+            "n": "dusk",
+            "hour_start": 17,
+            "hour_end": 19,
+            "activity": 0.7
+        },
+        "T07": {
+            "n": "evening",
+            "hour_start": 19,
+            "hour_end": 22,
+            "activity": 0.9
+        },
+        "T08": {
+            "n": "night",
+            "hour_start": 22,
+            "hour_end": 1,
+            "activity": 0.6
+        },
+        "T09": {
+            "n": "late_night",
+            "hour_start": 1,
+            "hour_end": 3,
+            "activity": 0.4
+        },
+        "T10": {
+            "n": "dead_hour",
+            "hour_start": 3,
+            "hour_end": 5,
+            "activity": 0.2
+        }
+    }
+}

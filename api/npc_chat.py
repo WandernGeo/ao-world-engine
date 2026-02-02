@@ -18,6 +18,14 @@ import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+# Import event engine for deterministic memories
+try:
+    from event_engine import get_npc_memory_context, get_events_before_tick, get_relationship_at_tick
+    HAS_EVENT_ENGINE = True
+except ImportError:
+    HAS_EVENT_ENGINE = False
+    print("⚠️ Event engine not available - memories disabled")
+
 app = Flask(__name__)
 CORS(app)
 
@@ -301,9 +309,9 @@ def npc_state(npc_id: str, tick: int):
 
 @app.route("/api/npc/chat", methods=["POST"])
 def npc_chat():
-    """Chat with an NPC using Vertex AI."""
+    """Chat with an NPC using Vertex AI with deterministic memories."""
     data = request.json
-    npc_id = data.get("npc_id", "kira")
+    npc_id = data.get("npc_id", "charlie")
     tick = data.get("tick", 100)
     message = data.get("message", "Hello")
     
@@ -314,8 +322,38 @@ def npc_chat():
     # Build prompt from NPC state
     personality = npc_state.get("personality", {})
     topics = npc_state.get("topics", {})
+    profile = FOUNDING_NPCS.get(npc_id, {})
+    
+    # Get deterministic memories from event engine
+    memory_context = ""
+    relationship_context = ""
+    if HAS_EVENT_ENGINE:
+        try:
+            memory_context = get_npc_memory_context(npc_id, tick)
+            
+            # Get relationships with other key NPCs
+            relationships = []
+            for other_npc in ["charlie", "felix", "kai_vance", "nova_chen", "aiche"]:
+                if other_npc != npc_id:
+                    rel = get_relationship_at_tick(npc_id, other_npc, tick)
+                    other_name = FOUNDING_NPCS.get(other_npc, {}).get("name", other_npc)
+                    relationships.append(f"- {other_name}: {rel['type']} (trust: {rel['trust']:.1f})")
+            relationship_context = "\n".join(relationships[:3])  # Top 3
+        except Exception as e:
+            print(f"⚠️ Event engine error: {e}")
+    
+    # Get visual description for character consistency
+    visual_desc = profile.get("visual_description", "")
+    backstory = profile.get("backstory", "")
+    catchphrases = profile.get("catchphrases", [])
     
     system_prompt = f"""You are {npc_state['name']}, a {npc_state['archetype']} in RE:ECHO City.
+
+APPEARANCE:
+{visual_desc if visual_desc else 'A citizen of the cyberpunk metropolis.'}
+
+BACKSTORY:
+{backstory}
 
 CURRENT STATE:
 - Location: {npc_state['location_desc']}
@@ -327,16 +365,24 @@ PERSONALITY (0-1 scale):
 - Paranoia: {personality.get('paranoia', 0.5)}
 - Mysticism: {personality.get('mysticism', 0.5)}
 - Aggression: {personality.get('aggression', 0.5)}
+- Intelligence: {personality.get('intelligence', 0.5)}
+- Empathy: {personality.get('empathy', 0.5)}
 
-TOPIC PREFERENCES:
-{json.dumps(topics, indent=2)}
+{memory_context if memory_context else "No significant recent memories."}
+
+RELATIONSHIPS:
+{relationship_context if relationship_context else "You are cautious with most people."}
+
+SIGNATURE PHRASES (use naturally):
+{json.dumps(catchphrases, indent=2) if catchphrases else "None defined"}
 
 RULES:
 - Stay in character at all times
-- Reference the current location/weather/mood naturally
-- Keep responses concise (2-3 sentences max)
+- Reference your memories and relationships when relevant
+- Keep responses concise (2-4 sentences max)
 - Use your personality traits to color your speech
 - If paranoia is high, be suspicious. If mysticism is high, speak cryptically.
+- You can reference other NPCs you've interacted with
 """
     
     if HAS_VERTEX and model:
@@ -349,14 +395,13 @@ RULES:
             npc_response = f"[Error: {e}]"
     else:
         # Fallback mock response
-        profile = FOUNDING_NPCS.get(npc_id, {})
-        catchphrases = profile.get("catchphrases", ["..."])
         import random
-        npc_response = random.choice(catchphrases)
+        npc_response = random.choice(catchphrases) if catchphrases else "..."
     
     return jsonify({
         "npc": npc_state["name"],
         "response": npc_response,
+        "memories_enabled": HAS_EVENT_ENGINE,
         "state": {
             "tick": tick,
             "location": npc_state["current_location"],

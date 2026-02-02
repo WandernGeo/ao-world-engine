@@ -1,0 +1,88 @@
+{
+    "_meta": {
+        "chunk_id": "codec_manifest_v1",
+        "type": "manifest",
+        "version": "1.0.0",
+        "description": "Master manifest linking all World Codec chunks",
+        "total_chunks": 8,
+        "total_size_estimate_kb": 600,
+        "created_at": "2026-02-02"
+    },
+    "chunks": {
+        "core": {
+            "id": "chunk_00_core",
+            "desc": "Core codec - actions, base objects, locations",
+            "file": "world_codec_00_core.json",
+            "tx_id": null,
+            "size_kb": 90,
+            "required": true
+        },
+        "npcs": {
+            "id": "chunk_01_npcs",
+            "desc": "NPC registry and relationships",
+            "file": "world_codec_01_npcs.json",
+            "tx_id": null,
+            "size_kb": 80,
+            "required": true
+        },
+        "medical": {
+            "id": "chunk_02_medical",
+            "desc": "Medical encyclopedia - conditions, treatments, drugs",
+            "file": "world_codec_02_medical.json",
+            "tx_id": null,
+            "size_kb": 90,
+            "required": false
+        },
+        "tech": {
+            "id": "chunk_03_tech",
+            "desc": "Technology - hacking, electronics, cybernetics",
+            "file": "world_codec_03_tech.json",
+            "tx_id": null,
+            "size_kb": 90,
+            "required": false
+        },
+        "chemistry": {
+            "id": "chunk_04_chemistry",
+            "desc": "Chemistry - drugs, compounds, reactions",
+            "file": "world_codec_04_chemistry.json",
+            "tx_id": null,
+            "size_kb": 70,
+            "required": false
+        },
+        "lore": {
+            "id": "chunk_05_lore",
+            "desc": "History, factions, world events",
+            "file": "world_codec_05_lore.json",
+            "tx_id": null,
+            "size_kb": 90,
+            "required": false
+        },
+        "skills": {
+            "id": "chunk_06_skills",
+            "desc": "Skills, abilities, progression",
+            "file": "world_codec_06_skills.json",
+            "tx_id": null,
+            "size_kb": 50,
+            "required": false
+        },
+        "events": {
+            "id": "chunk_07_events",
+            "desc": "Event templates and scenarios",
+            "file": "world_codec_07_events.json",
+            "tx_id": null,
+            "size_kb": 40,
+            "required": false
+        }
+    },
+    "chain_format": {
+        "description": "Each chunk contains a 'next_chunk' field pointing to the next TX ID",
+        "example": {
+            "chunk_id": "chunk_00_core",
+            "next_chunk": "TX_ID_OF_CHUNK_01",
+            "prev_chunk": null
+        }
+    },
+    "query_pattern": {
+        "graphql": "{ transactions(tags: [{name: \"App-Name\", values: [\"AO-World-Engine\"]}, {name: \"Type\", values: [\"world_codec_chunk\"]}]) { edges { node { id tags { name value } } } } }"
+    }
+}
