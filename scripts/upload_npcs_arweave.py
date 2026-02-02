@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Upload Founding NPCs to Arweave via Turbo Bundler
-==================================================
+Upload Founding NPCs to Arweave via Cloud Function
+====================================================
 
-Uses Turbo (ar.io) bundler - <100KB uploads are FREE!
+Uses the wandern-arweave-uploader Cloud Function which handles
+wallet signing and Turbo bundler integration.
 
 Usage:
   python3 upload_npcs_arweave.py --dry-run     # Test without uploading
@@ -22,46 +23,46 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from data.founding_npcs import FOUNDING_NPCS, create_npc_for_arweave
 
-# Turbo (ar.io) bundler - AO ecosystem recommended
-TURBO_MAINNET = "https://up.arweave.net"
+# Cloud Function that handles Turbo/Arweave uploads
+ARWEAVE_UPLOADER_URL = os.environ.get(
+    "ARWEAVE_UPLOADER_URL",
+    "https://arweave-uploader-zdku5kri5a-uc.a.run.app"
+)
+
 ARWEAVE_GATEWAY = "https://arweave.net"
 
 
-def upload_to_turbo(data: bytes, tags: list, dry_run: bool = False) -> str:
+def upload_via_cloud_function(data: dict, tags: list, dry_run: bool = False) -> str:
     """
-    Upload data to Arweave via Turbo bundler.
+    Upload data to Arweave via the wandern-arweave-uploader Cloud Function.
     
-    For <100KB, this is FREE (no wallet required).
+    The Cloud Function handles wallet signing and Turbo bundler integration.
     
     Returns transaction ID.
     """
     if dry_run:
         # Generate deterministic fake tx_id for testing
-        fake_tx = hashlib.sha256(data).hexdigest()[:43]
+        json_data = json.dumps(data, separators=(',', ':'))
+        fake_tx = hashlib.sha256(json_data.encode()).hexdigest()[:43]
         return f"DRY_RUN_{fake_tx}"
     
     try:
-        # Turbo expects multipart form or direct POST
-        # For small uploads, we can use the simple endpoint
-        headers = {
-            "Content-Type": "application/octet-stream",
+        payload = {
+            "data": json.dumps(data),
+            "tags": tags,
+            "content_type": "application/json"
         }
         
-        # Add tags as x-turbo-tag-{name} headers
-        for tag in tags:
-            header_name = f"x-turbo-tag-{tag['name'].lower().replace('-', '_')}"
-            headers[header_name] = tag['value']
-        
         response = requests.post(
-            f"{TURBO_MAINNET}/v1/tx/arweave",
-            data=data,
-            headers=headers,
+            ARWEAVE_UPLOADER_URL,
+            json=payload,
             timeout=60
         )
         
         if response.status_code in [200, 201]:
             result = response.json()
-            return result.get("id") or result.get("txId") or result.get("tx_id")
+            tx_id = result.get("tx_id") or result.get("id") or result.get("txId")
+            return tx_id
         else:
             print(f"  ❌ Upload failed: {response.status_code}")
             print(f"     {response.text[:200]}")
@@ -92,7 +93,7 @@ def main():
     print("=" * 60)
     print("UPLOAD FOUNDING NPCS TO ARWEAVE")
     print("=" * 60)
-    print(f"Bundler: Turbo (ar.io) - {TURBO_MAINNET}")
+    print(f"Cloud Function: {ARWEAVE_UPLOADER_URL}")
     print(f"Mode: {'DRY RUN (no actual upload)' if args.dry_run else 'LIVE UPLOAD'}")
     print()
     
@@ -103,12 +104,12 @@ def main():
         arweave_ready = create_npc_for_arweave(npc_key, npc_data)
         
         profile_json = json.dumps(arweave_ready["profile"], separators=(',', ':'))
-        profile_bytes = profile_json.encode('utf-8')
+        profile_bytes = len(profile_json.encode('utf-8'))
         
-        print(f"📤 Uploading {npc_data['name']} ({len(profile_bytes)} bytes)...")
+        print(f"📤 Uploading {npc_data['name']} ({profile_bytes} bytes)...")
         
-        tx_id = upload_to_turbo(
-            profile_bytes, 
+        tx_id = upload_via_cloud_function(
+            arweave_ready["profile"], 
             arweave_ready["tags"],
             dry_run=args.dry_run
         )
@@ -120,10 +121,10 @@ def main():
                 "npc_id": npc_data["id"],
                 "name": npc_data["name"],
                 "tx_id": tx_id,
-                "size_bytes": len(profile_bytes),
+                "size_bytes": profile_bytes,
                 "success": True
             })
-            total_bytes += len(profile_bytes)
+            total_bytes += profile_bytes
         else:
             print(f"   ❌ Failed")
             results.append({
@@ -154,7 +155,7 @@ def main():
         json.dump({
             "timestamp": datetime.now().isoformat(),
             "dry_run": args.dry_run,
-            "bundler": TURBO_MAINNET,
+            "uploader": ARWEAVE_UPLOADER_URL,
             "results": results,
             "summary": {
                 "total": len(results),

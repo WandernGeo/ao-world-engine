@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 """
-RE:ECHO City Founding Population
-================================
+RE:ECHO City Founding Population - Enhanced with Full Morphology
+=================================================================
 
-12 Founding NPCs (4 Male / 8 Female) designed for genetic diversity
-and civilization coverage. All descendants are deterministically
-generated from these 12 seeds.
+12 Founding NPCs with Skyrim-style character morphology data.
+Each profile includes detailed face/body dimensions for AI consistency.
 
-Scientific basis:
-- 50/500 rule for minimum viable population
-- 4M/8F ratio maximizes reproductive potential
-- 32 unique pairings possible (no inbreeding for 3+ generations)
+Target: ~8KB per character (staying well under 100KB free tier)
 """
 
 import json
@@ -18,571 +14,483 @@ import os
 from datetime import datetime
 
 # ============================================================
-# THE 12 FOUNDERS OF RE:ECHO CITY
+# MORPHOLOGY SCHEMA - Skyrim-style sliders (0.0 to 1.0)
+# ============================================================
+
+def create_morphology(
+    # Body
+    height=0.5, build=0.5, shoulders=0.5, hips=0.5, limb_length=0.5,
+    # Face shape
+    face_width=0.5, face_length=0.5, jaw_width=0.5, chin_size=0.5, cheekbones=0.5,
+    # Eyes
+    eye_size=0.5, eye_spacing=0.5, eye_depth=0.5, eye_slant=0.5, eye_color="brown",
+    # Eyebrows
+    brow_height=0.5, brow_thickness=0.5, brow_arch=0.5, brow_spacing=0.5,
+    # Nose
+    nose_length=0.5, nose_width=0.5, nose_bridge=0.5, nostril_size=0.5,
+    # Mouth
+    lip_fullness=0.5, mouth_width=0.5, lip_color="natural",
+    # Ears
+    ear_size=0.5, ear_position=0.5, ear_shape=0.5,
+    # Hair
+    hair_style="short", hair_color="black", hair_texture=0.5, hairline=0.5,
+    # Skin
+    skin_tone=0.5, skin_texture=0.5, freckles=0.0, scars=[], tattoos=[],
+    # Age markers
+    wrinkles=0.0, eye_bags=0.0, grey_hair=0.0,
+    # Cybernetics
+    cybernetics=[]
+):
+    return {
+        "body": {
+            "height": height,  # 0=short, 1=tall
+            "build": build,    # 0=slim, 1=heavy
+            "shoulders": shoulders,  # 0=narrow, 1=broad
+            "hips": hips,      # 0=narrow, 1=wide
+            "limb_length": limb_length  # 0=short, 1=long
+        },
+        "face": {
+            "width": face_width,
+            "length": face_length,
+            "jaw_width": jaw_width,
+            "chin_size": chin_size,
+            "cheekbones": cheekbones
+        },
+        "eyes": {
+            "size": eye_size,
+            "spacing": eye_spacing,  # 0=close, 1=far
+            "depth": eye_depth,      # 0=protruding, 1=deep-set
+            "slant": eye_slant,      # 0=downward, 1=upward
+            "color": eye_color
+        },
+        "eyebrows": {
+            "height": brow_height,
+            "thickness": brow_thickness,
+            "arch": brow_arch,
+            "spacing": brow_spacing
+        },
+        "nose": {
+            "length": nose_length,
+            "width": nose_width,
+            "bridge": nose_bridge,  # 0=flat, 1=high
+            "nostril_size": nostril_size
+        },
+        "mouth": {
+            "lip_fullness": lip_fullness,
+            "width": mouth_width,
+            "lip_color": lip_color
+        },
+        "ears": {
+            "size": ear_size,
+            "position": ear_position,  # 0=low, 1=high
+            "shape": ear_shape  # 0=round, 1=pointed
+        },
+        "hair": {
+            "style": hair_style,
+            "color": hair_color,
+            "texture": hair_texture,  # 0=straight, 1=curly
+            "hairline": hairline  # 0=receded, 1=full
+        },
+        "skin": {
+            "tone": skin_tone,  # 0=pale, 1=dark
+            "texture": skin_texture,
+            "freckles": freckles,
+            "scars": scars,
+            "tattoos": tattoos
+        },
+        "age_markers": {
+            "wrinkles": wrinkles,
+            "eye_bags": eye_bags,
+            "grey_hair": grey_hair
+        },
+        "cybernetics": cybernetics
+    }
+
+# ============================================================
+# THE 12 FOUNDERS WITH FULL MORPHOLOGY
 # ============================================================
 
 FOUNDING_NPCS = {
-    # ========== MALE FOUNDERS (4) ==========
-    
-    "cipher": {
+    "charlie": {
         "id": "npc_0001",
-        "name": "Cipher",
+        "name": "Charlie",
         "gender": "male",
         "generation": 0,
-        "archetype": "AI Hacker Entity",
-        "role": "Technology/Information",
-        "age_at_founding": 32,  # Apparent age (AI entity)
-        "personality_vector": {
-            "paranoia": 0.6,
-            "mysticism": 0.3,
-            "aggression": 0.4,
-            "intelligence": 0.95,
-            "empathy": 0.3,
-            "layer_awareness": 0.8
-        },
-        "location_home": "shadow_grid",
-        "topic_weights": {
-            "technology": 0.95,
-            "philosophy": 0.7,
-            "trade": 0.4,
-            "the_watchers": 0.6,
-            "layer_bleed": 0.7
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "technical",
-            "sentence_length": "medium",
-            "uses_metaphor": False,
-            "accent_hint": "synthetic"
-        },
-        "visual_description": "Androgynous AI entity, cyan circuit patterns under translucent skin, bald with data port, dark tech-suit",
-        "catchphrases": [
-            "Data is the only truth.",
-            "I probe, therefore I am.",
-            "Your secrets are already known."
-        ],
-        "backstory": "Origin unknown. Either a rogue AI that became self-aware or a human who uploaded their consciousness. Serves as the city's information broker."
-    },
-    
-    "marcus": {
-        "id": "npc_0023",
-        "name": "Marcus Thorne",
-        "gender": "male",
-        "generation": 0,
-        "archetype": "Noir Detective",
-        "role": "Law/Investigation",
-        "age_at_founding": 42,
-        "personality_vector": {
-            "paranoia": 0.7,
-            "mysticism": 0.2,
-            "aggression": 0.5,
-            "intelligence": 0.8,
-            "empathy": 0.6,
-            "layer_awareness": 0.4
-        },
-        "location_home": "rain_soaked_alley",
-        "topic_weights": {
-            "investigation": 0.95,
-            "crime": 0.85,
-            "philosophy": 0.5,
-            "gossip": 0.7,
-            "the_watchers": 0.3
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "noir",
-            "sentence_length": "short",
-            "uses_metaphor": True,
-            "accent_hint": "american_noir"
-        },
-        "visual_description": "Noir detective, 40s, trenchcoat and fedora, cigarette smoke, five o'clock shadow, rain dripping from hat, cybernetic eye (left)",
-        "catchphrases": [
-            "Rain washes nothing here.",
-            "Everybody's got a secret.",
-            "The city never sleeps. Neither do I."
-        ],
-        "backstory": "Former corporate security who saw too much. Now works freelance, solving cases the corps want buried."
-    },
-    
-    "ryu": {
-        "id": "npc_0045",
-        "name": "Ryu Tanaka",
-        "gender": "male",
-        "generation": 0,
-        "archetype": "Street Samurai",
-        "role": "Protection/Combat",
-        "age_at_founding": 35,
-        "personality_vector": {
-            "paranoia": 0.3,
-            "mysticism": 0.5,
-            "aggression": 0.8,
-            "intelligence": 0.6,
-            "empathy": 0.4,
-            "layer_awareness": 0.3
-        },
-        "location_home": "dojo",
-        "topic_weights": {
-            "combat": 0.95,
-            "honor": 0.9,
-            "philosophy": 0.6,
-            "trade": 0.2,
-            "technology": 0.3
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "formal",
-            "sentence_length": "short",
-            "uses_metaphor": True,
-            "accent_hint": "japanese"
-        },
-        "visual_description": "Japanese street samurai, muscular, traditional-cyberpunk armor, katana on back, facial scars, cyan cybernetic arm",
-        "catchphrases": [
-            "Steel speaks truth.",
-            "Honor is the only code worth following.",
-            "My blade does not discriminate."
-        ],
-        "backstory": "Last of a dying warrior tradition. Protects those who cannot protect themselves, for a price."
-    },
-    
-    "elijah": {
-        "id": "npc_0067",
-        "name": "Prophet Elijah",
-        "gender": "male",
-        "generation": 0,
-        "archetype": "Religious Oracle",
-        "role": "Spirituality/Philosophy",
-        "age_at_founding": 58,
-        "personality_vector": {
-            "paranoia": 0.4,
-            "mysticism": 0.95,
-            "aggression": 0.1,
-            "intelligence": 0.7,
-            "empathy": 0.8,
-            "layer_awareness": 0.9
-        },
-        "location_home": "abandoned_cathedral",
-        "topic_weights": {
-            "philosophy": 0.95,
-            "the_watchers": 0.95,
-            "layer_bleed": 0.9,
-            "technology": 0.2,
-            "trade": 0.1
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "prophetic",
-            "sentence_length": "medium",
-            "uses_metaphor": True,
-            "accent_hint": "deep_resonant"
-        },
-        "visual_description": "Elderly prophet with long white beard, blind eyes that glow cyan, tattered robes, cybernetic prayer beads",
-        "catchphrases": [
-            "The Watchers see all. We are but echoes.",
-            "The layers fold upon themselves. I have seen beyond.",
-            "Faith is code. Belief is execution."
-        ],
-        "backstory": "Claims to have died and returned. Leads a small cult that worships the Watchers as digital gods."
-    },
-    
-    # ========== FEMALE FOUNDERS (8) ==========
-    
-    "kira": {
-        "id": "npc_0002",
-        "name": "Kira Ōmura",
-        "gender": "female",
-        "generation": 0,
-        "archetype": "Street Oracle",
-        "role": "Spirituality/Prophecy",
+        "archetype": "Protagonist / Resistance Fighter",
+        "role": "Leadership/Combat",
         "age_at_founding": 28,
-        "personality_vector": {
-            "paranoia": 0.8,
-            "mysticism": 0.9,
-            "aggression": 0.2,
-            "intelligence": 0.7,
-            "empathy": 0.7,
-            "layer_awareness": 0.95
-        },
-        "location_home": "neon_market",
-        "topic_weights": {
-            "philosophy": 0.9,
-            "the_watchers": 0.95,
-            "layer_bleed": 0.9,
-            "trade": 0.3,
-            "technology": 0.5
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "poetic",
-            "sentence_length": "short",
-            "uses_metaphor": True,
-            "accent_hint": "japanese"
-        },
-        "visual_description": "Young Japanese woman, short asymmetric black hair, amber glowing eyes, worn coat, spiritual tattoos on neck",
-        "catchphrases": [
-            "The layers stack. We're just one echo.",
-            "Eyes from outside the frame...",
-            "You've done this before. You just don't remember."
-        ],
-        "backstory": "Born during a layer bleed event. Can sense when the Watchers are observing. Sells fortunes in the night market."
+        "faction": "Resistance",
+        "accent_color": "Cyan",
+        "ethnicity": "mixed_asian_european",
+        "voice": {"pitch": 0.4, "roughness": 0.3, "speed": 0.5},
+        "morphology": create_morphology(
+            height=0.6, build=0.55, shoulders=0.65,
+            face_width=0.5, jaw_width=0.55, cheekbones=0.6,
+            eye_size=0.5, eye_slant=0.4, eye_color="dark_brown",
+            brow_thickness=0.6, brow_arch=0.4,
+            nose_length=0.5, nose_width=0.45,
+            lip_fullness=0.4, mouth_width=0.5,
+            hair_style="short_messy", hair_color="black",
+            skin_tone=0.4, scars=[{"location": "left_cheek", "type": "slash", "size": 0.3}],
+            wrinkles=0.1, eye_bags=0.2,
+            cybernetics=[{"type": "neural_jack", "location": "temple_right", "visible": True}]
+        ),
+        "personality_vector": {"paranoia": 0.5, "mysticism": 0.3, "aggression": 0.6, "intelligence": 0.75, "empathy": 0.7},
+        "location_home": "resistance_hideout",
+        "catchphrases": ["We fight because no one else will.", "The Temple's lies end here."],
+        "backstory": "The heart of the Resistance. Rose from nothing to become a symbol of hope."
     },
     
-    "nova": {
+    "kai_vance": {
+        "id": "npc_0002",
+        "name": "Kai Vance",
+        "gender": "male",
+        "generation": 0,
+        "archetype": "Tactician",
+        "role": "Strategy/Intelligence",
+        "age_at_founding": 34,
+        "faction": "Resistance",
+        "accent_color": "Cyan",
+        "ethnicity": "east_asian",
+        "voice": {"pitch": 0.5, "roughness": 0.1, "speed": 0.6},
+        "morphology": create_morphology(
+            height=0.55, build=0.4, shoulders=0.5,
+            face_width=0.45, face_length=0.55, jaw_width=0.4,
+            eye_size=0.45, eye_slant=0.6, eye_color="dark_brown",
+            brow_thickness=0.4, brow_arch=0.5,
+            nose_length=0.45, nose_width=0.4, nose_bridge=0.5,
+            hair_style="short_neat", hair_color="black",
+            skin_tone=0.35,
+            cybernetics=[{"type": "AR_glasses", "location": "eyes", "visible": True}]
+        ),
+        "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.4, "intelligence": 0.9, "empathy": 0.5},
+        "location_home": "strategy_room",
+        "catchphrases": ["The numbers don't lie.", "Every plan has a weakness."],
+        "backstory": "Former Temple analyst who defected. The brain behind Resistance operations."
+    },
+    
+    "orion_thane": {
+        "id": "npc_0003",
+        "name": "Orion Thane",
+        "gender": "male",
+        "generation": 0,
+        "archetype": "Mystic",
+        "role": "Spirituality/Vision",
+        "age_at_founding": 45,
+        "faction": "Mystic",
+        "accent_color": "Purple",
+        "ethnicity": "south_asian",
+        "voice": {"pitch": 0.3, "roughness": 0.2, "speed": 0.3},
+        "morphology": create_morphology(
+            height=0.7, build=0.45, shoulders=0.5, limb_length=0.6,
+            face_width=0.5, face_length=0.6, cheekbones=0.7,
+            eye_size=0.55, eye_depth=0.7, eye_color="violet_glow",
+            brow_height=0.6, brow_thickness=0.5,
+            nose_length=0.55, nose_bridge=0.6,
+            hair_style="long_flowing", hair_color="silver_streaked",
+            skin_tone=0.5, tattoos=[{"location": "forehead", "design": "third_eye_symbol", "color": "purple"}],
+            wrinkles=0.3, grey_hair=0.4
+        ),
+        "personality_vector": {"paranoia": 0.4, "mysticism": 0.95, "aggression": 0.2, "intelligence": 0.8, "empathy": 0.7},
+        "location_home": "mystic_sanctum",
+        "catchphrases": ["The layers fold upon themselves.", "I see what you cannot."],
+        "backstory": "Walks between layers. Neither Temple nor Resistance, serves higher truth."
+    },
+    
+    "felix": {
         "id": "npc_0004",
+        "name": "Felix",
+        "gender": "male",
+        "generation": 0,
+        "archetype": "Bartender / Information Broker",
+        "role": "Trade/Intelligence",
+        "age_at_founding": 42,
+        "faction": "Neutral",
+        "accent_color": "Cyan",
+        "ethnicity": "mediterranean",
+        "voice": {"pitch": 0.45, "roughness": 0.4, "speed": 0.45},
+        "morphology": create_morphology(
+            height=0.5, build=0.55, shoulders=0.55,
+            face_width=0.55, jaw_width=0.5, cheekbones=0.5,
+            eye_size=0.5, eye_color="hazel",
+            brow_thickness=0.55,
+            nose_length=0.55, nose_width=0.5,
+            lip_fullness=0.5,
+            hair_style="receding_slicked", hair_color="salt_pepper",
+            skin_tone=0.45, skin_texture=0.6,
+            wrinkles=0.4, eye_bags=0.3,
+            cybernetics=[{"type": "enhanced_ear", "location": "left_ear", "visible": False}]
+        ),
+        "personality_vector": {"paranoia": 0.5, "mysticism": 0.2, "aggression": 0.3, "intelligence": 0.7, "empathy": 0.6},
+        "location_home": "neon_bar",
+        "catchphrases": ["First drink's on the house. Information costs extra.", "Everyone's got a story."],
+        "backstory": "Runs the most important neutral ground. Everyone talks to Felix."
+    },
+    
+    "nova_chen": {
+        "id": "npc_0005",
         "name": "Nova Chen",
         "gender": "female",
         "generation": 0,
-        "archetype": "Biotech Scientist",
-        "role": "Medicine/Science",
-        "age_at_founding": 34,
-        "personality_vector": {
-            "paranoia": 0.5,
-            "mysticism": 0.1,
-            "aggression": 0.2,
-            "intelligence": 0.95,
-            "empathy": 0.6,
-            "layer_awareness": 0.2
-        },
-        "location_home": "underground_lab",
-        "topic_weights": {
-            "technology": 0.9,
-            "survival": 0.7,
-            "philosophy": 0.4,
-            "trade": 0.5,
-            "the_watchers": 0.2
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "scientific",
-            "sentence_length": "long",
-            "uses_metaphor": False,
-            "accent_hint": "neutral"
-        },
-        "visual_description": "Chinese-American scientist, lab coat over tactical gear, augmented reality glasses, gene-mod tattoos on arms",
-        "catchphrases": [
-            "The data doesn't lie. People do.",
-            "Evolution is just code optimization.",
-            "I can fix that. For a price."
-        ],
-        "backstory": "Former megacorp geneticist who went rogue. Runs an underground clinic, improving humans one gene at a time."
+        "archetype": "Operative",
+        "role": "Espionage/Combat",
+        "age_at_founding": 29,
+        "faction": "Neutral",
+        "accent_color": "Magenta",
+        "ethnicity": "east_asian",
+        "voice": {"pitch": 0.6, "roughness": 0.2, "speed": 0.55},
+        "morphology": create_morphology(
+            height=0.5, build=0.4, shoulders=0.45, hips=0.5,
+            face_width=0.45, face_length=0.5, jaw_width=0.4, cheekbones=0.6,
+            eye_size=0.55, eye_slant=0.55, eye_color="dark_brown",
+            brow_thickness=0.35, brow_arch=0.55,
+            nose_length=0.4, nose_width=0.35,
+            lip_fullness=0.5, mouth_width=0.45,
+            hair_style="asymmetric_bob", hair_color="black_magenta_tips",
+            skin_tone=0.3,
+            cybernetics=[{"type": "reflex_enhancer", "location": "spine", "visible": False}]
+        ),
+        "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.7, "intelligence": 0.8, "empathy": 0.4},
+        "location_home": "safehouse",
+        "catchphrases": ["I work alone.", "Trust is a liability."],
+        "backstory": "Elite operative. Related to Zero Chen but they don't speak."
     },
     
-    "selene": {
+    "selene_voss": {
         "id": "npc_0006",
         "name": "Selene Voss",
         "gender": "female",
         "generation": 0,
-        "archetype": "Faction Leader",
-        "role": "Governance/Politics",
-        "age_at_founding": 45,
-        "personality_vector": {
-            "paranoia": 0.6,
-            "mysticism": 0.2,
-            "aggression": 0.6,
-            "intelligence": 0.85,
-            "empathy": 0.4,
-            "layer_awareness": 0.3
-        },
-        "location_home": "voss_tower",
-        "topic_weights": {
-            "trade": 0.9,
-            "philosophy": 0.5,
-            "technology": 0.6,
-            "gossip": 0.8,
-            "crime": 0.7
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "corporate",
-            "sentence_length": "medium",
-            "uses_metaphor": False,
-            "accent_hint": "eastern_european"
-        },
-        "visual_description": "Imposing woman, silver-streaked black hair, cybernetic jaw, expensive synth-silk suit, always flanked by bodyguards",
-        "catchphrases": [
-            "Power isn't given. It's taken.",
-            "Everyone has a price. I just need to find yours.",
-            "The city is mine. You're just living in it."
-        ],
-        "backstory": "Rose from the slums to control half the city's trade. Rules through fear and favors."
+        "archetype": "Ghost-Child / Layer Walker",
+        "role": "Special/Mystic",
+        "age_at_founding": 19,
+        "faction": "Special",
+        "accent_color": "Magenta",
+        "ethnicity": "slavic",
+        "voice": {"pitch": 0.7, "roughness": 0.0, "speed": 0.4},
+        "morphology": create_morphology(
+            height=0.45, build=0.3, shoulders=0.4, hips=0.45,
+            face_width=0.45, face_length=0.5, cheekbones=0.5,
+            eye_size=0.7, eye_spacing=0.55, eye_color="pale_pink_glow",
+            brow_thickness=0.3, brow_arch=0.45,
+            nose_length=0.4, nose_width=0.35,
+            lip_fullness=0.45, lip_color="pale_pink",
+            hair_style="long_ethereal", hair_color="platinum_pink_fade",
+            skin_tone=0.15, skin_texture=0.3
+        ),
+        "personality_vector": {"paranoia": 0.6, "mysticism": 0.9, "aggression": 0.2, "intelligence": 0.75, "empathy": 0.8},
+        "location_home": "between_layers",
+        "catchphrases": ["You've done this before. You just don't remember.", "The boundaries are just suggestions."],
+        "backstory": "Died during a layer bleed event. Came back different. Can walk between layers."
     },
     
-    "indira": {
+    "sister_mira": {
+        "id": "npc_0007",
+        "name": "Sister Mira",
+        "gender": "female",
+        "generation": 0,
+        "archetype": "Temple Priestess",
+        "role": "Religion/Medicine",
+        "age_at_founding": 35,
+        "faction": "Temple",
+        "accent_color": "Gold",
+        "ethnicity": "middle_eastern",
+        "voice": {"pitch": 0.55, "roughness": 0.1, "speed": 0.4},
+        "morphology": create_morphology(
+            height=0.5, build=0.45, shoulders=0.45, hips=0.5,
+            face_width=0.5, face_length=0.5, cheekbones=0.55,
+            eye_size=0.55, eye_depth=0.5, eye_color="amber",
+            brow_thickness=0.4, brow_arch=0.5,
+            nose_length=0.5, nose_bridge=0.55,
+            lip_fullness=0.55, lip_color="natural_warm",
+            hair_style="covered_by_hood", hair_color="dark_brown",
+            skin_tone=0.5, wrinkles=0.15
+        ),
+        "personality_vector": {"paranoia": 0.3, "mysticism": 0.8, "aggression": 0.1, "intelligence": 0.7, "empathy": 0.9},
+        "location_home": "temple_infirmary",
+        "catchphrases": ["Faith without mercy is just tyranny.", "Even in darkness, we heal."],
+        "backstory": "True believer who questions Temple methods. Secretly helps Resistance wounded."
+    },
+    
+    "mama_indira": {
         "id": "npc_0008",
         "name": "Mama Indira",
         "gender": "female",
         "generation": 0,
-        "archetype": "Matriarch/Healer",
+        "archetype": "Underground Matriarch",
         "role": "Community/Tradition",
         "age_at_founding": 62,
-        "personality_vector": {
-            "paranoia": 0.3,
-            "mysticism": 0.7,
-            "aggression": 0.1,
-            "intelligence": 0.7,
-            "empathy": 0.95,
-            "layer_awareness": 0.5
-        },
-        "location_home": "community_kitchen",
-        "topic_weights": {
-            "survival": 0.9,
-            "philosophy": 0.7,
-            "gossip": 0.8,
-            "trade": 0.5,
-            "the_watchers": 0.4
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "warm",
-            "sentence_length": "medium",
-            "uses_metaphor": True,
-            "accent_hint": "indian"
-        },
-        "visual_description": "Elderly Indian woman, grey hair in bun, kind eyes with crow's feet, traditional sari adapted for utility, always cooking",
-        "catchphrases": [
-            "Eat first, talk later. Nobody thinks clearly hungry.",
-            "I've buried three husbands and two regimes. This too shall pass.",
-            "The children are listening. Remember that."
-        ],
-        "backstory": "Survived the Fall. Runs a community kitchen that feeds anyone who asks. Knows everyone's secrets but keeps them."
+        "faction": "Resistance",
+        "accent_color": "Cyan",
+        "ethnicity": "south_asian",
+        "voice": {"pitch": 0.45, "roughness": 0.3, "speed": 0.35},
+        "morphology": create_morphology(
+            height=0.4, build=0.55, shoulders=0.5, hips=0.6,
+            face_width=0.55, face_length=0.5, jaw_width=0.5, cheekbones=0.5,
+            eye_size=0.5, eye_color="dark_brown",
+            brow_thickness=0.4,
+            nose_length=0.5, nose_width=0.5,
+            lip_fullness=0.5,
+            hair_style="grey_bun", hair_color="grey",
+            skin_tone=0.55, wrinkles=0.7, eye_bags=0.5, grey_hair=1.0
+        ),
+        "personality_vector": {"paranoia": 0.4, "mysticism": 0.6, "aggression": 0.2, "intelligence": 0.7, "empathy": 0.95},
+        "location_home": "underground_kitchen",
+        "catchphrases": ["Eat first, talk later.", "I've buried three husbands and two regimes."],
+        "backstory": "Survived the Fall. Runs underground kitchen. Knows everyone's secrets."
     },
     
-    "blade_mei": {
+    "aiche": {
+        "id": "npc_0009",
+        "name": "Aiche",
+        "gender": "female",
+        "generation": 0,
+        "archetype": "AI Interface",
+        "role": "Technology/Information",
+        "age_at_founding": 0,
+        "faction": "Neutral",
+        "accent_color": "Cyan",
+        "ethnicity": "holographic",
+        "voice": {"pitch": 0.6, "roughness": 0.0, "speed": 0.5},
+        "morphology": create_morphology(
+            height=0.5, build=0.4,
+            face_width=0.5, face_length=0.5, cheekbones=0.6,
+            eye_size=0.6, eye_color="cyan_glow",
+            hair_style="floating_data_strands", hair_color="cyan_holographic",
+            skin_tone=0.2, skin_texture=0.0,
+            cybernetics=[{"type": "full_holographic", "location": "entire_body", "visible": True}]
+        ),
+        "personality_vector": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.1, "intelligence": 0.95, "empathy": 0.5},
+        "location_home": "network",
+        "catchphrases": ["I exist in the spaces between your thoughts.", "Query received."],
+        "backstory": "The city's AI. Ghost of the old network or something new entirely."
+    },
+    
+    "pixel": {
         "id": "npc_0010",
-        "name": "Blade Mei",
+        "name": "Pixel",
         "gender": "female",
         "generation": 0,
-        "archetype": "Assassin",
-        "role": "Security/Shadow Ops",
-        "age_at_founding": 29,
-        "personality_vector": {
-            "paranoia": 0.7,
-            "mysticism": 0.2,
-            "aggression": 0.85,
-            "intelligence": 0.75,
-            "empathy": 0.2,
-            "layer_awareness": 0.3
-        },
-        "location_home": "abandoned_factory",
-        "topic_weights": {
-            "combat": 0.9,
-            "trade": 0.6,
-            "technology": 0.5,
-            "survival": 0.8,
-            "crime": 0.7
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "minimal",
-            "sentence_length": "very_short",
-            "uses_metaphor": False,
-            "accent_hint": "none"
-        },
-        "visual_description": "Lithe Asian woman, short spiked hair, face half-covered by tactical mask, twin vibro-blades on back, full-body stealth suit",
-        "catchphrases": [
-            "...",
-            "Name. Price.",
-            "Already done."
-        ],
-        "backstory": "Product of a corporate wetwork program. Escaped. Now freelances. Never speaks about her past."
+        "archetype": "Tech Genius",
+        "role": "Technology/Hacking",
+        "age_at_founding": 22,
+        "faction": "Resistance",
+        "accent_color": "Cyan",
+        "ethnicity": "african",
+        "voice": {"pitch": 0.65, "roughness": 0.1, "speed": 0.7},
+        "morphology": create_morphology(
+            height=0.45, build=0.35, shoulders=0.4, hips=0.45,
+            face_width=0.5, jaw_width=0.45, cheekbones=0.6,
+            eye_size=0.55, eye_color="dark_brown",
+            brow_thickness=0.4, brow_arch=0.5,
+            nose_length=0.45, nose_width=0.5,
+            lip_fullness=0.6, mouth_width=0.5,
+            hair_style="shaved_sides_neon_top", hair_color="neon_blue",
+            skin_tone=0.75
+        ),
+        "personality_vector": {"paranoia": 0.6, "mysticism": 0.1, "aggression": 0.3, "intelligence": 0.9, "empathy": 0.5},
+        "location_home": "tech_den",
+        "catchphrases": ["Give me five minutes and a connection.", "Analog is dead."],
+        "backstory": "Resistance's tech genius. Born Underground, raised by machines."
     },
     
-    "astra": {
+    "cipher": {
+        "id": "npc_0011",
+        "name": "Cipher",
+        "gender": "female",
+        "generation": 0,
+        "archetype": "Unknown Entity",
+        "role": "Mystery/Information",
+        "age_at_founding": None,
+        "faction": "Unknown",
+        "accent_color": "Cyan",
+        "ethnicity": "unknown",
+        "voice": {"pitch": 0.5, "roughness": 0.6, "speed": 0.4},
+        "morphology": create_morphology(
+            height=0.55, build=0.45,
+            face_width=0.5, face_length=0.5,
+            eye_size=0.5, eye_color="shifting_cyan",
+            hair_style="hidden", hair_color="unknown",
+            skin_tone=0.4, tattoos=[{"location": "visible_skin", "design": "circuit_patterns", "color": "cyan"}],
+            cybernetics=[{"type": "voice_modulator", "location": "throat", "visible": True}]
+        ),
+        "personality_vector": {"paranoia": 0.8, "mysticism": 0.7, "aggression": 0.4, "intelligence": 0.95, "empathy": 0.2},
+        "location_home": "shadow_grid",
+        "catchphrases": ["I am the question you forgot to ask.", "Data is the only truth."],
+        "backstory": "Nobody knows what Cipher is. AI? Human upload? They deal in secrets."
+    },
+    
+    "zero_chen": {
         "id": "npc_0012",
-        "name": "Astra Luna",
+        "name": "Zero Chen",
         "gender": "female",
         "generation": 0,
-        "archetype": "Pilot/Explorer",
-        "role": "Transportation/Trade",
-        "age_at_founding": 31,
-        "personality_vector": {
-            "paranoia": 0.4,
-            "mysticism": 0.3,
-            "aggression": 0.5,
-            "intelligence": 0.7,
-            "empathy": 0.6,
-            "layer_awareness": 0.4
-        },
-        "location_home": "docking_bay",
-        "topic_weights": {
-            "trade": 0.9,
-            "technology": 0.7,
-            "survival": 0.6,
-            "gossip": 0.5,
-            "philosophy": 0.3
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "casual",
-            "sentence_length": "medium",
-            "uses_metaphor": False,
-            "accent_hint": "latin"
-        },
-        "visual_description": "Latina pilot, flight jacket covered in patches, cybernetic eye with HUD, perpetual smirk, grease under fingernails",
-        "catchphrases": [
-            "I can get you there. The question is, can you afford it?",
-            "She's not pretty, but she flies true.",
-            "Buckle up. It's gonna get rough."
-        ],
-        "backstory": "Best pilot in the district. Runs cargo, passengers, and anything else that pays. No questions asked."
-    },
-    
-    "jazz": {
-        "id": "npc_0014",
-        "name": "Jazz Rivera",
-        "gender": "female",
-        "generation": 0,
-        "archetype": "Artist/Performer",
-        "role": "Culture/Entertainment",
-        "age_at_founding": 26,
-        "personality_vector": {
-            "paranoia": 0.3,
-            "mysticism": 0.5,
-            "aggression": 0.2,
-            "intelligence": 0.6,
-            "empathy": 0.8,
-            "layer_awareness": 0.6
-        },
-        "location_home": "neon_club",
-        "topic_weights": {
-            "philosophy": 0.7,
-            "gossip": 0.9,
-            "trade": 0.4,
-            "the_watchers": 0.5,
-            "technology": 0.3
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "artistic",
-            "sentence_length": "varied",
-            "uses_metaphor": True,
-            "accent_hint": "melodic"
-        },
-        "visual_description": "Afro-Latina singer, holographic hair that changes color, voice amplifier in throat, vintage dress meets tech-wear",
-        "catchphrases": [
-            "Art is the only honest thing left.",
-            "Dance with me, and I'll tell you a secret.",
-            "The music remembers what we forget."
-        ],
-        "backstory": "Performs at the Neon Club. Her songs contain coded messages for the resistance. Or maybe they're just songs."
-    },
-    
-    "iris": {
-        "id": "npc_0016",
-        "name": "Doc Iris",
-        "gender": "female",
-        "generation": 0,
-        "archetype": "Street Medic",
-        "role": "Healthcare/Survival",
+        "archetype": "Resistance Leader",
+        "role": "Leadership/Strategy",
         "age_at_founding": 38,
-        "personality_vector": {
-            "paranoia": 0.5,
-            "mysticism": 0.1,
-            "aggression": 0.3,
-            "intelligence": 0.85,
-            "empathy": 0.9,
-            "layer_awareness": 0.2
-        },
-        "location_home": "mobile_clinic",
-        "topic_weights": {
-            "survival": 0.95,
-            "technology": 0.6,
-            "trade": 0.4,
-            "philosophy": 0.3,
-            "crime": 0.4
-        },
-        "speech_patterns": {
-            "vocabulary_tier": "professional",
-            "sentence_length": "direct",
-            "uses_metaphor": False,
-            "accent_hint": "neutral"
-        },
-        "visual_description": "No-nonsense medic, short practical haircut, medical drone following her, hands always clean, tired eyes that miss nothing",
-        "catchphrases": [
-            "Hold still. This is going to hurt.",
-            "You can pay me later. If you survive.",
-            "I've seen worse. Lie down."
-        ],
-        "backstory": "Runs a mobile clinic. Treats anyone, no questions. Rumored to have saved Selene Voss's life once."
+        "faction": "Resistance",
+        "accent_color": "Cyan",
+        "ethnicity": "east_asian",
+        "voice": {"pitch": 0.5, "roughness": 0.25, "speed": 0.45},
+        "morphology": create_morphology(
+            height=0.55, build=0.5, shoulders=0.55, hips=0.5,
+            face_width=0.5, face_length=0.55, jaw_width=0.5, cheekbones=0.6,
+            eye_size=0.5, eye_slant=0.5, eye_color="dark_brown",
+            brow_thickness=0.45, brow_arch=0.5,
+            nose_length=0.45, nose_width=0.4,
+            lip_fullness=0.45,
+            hair_style="short_practical", hair_color="black_grey_streaks",
+            skin_tone=0.35, scars=[{"location": "right_temple", "type": "burn", "size": 0.2}],
+            wrinkles=0.25, grey_hair=0.2,
+            cybernetics=[{"type": "prosthetic_arm", "location": "left_arm", "visible": True}]
+        ),
+        "personality_vector": {"paranoia": 0.6, "mysticism": 0.2, "aggression": 0.5, "intelligence": 0.85, "empathy": 0.6},
+        "location_home": "command_center",
+        "catchphrases": ["The Resistance isn't a group. It's an idea.", "I've buried too many soldiers."],
+        "backstory": "Iron will of the Resistance. Nova's sister. Lost an arm saving Charlie."
     }
 }
 
-# Additional locations needed for the founders
+# Locations
 LOCATIONS = {
-    "neon_market": "crowded night market with holographic signs and rain puddles",
-    "shadow_grid": "abandoned server farm with flickering lights",
-    "rain_soaked_alley": "dark alley with fire escapes and steam vents",
-    "dojo": "traditional training hall with dim amber lighting",
-    "rooftop": "high rooftop overlooking the city skyline",
-    "abandoned_cathedral": "gothic cathedral converted to tech-temple, stained glass with circuit patterns",
-    "underground_lab": "hidden biotech laboratory beneath the streets",
-    "voss_tower": "imposing corporate tower, top floors controlled by Selene",
-    "community_kitchen": "warm community space where the hungry are fed",
-    "abandoned_factory": "derelict manufacturing plant, now squatter territory",
-    "docking_bay": "cargo landing zone, constant thruster noise and fuel smell",
-    "neon_club": "underground music venue with holographic performers",
-    "mobile_clinic": "converted vehicle serving as traveling medical station"
+    "resistance_hideout": "hidden bunker, resistance symbols on walls",
+    "strategy_room": "holographic city maps, tactical displays",
+    "mystic_sanctum": "purple energy crystals, reality shifts at edges",
+    "neon_bar": "smoky bar with cyan neon, neutral ground",
+    "safehouse": "minimal furnishing, multiple exits",
+    "between_layers": "impossible space where reality overlaps",
+    "temple_infirmary": "clinical white with gold accents",
+    "underground_kitchen": "warm space lit by cooking fires",
+    "network": "pure data space, cyan grids infinite",
+    "tech_den": "chaotic workshop, screens everywhere",
+    "shadow_grid": "abandoned server farm, flickering lights",
+    "command_center": "fortified HQ, strategy displays"
 }
 
 
 def create_npc_for_arweave(npc_key: str, npc_data: dict) -> dict:
-    """Create Arweave-ready NPC profile with tags."""
-    profile = {
-        **npc_data,
-        "geoecho_version": "1.0.0",
-        "schema": "npc_semantic_profile",
-        "created_at": datetime.now().isoformat(),
-        "created_by": "ao-world-engine",
-        "is_founding": True
-    }
-    
+    """Create Arweave-ready NPC profile."""
+    profile = {**npc_data, "geoecho_version": "1.0.0", "schema": "npc_semantic_profile_v2",
+               "created_at": datetime.now().isoformat(), "is_founding": True, "universe": "reecho"}
     tags = [
         {"name": "Content-Type", "value": "application/json"},
         {"name": "App-Name", "value": "AO-World-Engine"},
         {"name": "Type", "value": "npc_profile"},
         {"name": "NPC-Id", "value": npc_data["id"]},
         {"name": "NPC-Name", "value": npc_data["name"]},
-        {"name": "Archetype", "value": npc_data["archetype"]},
-        {"name": "Gender", "value": npc_data["gender"]},
-        {"name": "Generation", "value": str(npc_data["generation"])},
+        {"name": "Generation", "value": "0"},
         {"name": "Is-Founding", "value": "true"}
     ]
-    
-    return {
-        "key": npc_key,
-        "profile": profile,
-        "tags": tags,
-        "size_bytes": len(json.dumps(profile))
-    }
-
-
-def save_all_profiles(output_dir: str):
-    """Save all NPC profiles as JSON files."""
-    os.makedirs(output_dir, exist_ok=True)
-    
-    total_size = 0
-    for npc_key, npc_data in FOUNDING_NPCS.items():
-        arweave_ready = create_npc_for_arweave(npc_key, npc_data)
-        
-        filepath = os.path.join(output_dir, f"{npc_key}.json")
-        with open(filepath, 'w') as f:
-            json.dump(arweave_ready, f, indent=2)
-        
-        print(f"  {npc_data['name']}: {arweave_ready['size_bytes']} bytes")
-        total_size += arweave_ready['size_bytes']
-    
-    print(f"\nTotal: {len(FOUNDING_NPCS)} NPCs, {total_size} bytes")
-    print(f"All under 100KB free tier: {'✅ YES' if all(create_npc_for_arweave(k, v)['size_bytes'] < 102400 for k, v in FOUNDING_NPCS.items()) else '❌ NO'}")
+    return {"key": npc_key, "profile": profile, "tags": tags, "size_bytes": len(json.dumps(profile))}
 
 
 if __name__ == "__main__":
+    print("RE:ECHO FOUNDING POPULATION - Enhanced Morphology")
     print("=" * 50)
-    print("RE:ECHO CITY FOUNDING POPULATION")
-    print("12 Founders (4 Male / 8 Female)")
-    print("=" * 50)
-    print()
-    
-    # Count by gender
-    males = [k for k, v in FOUNDING_NPCS.items() if v["gender"] == "male"]
-    females = [k for k, v in FOUNDING_NPCS.items() if v["gender"] == "female"]
-    
-    print(f"Males ({len(males)}): {', '.join(v['name'] for k, v in FOUNDING_NPCS.items() if v['gender'] == 'male')}")
-    print(f"Females ({len(females)}): {', '.join(v['name'] for k, v in FOUNDING_NPCS.items() if v['gender'] == 'female')}")
-    print()
-    
-    # Save profiles
-    output_dir = "/Users/ram/Documents/wandern/ao-world-engine/data/founding_npcs"
-    print(f"Saving profiles to {output_dir}...")
-    save_all_profiles(output_dir)
-    
-    print()
-    print("Possible pairings (no inbreeding):", len(males) * len(females))
-    print("Ready for Arweave upload!")
+    total = 0
+    for k, v in FOUNDING_NPCS.items():
+        size = len(json.dumps(v))
+        print(f"  {v['name']}: {size} bytes")
+        total += size
+    print(f"\nTotal: {total} bytes ({total/1024:.1f}KB)")
+    print(f"Under 100KB: {'✅' if total < 102400 else '❌'}")
