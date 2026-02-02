@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RE:ECHO City - Chat with NPC AI on the Permaweb</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050508;
+            --bg-panel: rgba(10, 12, 20, 0.95);
+            --bg-chat: rgba(5, 8, 15, 0.9);
+            --accent-cyan: #00f0ff;
+            --accent-magenta: #ff00aa;
+            --accent-orange: #ff6b35;
+            --text-primary: #e0e8f0;
+            --text-dim: #667788;
+            --border-glow: rgba(0, 240, 255, 0.3);
+            --npc-bubble: rgba(0, 240, 255, 0.1);
+            --user-bubble: rgba(255, 0, 170, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes grid-move {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .panel h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Time Control */
+        .tick-display {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .tick-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 20px var(--accent-cyan);
+        }
+
+        .tick-info {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .time-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            border-radius: 2px;
+            outline: none;
+            margin: 0.5rem 0;
+        }
+
+        .time-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .time-presets {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .time-btn {
+            flex: 1;
+            padding: 0.4rem;
+            background: transparent;
+            border: 1px solid var(--border-glow);
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .time-btn:hover {
+            background: var(--npc-bubble);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        /* NPC Selector */
+        .npc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .npc-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .npc-card:hover {
+            background: var(--npc-bubble);
+            border-color: var(--accent-cyan);
+        }
+
+        .npc-card.active {
+            background: var(--npc-bubble);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .npc-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .npc-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .npc-name {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .npc-archetype {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        /* State Display */
+        .state-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .state-item {
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .state-label {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .state-value {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Personality bars */
+        .personality-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .personality-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar-label {
+            width: 70px;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .bar-fill.paranoia {
+            background: var(--accent-orange);
+        }
+
+        .bar-fill.mysticism {
+            background: var(--accent-magenta);
+        }
+
+        .bar-fill.aggression {
+            background: #ff3366;
+        }
+
+        /* Chat area */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-chat);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-npc-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 400px;
+            max-height: 60vh;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            animation: message-in 0.3s ease-out;
+        }
+
+        @keyframes message-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.npc {
+            align-self: flex-start;
+            background: var(--npc-bubble);
+            border: 1px solid var(--accent-cyan);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--user-bubble);
+            border: 1px solid var(--accent-magenta);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-meta {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .message.system {
+            align-self: center;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid var(--accent-orange);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        /* Input area */
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border-glow);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            border: none;
+            border-radius: 20px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Arweave link */
+        .arweave-link {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .arweave-link a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        /* Loading animation */
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 0.5rem;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: typing-dot 1s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-dot {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .chat-container {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <header>
+            <h1>RE:ECHO CITY</h1>
+            <p class="subtitle">Chat with NPC AI on the Permaweb • Powered by Arweave + AO</p>
+        </header>
+
+        <aside class="sidebar">
+            <!-- Time Control -->
+            <div class="panel">
+                <h3>⏱️ TIME CONTROL</h3>
+                <div class="tick-display">
+                    <div class="tick-number" id="tickNumber">100</div>
+                    <div class="tick-info" id="tickInfo">Day 4, 4:00 AM • Clear</div>
+                </div>
+                <input type="range" class="time-slider" id="tickSlider" min="0" max="2000" value="100">
+                <div class="time-presets">
+                    <button class="time-btn" onclick="setTick(100)">Dawn</button>
+                    <button class="time-btn" onclick="setTick(500)">Week 1</button>
+                    <button class="time-btn" onclick="setTick(1337)">Rainy Eve</button>
+                </div>
+            </div>
+
+            <!-- NPC Selector -->
+            <div class="panel">
+                <h3>👤 SELECT NPC</h3>
+                <div class="npc-list" id="npcList"></div>
+            </div>
+
+            <!-- NPC State -->
+            <div class="panel" id="statePanel">
+                <h3>📊 NPC STATE</h3>
+                <div class="state-grid" id="stateGrid">
+                    <div class="state-item">
+                        <div class="state-label">Location</div>
+                        <div class="state-value" id="stateLocation">-</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Mood</div>
+                        <div class="state-value" id="stateMood">-</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Weather</div>
+                        <div class="state-value" id="stateWeather">-</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Time</div>
+                        <div class="state-value" id="stateTime">-</div>
+                    </div>
+                </div>
+                <div class="personality-bars" style="margin-top: 1rem;">
+                    <div class="personality-bar">
+                        <span class="bar-label">Paranoia</span>
+                        <div class="bar-track">
+                            <div class="bar-fill paranoia" id="barParanoia" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="personality-bar">
+                        <span class="bar-label">Mysticism</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mysticism" id="barMysticism" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="personality-bar">
+                        <span class="bar-label">Aggression</span>
+                        <div class="bar-track">
+                            <div class="bar-fill aggression" id="barAggression" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualize Scene -->
+            <div class="panel">
+                <h3>🎨 VISUALIZE SCENE</h3>
+                <p style="font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.75rem;">
+                    Generate a Signal Noir style scene description
+                </p>
+                <button class="time-btn" style="width: 100%; margin-bottom: 0.5rem;" onclick="visualizeScene()">
+                    ✨ Describe Current Scene
+                </button>
+                <button class="time-btn" style="width: 100%;" onclick="getImagePrompt()">
+                    📋 Copy Image Prompt
+                </button>
+                <div id="sceneOutput"
+                    style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-dim); display: none;">
+                    <div id="sceneText"
+                        style="background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 4px; line-height: 1.4;">
+                    </div>
+                </div>
+                <p style="font-size: 0.6rem; color: var(--accent-orange); margin-top: 0.5rem;">
+                    ⚠️ Demo only. Uses Gemini Flash. For production Signal Noir, use custom-trained models.
+                </p>
+            </div>
+
+            <!-- Arweave -->
+            <div class="panel arweave-link">
+                Powered by data on <a href="https://arweave.net/XmlqPa1RNFvipxnvyZTgbpx8EjOZNzNNI2tMGjQ3eb4"
+                    target="_blank">Arweave</a>
+            </div>
+        </aside>
+
+        <main class="chat-container">
+            <div class="chat-header">
+                <div class="chat-npc-info">
+                    <div class="npc-avatar" id="chatAvatar">🔮</div>
+                    <div>
+                        <div class="npc-name" id="chatNpcName">Kira Ōmura</div>
+                        <div class="npc-archetype" id="chatNpcArchetype">Street Oracle</div>
+                    </div>
+                </div>
+                <div class="tick-info" id="chatTickInfo">Tick 100</div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    <strong>SYSTEM:</strong> You are now tuning into RE:ECHO City at Tick 100. The Watchers observe.
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Speak to the NPC..."
+                    onkeypress="handleKeyPress(event)">
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">SEND</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:8080'
+            : 'https://ao-npc-chat-YOUR_PROJECT.run.app'; // Replace after deploy
+
+        // NPC Data
+        const npcs = {
+            kira: { name: "Kira Ōmura", archetype: "Street Oracle", icon: "🔮", personality: { paranoia: 0.8, mysticism: 0.9, aggression: 0.2 } },
+            cipher: { name: "Cipher", archetype: "AI Hacker Entity", icon: "🤖", personality: { paranoia: 0.6, mysticism: 0.3, aggression: 0.4 } },
+            marco: { name: "Marco Chen", archetype: "Street Merchant", icon: "💰", personality: { paranoia: 0.4, mysticism: 0.1, aggression: 0.3 } },
+            charlie: { name: "Charlie Vex", archetype: "Noir Detective", icon: "🕵️", personality: { paranoia: 0.7, mysticism: 0.2, aggression: 0.5 } },
+            blade: { name: "Blade Tanaka", archetype: "Street Samurai", icon: "⚔️", personality: { paranoia: 0.3, mysticism: 0.4, aggression: 0.8 } }
+        };
+
+        let currentNpc = 'kira';
+        let currentTick = 100;
+
+        // Initialize
+        function init() {
+            renderNpcList();
+            updateTick(100);
+            selectNpc('kira');
+        }
+
+        function renderNpcList() {
+            const list = document.getElementById('npcList');
+            list.innerHTML = Object.entries(npcs).map(([id, npc]) => `
+                <div class="npc-card ${id === currentNpc ? 'active' : ''}" onclick="selectNpc('${id}')">
+                    <div class="npc-avatar">${npc.icon}</div>
+                    <div class="npc-info">
+                        <div class="npc-name">${npc.name}</div>
+                        <div class="npc-archetype">${npc.archetype}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectNpc(id) {
+            currentNpc = id;
+            const npc = npcs[id];
+
+            // Update header
+            document.getElementById('chatAvatar').textContent = npc.icon;
+            document.getElementById('chatNpcName').textContent = npc.name;
+            document.getElementById('chatNpcArchetype').textContent = npc.archetype;
+
+            // Update personality bars
+            document.getElementById('barParanoia').style.width = (npc.personality.paranoia * 100) + '%';
+            document.getElementById('barMysticism').style.width = (npc.personality.mysticism * 100) + '%';
+            document.getElementById('barAggression').style.width = (npc.personality.aggression * 100) + '%';
+
+            // Update list styling
+            renderNpcList();
+
+            // Add system message
+            addMessage('system', `Tuning into ${npc.name} at Tick ${currentTick}...`);
+
+            // Fetch state
+            fetchNpcState();
+        }
+
+        function setTick(tick) {
+            document.getElementById('tickSlider').value = tick;
+            updateTick(tick);
+        }
+
+        function updateTick(tick) {
+            currentTick = tick;
+            const day = Math.floor(tick / 24);
+            const hour = tick % 24;
+            const weather = ['Clear', 'Rain', 'Storm', 'Fog'][Math.floor(tick / 6) % 4];
+            const period = hour < 6 ? 'Night' : hour < 12 ? 'Morning' : hour < 18 ? 'Afternoon' : 'Evening';
+
+            document.getElementById('tickNumber').textContent = tick;
+            document.getElementById('tickInfo').textContent = `Day ${day}, ${hour}:00 ${period} • ${weather}`;
+            document.getElementById('chatTickInfo').textContent = `Tick ${tick}`;
+
+            document.getElementById('stateWeather').textContent = weather;
+            document.getElementById('stateTime').textContent = `${hour}:00`;
+
+            // Simulated state changes
+            const moods = ['wary', 'contemplative', 'neutral', 'aggressive'];
+            const locations = ['Neon Market', 'Shadow Grid', 'Alley', 'Dojo', 'Rooftop'];
+            document.getElementById('stateMood').textContent = moods[tick % 4];
+            document.getElementById('stateLocation').textContent = locations[tick % 5];
+        }
+
+        document.getElementById('tickSlider').addEventListener('input', (e) => {
+            updateTick(parseInt(e.target.value));
+        });
+
+        async function fetchNpcState() {
+            try {
+                const res = await fetch(`${API_BASE}/api/npc/state/${currentNpc}/${currentTick}`);
+                if (res.ok) {
+                    const state = await res.json();
+                    document.getElementById('stateLocation').textContent = state.current_location.replace('_', ' ');
+                    document.getElementById('stateMood').textContent = state.current_mood;
+                    document.getElementById('stateWeather').textContent = state.tick_state.weather;
+                    document.getElementById('stateTime').textContent = `${state.tick_state.hour}:00`;
+                }
+            } catch (e) {
+                console.log('API not available, using local simulation');
+            }
+        }
+
+        function addMessage(type, content, meta = null) {
+            const messages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            div.innerHTML = content + (meta ? `<div class="message-meta">${meta}</div>` : '');
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function showTyping() {
+            const messages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'message npc';
+            div.id = 'typing';
+            div.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            input.value = '';
+            addMessage('user', message);
+
+            document.getElementById('sendBtn').disabled = true;
+            showTyping();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/npc/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        npc_id: currentNpc,
+                        tick: currentTick,
+                        message: message
+                    })
+                });
+
+                removeTyping();
+
+                if (res.ok) {
+                    const data = await res.json();
+                    addMessage('npc', data.response, `${data.state.location} • ${data.state.weather} • Tick ${data.state.tick}`);
+                } else {
+                    // Fallback response
+                    const npc = npcs[currentNpc];
+                    const fallback = generateFallback(npc, message);
+                    addMessage('npc', fallback, `Local simulation • Tick ${currentTick}`);
+                }
+            } catch (e) {
+                removeTyping();
+                // Fallback for when API is not available
+                const npc = npcs[currentNpc];
+                const fallback = generateFallback(npc, message);
+                addMessage('npc', fallback, `Local simulation • Tick ${currentTick}`);
+            }
+
+            document.getElementById('sendBtn').disabled = false;
+        }
+
+        function generateFallback(npc, userMessage) {
+            const responses = {
+                kira: [
+                    "*eyes flicker with distant visions* The layers stack, friend. We're just echoes in someone's dream.",
+                    "You seek answers? Look to the static between channels. The Watchers see all.",
+                    "*touches temple* I feel them... eyes from outside the frame. Do you?"
+                ],
+                cipher: [
+                    ">> ANALYSIS_COMPLETE. Your query registered. Data is the only truth.",
+                    "*digital voice crackles* I probe the networks while the city sleeps. What data do you seek?",
+                    ">> ALERT: Unusual observation detected. Are you one of the Watchers?"
+                ],
+                marco: [
+                    "*counts credits* Everything has a price, friend. What are you buying or selling?",
+                    "The market never sleeps, and neither does opportunity. What's your offer?",
+                    "*glances around nervously* Keep your voice down. Some deals are best made in shadows."
+                ],
+                charlie: [
+                    "*tips hat, rain dripping from brim* Everybody's got secrets in this city. What's yours?",
+                    "Rain washes nothing clean here. Just moves the stains around.",
+                    "*lights cigarette* Another case, another alley. What brings you to my part of town?"
+                ],
+                blade: [
+                    "*hand rests on katana* Honor is the only code worth following. State your business.",
+                    "Steel speaks truth where words fail. Are you friend or foe?",
+                    "*eyes narrow* The dojo teaches patience. My blade teaches consequence."
+                ]
+            };
+
+            const npcResponses = responses[currentNpc] || responses.kira;
+            return npcResponses[Math.floor(Math.random() * npcResponses.length)];
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        // Scene visualization functions
+        async function visualizeScene() {
+            const sceneOutput = document.getElementById('sceneOutput');
+            const sceneText = document.getElementById('sceneText');
+
+            sceneOutput.style.display = 'block';
+            sceneText.textContent = '✨ Generating scene description...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/scene/describe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        npc_id: currentNpc,
+                        tick: currentTick,
+                        action: 'standing in the rain, looking contemplative'
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    sceneText.innerHTML = `<em>${data.description}</em><br><br><small style="color: var(--accent-orange);">${data.disclaimer}</small>`;
+                } else {
+                    // Fallback
+                    const npc = npcs[currentNpc];
+                    const locations = ['neon market', 'shadow grid', 'rain-soaked alley', 'rooftop', 'dojo'];
+                    const weather = ['rain', 'fog', 'storm', 'clear'][currentTick % 4];
+                    const location = locations[currentTick % 5];
+                    sceneText.innerHTML = `<em>*${npc.name} stands in the ${location}, ${weather} weather casting cyan neon reflections on wet surfaces. High contrast shadows play across their features in classic Signal Noir style.*</em><br><br><small style="color: var(--accent-orange);">⚠️ Local fallback. Connect to API for AI-generated descriptions.</small>`;
+                }
+            } catch (e) {
+                const npc = npcs[currentNpc];
+                sceneText.innerHTML = `<em>*${npc.name} emerges from the shadows in RE:ECHO City. Rain cascades down, reflecting cyan neon in countless puddles. The noir atmosphere is palpable.*</em><br><br><small style="color: var(--accent-orange);">⚠️ Local fallback. Start the API server for AI descriptions.</small>`;
+            }
+        }
+
+        async function getImagePrompt() {
+            const sceneOutput = document.getElementById('sceneOutput');
+            const sceneText = document.getElementById('sceneText');
+
+            sceneOutput.style.display = 'block';
+            sceneText.textContent = '📋 Getting prompt...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/scene/prompt`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        npc_id: currentNpc,
+                        tick: currentTick,
+                        action: 'standing in the rain'
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    await navigator.clipboard.writeText(data.prompt);
+                    sceneText.innerHTML = `<span style="color: var(--accent-cyan);">✅ Prompt copied to clipboard!</span><br><br><small>${data.tip}</small>`;
+                } else {
+                    throw new Error('API not available');
+                }
+            } catch (e) {
+                // Generate fallback prompt
+                const npc = npcs[currentNpc];
+                const npcPrompts = {
+                    kira: 'Young Japanese woman, short asymmetric black hair, amber glowing eyes, worn coat, spiritual tattoos on neck',
+                    cipher: 'Androgynous AI entity, cyan circuit patterns under translucent skin, bald with data port, dark tech-suit',
+                    marco: 'Middle-aged Asian man, weathered face, cybernetic cyan eye, worn leather jacket, shrewd expression',
+                    charlie: 'Noir detective, 40s, trenchcoat and fedora, cigarette smoke, five o\'clock shadow, rain dripping from hat',
+                    blade: 'Japanese street samurai, muscular, traditional-cyberpunk armor, katana on back, facial scars, cyan cybernetic arm'
+                };
+
+                const prompt = `${npcPrompts[currentNpc] || npcPrompts.kira}
+
+Standing in rain-soaked cyberpunk alley at night.
+
+SIGNAL NOIR STYLE - MANDATORY:
+- BLACK AND WHITE / GRAYSCALE
+- Deep inky black shadows, high contrast
+- ONLY CYAN (#00CED1) accents for tech/neon
+- NO red, green, yellow, orange, pink, purple
+- Rain atmosphere, wet surfaces
+- Sin City / Blade Runner aesthetic
+
+Cinematic wide shot, dramatic noir lighting.`;
+
+                try {
+                    await navigator.clipboard.writeText(prompt);
+                    sceneText.innerHTML = `<span style="color: var(--accent-cyan);">✅ Prompt copied!</span><br><br><small>Use with Imagen, DALL-E, or Midjourney. Add 'ar:16:9' for widescreen.</small>`;
+                } catch (clipErr) {
+                    sceneText.innerHTML = `<pre style="font-size: 0.65rem; overflow-x: auto; white-space: pre-wrap;">${prompt}</pre><small>Copy manually and use with any image generator.</small>`;
+                }
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+
+</html>
