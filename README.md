@@ -7,13 +7,7 @@
 [![Powered by Arweave](https://img.shields.io/badge/Powered%20by-Arweave-black)](https://arweave.org)
 
 <p align="center">
-  <img src="assets/scenes/city_rain.png" width="400" alt="RE:ECHO City - Rain">
-  <img src="assets/scenes/alley.png" width="400" alt="RE:ECHO City - Alley">
-</p>
-
-<p align="center">
-  <img src="assets/characters/charlie.png" width="200" alt="Charlie - Street Detective">
-  <img src="assets/characters/cipher.png" width="200" alt="Cipher - AI Oracle">
+  <img src="assets/hero.png" width="800" alt="RE:ECHO City - Signal Noir">
 </p>
 
 *Signal Noir style - cyberpunk meets film noir. Every world has its own aesthetic.*
