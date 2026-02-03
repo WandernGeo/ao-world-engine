@@ -646,7 +646,7 @@
         // =============================================================================
         const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '' || window.location.protocol === 'file:')
             ? "http://localhost:8081"
-            : "";
+            : window.location.origin;
 
         const state = {
             tick: 0,
