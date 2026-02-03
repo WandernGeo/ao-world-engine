@@ -711,6 +711,19 @@
         let currentNpc = 'charlie';
         let currentTick = 100;
 
+        // Persistent user ID (stored in localStorage)
+        // This allows NPCs to remember you across sessions
+        function getUserId() {
+            let userId = localStorage.getItem('reecho_user_id');
+            if (!userId) {
+                userId = 'user_' + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('reecho_user_id', userId);
+                console.log('🆕 Generated new user ID:', userId);
+            }
+            return userId;
+        }
+        const USER_ID = getUserId();
+
         // Initialize
         function init() {
             renderNpcList();
@@ -843,7 +856,8 @@
                     body: JSON.stringify({
                         npc_id: currentNpc,
                         tick: currentTick,
-                        message: message
+                        message: message,
+                        user_id: USER_ID
                     })
                 });
 

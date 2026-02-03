@@ -86,60 +86,51 @@ _arweave_cache = {}
 # CONVERSATION MEMORY SYSTEM
 # ============================================================
 # 
-# Two-tier memory:
-# 1. In-memory cache (instant) - stored here per user_id + npc_id
-# 2. Arweave archive (permanent) - batched every N conversations
-#
-# This allows NPCs to remember conversations within a session,
-# and persist important memories to Arweave for permanence.
+# Persistent memory storage using npc_memory.py
+# - Saves to JSON files in data/memories/
+# - Survives server restarts  
+# - Ready for Arweave archival
 # ============================================================
 
-_conversation_memory = {}  # Key: "user_id:npc_id" -> List of messages
-_user_info = {}  # Key: "user_id" -> {"name": ..., "first_seen_tick": ...}
-
-def get_conversation_key(user_id: str, npc_id: str) -> str:
-    """Generate unique key for user-NPC conversation."""
-    return f"{user_id}:{npc_id}"
-
-def get_conversation_history(user_id: str, npc_id: str, max_messages: int = 20) -> list:
-    """Get conversation history between user and NPC."""
-    key = get_conversation_key(user_id, npc_id)
-    history = _conversation_memory.get(key, [])
-    return history[-max_messages:]  # Return last N messages
-
-def add_to_conversation(user_id: str, npc_id: str, role: str, content: str, tick: int):
-    """Add a message to conversation history."""
-    key = get_conversation_key(user_id, npc_id)
-    if key not in _conversation_memory:
-        _conversation_memory[key] = []
+try:
+    from npc_memory import (
+        get_memory,
+        remember_user,
+        get_user_info,
+        get_conversation_history,
+        add_to_conversation
+    )
+    HAS_PERSISTENT_MEMORY = True
+    print("✅ Persistent memory system loaded")
+except ImportError:
+    HAS_PERSISTENT_MEMORY = False
+    print("⚠️ Persistent memory not available - using in-memory fallback")
     
-    _conversation_memory[key].append({
-        "role": role,
-        "content": content,
-        "tick": tick,
-        "timestamp": tick  # Same as tick for now
-    })
+    # Fallback in-memory storage
+    _conversation_memory = {}
+    _user_info = {}
     
-    # Keep only last 50 messages per conversation
-    if len(_conversation_memory[key]) > 50:
-        _conversation_memory[key] = _conversation_memory[key][-50:]
-
-def remember_user(user_id: str, name: str, tick: int):
-    """Remember information about a user."""
-    if user_id not in _user_info:
-        _user_info[user_id] = {
-            "name": name,
-            "first_seen_tick": tick,
-            "last_seen_tick": tick
-        }
-    else:
-        _user_info[user_id]["last_seen_tick"] = tick
-        if name and name != "unknown":
+    def get_conversation_history(user_id: str, npc_id: str, max_messages: int = 20) -> list:
+        key = f"{user_id}:{npc_id}"
+        history = _conversation_memory.get(key, [])
+        return history[-max_messages:]
+    
+    def add_to_conversation(user_id: str, npc_id: str, role: str, content: str, tick: int):
+        key = f"{user_id}:{npc_id}"
+        if key not in _conversation_memory:
+            _conversation_memory[key] = []
+        _conversation_memory[key].append({"role": role, "content": content, "tick": tick})
+        if len(_conversation_memory[key]) > 50:
+            _conversation_memory[key] = _conversation_memory[key][-50:]
+    
+    def remember_user(user_id: str, name: str, tick: int):
+        if user_id not in _user_info:
+            _user_info[user_id] = {"name": name, "first_seen_tick": tick}
+        else:
             _user_info[user_id]["name"] = name
-
-def get_user_info(user_id: str) -> dict:
-    """Get what we know about a user."""
-    return _user_info.get(user_id, {"name": None, "first_seen_tick": None})
+    
+    def get_user_info(user_id: str) -> dict:
+        return _user_info.get(user_id, {"name": None, "first_seen_tick": None})
 
 
 # ============================================================
