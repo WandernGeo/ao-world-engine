@@ -1,0 +1,132 @@
+{
+    "_addon_type": "neighborhood",
+    "_addon_version": "1.0.0",
+    "_addon_id": "neon_alley",
+    "_addon_name": "Neon Alley District",
+    "_addon_author": "community",
+    "_addon_description": "Example addon showing how to add a new neighborhood with custom slang",
+    "district": {
+        "id": "neon_alley",
+        "name": "Neon Alley",
+        "culture": "nightlife_party",
+        "parent_zone": "downtown",
+        "accent": "loud, energetic, lots of laughter",
+        "greetings": [
+            "Heyyy! You made it!",
+            "Party's this way!",
+            "Looking good tonight!",
+            "Welcome to the glow!",
+            "First round's on me!"
+        ],
+        "farewells": [
+            "Don't be a stranger!",
+            "Same time tomorrow?",
+            "The night is young!",
+            "Catch you in the glow!",
+            "Party never stops!"
+        ],
+        "slang": {
+            "party": "glow",
+            "drunk": "lit",
+            "sober": "dark",
+            "fun": "neon",
+            "boring": "dim",
+            "dance": "pulse",
+            "music": "waves",
+            "drugs": "colors",
+            "hangover": "burnout",
+            "club": "hive",
+            "bouncer": "gate",
+            "vip": "elevated",
+            "regular": "local glow"
+        },
+        "phrases": [
+            "Life's short. Dance in the neon.",
+            "Temple by day, Alley by night.",
+            "The glow heals all wounds.",
+            "What happens in the Alley stays in the Alley.",
+            "We're all beautiful in the right light."
+        ],
+        "curses": [
+            "buzzkill",
+            "dimmer",
+            "static"
+        ],
+        "intensifiers": [
+            "absolutely",
+            "totally",
+            "mega"
+        ]
+    },
+    "story_templates": {
+        "club_night": {
+            "trigger": {
+                "time": "night",
+                "need": "entertainment"
+            },
+            "location_type": "club",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@club"
+                },
+                {
+                    "action": "greet",
+                    "target": "@bouncer"
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "order",
+                    "item": "drink"
+                },
+                {
+                    "action": "dance",
+                    "duration": [
+                        1,
+                        3
+                    ]
+                },
+                {
+                    "action": "socialize",
+                    "target": "@random_clubgoer"
+                },
+                {
+                    "action": "flirt",
+                    "probability": 0.3
+                },
+                {
+                    "action": "drink_more",
+                    "probability": 0.5
+                },
+                {
+                    "action": "dance",
+                    "duration": [
+                        1,
+                        2
+                    ]
+                },
+                {
+                    "action": "leave"
+                }
+            ]
+        }
+    },
+    "canned_responses": {
+        "greeting": {
+            "friendly": [
+                "Heyyy, you look like you could use a drink!",
+                "Welcome to the Alley! First time?",
+                "The glow treats everyone equal!"
+            ]
+        },
+        "small_talk": {
+            "friendly": [
+                "You hear that new track? It's mega neon!",
+                "This DJ is lit tonight!",
+                "Temple gets you during the day, but night belongs to us!"
+            ]
+        }
+    }
+}

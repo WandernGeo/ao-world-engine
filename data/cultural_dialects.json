@@ -1,0 +1,433 @@
+{
+    "_desc": "Cultural dialect library for NPC dialogue by neighborhood/faction",
+    "_version": "1.0.0",
+    "_note": "LLM should incorporate these cultural markers when translating intent logs",
+    "districts": {
+        "undercity": {
+            "name": "Undercity",
+            "culture": "street_survivor",
+            "accent": "clipped, fast, drops consonants",
+            "greetings": [
+                "Ey.",
+                "Wha' you need?",
+                "Keep movin' or talk fast.",
+                "You lost?",
+                "Who sent ya?"
+            ],
+            "farewells": [
+                "Stay sharp.",
+                "Don' get dead.",
+                "Watch the shadows.",
+                "Later.",
+                "Keep ya head down."
+            ],
+            "slang": {
+                "credits": "creds",
+                "temple": "the spooks",
+                "temple_guards": "spookies",
+                "police": "badges",
+                "money": "scratch",
+                "friend": "choom",
+                "stranger": "gonk",
+                "dangerous": "nova hot",
+                "good": "preem",
+                "bad": "fragged",
+                "killed": "flatlined",
+                "cybernetics": "chrome",
+                "drugs": "stims",
+                "weapon": "iron",
+                "run_away": "ghost",
+                "information": "deets",
+                "yes": "solid",
+                "no": "neg",
+                "crazy": "zeroed",
+                "rich_person": "corpo",
+                "poor_person": "gutter",
+                "home": "crib",
+                "bar": "dive"
+            },
+            "phrases": [
+                "Down here, trust gets you flatlined.",
+                "Creds talk, everything else walks.",
+                "If you ain't chrome, you ain't survivin'.",
+                "The only law is who's got more iron.",
+                "Temple don't come down here. Too scared.",
+                "We take care of our own. Everyone else can ghost."
+            ],
+            "curses": [
+                "frag",
+                "drek",
+                "slot",
+                "gonk"
+            ],
+            "intensifiers": [
+                "nova",
+                "preem",
+                "delta"
+            ]
+        },
+        "temple_district": {
+            "name": "Temple District",
+            "culture": "religious_reverent",
+            "accent": "measured, formal, slightly melodic",
+            "greetings": [
+                "Blessings upon you, traveler.",
+                "May the Signal guide you.",
+                "Welcome to sacred ground.",
+                "Peace be with you.",
+                "The Prophet's light shines on you."
+            ],
+            "farewells": [
+                "Walk in the Signal's grace.",
+                "May harmony follow you.",
+                "Until the Convergence.",
+                "The Prophet watches over you.",
+                "Return when you seek truth."
+            ],
+            "slang": {
+                "credits": "offerings",
+                "good": "blessed",
+                "bad": "dissonant",
+                "enemy": "the disconnected",
+                "outsider": "seeker",
+                "member": "resonant one",
+                "leader": "vessel",
+                "temple": "sanctuary",
+                "prayer": "attunement",
+                "miracle": "manifestation",
+                "death": "final resonance",
+                "heretic": "static bearer",
+                "truth": "the Signal"
+            },
+            "phrases": [
+                "The Signal speaks to those who listen.",
+                "Prophet Elijah saved us from the static.",
+                "Dissonance breeds chaos. Harmony brings peace.",
+                "All will resonate in time.",
+                "The Undercity... they have lost their way.",
+                "We do not judge. We illuminate."
+            ],
+            "curses": [
+                "static",
+                "dissonance",
+                "void"
+            ],
+            "intensifiers": [
+                "truly",
+                "by the Signal",
+                "in resonance"
+            ]
+        },
+        "market": {
+            "name": "Central Market",
+            "culture": "merchant_pragmatic",
+            "accent": "energetic, persuasive, code-switching",
+            "greetings": [
+                "What can I get you?",
+                "Looking for something special?",
+                "Best prices in the district!",
+                "Ah, a customer with taste!",
+                "You want it, I got it."
+            ],
+            "farewells": [
+                "Come back anytime!",
+                "Tell your friends!",
+                "Pleasure doing business.",
+                "You know where to find me.",
+                "Next time, bulk discount!"
+            ],
+            "slang": {
+                "deal": "square",
+                "good_deal": "clean trade",
+                "bad_deal": "dirty swap",
+                "expensive": "premium",
+                "cheap": "budget",
+                "stolen": "hot",
+                "legal": "cold",
+                "profit": "margin",
+                "customer": "mark",
+                "competitor": "rival stall",
+                "bribe": "facilitation fee",
+                "fake": "replica",
+                "real": "authentic"
+            },
+            "phrases": [
+                "Everyone's money spends the same.",
+                "I don't ask where it came from. You don't ask where it's going.",
+                "Temple credits, Resistance credits, all credits.",
+                "The market has no politics. Only prices.",
+                "You want quality or you want quantity?",
+                "This? This is investment grade."
+            ],
+            "curses": [
+                "bankruptcy",
+                "deficit",
+                "audit"
+            ],
+            "intensifiers": [
+                "genuinely",
+                "absolutely",
+                "premium"
+            ]
+        },
+        "docks": {
+            "name": "The Docks",
+            "culture": "smuggler_secretive",
+            "accent": "gruff, low, lots of pauses",
+            "greetings": [
+                "...yeah?",
+                "You're not from around here.",
+                "Password.",
+                "Who vouches for you?",
+                "State your business."
+            ],
+            "farewells": [
+                "You were never here.",
+                "Forget my face.",
+                "Don't come back unless you're serious.",
+                "...disappear.",
+                "You know the way out."
+            ],
+            "slang": {
+                "illegal_goods": "wet cargo",
+                "legal_goods": "dry cargo",
+                "bribe": "docking fee",
+                "smuggling": "moving",
+                "police": "harbor eyes",
+                "informant": "leaker",
+                "trusted": "vouched",
+                "untrusted": "cold",
+                "boat": "runner",
+                "warehouse": "house",
+                "hidden_room": "void",
+                "escape_route": "current"
+            },
+            "phrases": [
+                "Things come in. Things go out. That's all.",
+                "The water keeps secrets better than people.",
+                "You got a name? Don't tell me.",
+                "I move things. I don't ask what.",
+                "The current goes both ways.",
+                "Everyone's running from something."
+            ],
+            "curses": [
+                "anchor",
+                "sunk",
+                "drowned"
+            ],
+            "intensifiers": [
+                "dead",
+                "stone",
+                "cold"
+            ]
+        },
+        "spire": {
+            "name": "The Spire",
+            "culture": "corporate_elite",
+            "accent": "precise, educated, slightly condescending",
+            "greetings": [
+                "Can I help you?",
+                "Do you have an appointment?",
+                "This is a restricted area.",
+                "State your clearance level.",
+                "Ah, a visitor. Charming."
+            ],
+            "farewells": [
+                "Security will escort you.",
+                "Have your people contact my people.",
+                "The elevator is that way.",
+                "Don't forget to sign the NDA.",
+                "We'll be in touch. Or not."
+            ],
+            "slang": {
+                "money": "capital",
+                "poor_people": "ground-dwellers",
+                "meeting": "summit",
+                "bribe": "consulting fee",
+                "illegal": "off-books",
+                "legal": "compliant",
+                "employee": "resource",
+                "fired": "restructured",
+                "promotion": "elevation",
+                "demotion": "rebalancing",
+                "spy": "competitive intelligence",
+                "theft": "asset acquisition"
+            },
+            "phrases": [
+                "Money isn't everything. It's the only thing.",
+                "The ground-dwellers have their uses.",
+                "Efficiency. Optimization. Results.",
+                "Everyone has a price. Finding it is the art.",
+                "The Spire didn't build itself.",
+                "Progress requires... sacrifices."
+            ],
+            "curses": [
+                "liability",
+                "deficit",
+                "obsolete"
+            ],
+            "intensifiers": [
+                "precisely",
+                "exceptionally",
+                "strategically"
+            ]
+        },
+        "old_quarter": {
+            "name": "Old Quarter",
+            "culture": "elder_traditional",
+            "accent": "slow, nostalgic, formal",
+            "greetings": [
+                "Welcome, young one.",
+                "It's been too long since new faces.",
+                "Come, sit. Rest your feet.",
+                "Ah, a visitor. How rare.",
+                "The old ways still welcome strangers."
+            ],
+            "farewells": [
+                "May you find what you seek.",
+                "Remember the old ways.",
+                "Return when time allows.",
+                "The past watches over you.",
+                "Walk carefully. The city has changed."
+            ],
+            "slang": {
+                "past": "before the Signal",
+                "temple": "the new religion",
+                "technology": "the new magic",
+                "young_people": "the rushed ones",
+                "tradition": "the anchor",
+                "memory": "the true record",
+                "change": "the erosion"
+            },
+            "phrases": [
+                "In my day, we didn't need chrome to survive.",
+                "The Temple... they've forgotten what came before.",
+                "These streets had different names once.",
+                "The old buildings remember. I remember.",
+                "Progress? That's what they called the collapse too.",
+                "Some things should stay buried."
+            ],
+            "curses": [
+                "modernist",
+                "forgetful",
+                "hollow"
+            ],
+            "intensifiers": [
+                "truly",
+                "in the old way",
+                "as it was"
+            ]
+        }
+    },
+    "factions": {
+        "resistance": {
+            "in_phrases": [
+                "For the cause.",
+                "Freedom isn't free.",
+                "The Temple will fall.",
+                "We remember what they did.",
+                "Stay strong, stay hidden."
+            ],
+            "recognition_codes": [
+                "The signal is weak today.",
+                "Have you seen the morning star?",
+                "The old clock still ticks."
+            ],
+            "slang": {
+                "member": "comrade",
+                "leader": "spark",
+                "mission": "action",
+                "temple": "the machine",
+                "spy": "ear",
+                "safe_house": "nest"
+            }
+        },
+        "temple": {
+            "in_phrases": [
+                "Prophet guide us.",
+                "Resonance brings clarity.",
+                "The static must be silenced.",
+                "All will harmonize.",
+                "Blessed be the Signal."
+            ],
+            "recognition_codes": [
+                "The frequency is clear.",
+                "Have you heard the morning hymn?",
+                "The Prophet's light guides."
+            ],
+            "slang": {
+                "member": "resonant",
+                "leader": "vessel",
+                "mission": "purification",
+                "resistance": "the static",
+                "spy": "listener",
+                "temple": "sanctuary"
+            }
+        }
+    },
+    "personality_modifiers": {
+        "aggressive": {
+            "tone": "short, threatening",
+            "punctuation": "lots of periods, few questions",
+            "word_choice": "demands, warnings"
+        },
+        "friendly": {
+            "tone": "warm, inviting",
+            "punctuation": "exclamations, questions",
+            "word_choice": "offers, compliments"
+        },
+        "suspicious": {
+            "tone": "questioning, guarded",
+            "punctuation": "ellipses, trailing questions",
+            "word_choice": "deflections, counter-questions"
+        },
+        "scholarly": {
+            "tone": "verbose, precise",
+            "punctuation": "complex sentences",
+            "word_choice": "technical terms, qualifications"
+        }
+    },
+    "llm_translation_prompt": {
+        "system": "You are translating NPC interaction logs into natural dialogue. Use the NPC's district culture, faction allegiance, and personality to shape their voice. Incorporate appropriate slang, greetings, and speech patterns. Keep dialogue concise and authentic to the character.",
+        "example_input": {
+            "participants": [
+                "charlie",
+                "felix"
+            ],
+            "charlie": {
+                "district": "undercity",
+                "faction": "resistance",
+                "personality": "friendly"
+            },
+            "felix": {
+                "district": "market",
+                "personality": "merchant"
+            },
+            "sequence": [
+                {
+                    "a": "charlie",
+                    "i": "greet"
+                },
+                {
+                    "a": "felix",
+                    "i": "greet_back"
+                },
+                {
+                    "a": "charlie",
+                    "i": "order",
+                    "e": {
+                        "item": "drink"
+                    }
+                },
+                {
+                    "a": "charlie",
+                    "i": "gossip",
+                    "e": {
+                        "topic": "temple_patrol"
+                    }
+                }
+            ]
+        },
+        "example_output": "Charlie pushed through the crowd into Felix's stall. \"Ey, choom. Got any of that synth left?\"\n\nFelix grinned, already reaching for a bottle. \"For you? Always got the good stuff.\"\n\n\"Heard the spookies doubled their badges near the east tunnels,\" Charlie said, voice dropping. \"Nova hot out there.\"\n\nFelix's smile flickered. \"That so? Bad for business...\""
+    }
+}
