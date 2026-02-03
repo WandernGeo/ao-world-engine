@@ -618,7 +618,7 @@ CHARACTERS PRESENT:
 
 {f"ACTION: {action}" if action else ""}
 
-Style: Batman: The Animated Series meets cyberpunk. High contrast, dark moody noir. 
+Style: Signal Noir - high contrast grayscale with cyan accents, dark moody noir. 
 Describe what a viewer would see entering this scene. Mention specific characters by name.
 Keep it cinematic and atmospheric."""
 
@@ -648,7 +648,7 @@ Keep it cinematic and atmospheric."""
         # Build image prompt
         npc_visuals = ", ".join([n.get("visual", n["name"]) for n in loc_state["npcs"][:3]])  # Max 3 NPCs
         
-        image_prompt = f"""Signal Noir cyberpunk scene, Batman The Animated Series art style:
+        image_prompt = f"""Signal Noir cyberpunk scene:
 
 {loc_state["location_desc"]} at {time_desc}.
 {weather_desc}.
@@ -698,7 +698,7 @@ MANDATORY STYLE:
 # ============================================================
 
 SIGNAL_NOIR_STYLE = """
-SIGNAL NOIR STYLE (Batman: The Animated Series aesthetic):
+SIGNAL NOIR STYLE:
 - Render in BLACK AND WHITE / GRAYSCALE
 - Deep inky black shadows, high contrast
 - ONLY CYAN (#00CED1) accents for tech/neon elements
@@ -754,7 +754,7 @@ LOCATION: {state['location_desc']}
 WEATHER: {weather_desc}
 TIME: {time_desc}
 
-Style: Batman: The Animated Series meets cyberpunk. High contrast black and white with ONLY cyan neon accents. Dark, moody, art deco noir. NOT always raining - match the weather above.
+Style: Signal Noir - high contrast grayscale with ONLY cyan neon accents. Dark, moody, art deco noir. NOT always raining - match the weather above.
 
 Write a cinematic scene description:"""
     
