@@ -32,7 +32,205 @@ def deterministic_choice(items: list, seed: str) -> Any:
 
 
 # =============================================================================
-# D&D ALIGNMENTS
+# RE:ECHO ALIGNMENTS (Original - From Series Bible)
+# =============================================================================
+# Two axes specific to RE:ECHO lore:
+# 1. Signal Axis: How a character relates to the Echoes/ancient signals
+# 2. Method Axis: How a character achieves their goals
+
+class SignalAxis(Enum):
+    """How character relates to Echoes/ancient signals."""
+    RESONANT = "resonant"      # Works with/protects the natural flow of Echoes
+    NEUTRAL = "neutral"        # Uses Echoes pragmatically without ideology
+    DISSONANT = "dissonant"    # Seeks to control, corrupt, or silence Echoes
+
+
+class MethodAxis(Enum):
+    """How character achieves their goals."""
+    HARMONIC = "harmonic"      # Follows rules, structure, tradition
+    ADAPTIVE = "adaptive"      # Flexible, situation-dependent ethics
+    CHAOTIC = "chaotic"        # Unpredictable, instinct-driven, rule-breaking
+
+
+@dataclass
+class EchoAlignment:
+    """RE:ECHO-specific alignment system."""
+    signal: SignalAxis
+    method: MethodAxis
+    
+    @property
+    def name(self) -> str:
+        if self.signal == SignalAxis.NEUTRAL and self.method == MethodAxis.ADAPTIVE:
+            return "True Neutral"
+        return f"{self.method.value.title()} {self.signal.value.title()}"
+    
+    @property
+    def dnd_equivalent(self) -> str:
+        """Map to D&D equivalent for reference."""
+        mapping = {
+            ("harmonic", "resonant"): "Lawful Good",
+            ("adaptive", "resonant"): "Neutral Good",
+            ("chaotic", "resonant"): "Chaotic Good",
+            ("harmonic", "neutral"): "Lawful Neutral",
+            ("adaptive", "neutral"): "True Neutral",
+            ("chaotic", "neutral"): "Chaotic Neutral",
+            ("harmonic", "dissonant"): "Lawful Evil",
+            ("adaptive", "dissonant"): "Neutral Evil",
+            ("chaotic", "dissonant"): "Chaotic Evil",
+        }
+        return mapping.get((self.method.value, self.signal.value), "Unknown")
+    
+    @property
+    def description(self) -> str:
+        descriptions = {
+            ("harmonic", "resonant"): "Protects Echoes through established traditions and structures",
+            ("adaptive", "resonant"): "Protects Echoes by whatever means necessary",
+            ("chaotic", "resonant"): "Fights for Echo freedom through rebellion",
+            ("harmonic", "neutral"): "Follows rules regardless of Echo ideology",
+            ("adaptive", "neutral"): "Acts in self-interest or maintains balance",
+            ("chaotic", "neutral"): "Acts on impulse, loyal only to themselves",
+            ("harmonic", "dissonant"): "Controls Echoes through systems and manipulation",
+            ("adaptive", "dissonant"): "Uses any method to exploit Echoes for power",
+            ("chaotic", "dissonant"): "Seeks to corrupt or destroy Echoes entirely",
+        }
+        return descriptions.get((self.method.value, self.signal.value), "Unknown")
+    
+    def get_behavior_modifiers(self) -> Dict[str, float]:
+        """Returns modifiers for simulation behavior."""
+        mods = {}
+        
+        # Method axis affects rule following
+        if self.method == MethodAxis.HARMONIC:
+            mods["obey_authority"] = 0.8
+            mods["crime_chance"] = 0.1
+            mods["predictability"] = 0.9
+        elif self.method == MethodAxis.CHAOTIC:
+            mods["obey_authority"] = 0.2
+            mods["crime_chance"] = 0.4
+            mods["predictability"] = 0.3
+        else:
+            mods["obey_authority"] = 0.5
+            mods["crime_chance"] = 0.25
+            mods["predictability"] = 0.6
+        
+        # Signal axis affects altruism and Echo interaction
+        if self.signal == SignalAxis.RESONANT:
+            mods["help_stranger"] = 0.9
+            mods["sacrifice_for_others"] = 0.7
+            mods["aggression_unprovoked"] = 0.1
+            mods["echo_affinity"] = 0.9
+        elif self.signal == SignalAxis.DISSONANT:
+            mods["help_stranger"] = 0.1
+            mods["sacrifice_for_others"] = 0.0
+            mods["aggression_unprovoked"] = 0.5
+            mods["echo_affinity"] = 0.2
+        else:
+            mods["help_stranger"] = 0.5
+            mods["sacrifice_for_others"] = 0.3
+            mods["aggression_unprovoked"] = 0.25
+            mods["echo_affinity"] = 0.5
+        
+        return mods
+
+
+def assign_echo_alignment(npc_id: str, birth_tick: int) -> EchoAlignment:
+    """Deterministically assign RE:ECHO alignment based on ID and birth."""
+    seed = f"{npc_id}_echo_alignment_{birth_tick}"
+    
+    method_roll = deterministic_hash(seed + "_method") % 100
+    signal_roll = deterministic_hash(seed + "_signal") % 100
+    
+    # Distribution: 30% each extreme, 40% neutral/adaptive
+    if method_roll < 30:
+        method = MethodAxis.HARMONIC
+    elif method_roll < 70:
+        method = MethodAxis.ADAPTIVE
+    else:
+        method = MethodAxis.CHAOTIC
+    
+    if signal_roll < 35:
+        signal = SignalAxis.RESONANT
+    elif signal_roll < 75:
+        signal = SignalAxis.NEUTRAL
+    else:
+        signal = SignalAxis.DISSONANT
+    
+    return EchoAlignment(signal, method)
+
+
+# =============================================================================
+# RE:ECHO PERSONALITY ARCHETYPES (From Series Bible)
+# =============================================================================
+
+REECHO_ARCHETYPES = {
+    "architect": {
+        "mbti_like": "INTJ",
+        "description": "Strategic visionary who sees the big picture",
+        "strengths": ["planning", "foresight", "independence"],
+        "weaknesses": ["cold", "dismissive_of_emotions"],
+        "examples": ["Zero Chen"]
+    },
+    "advocate": {
+        "mbti_like": "INFJ",
+        "description": "Quiet idealist driven by deep values",
+        "strengths": ["empathy", "conviction", "insight"],
+        "weaknesses": ["perfectionist", "easily_overwhelmed"],
+        "examples": ["Sister Mira"]
+    },
+    "commander": {
+        "mbti_like": "ENTJ",
+        "description": "Bold leader who commands respect and fear",
+        "strengths": ["charisma", "decisiveness", "ambition"],
+        "weaknesses": ["ruthless", "impatient", "domineering"],
+        "examples": ["Morack Ru'Les"]
+    },
+    "seeker": {
+        "mbti_like": "INTP",
+        "description": "Curious explorer of truth and mystery",
+        "strengths": ["logic", "creativity", "objectivity"],
+        "weaknesses": ["detached", "overthinks", "socially_awkward"],
+        "examples": ["Charlie"]
+    },
+    "catalyst": {
+        "mbti_like": "ENFP",
+        "description": "Enthusiastic champion who inspires change",
+        "strengths": ["passion", "adaptability", "connection"],
+        "weaknesses": ["scattered", "overly_optimistic", "rebellious"],
+        "examples": ["Kai Vance"]
+    },
+    "sentinel": {
+        "mbti_like": "ISTJ",
+        "description": "Reliable protector of duty and tradition",
+        "strengths": ["discipline", "loyalty", "thoroughness"],
+        "weaknesses": ["rigid", "judgmental", "resistant_to_change"],
+        "examples": ["Prophet Elijah"]
+    },
+    "mediator": {
+        "mbti_like": "INFP",
+        "description": "Gentle healer seeking harmony and meaning",
+        "strengths": ["compassion", "creativity", "authenticity"],
+        "weaknesses": ["naive", "avoidant", "self_critical"],
+        "examples": ["Orion Thane"]
+    },
+    "operative": {
+        "mbti_like": "ISTP",
+        "description": "Cool-headed problem solver in crisis",
+        "strengths": ["calm_under_pressure", "resourceful", "observant"],
+        "weaknesses": ["insensitive", "risk_taking", "private"],
+        "examples": ["Aiche"]
+    }
+}
+
+
+def assign_reecho_archetype(npc_id: str, birth_tick: int) -> str:
+    """Assign RE:ECHO personality archetype."""
+    seed = f"{npc_id}_archetype_{birth_tick}"
+    archetypes = list(REECHO_ARCHETYPES.keys())
+    return deterministic_choice(archetypes, seed)
+
+
+# =============================================================================
+# D&D ALIGNMENTS (Classic - for reference/compatibility)
 # =============================================================================
 
 class LawChaos(Enum):
@@ -594,7 +792,11 @@ class PersonalityProfile:
     npc_id: str
     birth_tick: int
     
-    # D&D Alignment
+    # RE:ECHO Alignment (Primary - from series lore)
+    echo_alignment: EchoAlignment = None
+    archetype: str = ""  # seeker, catalyst, etc.
+    
+    # D&D Alignment (Secondary - for reference)
     alignment: DnDAlignment = None
     
     # MBTI
@@ -631,11 +833,13 @@ class PersonalityProfile:
         }
     
     def get_summary(self) -> str:
-        """Human-readable summary."""
+        """Human-readable summary with RE:ECHO lore first."""
+        archetype_data = REECHO_ARCHETYPES.get(self.archetype, {})
+        archetype_name = self.archetype.title() if self.archetype else "Unknown"
         return f"""
-{self.alignment.name if self.alignment else 'Unknown'} {MBTI_TYPES.get(self.mbti, {}).get('name', '')} ({self.mbti})
-{WESTERN_ZODIAC.get(self.zodiac, {}).get('symbol', '')} {self.zodiac.title()} ({self.zodiac_element})
-{CHINESE_ZODIAC.get(self.chinese_animal, {}).get('symbol', '')} {self.chinese_element.title()} {self.chinese_animal.title()}
+⚡ {self.echo_alignment.name if self.echo_alignment else 'Unknown'} {archetype_name}
+   "{self.echo_alignment.description if self.echo_alignment else ''}"   
+{WESTERN_ZODIAC.get(self.zodiac, {}).get('symbol', '')} {self.zodiac.title()} ({self.zodiac_element}) | {CHINESE_ZODIAC.get(self.chinese_animal, {}).get('symbol', '')} {self.chinese_element.title()} {self.chinese_animal.title()}
 Traits: {', '.join(self.all_traits[:5])}
 """.strip()
 
@@ -644,7 +848,11 @@ def generate_personality_profile(npc_id: str, birth_tick: int) -> PersonalityPro
     """Generate complete personality profile for an NPC."""
     profile = PersonalityProfile(npc_id=npc_id, birth_tick=birth_tick)
     
-    # D&D Alignment
+    # RE:ECHO Alignment (Primary - from series lore)
+    profile.echo_alignment = assign_echo_alignment(npc_id, birth_tick)
+    profile.archetype = assign_reecho_archetype(npc_id, birth_tick)
+    
+    # D&D Alignment (Secondary)
     profile.alignment = assign_alignment(npc_id, birth_tick)
     
     # MBTI
@@ -660,6 +868,11 @@ def generate_personality_profile(npc_id: str, birth_tick: int) -> PersonalityPro
     # Combine all traits
     all_traits = set()
     all_weaknesses = set()
+    
+    # From RE:ECHO Archetype
+    archetype_data = REECHO_ARCHETYPES.get(profile.archetype, {})
+    all_traits.update(archetype_data.get("strengths", []))
+    all_weaknesses.update(archetype_data.get("weaknesses", []))
     
     # From MBTI
     mbti_data = MBTI_TYPES.get(profile.mbti, {})
