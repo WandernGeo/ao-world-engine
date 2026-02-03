@@ -12,24 +12,43 @@ cd ao-world-engine
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Start the simulation API
+# Start the simulation API (Terminal 1)
 python -m api.api_simulation
-
-# Open in browser
-open http://localhost:8081
+# API now running at http://localhost:8081
 ```
 
-That's it! The API serves both the simulation data AND the visualizer.
+**Then open the visualizer** (one of these options):
+
+```bash
+# Option 1: Open the visualizer HTML directly
+open visualizer/index.html
+
+# Option 2: Run the full frontend (landing + visualizer + chat)
+# In a NEW terminal:
+cd demo
+python server.py
+# Open http://localhost:8082
+```
 
 ---
 
-## What Runs Locally
+## Architecture
+
+```
+┌─────────────────┐     API calls      ┌─────────────────┐
+│   Visualizer    │ ─────────────────► │  Simulation API │
+│  (HTML/JS)      │                    │  localhost:8081 │
+│  localhost:8082 │ ◄───────────────── │                 │
+│  or file://     │     JSON data      │  800 NPCs       │
+└─────────────────┘                    └─────────────────┘
+```
 
 | Component | URL | What It Does |
 |-----------|-----|--------------|
-| Simulation API | `localhost:8081/api/*` | NPC states, buildings, events |
-| Visualizer | `localhost:8081/` | Map view with buildings and NPCs |
-| Stats | `localhost:8081/api/stats` | Total NPCs, buildings, factions |
+| Simulation API | `localhost:8081` | NPC states, buildings, events |
+| Visualizer (standalone) | `file://visualizer/index.html` | Map view (opens local file) |
+| Combined Frontend | `localhost:8082` | Landing + Explore + Chat |
+| API Stats | `localhost:8081/api/stats` | JSON endpoint |
 
 ---
 
