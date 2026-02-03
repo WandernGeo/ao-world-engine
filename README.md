@@ -198,6 +198,7 @@ This protects the community while allowing you to build proprietary worlds **on 
 | Doc | What It Covers |
 |-----|----------------|
 | [LOCAL_SETUP.md](./docs/LOCAL_SETUP.md) | **Run locally with local data** - no cloud needed |
+| [GRAPH_VISUALIZATION.md](./docs/GRAPH_VISUALIZATION.md) | **Graph network view** - physics simulation explained |
 | [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md) | Full API reference |
 | [SIMULATION_SYSTEM.md](./docs/SIMULATION_SYSTEM.md) | How NPC schedules, moods, hobbies work |
 | [AI_NPC_SYSTEM.md](./docs/AI_NPC_SYSTEM.md) | LLM chat integration |

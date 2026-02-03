@@ -1190,11 +1190,31 @@
                 }
             });
 
-            // Legend
+            // Legend and controls help
             ctx.fillStyle = '#888';
             ctx.font = '12px Roboto';
             ctx.textAlign = 'left';
-            ctx.fillText('🔗 Graph Network: NPCs → Buildings (Green=Home, Blue=Work)', 20, height - 20);
+            ctx.fillText('🔗 Graph Network • Click node for details • Scroll to zoom • Drag to pan', 20, height - 40);
+            ctx.fillText('⚪ NPCs (colored by faction) • 🟨 Buildings • 🟢 Home • 🔵 Work', 20, height - 20);
+        }
+
+        // Handle graph node clicks
+        function handleGraphClick(mouseX, mouseY) {
+            for (const node of graphNodes) {
+                const size = node.type === 'building' ? 20 : 12;
+                const dist = Math.hypot(mouseX - node.x, mouseY - node.y);
+                if (dist < size + 5) {
+                    if (node.type === 'npc') {
+                        // Open NPC profile
+                        selectNpc(node.data);
+                    } else {
+                        // Open building info
+                        selectBuilding(node.data);
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
 
         function drawGrid() {
@@ -1679,7 +1699,16 @@
         });
 
         document.getElementById("building-select").addEventListener("change", async (e) => {
-            state.currentBuilding = e.target.value || null;
+            const buildingId = e.target.value;
+            if (!buildingId) {
+                state.currentBuilding = null;
+                document.getElementById("building-info").style.display = "none";
+            } else {
+                const building = state.buildings.find(b => b.id === buildingId);
+                if (building) {
+                    await selectBuilding(building);
+                }
+            }
             await updateNpcStates();
             updateNpcList();
             draw();
@@ -1712,6 +1741,13 @@
                 const rect = canvas.getBoundingClientRect();
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
+
+                // Handle graph view clicks separately
+                if (state.viewMode === "graph") {
+                    handleGraphClick(mouseX, mouseY);
+                    state.dragging = false;
+                    return;
+                }
 
                 // Convert to world coordinates
                 const width = canvas.width / window.devicePixelRatio;
