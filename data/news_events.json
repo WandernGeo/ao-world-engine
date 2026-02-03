@@ -1,0 +1,387 @@
+{
+    "_desc": "News headlines, possible events, and event-to-headline mappings",
+    "_version": "1.0.0",
+    "_note": "Events happen in simulation -> get reported in news. News can also seed events retroactively.",
+    "news_sources": {
+        "temple_broadcast": {
+            "name": "Temple Signal Broadcast",
+            "bias": "pro_temple",
+            "tone": "authoritative",
+            "reach": "city_wide"
+        },
+        "underground_wire": {
+            "name": "Underground Wire",
+            "bias": "pro_resistance",
+            "tone": "subversive",
+            "reach": "undercity"
+        },
+        "market_gazette": {
+            "name": "Market Gazette",
+            "bias": "neutral",
+            "tone": "commercial",
+            "reach": "market_district"
+        },
+        "spire_herald": {
+            "name": "Spire Herald",
+            "bias": "pro_corporate",
+            "tone": "formal",
+            "reach": "upper_city"
+        },
+        "dock_rumors": {
+            "name": "Dock Rumors",
+            "bias": "neutral",
+            "tone": "informal",
+            "reach": "docks"
+        }
+    },
+    "event_categories": {
+        "crime": {
+            "weight": 0.25,
+            "events": [
+                "robbery",
+                "murder",
+                "theft",
+                "assault",
+                "kidnapping",
+                "smuggling",
+                "black_market_raid",
+                "gang_violence",
+                "corporate_espionage",
+                "data_theft"
+            ]
+        },
+        "political": {
+            "weight": 0.15,
+            "events": [
+                "temple_announcement",
+                "resistance_attack",
+                "faction_war",
+                "policy_change",
+                "prophet_speech",
+                "curfew_declared",
+                "martial_law",
+                "election",
+                "coup_rumor"
+            ]
+        },
+        "economic": {
+            "weight": 0.20,
+            "events": [
+                "market_crash",
+                "shortage",
+                "price_spike",
+                "new_business",
+                "factory_closure",
+                "trade_deal",
+                "smuggling_bust",
+                "currency_fluctuation",
+                "job_fair"
+            ]
+        },
+        "technological": {
+            "weight": 0.15,
+            "events": [
+                "cyberware_recall",
+                "hack_attack",
+                "ai_malfunction",
+                "power_outage",
+                "network_breach",
+                "new_tech_release",
+                "robot_uprising",
+                "signal_interference"
+            ]
+        },
+        "environmental": {
+            "weight": 0.10,
+            "events": [
+                "smog_alert",
+                "acid_rain",
+                "infrastructure_collapse",
+                "fire",
+                "flood",
+                "toxic_spill",
+                "quarantine",
+                "disease_outbreak"
+            ]
+        },
+        "social": {
+            "weight": 0.15,
+            "events": [
+                "protest",
+                "riot",
+                "celebration",
+                "memorial",
+                "scandal",
+                "celebrity_news",
+                "sports_event",
+                "cultural_festival",
+                "migration_wave"
+            ]
+        }
+    },
+    "headline_templates": {
+        "crime": {
+            "robbery": [
+                "ARMED ROBBERY at {location}: {credits} Credits Stolen",
+                "Masked Thieves Hit {business} in {district}",
+                "Brazen Daylight Robbery Leaves {district} Shaken",
+                "Security Footage Shows {count} Armed Suspects at {location}",
+                "{faction} Suspected in {location} Heist",
+                "Credits Gone: {business} Cleaned Out Overnight"
+            ],
+            "murder": [
+                "BODY FOUND in {district}: Temple Authorities Investigating",
+                "Prominent {profession} Found Dead in {location}",
+                "Serial Killer Strikes Again? {count}th Victim This Cycle",
+                "Gang-Related Killing Rocks {district}",
+                "Unsolved Murder Haunts {neighborhood} Residents",
+                "Temple Confirms: Death of {name} Under Investigation"
+            ],
+            "gang_violence": [
+                "GANG WAR Erupts in {district}: {count} Casualties",
+                "Territorial Dispute Turns Deadly in {neighborhood}",
+                "Rival Gangs Clash Over {resource}",
+                "{gang_name} Expands Into {district} - Violence Follows",
+                "Innocent Bystanders Caught in Crossfire",
+                "Gang Truce Collapses: Streets Unsafe"
+            ],
+            "data_theft": [
+                "MASSIVE DATA BREACH at {corporation}",
+                "Personal Records of {count} Citizens Compromised",
+                "Corporate Secrets Leaked to Underground",
+                "Netrunner Gang Behind {corporation} Hack",
+                "Temple Database Targeted by Unknown Hackers",
+                "Identity Theft Ring Busted in {district}"
+            ]
+        },
+        "political": {
+            "temple_announcement": [
+                "PROPHET SPEAKS: New Directive for {topic}",
+                "Temple Releases Statement on {issue}",
+                "Mandatory Attendance: Prophet's Address Tomorrow",
+                "Signal Day Celebration Plans Announced",
+                "Temple Authority Expands Into {district}",
+                "New Temple Regulations Effective Immediately"
+            ],
+            "resistance_attack": [
+                "EXPLOSION Rocks {district}: Resistance Suspected",
+                "Underground Cell Strikes Temple Outpost",
+                "Resistance Leaflets Flood {neighborhood}",
+                "Sabotage at {facility}: Production Halted",
+                "Temple Checkpoint Attacked - {count} Injured",
+                "Resistance Broadcasts Pirate Signal"
+            ],
+            "curfew_declared": [
+                "CURFEW IN EFFECT: {district} Lockdown",
+                "Temple Imposes Nighttime Restrictions",
+                "Movement Limited After Sundown",
+                "Curfew Violators Face Immediate Detention",
+                "Emergency Measures: Stay Indoors After {time}",
+                "District-Wide Curfew Extended Indefinitely"
+            ]
+        },
+        "economic": {
+            "shortage": [
+                "SHORTAGE ALERT: {resource} Supplies Critical",
+                "{resource} Prices Skyrocket Amid Scarcity",
+                "Rationing Begins for {resource}",
+                "Black Market {resource} Prices Triple",
+                "Factory Breakdown Causes {resource} Deficit",
+                "Hoarding Reported as {resource} Runs Low"
+            ],
+            "market_crash": [
+                "MARKET IN FREEFALL: Credits Devalue {percent}%",
+                "Economic Crisis Looms as Trading Halts",
+                "Investors Panic: Mass Credit Withdrawal",
+                "Currency Exchange Frozen Temporarily",
+                "Corporate Collapse Triggers Market Chaos",
+                "Emergency Economic Measures Announced"
+            ],
+            "new_business": [
+                "NEW: {business_type} Opens in {district}",
+                "Entrepreneur Brings {service} to {neighborhood}",
+                "Grand Opening: {business_name} Welcomes Customers",
+                "Competition Heats Up in {industry}",
+                "Local Business Expands to Second Location",
+                "Innovative {business_type} Fills Market Gap"
+            ]
+        },
+        "technological": {
+            "cyberware_recall": [
+                "URGENT RECALL: {model} Cyberware Malfunctioning",
+                "{count} Affected by Defective {implant_type}",
+                "Manufacturer Issues Warning About {component}",
+                "Cyberpsychosis Linked to {brand} Implants",
+                "Ripperdocs Overwhelmed by Recall Patients",
+                "Class Action Lawsuit Against {manufacturer}"
+            ],
+            "hack_attack": [
+                "CYBERATTACK Cripples {target} Systems",
+                "Netrunners Breach {organization} Security",
+                "Infrastructure Hack Affects {count} Citizens",
+                "AI Countermeasures Fail to Stop Intrusion",
+                "Black ICE Deployed After {target} Breach",
+                "Hacker Collective Claims Responsibility"
+            ],
+            "power_outage": [
+                "BLACKOUT: {district} Without Power for {duration}",
+                "Grid Failure Affects {count} Residences",
+                "Emergency Generators Activated Citywide",
+                "Power Restored After {duration} Outage",
+                "Sabotage Suspected in Power Grid Attack",
+                "Rolling Blackouts Expected This Cycle"
+            ],
+            "ai_malfunction": [
+                "AI GONE ROGUE: {type} Unit Causes Chaos",
+                "Automated System Failure in {district}",
+                "Household Bots Attack Owner - Virus Suspected",
+                "Factory AI Refuses Shutdown Commands",
+                "Traffic AI Malfunction Causes Pileup",
+                "Sentient AI Sighting Reports Increase"
+            ]
+        },
+        "environmental": {
+            "smog_alert": [
+                "AIR QUALITY CRITICAL: Stay Indoors",
+                "Smog Index Reaches Dangerous Levels",
+                "Respiratory Emergency in {district}",
+                "Visibility Near Zero in Lower Levels",
+                "Clinics Overwhelmed with Breathing Cases",
+                "Smog Expected to Clear in {duration}"
+            ],
+            "disease_outbreak": [
+                "OUTBREAK: {disease} Cases Spike in {district}",
+                "Quarantine Zone Established Around {location}",
+                "Temple Healers Deploy to Affected Area",
+                "Infection Source Identified as {source}",
+                "Vaccination Campaign Begins Immediately",
+                "Mortality Rate Concerns Health Officials"
+            ],
+            "toxic_spill": [
+                "HAZMAT ALERT: Toxic Spill at {location}",
+                "Chemical Contamination Forces Evacuation",
+                "Water Supply Compromised in {district}",
+                "Cleanup Crews Working Around the Clock",
+                "Long-Term Health Effects Unknown",
+                "Corporate Negligence Blamed for Spill"
+            ]
+        },
+        "social": {
+            "protest": [
+                "PROTEST: {count} Gather in {location}",
+                "Demonstrators Demand {demand}",
+                "Peaceful Protest Turns Tense",
+                "Temple Security Monitors Gathering",
+                "Workers Strike for Better Conditions",
+                "Activists Arrested at {location}"
+            ],
+            "riot": [
+                "RIOT: Violence Erupts in {district}",
+                "Temple Forces Deployed to Restore Order",
+                "Property Damage Extensive After Unrest",
+                "{count} Injured in Street Clashes",
+                "Curfew Imposed Following Violence",
+                "Riot Caused by {trigger}"
+            ],
+            "scandal": [
+                "SCANDAL: {faction} Official Accused of {crime}",
+                "Leaked Documents Reveal {revelation}",
+                "Public Outrage Over {scandal_type}",
+                "Investigation Launched Into {subject}",
+                "Cover-Up Allegations Rock {organization}",
+                "{name} Denies Allegations, Calls It Conspiracy"
+            ]
+        }
+    },
+    "npc_news_reactions": {
+        "crime": [
+            "Did you hear about the {event_type} in {district}?",
+            "Things are getting worse. Another {event_type}.",
+            "I knew someone near where that {event_type} happened.",
+            "Stay safe out there. {event_type} on the rise.",
+            "The news about {district} is terrifying."
+        ],
+        "political": [
+            "The Temple announced {topic}. What do you think?",
+            "Did you catch the Prophet's latest message?",
+            "Politics are dangerous to discuss. But...",
+            "Resistance made the news again. Bold.",
+            "Things are changing. Not sure if good or bad."
+        ],
+        "economic": [
+            "Prices are crazy. Did you hear about {resource}?",
+            "The market's a mess. Affecting everyone.",
+            "Work's getting harder to find.",
+            "That new business might help the area.",
+            "Credits don't stretch like they used to."
+        ],
+        "technological": [
+            "Another recall? My {implant} is that brand...",
+            "Cyberattacks make me paranoid.",
+            "The outage was rough. Lost everything in my fridge.",
+            "AI malfunctions are happening more often.",
+            "Technology's both blessing and curse."
+        ],
+        "environmental": [
+            "The air's been terrible. Hard to breathe.",
+            "Heard about the outbreak. Scary stuff.",
+            "Stay away from {location}. Contaminated.",
+            "Weather's been brutal lately.",
+            "The city's falling apart around us."
+        ],
+        "social": [
+            "The protest was huge. Were you there?",
+            "Unrest is spreading. People are angry.",
+            "Did you hear the scandal? Unbelievable.",
+            "The celebration was nice. We needed that.",
+            "Community's coming together, at least."
+        ]
+    },
+    "event_triggers": {
+        "robbery": {
+            "preconditions": [
+                "location_type:commercial",
+                "time:night",
+                "security_level:low"
+            ],
+            "effects": [
+                "credits_lost",
+                "security_increased",
+                "npc_fear_up"
+            ]
+        },
+        "gang_violence": {
+            "preconditions": [
+                "gang_territory:contested",
+                "gang_tension:high"
+            ],
+            "effects": [
+                "npc_injured",
+                "area_dangerous",
+                "patrol_increased"
+            ]
+        },
+        "power_outage": {
+            "preconditions": [
+                "infrastructure_stress:high",
+                "weather:storm"
+            ],
+            "effects": [
+                "power_down",
+                "security_reduced",
+                "crime_opportunity"
+            ]
+        },
+        "protest": {
+            "preconditions": [
+                "faction_tension:high",
+                "public_grievance:exists"
+            ],
+            "effects": [
+                "crowd_gathering",
+                "temple_alert",
+                "route_blocked"
+            ]
+        }
+    }
+}

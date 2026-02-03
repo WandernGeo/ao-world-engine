@@ -1,0 +1,421 @@
+{
+    "_desc": "Extended news with NPC entities, Echo discoveries, business openings, heroic acts",
+    "_version": "1.1.0",
+    "entity_types": {
+        "npc_names": {
+            "desc": "NPCs who can be subjects of news stories",
+            "common": [
+                "Marcus Chen",
+                "Elena Vasquez",
+                "Dmitri Volkov",
+                "Yuki Tanaka",
+                "Omar Hassan",
+                "Sofia Rodriguez",
+                "Viktor Petrov",
+                "Mei Lin",
+                "Jamal Washington",
+                "Priya Sharma",
+                "Klaus Weber",
+                "Fatima Al-Hassan",
+                "Carlos Mendez",
+                "Ingrid Johansson",
+                "Kwame Asante",
+                "Luna Park",
+                "Sergei Kozlov",
+                "Rosa Martinez",
+                "Ahmed Nasser",
+                "Kenji Watanabe"
+            ],
+            "notable": [
+                "Councilor Jin Wei",
+                "Dr. Sarah Blake",
+                "Captain Reyes",
+                "Father Marcus",
+                "The Prophet",
+                "Elder Zhen",
+                "Boss Kozlov",
+                "Director Huang",
+                "Chief Engineer Patel",
+                "Detective Nakamura",
+                "Senator Crawford",
+                "General Stone",
+                "Archbishop Mendez",
+                "Crime Lord Vance"
+            ]
+        },
+        "business_names": [
+            "Neon Dreams Cafe",
+            "Circuit City Repairs",
+            "The Rusty Gear",
+            "Synth-Soul Lounge",
+            "Chrome & Steel Clinic",
+            "The Glitch Bar",
+            "Quantum Bites Diner",
+            "Neural Networks Hub",
+            "The Copper Kettle",
+            "Voltage Supplies",
+            "Midnight Oil Workshop",
+            "Echo Chamber Club",
+            "The Static Lounge",
+            "Binary Bakery",
+            "The Last Frequency",
+            "Pulse Point Pharmacy",
+            "Digital Horizons",
+            "The Firewall",
+            "Resonance Records",
+            "Signal & Noise"
+        ],
+        "locations": [
+            "Central Plaza",
+            "Neon Alley",
+            "The Undercity",
+            "Temple Square",
+            "Market Row",
+            "The Docks",
+            "Spire Level 7",
+            "Old Quarter",
+            "Sector 12",
+            "The Pits",
+            "Factory District",
+            "Commerce Hub",
+            "Residential Block C",
+            "The Tunnels",
+            "Skybridge 4",
+            "Memorial Park"
+        ],
+        "items": [
+            "ancient data chip",
+            "pre-Silence artifact",
+            "Echo fragment",
+            "forbidden text",
+            "smuggled goods",
+            "classified documents",
+            "stolen credits",
+            "experimental tech",
+            "black market cyberware",
+            "resistance propaganda",
+            "Temple relics",
+            "lost recordings"
+        ]
+    },
+    "echo_events": {
+        "_desc": "News about Echoes - music, instruments, discoveries, reactions",
+        "echo_discovery": {
+            "headlines": [
+                "ECHO SIGHTING: {npc_name} Claims to Have Heard 'Music'",
+                "Mysterious Sound Artifact Found in {location}",
+                "Underground Reports: Echo Fragment Recovered from {location}",
+                "Temple Investigates 'Harmonic Anomaly' in {district}",
+                "Witness Describes Hearing 'Impossible Sounds' Near {location}",
+                "{npc_name} Hospitalized After Echo Exposure",
+                "Scientists Baffled by 'Resonance Pattern' Discovery",
+                "Ancient Device Found - Could Play Lost 'Songs'",
+                "Echo Hunters Report Breakthrough in {district}",
+                "Frequency Analysts Detect Unusual Signals"
+            ],
+            "npc_reactions_believer": [
+                "I always knew Echoes were real. The music exists!",
+                "Finally, proof! The songs survived the Silence!",
+                "They can't hide the truth anymore. Echoes are everywhere!",
+                "I felt it. The resonance. It's beautiful.",
+                "The Prophet was right. The old frequencies return.",
+                "This changes everything. Music will heal us.",
+                "I've dreamed of sounds like this. Now they're real.",
+                "The Temple can't suppress this forever.",
+                "We were right to keep searching. The Echoes live!",
+                "A new era begins. The Silence ends."
+            ],
+            "npc_reactions_skeptic": [
+                "Echoes? Please. It's probably just equipment malfunction.",
+                "People see what they want to see. Hear what they want to hear.",
+                "Mass hysteria. That's all this Echo nonsense is.",
+                "Temple propaganda to keep us hoping for fairy tales.",
+                "I'll believe in music when I hear it myself.",
+                "Another hoax. Another disappointment.",
+                "These 'sightings' are always debunked.",
+                "Neural glitches from cheap implants. Nothing more.",
+                "If music existed, the corporations would have found it.",
+                "Echoes are just stories we tell children."
+            ],
+            "npc_reactions_curious": [
+                "What if it's true? What if music really exists?",
+                "I want to believe... but I need proof.",
+                "Has anyone actually HEARD an Echo? Really?",
+                "The stories are consistent. That's... interesting.",
+                "I'm keeping an open mind. Strange things happen.",
+                "Maybe the old world wasn't completely destroyed.",
+                "The Prophet's followers seem so certain...",
+                "I'd give anything to hear what they describe.",
+                "What does 'music' even sound like?",
+                "The longing is real, even if the Echoes aren't."
+            ]
+        },
+        "first_music_experience": {
+            "headlines": [
+                "BREAKING: Public Echo Exhibition Draws Thousands",
+                "{npc_name} Becomes First to Hear 'Song' in Generation",
+                "Tears Flow as Citizens Experience Ancient 'Melody'",
+                "Temple Allows Controlled Echo Demonstration",
+                "'Like Nothing I've Ever Known' - First Music Listeners React",
+                "Mass Emotional Response to Echo Playback Event",
+                "Musicians? New Group Claims to 'Create' Sounds",
+                "Instrument Discovered: Device That 'Makes Music'",
+                "Children Exposed to Echo - Reactions Unprecedented",
+                "The Silence Breaks: First Public Music Event"
+            ],
+            "npc_reactions_overwhelmed": [
+                "*tears streaming* I never knew... I never knew anything could sound like that.",
+                "My whole body is shaking. Is this what we lost?",
+                "They took this from us. For generations. Why?",
+                "I can't... I can't describe it. There are no words.",
+                "It's like remembering something I never knew.",
+                "The ache in my chest... is this what 'moved' means?",
+                "How did they live without this? How do WE live without this?",
+                "I'm crying and I don't know why. I can't stop.",
+                "It speaks to something deep. Something forgotten.",
+                "We have to bring this back. Everyone needs to hear."
+            ],
+            "npc_reactions_confused": [
+                "That's... that's music? I don't understand.",
+                "It's just sounds arranged oddly. Why is everyone crying?",
+                "I feel something but I don't know what it is.",
+                "Is it supposed to make me feel this way?",
+                "Everyone says it's beautiful but I just hear noise.",
+                "Maybe I'm broken. I don't feel what they feel.",
+                "The rhythm is... interesting. Not what I expected.",
+                "It's overwhelming. Too much sensation at once.",
+                "I need to hear it again. I need to understand.",
+                "Why would the old world need this? What purpose?"
+            ]
+        },
+        "instrument_discovery": {
+            "headlines": [
+                "ARTIFACT ALERT: 'Guitar' Device Found in {location}",
+                "Strings of the Past: Pre-Silence Instrument Recovered",
+                "Temple Confiscates 'Piano' - Calls It Dangerous",
+                "Underground Instrument Maker Arrested in {district}",
+                "'Drums': Primitive Echo Generators Surface in Market",
+                "{npc_name} Caught with Illegal Music-Making Device",
+                "Scientific Analysis: How Did 'Violins' Create Sound?",
+                "Resistance Claims to Have Working 'Synthesizer'",
+                "Children Found Playing with Reconstructed 'Flute'",
+                "Black Market 'Instrument' Prices Skyrocket"
+            ],
+            "npc_reactions": [
+                "A guitar? They say you could make music with your hands.",
+                "I saw someone playing... making sounds from nothing.",
+                "The old world had hundreds of these... instruments.",
+                "Imagine creating Echoes yourself. Not just hearing them.",
+                "The Temple destroyed them all. Or tried to.",
+                "People used to learn to play. Spend years practicing.",
+                "It's not just hearing music - it's MAKING it.",
+                "What else did they take from us?",
+                "I touched one once. The strings vibrated. I felt it.",
+                "Some say the Resistance is teaching people to play."
+            ]
+        }
+    },
+    "human_interest": {
+        "heroic_acts": {
+            "headlines": [
+                "{npc_name} SAVES CHILD from Collapsing Structure",
+                "Hero of {district}: {npc_name} Rescues {count} from Fire",
+                "Stranger Donates Rare Medicine to Dying Teen",
+                "Off-Duty Medic {npc_name} Saves Accident Victims",
+                "{npc_name} Risks Life to Stop Armed Robbery",
+                "Community Rallies: {npc_name} Pulls Family from Floodwaters",
+                "Former Criminal {npc_name} Saves Temple Official's Life",
+                "Anonymous Hero Delivers Food to Undercity Orphans",
+                "Elderly {npc_name} Defends Neighborhood from Gang",
+                "Cyborg {npc_name} Uses Chrome to Save Trapped Workers"
+            ],
+            "npc_reactions": [
+                "Did you hear what {npc_name} did? Incredible.",
+                "There are still good people in this city.",
+                "Heroes exist. {npc_name} proved it.",
+                "They should give {npc_name} a medal. Or better housing.",
+                "Restores your faith in humanity, doesn't it?",
+                "We need more people like {npc_name}.",
+                "Reminds me there's more than just survival.",
+                "That took real courage. Most would have run.",
+                "The city isn't all darkness. Some light remains.",
+                "I hope I'd be that brave if it was me."
+            ]
+        },
+        "business_openings": {
+            "headlines": [
+                "NEW: '{business_name}' Opens Doors in {district}",
+                "Entrepreneur {npc_name} Launches {business_type} in {location}",
+                "Grand Opening: {business_name} Brings Jobs to {district}",
+                "Former Worker {npc_name} Opens Own Shop After Years of Saving",
+                "Innovation: {business_name} Offers Unique Services to Area",
+                "Competition Heats Up as {business_name} Enters Market",
+                "Family Business {business_name} Celebrates Three Generations",
+                "Underground Favorite {business_name} Goes Legitimate",
+                "{business_name} Hiring: {count} New Positions Available",
+                "Community Funded: {business_name} Opens via Crowdfunding"
+            ],
+            "business_types": [
+                "cybernetic repair shop",
+                "synth-food restaurant",
+                "holographic entertainment venue",
+                "medical clinic",
+                "tech recycling center",
+                "hydroponic farm",
+                "security consulting firm",
+                "courier service",
+                "data storage facility",
+                "custom tailoring shop",
+                "beverage establishment",
+                "information broker office"
+            ],
+            "npc_reactions": [
+                "New place opened up. Might check it out.",
+                "Finally, somewhere decent in this neighborhood.",
+                "Competition's good. Maybe prices will drop.",
+                "I heard they're hiring. Might apply.",
+                "Hope they last. So many places close.",
+                "The food at {business_name} is actually edible.",
+                "Good for {npc_name}. Starting a business takes guts.",
+                "This area needed something like that.",
+                "Wonder how long before Temple takes their cut.",
+                "Another business means the area's improving. Maybe."
+            ]
+        },
+        "crimes_with_names": {
+            "headlines": [
+                "{npc_name} ARRESTED in Connection with {crime} Ring",
+                "Notorious {npc_name} Escapes Custody During Transfer",
+                "Trial Begins: {npc_name} Faces {count} Charges",
+                "{npc_name} Sentenced to Undercity Detention",
+                "Witness {npc_name} Disappears Before Testimony",
+                "Former Official {npc_name} Accused of Corruption",
+                "{npc_name} Family Denies Connection to Criminal Empire",
+                "Crime Boss {npc_name} Found Dead in Cell",
+                "Innocent? New Evidence May Free {npc_name}",
+                "Gang Leader {npc_name} Offers Temple Cooperation"
+            ],
+            "crime_types": [
+                "smuggling",
+                "credit fraud",
+                "assault",
+                "illegal cyberware trafficking",
+                "resistance activity",
+                "data theft",
+                "extortion",
+                "murder",
+                "Temple defiance",
+                "black market operations",
+                "identity theft"
+            ],
+            "npc_reactions": [
+                "I knew {npc_name}. Never thought they'd end up like this.",
+                "{npc_name} arrested? About time. Everyone knew.",
+                "They're making an example of {npc_name}.",
+                "Innocent until proven guilty. Even {npc_name}.",
+                "The real criminals never get caught.",
+                "{npc_name}'s trial is just theatre.",
+                "I don't believe {npc_name} did it. Setup.",
+                "Justice? In this city? Please.",
+                "{npc_name} had it coming. We all knew.",
+                "Temple detention... that's basically a death sentence."
+            ]
+        },
+        "community_events": {
+            "headlines": [
+                "CELEBRATION: {district} Marks Anniversary of Founding",
+                "Community Cleanup: {count} Volunteers Transform {location}",
+                "{district} Block Party Draws Record Attendance",
+                "Memorial Service for Victims of {event}",
+                "Youth Program Graduates {count} in {district}",
+                "Art Display: Local Creators Showcase Work",
+                "Sports Competition: {district} vs {district_2}",
+                "Market Festival Brings Rare Goods to {location}",
+                "Cultural Exchange: {district} Welcomes Visitors",
+                "Community Garden Opens in {location}"
+            ]
+        },
+        "personal_milestones": {
+            "headlines": [
+                "Oldest Citizen {npc_name} Celebrates {count} Years",
+                "Wedding: {npc_name} and {npc_name_2} Marry in {location}",
+                "New Birth Registered: {district} Population Grows",
+                "{npc_name} Becomes First in Family to Complete Education",
+                "Recovery: {npc_name} Walks Again After Cybernetic Surgery",
+                "Reunion: {npc_name} Finds Lost Family After {count} Years",
+                "Achievement: {npc_name} Promoted to {position}",
+                "Local {npc_name} Published in Scientific Journal",
+                "After {count} Years, {npc_name} Clears Name",
+                "Community Honors {npc_name} for Lifetime of Service"
+            ]
+        }
+    },
+    "rumors": {
+        "_desc": "Unconfirmed stories that spread among NPCs",
+        "echo_rumors": [
+            "They say there's an Echo hidden somewhere in the Undercity.",
+            "I heard the resistance has a working music device.",
+            "Someone told me the Temple has vaults full of instruments.",
+            "A kid in {district} claims to hear music in their dreams.",
+            "The Prophet knows where the Echoes are. He's hiding them.",
+            "Before the Silence, everyone could make music. Everyone.",
+            "There's a frequency only some people can hear. Echo-sensitives.",
+            "Deep in the tunnels, you can still hear the old songs.",
+            "The corporate archives contain recordings. They just won't share.",
+            "Music didn't disappear. It was taken from us deliberately."
+        ],
+        "general_rumors": [
+            "I heard {npc_name} is secretly working for the resistance.",
+            "They say the Spire has technology we can't even imagine.",
+            "Someone found a way out of the city. An escape route.",
+            "{district} is going to be quarantined. Heard it from someone.",
+            "The Temple is planning something big. Something soon.",
+            "There's a new drug that gives you Echo-like experiences.",
+            "Corporate is testing weapons in the Undercity. On people.",
+            "The Prophet isn't human. That's what some believe.",
+            "Credits are going to be worthless soon. Barter while you can.",
+            "A gang war is brewing. Big factions are choosing sides.",
+            "There are tunnels under the Temple. Ancient ones.",
+            "Someone important is going to be assassinated. Word is spreading.",
+            "The water in {district} isn't safe anymore.",
+            "A new faction is forming. Neither Temple nor resistance.",
+            "The AI in the core is becoming sentient. Or already is."
+        ],
+        "rumor_spread_modifiers": {
+            "confirmation": [
+                "I can confirm - I saw it myself.",
+                "This is real. My cousin works there.",
+                "It's not a rumor. I have proof.",
+                "Multiple sources are saying the same thing."
+            ],
+            "doubt": [
+                "Just something I heard. Don't know if true.",
+                "Take it with a grain of salt.",
+                "Could be propaganda. Hard to tell.",
+                "Sounds too crazy to be real, but..."
+            ],
+            "dismissal": [
+                "Complete nonsense. Don't spread it.",
+                "That's just fear-mongering.",
+                "I looked into it. Totally fake.",
+                "Someone's been drinking the wrong synth-brew."
+            ]
+        }
+    },
+    "scandal_templates": {
+        "political_scandal": [
+            "{notable_name} Caught in Secret Deal with {faction}",
+            "LEAK: {notable_name} Siphoned {credits} from Public Funds",
+            "Former Ally Accuses {notable_name} of Betrayal",
+            "Recordings Surface: {notable_name} Made Illegal Promises",
+            "{notable_name}'s Past Employment Raises Questions"
+        ],
+        "personal_scandal": [
+            "{notable_name} Exposed: Double Life Revealed",
+            "Family of {notable_name} Denies Shocking Allegations",
+            "{notable_name}'s Former Associate Tells All",
+            "The Downfall of {notable_name}: A Timeline",
+            "What Did {notable_name} Know? New Questions Emerge"
+        ]
+    }
+}
