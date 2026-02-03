@@ -12,6 +12,18 @@
 
 *Signal Noir style - cyberpunk meets film noir. Every world has its own aesthetic.*
 
+## 📸 Screenshots
+
+| Visualizer | Graph Network |
+|:----------:|:-------------:|
+| ![Visualizer](docs/screenshots/visualizer.png) | ![Graph](docs/screenshots/graph_network.png) |
+| District overview with buildings & NPCs | Neural network view of NPC-building connections |
+
+| Chat Interface | API Documentation |
+|:--------------:|:-----------------:|
+| ![Chat](docs/screenshots/chat.png) | ![API](docs/screenshots/api.png) |
+| Talk to NPCs with LLM-powered dialogue | RESTful API for integration |
+
 ---
 
 ## 🎮 Live Demo - Talk to NPCs Now!
