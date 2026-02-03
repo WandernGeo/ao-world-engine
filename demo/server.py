@@ -183,24 +183,33 @@ def simulation_tick():
     npcs = get_npcs()
     buildings = get_buildings()
     
-    # Calculate states for all NPCs
+    # Calculate states for ALL NPCs to get location summary
     states = []
-    for npc in npcs[:100]:  # Limit for performance
+    location_summary = {}
+    
+    for npc in npcs:
         state = get_npc_state(npc, tick)
-        states.append({
-            "id": npc["id"],
-            "name": npc.get("name", npc["id"]),
-            "location": state["location"],
-            "activity": state["activity"],
-            "mood": state["mood"]
-        })
+        loc = state.get("location", "unknown")
+        location_summary[loc] = location_summary.get(loc, 0) + 1
+        
+        # Only add first 100 NPCs to response for performance
+        if len(states) < 100:
+            states.append({
+                "id": npc["id"],
+                "name": npc.get("name", npc["id"]),
+                "location": state["location"],
+                "activity": state["activity"],
+                "mood": state["mood"],
+                "faction": npc.get("faction", "civilian")
+            })
     
     time_info = get_time_info(tick)
     
     return jsonify({
         "tick": tick,
         "time": time_info,
-        "npc_count": len(states),
+        "npc_count": len(npcs),
+        "location_summary": location_summary,
         "npcs": states
     })
 
