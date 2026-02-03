@@ -223,10 +223,36 @@ def get_npc_memory_context(npc_id: str, tick: int) -> str:
     if not events:
         return "No significant recent events."
     
+    def ticks_to_time_ago(tick_diff: int) -> str:
+        """Convert tick difference to human-readable time."""
+        if tick_diff <= 0:
+            return "just now"
+        
+        # 1 tick = 1 hour, 24 ticks = 1 day
+        hours = tick_diff
+        days = tick_diff // 24
+        remaining_hours = tick_diff % 24
+        
+        if days == 0:
+            if hours == 1:
+                return "1 hour ago"
+            return f"{hours} hours ago"
+        elif days == 1:
+            if remaining_hours == 0:
+                return "yesterday"
+            return f"yesterday, {remaining_hours}h ago"
+        elif days < 7:
+            return f"{days} days ago"
+        elif days < 30:
+            weeks = days // 7
+            return f"{weeks} week{'s' if weeks > 1 else ''} ago"
+        else:
+            return f"{days} days ago"
+    
     memory_lines = []
     for event in events:
         tick_diff = tick - event["tick"]
-        time_ago = f"{tick_diff} ticks ago" if tick_diff > 0 else "just now"
+        time_ago = ticks_to_time_ago(tick_diff)
         
         if event["type"] == "social":
             memory_lines.append(f"- {time_ago}: {event['action'].capitalize()}ed {event['target_name']} at {event['location'].replace('_', ' ')}")
