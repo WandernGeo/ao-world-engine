@@ -388,10 +388,22 @@ event = storyteller.pick_next_event(world_state, tick)
 
 ## Next Steps
 
-1. **Create AO Process** - Set up the autonomous cron-based process
-2. ✅ **Add Storyteller** - RimWorld-style event curation (DONE)
-3. ✅ **Add Quirks** - Dwarf Fortress personality system (DONE)
-4. ✅ **Add Personality System** - Full RE:ECHO + MBTI + Zodiacs (DONE)
-5. **Test on AO Testnet** - Deploy and verify always-running behavior
-6. **Expand Social Groups** - Sims-style dynamic group formation
-7. **Add Schemes** - Crusader Kings long-term NPC plans
+### ✅ Completed
+1. ✅ **Utility System** - RimWorld-style action scoring
+2. ✅ **GOAP Planning** - Goal-Oriented Action Planning
+3. ✅ **A-Life Migration** - STALKER-style zone roaming
+4. ✅ **AI Storyteller** - RimWorld-style event curation
+5. ✅ **Personality Quirks** - Dwarf Fortress emergent behavior
+6. ✅ **Apophenia Support** - Pattern generation for player speculation
+7. ✅ **Social Groups** - The Sims: cliques, clubs, gangs, families
+8. ✅ **Long-term Schemes** - Crusader Kings: assassination, seduction, usurpation
+9. ✅ **Dynasty System** - Crusader Kings: inheritance, family traits, succession
+10. ✅ **Personality System** - Full RE:ECHO + MBTI + Zodiacs with family/faction influence
+
+### 🚧 Upcoming
+1. **Dialogue System (Rasa-style)** - Intents, entities, stories, canned responses
+   - Eliminates LLM dependency for NPC conversations
+   - Deterministic dialogue trees compatible with AO
+   - Personality-influenced response selection
+2. **Create AO Process** - Deploy autonomous cron-based simulation
+3. **Test on AO Testnet** - Verify always-running behavior
