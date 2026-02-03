@@ -154,6 +154,28 @@ def get_building(building_id):
         return jsonify({"error": f"Building {building_id} not found"}), 404
     return jsonify(building)
 
+@app.route("/api/npcs/at/<location>")
+def get_npcs_at_location(location):
+    """Get all NPCs at a location at a given tick."""
+    tick = request.args.get("tick", 0, type=int)
+    npcs = get_npcs()
+    
+    # Calculate which NPCs are at this location at this tick
+    npcs_at_location = []
+    for npc in npcs:
+        state = get_npc_state(npc, tick)
+        # Check if NPC's calculated location matches the requested location
+        if state.get("location", "") == location or state.get("building_id", "") == location:
+            npcs_at_location.append({
+                "id": npc["id"],
+                "name": npc.get("name", npc["id"]),
+                "activity": state["activity"],
+                "mood": state["mood"],
+                "location": state["location"]
+            })
+    
+    return jsonify(npcs_at_location)
+
 @app.route("/api/simulation/tick")
 def simulation_tick():
     """Run simulation for a tick."""
