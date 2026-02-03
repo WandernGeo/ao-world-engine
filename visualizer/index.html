@@ -655,6 +655,7 @@
             <select id="view-mode">
                 <option value="district">District Overview</option>
                 <option value="building">Building View</option>
+                <option value="graph">🔗 Graph Network</option>
             </select>
         </div>
 
@@ -984,6 +985,12 @@
             ctx.fillStyle = "#0a0a0f";
             ctx.fillRect(0, 0, width, height);
 
+            // Check for graph view mode
+            if (state.viewMode === "graph") {
+                drawGraph(width, height);
+                return;
+            }
+
             // Apply camera transform
             ctx.save();
             ctx.translate(width / 2, height / 2);
@@ -1006,6 +1013,188 @@
 
             // Draw UI overlay
             drawOverlay(width, height);
+        }
+
+        // =============================================================================
+        // GRAPH VIEW - Neural Network Style
+        // =============================================================================
+        const graphNodes = [];
+        const graphEdges = [];
+        let graphInitialized = false;
+
+        function initializeGraph() {
+            graphNodes.length = 0;
+            graphEdges.length = 0;
+
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            // Add building nodes (squares) in a circle
+            state.buildings.forEach((building, i) => {
+                const angle = (i / state.buildings.length) * Math.PI * 2;
+                const radius = Math.min(width, height) * 0.35;
+                graphNodes.push({
+                    id: building.id,
+                    type: 'building',
+                    label: building.name || building.id,
+                    x: centerX + Math.cos(angle) * radius,
+                    y: centerY + Math.sin(angle) * radius,
+                    vx: 0, vy: 0,
+                    color: '#ffd700',
+                    data: building
+                });
+            });
+
+            // Add NPC nodes (limited to 50 for performance)
+            const displayNpcs = state.npcs.slice(0, 50);
+            displayNpcs.forEach((npc, i) => {
+                graphNodes.push({
+                    id: npc.id,
+                    type: 'npc',
+                    label: npc.name?.split(' ')[0] || npc.id,
+                    x: centerX + (Math.random() - 0.5) * 400,
+                    y: centerY + (Math.random() - 0.5) * 400,
+                    vx: 0, vy: 0,
+                    color: FACTION_COLORS[npc.faction] || '#00ffff',
+                    data: npc
+                });
+
+                // Edge to home building
+                if (npc.home) {
+                    graphEdges.push({
+                        source: npc.id,
+                        target: npc.home,
+                        type: 'home',
+                        color: 'rgba(0, 255, 136, 0.3)'
+                    });
+                }
+
+                // Edge to workplace
+                if (npc.workplace && npc.workplace !== npc.home) {
+                    graphEdges.push({
+                        source: npc.id,
+                        target: npc.workplace,
+                        type: 'work',
+                        color: 'rgba(0, 200, 255, 0.3)'
+                    });
+                }
+            });
+
+            graphInitialized = true;
+        }
+
+        function updateGraphPhysics() {
+            if (!graphInitialized) return;
+
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+
+            // Simple force simulation
+            graphNodes.forEach(node => {
+                // Repulsion from other nodes
+                graphNodes.forEach(other => {
+                    if (node.id === other.id) return;
+                    const dx = node.x - other.x;
+                    const dy = node.y - other.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    const force = 500 / (dist * dist);
+                    node.vx += (dx / dist) * force;
+                    node.vy += (dy / dist) * force;
+                });
+
+                // Attraction to center
+                node.vx += (width / 2 - node.x) * 0.001;
+                node.vy += (height / 2 - node.y) * 0.001;
+
+                // Edge attraction
+                graphEdges.forEach(edge => {
+                    if (edge.source !== node.id && edge.target !== node.id) return;
+                    const otherId = edge.source === node.id ? edge.target : edge.source;
+                    const other = graphNodes.find(n => n.id === otherId);
+                    if (!other) return;
+
+                    const dx = other.x - node.x;
+                    const dy = other.y - node.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    node.vx += dx * 0.01;
+                    node.vy += dy * 0.01;
+                });
+
+                // Apply velocity
+                node.x += node.vx * 0.1;
+                node.y += node.vy * 0.1;
+                node.vx *= 0.9;
+                node.vy *= 0.9;
+
+                // Bounds
+                node.x = Math.max(50, Math.min(width - 50, node.x));
+                node.y = Math.max(50, Math.min(height - 50, node.y));
+            });
+        }
+
+        function drawGraph(width, height) {
+            if (!graphInitialized) initializeGraph();
+            updateGraphPhysics();
+
+            // Draw edges first
+            graphEdges.forEach(edge => {
+                const source = graphNodes.find(n => n.id === edge.source);
+                const target = graphNodes.find(n => n.id === edge.target);
+                if (!source || !target) return;
+
+                ctx.beginPath();
+                ctx.moveTo(source.x, source.y);
+                ctx.lineTo(target.x, target.y);
+                ctx.strokeStyle = edge.color;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Draw nodes
+            graphNodes.forEach(node => {
+                const size = node.type === 'building' ? 20 : 8;
+                const isHovered = state.hoveredNpc?.id === node.id || state.currentBuilding === node.id;
+
+                if (node.type === 'building') {
+                    // Square for buildings
+                    ctx.fillStyle = node.color;
+                    ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size);
+                    if (isHovered) {
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(node.x - size / 2 - 2, node.y - size / 2 - 2, size + 4, size + 4);
+                    }
+                } else {
+                    // Circle for NPCs
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = node.color;
+                    ctx.fill();
+                    if (isHovered) {
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, size + 3, 0, Math.PI * 2);
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                }
+
+                // Labels
+                if (state.showLabels || isHovered) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = node.type === 'building' ? 'bold 10px Roboto' : '9px Roboto';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(node.label, node.x, node.y + size + 12);
+                }
+            });
+
+            // Legend
+            ctx.fillStyle = '#888';
+            ctx.font = '12px Roboto';
+            ctx.textAlign = 'left';
+            ctx.fillText('🔗 Graph Network: NPCs → Buildings (Green=Home, Blue=Work)', 20, height - 20);
         }
 
         function drawGrid() {
@@ -1483,6 +1672,9 @@
 
         document.getElementById("view-mode").addEventListener("change", (e) => {
             state.viewMode = e.target.value;
+            if (state.viewMode === "graph") {
+                graphInitialized = false; // Reset graph on view change
+            }
             draw();
         });
 
