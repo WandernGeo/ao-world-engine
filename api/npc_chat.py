@@ -309,11 +309,12 @@ def npc_state(npc_id: str, tick: int):
 
 @app.route("/api/npc/chat", methods=["POST"])
 def npc_chat():
-    """Chat with an NPC using Vertex AI with deterministic memories."""
+    """Chat with an NPC using Vertex AI with deterministic memories and conversation history."""
     data = request.json
     npc_id = data.get("npc_id", "charlie")
     tick = data.get("tick", 100)
     message = data.get("message", "Hello")
+    history = data.get("history", [])  # List of {"role": "user"/"npc", "content": "..."}
     
     npc_state = get_npc_state(npc_id, tick)
     if not npc_state:
@@ -448,11 +449,23 @@ RULES:
 - When asked about people you know, be specific about your relationship with them
 """
     
+    # Build conversation history context
+    history_context = ""
+    if history:
+        history_lines = []
+        for msg in history[-10:]:  # Last 10 messages max
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role == "user":
+                history_lines.append(f"User: {content}")
+            else:
+                history_lines.append(f"{npc_state['name']}: {content}")
+        history_context = "\n\nRECENT CONVERSATION:\n" + "\n".join(history_lines)
+    
     if HAS_VERTEX and model:
         try:
-            response = model.generate_content(
-                f"{system_prompt}\n\nUser says: {message}\n\nRespond as {npc_state['name']}:"
-            )
+            full_prompt = f"{system_prompt}{history_context}\n\nUser says: {message}\n\nRespond as {npc_state['name']}:"
+            response = model.generate_content(full_prompt)
             npc_response = response.text
         except Exception as e:
             npc_response = f"[Error: {e}]"
