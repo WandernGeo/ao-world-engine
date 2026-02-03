@@ -246,10 +246,78 @@ def classify_intent(text: str) -> str:
 
 ## Implementation Files Needed
 
-1. `scripts/dialogue_system.py` - Core dialogue logic
-2. `data/canned_responses.json` - Base response library
-3. `data/intents.json` - Intent patterns
-4. `lua/dialogue_ao.lua` - AO process for storage
+### Core Dialogue
+
+| File | Size | Purpose |
+|------|------|---------|
+| `scripts/dialogue_system.py` | - | Core dialogue logic |
+| `scripts/nlu_engine.py` | 23KB | Fuzzy matching intent detection |
+| `scripts/news_generator.py` | 12KB | News headlines & dynamic intent API |
+
+### Data Files
+
+| File | Size | Purpose |
+|------|------|---------|
+| `data/canned_responses.json` | 21KB | Base response library |
+| `data/small_talk_intents.json` | 22KB | 10 intent categories, 100+ variations |
+| `data/cyberpunk_intents.json` | 44KB | 11 cyberpunk topics, 335 responses |
+| `data/response_variations.json` | 30KB | Mood/weather/personality variations |
+| `data/context_intents.json` | 16KB | Activity/location aware responses |
+| `data/cultural_dialects.json` | 15KB | 6 districts with slang |
+| `data/news_events.json` | 15KB | Event categories, headline templates |
+| `data/news_extended.json` | 20KB | NPC entities, Echo discoveries, rumors |
+
+---
+
+## News & Events System
+
+### Headlines from World Events
+
+NPCs react to news based on what happens in the simulation:
+
+```
+📰 [UNDERGROUND_WIRE] Marcus Chen SAVES CHILD from Collapsing Structure
+📰 [TEMPLE_BROADCAST] ECHO SIGHTING: Elena Vasquez Claims to Have Heard 'Music'
+📰 [MARKET_GAZETTE] NEW: 'Neon Dreams Cafe' Opens Doors in Market District
+```
+
+### Event Categories
+
+- **Crime**: Robbery, murder, gang violence, data theft
+- **Political**: Temple announcements, resistance attacks, curfews
+- **Economic**: Shortages, market crashes, new businesses
+- **Technological**: Cyberware recalls, hack attacks, AI malfunctions
+- **Environmental**: Smog alerts, disease outbreaks, toxic spills
+- **Social**: Protests, riots, celebrations, scandals
+
+### Echo Discoveries
+
+Special news about music/Echoes with believer, skeptic, and curious reactions:
+
+```json
+{
+  "believer": "I always knew Echoes were real. The music exists!",
+  "skeptic": "Mass hysteria. That's all this Echo nonsense is.",
+  "curious": "What if it's true? What if music really exists?"
+}
+```
+
+### Rumors System
+
+Unconfirmed stories that spread among NPCs:
+
+- "They say there's an Echo hidden somewhere in the Undercity."
+- "I heard the resistance has a working music device."
+- "Someone told me the Temple has vaults full of instruments."
+
+### Dynamic Intent API
+
+Add new intents/responses at runtime:
+
+```bash
+python scripts/news_generator.py --add-intent "new_topic" '{"patterns": ["keyword"]}'
+python scripts/news_generator.py --add-event crime "new_crime" "HEADLINE" "NPC reaction"
+```
 
 ---
 
@@ -260,3 +328,4 @@ def classify_intent(text: str) -> str:
 3. **Conversations become assets** - Every chat improves the system
 4. **No LLM dependency** - Works offline with growing library
 5. **Deterministic** - Same NPC personality = consistent responses
+6. **News is generated** - Headlines from world state, not LLM
