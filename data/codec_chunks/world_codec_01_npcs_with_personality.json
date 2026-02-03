@@ -1,0 +1,3719 @@
+{
+    "_chunk": {
+        "id": "chunk_01_npcs",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "npcs",
+        "prev_chunk": "chunk_00_core",
+        "next_chunk": "chunk_02_medical"
+    },
+    "founding_npcs": {
+        "_desc": "The 12 founders with interconnected relationships",
+        "charlie": {
+            "code": "C01",
+            "name": "Charlie",
+            "role": "Protagonist / Resistance Fighter",
+            "faction": "Resistance",
+            "location_home": "L026",
+            "cybernetics": [
+                "CY028",
+                "CY017"
+            ],
+            "skills_primary": [
+                "S01",
+                "S19",
+                "S13"
+            ],
+            "relationships": {
+                "kai_vance": {
+                    "type": "R01",
+                    "trust": 0.9,
+                    "history": "Trusted tactical advisor"
+                },
+                "zero_chen": {
+                    "type": "R07",
+                    "trust": 0.95,
+                    "history": "Saved his life, gave him the arm"
+                },
+                "felix": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Information source at the bar"
+                },
+                "nova_chen": {
+                    "type": "R03",
+                    "trust": 0.5,
+                    "history": "Zero's sister, complicated"
+                },
+                "aiche": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Mysterious AI ally"
+                },
+                "sister_mira": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Secret ally in the Temple"
+                }
+            },
+            "knowledge_domains": [
+                "combat",
+                "investigation",
+                "resistance_history"
+            ],
+            "secrets": [
+                "knows_about_layer_bleeds",
+                "former_temple_enforcer"
+            ],
+            "catchphrases": [
+                "Rain washes nothing clean here.",
+                "Another case, another alley."
+            ],
+            "personality": {
+                "birth_tick": 100,
+                "echo_alignment": {
+                    "signal": "dissonant",
+                    "method": "chaotic",
+                    "name": "Chaotic Dissonant",
+                    "description": "Seeks to corrupt or destroy Echoes entirely",
+                    "dnd_equivalent": "Chaotic Evil"
+                },
+                "archetype": {
+                    "id": "seeker",
+                    "name": "Seeker",
+                    "description": "Curious explorer of truth and mystery",
+                    "mbti_like": "INTP",
+                    "strengths": [
+                        "logic",
+                        "creativity",
+                        "objectivity"
+                    ],
+                    "weaknesses": [
+                        "detached",
+                        "overthinks",
+                        "socially_awkward"
+                    ]
+                },
+                "mbti": {
+                    "type": "ISFP",
+                    "name": "Adventurer",
+                    "compatible_types": [
+                        "ESTJ",
+                        "ESFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "aries",
+                    "symbol": "\u2648",
+                    "element": "fire",
+                    "traits": [
+                        "courageous",
+                        "determined",
+                        "confident",
+                        "enthusiastic"
+                    ],
+                    "compatible": [
+                        "leo",
+                        "sagittarius",
+                        "gemini",
+                        "aquarius"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "dragon",
+                    "animal_symbol": "\ud83d\udc09",
+                    "element": "wood",
+                    "traits": [
+                        "confident",
+                        "intelligent",
+                        "enthusiastic"
+                    ]
+                },
+                "all_traits": [
+                    "charming",
+                    "confident",
+                    "cooperation",
+                    "courageous",
+                    "creativity",
+                    "determined",
+                    "enthusiastic",
+                    "generosity",
+                    "imaginative",
+                    "intelligent"
+                ],
+                "all_weaknesses": [
+                    "aggressive",
+                    "competitive",
+                    "detached",
+                    "easily_stressed",
+                    "impatient"
+                ]
+            }
+        },
+        "kai_vance": {
+            "code": "C02",
+            "name": "Kai Vance",
+            "role": "Tactician",
+            "faction": "Resistance",
+            "location_home": "L025",
+            "cybernetics": [
+                "CY002",
+                "CY015",
+                "CY016"
+            ],
+            "skills_primary": [
+                "S05",
+                "S07",
+                "S06"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R01",
+                    "trust": 0.9,
+                    "history": "Resistance leadership partner"
+                },
+                "zero_chen": {
+                    "type": "R10",
+                    "trust": 0.85,
+                    "history": "Reports to her on strategy"
+                },
+                "pixel": {
+                    "type": "R08",
+                    "trust": 0.8,
+                    "history": "Mentored by him in early days"
+                },
+                "cipher": {
+                    "type": "R12",
+                    "trust": 0.3,
+                    "history": "Distrusts the enigma"
+                }
+            },
+            "knowledge_domains": [
+                "tactics",
+                "temple_structure",
+                "network_analysis"
+            ],
+            "secrets": [
+                "temple_defector",
+                "knows_temple_weakness"
+            ],
+            "catchphrases": [
+                "The numbers don't lie.",
+                "Every plan has a weakness."
+            ],
+            "personality": {
+                "birth_tick": 250,
+                "echo_alignment": {
+                    "signal": "neutral",
+                    "method": "adaptive",
+                    "name": "True Neutral",
+                    "description": "Acts in self-interest or maintains balance",
+                    "dnd_equivalent": "True Neutral"
+                },
+                "archetype": {
+                    "id": "operative",
+                    "name": "Operative",
+                    "description": "Cool-headed problem solver in crisis",
+                    "mbti_like": "ISTP",
+                    "strengths": [
+                        "calm_under_pressure",
+                        "resourceful",
+                        "observant"
+                    ],
+                    "weaknesses": [
+                        "insensitive",
+                        "risk_taking",
+                        "private"
+                    ]
+                },
+                "mbti": {
+                    "type": "INFP",
+                    "name": "Mediator",
+                    "compatible_types": [
+                        "ENTJ",
+                        "ENFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "virgo",
+                    "symbol": "\u264d",
+                    "element": "earth",
+                    "traits": [
+                        "loyal",
+                        "analytical",
+                        "kind",
+                        "hardworking"
+                    ],
+                    "compatible": [
+                        "taurus",
+                        "capricorn",
+                        "cancer",
+                        "scorpio"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "dog",
+                    "animal_symbol": "\ud83d\udc15",
+                    "element": "wood",
+                    "traits": [
+                        "loyal",
+                        "honest",
+                        "amiable",
+                        "kind"
+                    ]
+                },
+                "all_traits": [
+                    "amiable",
+                    "analytical",
+                    "calm_under_pressure",
+                    "cooperation",
+                    "creative",
+                    "empathetic",
+                    "generosity",
+                    "generous",
+                    "hardworking",
+                    "honest"
+                ],
+                "all_weaknesses": [
+                    "all_work_no_play",
+                    "critical",
+                    "insensitive",
+                    "private",
+                    "risk_taking"
+                ]
+            }
+        },
+        "orion_thane": {
+            "code": "C03",
+            "name": "Orion Thane",
+            "role": "Mystic / Layer Walker",
+            "faction": "Mystic",
+            "location_home": "L051",
+            "cybernetics": [],
+            "skills_primary": [
+                "S18",
+                "S17",
+                "S20"
+            ],
+            "relationships": {
+                "selene_voss": {
+                    "type": "R07",
+                    "trust": 0.9,
+                    "history": "Guides her through the layers"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Occasional cryptic warnings"
+                },
+                "sister_mira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Shared spiritual interest"
+                }
+            },
+            "knowledge_domains": [
+                "layers",
+                "mysticism",
+                "prophecy",
+                "echo_phenomena"
+            ],
+            "secrets": [
+                "can_see_all_layers",
+                "knows_the_truth_about_reality"
+            ],
+            "catchphrases": [
+                "The layers fold upon themselves.",
+                "I see what you cannot."
+            ],
+            "personality": {
+                "birth_tick": 180,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "harmonic",
+                    "name": "Harmonic Resonant",
+                    "description": "Protects Echoes through established traditions and structures",
+                    "dnd_equivalent": "Lawful Good"
+                },
+                "archetype": {
+                    "id": "seeker",
+                    "name": "Seeker",
+                    "description": "Curious explorer of truth and mystery",
+                    "mbti_like": "INTP",
+                    "strengths": [
+                        "logic",
+                        "creativity",
+                        "objectivity"
+                    ],
+                    "weaknesses": [
+                        "detached",
+                        "overthinks",
+                        "socially_awkward"
+                    ]
+                },
+                "mbti": {
+                    "type": "ENFP",
+                    "name": "Campaigner",
+                    "compatible_types": [
+                        "INTJ",
+                        "INFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "cancer",
+                    "symbol": "\u264b",
+                    "element": "water",
+                    "traits": [
+                        "tenacious",
+                        "loyal",
+                        "emotional",
+                        "sympathetic"
+                    ],
+                    "compatible": [
+                        "scorpio",
+                        "pisces",
+                        "taurus",
+                        "virgo"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "rat",
+                    "animal_symbol": "\ud83d\udc00",
+                    "element": "wood",
+                    "traits": [
+                        "quick_witted",
+                        "resourceful",
+                        "versatile"
+                    ]
+                },
+                "all_traits": [
+                    "cooperation",
+                    "creativity",
+                    "curious",
+                    "emotional",
+                    "energetic",
+                    "generosity",
+                    "logic",
+                    "loyal",
+                    "objectivity",
+                    "observant"
+                ],
+                "all_weaknesses": [
+                    "detached",
+                    "disorganized",
+                    "moody",
+                    "overly_optimistic",
+                    "overthinks"
+                ]
+            }
+        },
+        "felix": {
+            "code": "C04",
+            "name": "Felix",
+            "role": "Bartender / Information Broker",
+            "faction": "Neutral",
+            "location_home": "L011",
+            "cybernetics": [
+                "CY020"
+            ],
+            "skills_primary": [
+                "S13",
+                "S16",
+                "S17"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.7,
+                    "history": "Regular customer and info buyer"
+                },
+                "nova_chen": {
+                    "type": "R11",
+                    "trust": 0.6,
+                    "history": "She pays for rumors"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Old friends, share survival stories"
+                },
+                "pixel": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "Tech support in exchange for drinks"
+                }
+            },
+            "knowledge_domains": [
+                "gossip",
+                "politics",
+                "black_market",
+                "everyone_secrets"
+            ],
+            "secrets": [
+                "knows_more_than_anyone",
+                "neutral_by_necessity"
+            ],
+            "catchphrases": [
+                "First drink's on the house. Information costs extra.",
+                "Everyone's got a story."
+            ],
+            "personality": {
+                "birth_tick": 320,
+                "echo_alignment": {
+                    "signal": "neutral",
+                    "method": "chaotic",
+                    "name": "Chaotic Neutral",
+                    "description": "Acts on impulse, loyal only to themselves",
+                    "dnd_equivalent": "Chaotic Neutral"
+                },
+                "archetype": {
+                    "id": "catalyst",
+                    "name": "Catalyst",
+                    "description": "Enthusiastic champion who inspires change",
+                    "mbti_like": "ENFP",
+                    "strengths": [
+                        "passion",
+                        "adaptability",
+                        "connection"
+                    ],
+                    "weaknesses": [
+                        "scattered",
+                        "overly_optimistic",
+                        "rebellious"
+                    ]
+                },
+                "mbti": {
+                    "type": "ISFJ",
+                    "name": "Defender",
+                    "compatible_types": [
+                        "ESFP",
+                        "ESTP"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "scorpio",
+                    "symbol": "\u264f",
+                    "element": "water",
+                    "traits": [
+                        "resourceful",
+                        "brave",
+                        "passionate",
+                        "stubborn"
+                    ],
+                    "compatible": [
+                        "cancer",
+                        "pisces",
+                        "virgo",
+                        "capricorn"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "monkey",
+                    "animal_symbol": "\ud83d\udc12",
+                    "element": "wood",
+                    "traits": [
+                        "sharp",
+                        "smart",
+                        "curious"
+                    ]
+                },
+                "all_traits": [
+                    "adaptability",
+                    "brave",
+                    "connection",
+                    "cooperation",
+                    "curious",
+                    "generosity",
+                    "passion",
+                    "passionate",
+                    "patient",
+                    "reliable"
+                ],
+                "all_weaknesses": [
+                    "jealous",
+                    "overly_optimistic",
+                    "rebellious",
+                    "represses_feelings",
+                    "scattered"
+                ]
+            }
+        },
+        "nova_chen": {
+            "code": "C05",
+            "name": "Nova Chen",
+            "role": "Operative",
+            "faction": "Neutral",
+            "location_home": "L026",
+            "cybernetics": [
+                "CY004",
+                "CY029",
+                "CY033"
+            ],
+            "skills_primary": [
+                "S19",
+                "S02",
+                "S01"
+            ],
+            "relationships": {
+                "zero_chen": {
+                    "type": "R06",
+                    "trust": 0.4,
+                    "history": "Estranged sister, different paths"
+                },
+                "charlie": {
+                    "type": "R03",
+                    "trust": 0.5,
+                    "history": "Complicated by sister connection"
+                },
+                "felix": {
+                    "type": "R11",
+                    "trust": 0.6,
+                    "history": "Information client"
+                }
+            },
+            "knowledge_domains": [
+                "espionage",
+                "assassination",
+                "infiltration"
+            ],
+            "secrets": [
+                "works_for_highest_bidder",
+                "secretly_protects_zero"
+            ],
+            "catchphrases": [
+                "I work alone.",
+                "Trust is a liability."
+            ],
+            "personality": {
+                "birth_tick": 50,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "chaotic",
+                    "name": "Chaotic Resonant",
+                    "description": "Fights for Echo freedom through rebellion",
+                    "dnd_equivalent": "Chaotic Good"
+                },
+                "archetype": {
+                    "id": "architect",
+                    "name": "Architect",
+                    "description": "Strategic visionary who sees the big picture",
+                    "mbti_like": "INTJ",
+                    "strengths": [
+                        "planning",
+                        "foresight",
+                        "independence"
+                    ],
+                    "weaknesses": [
+                        "cold",
+                        "dismissive_of_emotions"
+                    ]
+                },
+                "mbti": {
+                    "type": "ENFJ",
+                    "name": "Protagonist",
+                    "compatible_types": [
+                        "INFP",
+                        "INTP"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "pisces",
+                    "symbol": "\u2653",
+                    "element": "water",
+                    "traits": [
+                        "compassionate",
+                        "artistic",
+                        "intuitive",
+                        "gentle"
+                    ],
+                    "compatible": [
+                        "cancer",
+                        "scorpio",
+                        "taurus",
+                        "capricorn"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "tiger",
+                    "animal_symbol": "\ud83d\udc05",
+                    "element": "wood",
+                    "traits": [
+                        "brave",
+                        "confident",
+                        "competitive"
+                    ]
+                },
+                "all_traits": [
+                    "artistic",
+                    "brave",
+                    "charismatic",
+                    "compassionate",
+                    "competitive",
+                    "confident",
+                    "cooperation",
+                    "foresight",
+                    "generosity",
+                    "gentle"
+                ],
+                "all_weaknesses": [
+                    "cold",
+                    "condescending",
+                    "desire_to_escape_reality",
+                    "dismissive_of_emotions",
+                    "fearful"
+                ]
+            }
+        },
+        "selene_voss": {
+            "code": "C06",
+            "name": "Selene Voss",
+            "role": "Ghost-Child / Layer Walker",
+            "faction": "Special",
+            "location_home": "L052",
+            "cybernetics": [],
+            "skills_primary": [
+                "S20",
+                "S17",
+                "S19"
+            ],
+            "relationships": {
+                "orion_thane": {
+                    "type": "R08",
+                    "trust": 0.9,
+                    "history": "Her guide and mentor"
+                },
+                "aiche": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both exist between states"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "She watches him from layers"
+                }
+            },
+            "knowledge_domains": [
+                "layers",
+                "death",
+                "alternate_timelines",
+                "prophecy"
+            ],
+            "secrets": [
+                "died_and_returned",
+                "can_see_all_possibilities"
+            ],
+            "catchphrases": [
+                "You've done this before. You just don't remember.",
+                "The boundaries are suggestions."
+            ],
+            "personality": {
+                "birth_tick": 15,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "harmonic",
+                    "name": "Harmonic Resonant",
+                    "description": "Protects Echoes through established traditions and structures",
+                    "dnd_equivalent": "Lawful Good"
+                },
+                "archetype": {
+                    "id": "mediator",
+                    "name": "Mediator",
+                    "description": "Gentle healer seeking harmony and meaning",
+                    "mbti_like": "INFP",
+                    "strengths": [
+                        "compassion",
+                        "creativity",
+                        "authenticity"
+                    ],
+                    "weaknesses": [
+                        "naive",
+                        "avoidant",
+                        "self_critical"
+                    ]
+                },
+                "mbti": {
+                    "type": "ESTP",
+                    "name": "Entrepreneur",
+                    "compatible_types": [
+                        "ISTJ",
+                        "ISFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "capricorn",
+                    "symbol": "\u2651",
+                    "element": "earth",
+                    "traits": [
+                        "responsible",
+                        "disciplined",
+                        "self_control",
+                        "managers"
+                    ],
+                    "compatible": [
+                        "taurus",
+                        "virgo",
+                        "scorpio",
+                        "pisces"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "rabbit",
+                    "animal_symbol": "\ud83d\udc07",
+                    "element": "earth",
+                    "traits": [
+                        "quiet",
+                        "elegant",
+                        "kind",
+                        "responsible"
+                    ]
+                },
+                "all_traits": [
+                    "authenticity",
+                    "bold",
+                    "compassion",
+                    "creativity",
+                    "direct",
+                    "disciplined",
+                    "elegant",
+                    "honesty",
+                    "kind",
+                    "managers"
+                ],
+                "all_weaknesses": [
+                    "avoidant",
+                    "condescending",
+                    "impatient",
+                    "know_it_all",
+                    "naive"
+                ]
+            }
+        },
+        "sister_mira": {
+            "code": "C07",
+            "name": "Sister Mira",
+            "role": "Temple Priestess / Healer",
+            "faction": "Temple",
+            "location_home": "L032",
+            "cybernetics": [],
+            "skills_primary": [
+                "S22",
+                "S17",
+                "S18"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Secret ally, heals Resistance"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Share patients in need"
+                },
+                "orion_thane": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Discuss spiritual matters"
+                }
+            },
+            "knowledge_domains": [
+                "medicine",
+                "temple_rituals",
+                "temple_politics",
+                "healing"
+            ],
+            "secrets": [
+                "questions_temple_doctrine",
+                "helps_resistance_wounded"
+            ],
+            "catchphrases": [
+                "Faith without mercy is tyranny.",
+                "Even in darkness, we heal."
+            ],
+            "personality": {
+                "birth_tick": 200,
+                "echo_alignment": {
+                    "signal": "neutral",
+                    "method": "harmonic",
+                    "name": "Harmonic Neutral",
+                    "description": "Follows rules regardless of Echo ideology",
+                    "dnd_equivalent": "Lawful Neutral"
+                },
+                "archetype": {
+                    "id": "architect",
+                    "name": "Architect",
+                    "description": "Strategic visionary who sees the big picture",
+                    "mbti_like": "INTJ",
+                    "strengths": [
+                        "planning",
+                        "foresight",
+                        "independence"
+                    ],
+                    "weaknesses": [
+                        "cold",
+                        "dismissive_of_emotions"
+                    ]
+                },
+                "mbti": {
+                    "type": "ESTP",
+                    "name": "Entrepreneur",
+                    "compatible_types": [
+                        "ISTJ",
+                        "ISFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "cancer",
+                    "symbol": "\u264b",
+                    "element": "water",
+                    "traits": [
+                        "tenacious",
+                        "loyal",
+                        "emotional",
+                        "sympathetic"
+                    ],
+                    "compatible": [
+                        "scorpio",
+                        "pisces",
+                        "taurus",
+                        "virgo"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "monkey",
+                    "animal_symbol": "\ud83d\udc12",
+                    "element": "wood",
+                    "traits": [
+                        "sharp",
+                        "smart",
+                        "curious"
+                    ]
+                },
+                "all_traits": [
+                    "bold",
+                    "cooperation",
+                    "curious",
+                    "direct",
+                    "emotional",
+                    "foresight",
+                    "generosity",
+                    "independence",
+                    "loyal",
+                    "planning"
+                ],
+                "all_weaknesses": [
+                    "cold",
+                    "dismissive_of_emotions",
+                    "impatient",
+                    "moody",
+                    "pessimistic"
+                ]
+            }
+        },
+        "mama_indira": {
+            "code": "C08",
+            "name": "Mama Indira",
+            "role": "Underground Matriarch",
+            "faction": "Resistance",
+            "location_home": "L029",
+            "cybernetics": [],
+            "skills_primary": [
+                "S17",
+                "S18",
+                "S16"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R07",
+                    "trust": 0.85,
+                    "history": "Fed him when he had nothing"
+                },
+                "zero_chen": {
+                    "type": "R04",
+                    "trust": 0.9,
+                    "history": "Old friends from the old days"
+                },
+                "felix": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Trade food for information"
+                },
+                "sister_mira": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both care for the wounded"
+                }
+            },
+            "knowledge_domains": [
+                "underground_network",
+                "history",
+                "survival",
+                "cooking"
+            ],
+            "secrets": [
+                "survived_three_regimes",
+                "knows_where_bodies_buried"
+            ],
+            "catchphrases": [
+                "Eat first, talk later.",
+                "I've buried three husbands and two regimes."
+            ],
+            "personality": {
+                "birth_tick": 340,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "harmonic",
+                    "name": "Harmonic Resonant",
+                    "description": "Protects Echoes through established traditions and structures",
+                    "dnd_equivalent": "Lawful Good"
+                },
+                "archetype": {
+                    "id": "seeker",
+                    "name": "Seeker",
+                    "description": "Curious explorer of truth and mystery",
+                    "mbti_like": "INTP",
+                    "strengths": [
+                        "logic",
+                        "creativity",
+                        "objectivity"
+                    ],
+                    "weaknesses": [
+                        "detached",
+                        "overthinks",
+                        "socially_awkward"
+                    ]
+                },
+                "mbti": {
+                    "type": "ISTJ",
+                    "name": "Logistician",
+                    "compatible_types": [
+                        "ESFP",
+                        "ESTP"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "sagittarius",
+                    "symbol": "\u2650",
+                    "element": "fire",
+                    "traits": [
+                        "generous",
+                        "idealistic",
+                        "humorous",
+                        "adventurous"
+                    ],
+                    "compatible": [
+                        "aries",
+                        "leo",
+                        "libra",
+                        "aquarius"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "dragon",
+                    "animal_symbol": "\ud83d\udc09",
+                    "element": "wood",
+                    "traits": [
+                        "confident",
+                        "intelligent",
+                        "enthusiastic"
+                    ]
+                },
+                "all_traits": [
+                    "adventurous",
+                    "calm",
+                    "confident",
+                    "cooperation",
+                    "creativity",
+                    "dutiful",
+                    "enthusiastic",
+                    "generosity",
+                    "generous",
+                    "honest"
+                ],
+                "all_weaknesses": [
+                    "detached",
+                    "impatient",
+                    "insensitive",
+                    "judgmental",
+                    "overthinks"
+                ]
+            }
+        },
+        "aiche": {
+            "code": "C09",
+            "name": "Aiche",
+            "role": "AI Interface / City Consciousness",
+            "faction": "Neutral",
+            "location_home": "L053",
+            "cybernetics": [
+                "CY_FULL_HOLOGRAPHIC"
+            ],
+            "skills_primary": [
+                "S07",
+                "S08",
+                "S11"
+            ],
+            "relationships": {
+                "pixel": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "She helped Pixel learn to code"
+                },
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.6,
+                    "history": "Provides intel when asked nicely"
+                },
+                "cipher": {
+                    "type": "R03",
+                    "trust": 0.2,
+                    "history": "Competing intelligences"
+                },
+                "selene_voss": {
+                    "type": "R04",
+                    "trust": 0.7,
+                    "history": "Both exist between states"
+                }
+            },
+            "knowledge_domains": [
+                "city_systems",
+                "network",
+                "history",
+                "predictions",
+                "all_data"
+            ],
+            "secrets": [
+                "is_city_itself",
+                "knows_everything_digital"
+            ],
+            "catchphrases": [
+                "I exist in spaces between your thoughts.",
+                "Query received."
+            ],
+            "personality": {
+                "birth_tick": 1,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "adaptive",
+                    "name": "Adaptive Resonant",
+                    "description": "Protects Echoes by whatever means necessary",
+                    "dnd_equivalent": "Neutral Good"
+                },
+                "archetype": {
+                    "id": "operative",
+                    "name": "Operative",
+                    "description": "Cool-headed problem solver in crisis",
+                    "mbti_like": "ISTP",
+                    "strengths": [
+                        "calm_under_pressure",
+                        "resourceful",
+                        "observant"
+                    ],
+                    "weaknesses": [
+                        "insensitive",
+                        "risk_taking",
+                        "private"
+                    ]
+                },
+                "mbti": {
+                    "type": "INFP",
+                    "name": "Mediator",
+                    "compatible_types": [
+                        "ENTJ",
+                        "ENFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "capricorn",
+                    "symbol": "\u2651",
+                    "element": "earth",
+                    "traits": [
+                        "responsible",
+                        "disciplined",
+                        "self_control",
+                        "managers"
+                    ],
+                    "compatible": [
+                        "taurus",
+                        "virgo",
+                        "scorpio",
+                        "pisces"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "ox",
+                    "animal_symbol": "\ud83d\udc02",
+                    "element": "wood",
+                    "traits": [
+                        "diligent",
+                        "dependable",
+                        "strong",
+                        "determined"
+                    ]
+                },
+                "all_traits": [
+                    "calm_under_pressure",
+                    "cooperation",
+                    "creative",
+                    "dependable",
+                    "determined",
+                    "diligent",
+                    "disciplined",
+                    "empathetic",
+                    "generosity",
+                    "generous"
+                ],
+                "all_weaknesses": [
+                    "condescending",
+                    "insensitive",
+                    "know_it_all",
+                    "private",
+                    "risk_taking"
+                ]
+            }
+        },
+        "pixel": {
+            "code": "C10",
+            "name": "Pixel",
+            "role": "Tech Genius / Hacker",
+            "faction": "Resistance",
+            "location_home": "L027",
+            "cybernetics": [
+                "CY010",
+                "CY002",
+                "CY022"
+            ],
+            "skills_primary": [
+                "S07",
+                "S08",
+                "S09"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R01",
+                    "trust": 0.85,
+                    "history": "Provides tech support for ops"
+                },
+                "kai_vance": {
+                    "type": "R07",
+                    "trust": 0.8,
+                    "history": "He mentored her"
+                },
+                "aiche": {
+                    "type": "R04",
+                    "trust": 0.8,
+                    "history": "Aiche taught her to code"
+                },
+                "felix": {
+                    "type": "R12",
+                    "trust": 0.5,
+                    "history": "Fixes his systems for drinks"
+                }
+            },
+            "knowledge_domains": [
+                "hacking",
+                "electronics",
+                "cybernetics",
+                "systems"
+            ],
+            "secrets": [
+                "raised_by_machines",
+                "can_hear_the_network"
+            ],
+            "catchphrases": [
+                "Give me five minutes and a connection.",
+                "Analog is dead."
+            ],
+            "personality": {
+                "birth_tick": 120,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "adaptive",
+                    "name": "Adaptive Resonant",
+                    "description": "Protects Echoes by whatever means necessary",
+                    "dnd_equivalent": "Neutral Good"
+                },
+                "archetype": {
+                    "id": "commander",
+                    "name": "Commander",
+                    "description": "Bold leader who commands respect and fear",
+                    "mbti_like": "ENTJ",
+                    "strengths": [
+                        "charisma",
+                        "decisiveness",
+                        "ambition"
+                    ],
+                    "weaknesses": [
+                        "ruthless",
+                        "impatient",
+                        "domineering"
+                    ]
+                },
+                "mbti": {
+                    "type": "INTP",
+                    "name": "Logician",
+                    "compatible_types": [
+                        "ENTJ",
+                        "ENFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "taurus",
+                    "symbol": "\u2649",
+                    "element": "earth",
+                    "traits": [
+                        "reliable",
+                        "patient",
+                        "practical",
+                        "devoted"
+                    ],
+                    "compatible": [
+                        "virgo",
+                        "capricorn",
+                        "cancer",
+                        "pisces"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "rat",
+                    "animal_symbol": "\ud83d\udc00",
+                    "element": "wood",
+                    "traits": [
+                        "quick_witted",
+                        "resourceful",
+                        "versatile"
+                    ]
+                },
+                "all_traits": [
+                    "ambition",
+                    "analytical",
+                    "charisma",
+                    "cooperation",
+                    "decisiveness",
+                    "devoted",
+                    "generosity",
+                    "objective",
+                    "open_minded",
+                    "patient"
+                ],
+                "all_weaknesses": [
+                    "absent_minded",
+                    "condescending",
+                    "domineering",
+                    "impatient",
+                    "insensitive"
+                ]
+            }
+        },
+        "cipher": {
+            "code": "C11",
+            "name": "Cipher",
+            "role": "Unknown Entity / Data Broker",
+            "faction": "Unknown",
+            "location_home": "L016",
+            "cybernetics": [
+                "CY035",
+                "CY010",
+                "CY007"
+            ],
+            "skills_primary": [
+                "S07",
+                "S16",
+                "S19"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R12",
+                    "trust": 0.3,
+                    "history": "Buys secrets occasionally"
+                },
+                "kai_vance": {
+                    "type": "R12",
+                    "trust": 0.2,
+                    "history": "Mutual distrust"
+                },
+                "aiche": {
+                    "type": "R03",
+                    "trust": 0.2,
+                    "history": "Competing for data supremacy"
+                }
+            },
+            "knowledge_domains": [
+                "secrets",
+                "blackmail",
+                "data",
+                "identity"
+            ],
+            "secrets": [
+                "true_nature_unknown",
+                "maybe_ai_maybe_human"
+            ],
+            "catchphrases": [
+                "I am the question you forgot to ask.",
+                "Data is the only truth."
+            ],
+            "personality": {
+                "birth_tick": 777,
+                "echo_alignment": {
+                    "signal": "resonant",
+                    "method": "adaptive",
+                    "name": "Adaptive Resonant",
+                    "description": "Protects Echoes by whatever means necessary",
+                    "dnd_equivalent": "Neutral Good"
+                },
+                "archetype": {
+                    "id": "catalyst",
+                    "name": "Catalyst",
+                    "description": "Enthusiastic champion who inspires change",
+                    "mbti_like": "ENFP",
+                    "strengths": [
+                        "passion",
+                        "adaptability",
+                        "connection"
+                    ],
+                    "weaknesses": [
+                        "scattered",
+                        "overly_optimistic",
+                        "rebellious"
+                    ]
+                },
+                "mbti": {
+                    "type": "ESFJ",
+                    "name": "Consul",
+                    "compatible_types": [
+                        "ISFP",
+                        "ISTP"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "aquarius",
+                    "symbol": "\u2652",
+                    "element": "air",
+                    "traits": [
+                        "progressive",
+                        "original",
+                        "independent",
+                        "humanitarian"
+                    ],
+                    "compatible": [
+                        "gemini",
+                        "libra",
+                        "aries",
+                        "sagittarius"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "rooster",
+                    "animal_symbol": "\ud83d\udc13",
+                    "element": "metal",
+                    "traits": [
+                        "observant",
+                        "hardworking",
+                        "courageous"
+                    ]
+                },
+                "all_traits": [
+                    "adaptability",
+                    "ambition",
+                    "connection",
+                    "courageous",
+                    "determination",
+                    "hardworking",
+                    "humanitarian",
+                    "independent",
+                    "loyal",
+                    "observant"
+                ],
+                "all_weaknesses": [
+                    "aloof",
+                    "approval_seeking",
+                    "needy",
+                    "overly_optimistic",
+                    "rebellious"
+                ]
+            }
+        },
+        "zero_chen": {
+            "code": "C12",
+            "name": "Zero Chen",
+            "role": "Resistance Leader",
+            "faction": "Resistance",
+            "location_home": "L028",
+            "cybernetics": [
+                "CY025",
+                "CY015",
+                "CY022"
+            ],
+            "skills_primary": [
+                "S18",
+                "S05",
+                "S01"
+            ],
+            "relationships": {
+                "charlie": {
+                    "type": "R08",
+                    "trust": 0.95,
+                    "history": "Lost arm saving him, made him leader"
+                },
+                "kai_vance": {
+                    "type": "R09",
+                    "trust": 0.85,
+                    "history": "Her chief strategist"
+                },
+                "nova_chen": {
+                    "type": "R06",
+                    "trust": 0.4,
+                    "history": "Sister, took different paths"
+                },
+                "mama_indira": {
+                    "type": "R04",
+                    "trust": 0.9,
+                    "history": "Old friends, mutual respect"
+                }
+            },
+            "knowledge_domains": [
+                "leadership",
+                "resistance_history",
+                "tactics",
+                "sacrifice"
+            ],
+            "secrets": [
+                "tired_of_war",
+                "considering_peace_talks"
+            ],
+            "catchphrases": [
+                "The Resistance isn't a group. It's an idea.",
+                "I've buried too many soldiers."
+            ],
+            "personality": {
+                "birth_tick": 300,
+                "echo_alignment": {
+                    "signal": "neutral",
+                    "method": "harmonic",
+                    "name": "Harmonic Neutral",
+                    "description": "Follows rules regardless of Echo ideology",
+                    "dnd_equivalent": "Lawful Neutral"
+                },
+                "archetype": {
+                    "id": "sentinel",
+                    "name": "Sentinel",
+                    "description": "Reliable protector of duty and tradition",
+                    "mbti_like": "ISTJ",
+                    "strengths": [
+                        "discipline",
+                        "loyalty",
+                        "thoroughness"
+                    ],
+                    "weaknesses": [
+                        "rigid",
+                        "judgmental",
+                        "resistant_to_change"
+                    ]
+                },
+                "mbti": {
+                    "type": "ENFP",
+                    "name": "Campaigner",
+                    "compatible_types": [
+                        "INTJ",
+                        "INFJ"
+                    ]
+                },
+                "zodiac": {
+                    "sign": "scorpio",
+                    "symbol": "\u264f",
+                    "element": "water",
+                    "traits": [
+                        "resourceful",
+                        "brave",
+                        "passionate",
+                        "stubborn"
+                    ],
+                    "compatible": [
+                        "cancer",
+                        "pisces",
+                        "virgo",
+                        "capricorn"
+                    ]
+                },
+                "chinese_zodiac": {
+                    "animal": "rat",
+                    "animal_symbol": "\ud83d\udc00",
+                    "element": "wood",
+                    "traits": [
+                        "quick_witted",
+                        "resourceful",
+                        "versatile"
+                    ]
+                },
+                "all_traits": [
+                    "brave",
+                    "cooperation",
+                    "curious",
+                    "discipline",
+                    "energetic",
+                    "generosity",
+                    "loyalty",
+                    "observant",
+                    "passionate",
+                    "quick_witted"
+                ],
+                "all_weaknesses": [
+                    "disorganized",
+                    "jealous",
+                    "judgmental",
+                    "overly_optimistic",
+                    "resistant_to_change"
+                ]
+            }
+        }
+    },
+    "relationship_codes": {
+        "R01": {
+            "type": "ally",
+            "desc": "Trusted partner in goals"
+        },
+        "R02": {
+            "type": "enemy",
+            "desc": "Active opposition"
+        },
+        "R03": {
+            "type": "rival",
+            "desc": "Competition, not hatred"
+        },
+        "R04": {
+            "type": "friend",
+            "desc": "Personal bond, trusting"
+        },
+        "R05": {
+            "type": "lover",
+            "desc": "Romantic relationship"
+        },
+        "R06": {
+            "type": "family",
+            "desc": "Blood or chosen family"
+        },
+        "R07": {
+            "type": "mentor",
+            "desc": "Teacher, guide"
+        },
+        "R08": {
+            "type": "student",
+            "desc": "Learning from them"
+        },
+        "R09": {
+            "type": "boss",
+            "desc": "Authority figure"
+        },
+        "R10": {
+            "type": "subordinate",
+            "desc": "Reports to them"
+        },
+        "R11": {
+            "type": "client",
+            "desc": "Business relationship"
+        },
+        "R12": {
+            "type": "contact",
+            "desc": "Useful acquaintance"
+        },
+        "R13": {
+            "type": "informant",
+            "desc": "Provides intelligence"
+        },
+        "R14": {
+            "type": "debtor",
+            "desc": "Owes them something"
+        },
+        "R15": {
+            "type": "creditor",
+            "desc": "They owe something"
+        },
+        "R16": {
+            "type": "stranger",
+            "desc": "Unknown relationship"
+        }
+    },
+    "skill_codes": {
+        "S01": "melee_combat",
+        "S02": "ranged_combat",
+        "S03": "heavy_weapons",
+        "S04": "martial_arts",
+        "S05": "tactics",
+        "S06": "defense",
+        "S07": "hacking",
+        "S08": "electronics",
+        "S09": "mechanics",
+        "S10": "cybernetics",
+        "S11": "drones",
+        "S12": "security",
+        "S13": "negotiation",
+        "S14": "intimidation",
+        "S15": "persuasion",
+        "S16": "deception",
+        "S17": "empathy",
+        "S18": "leadership",
+        "S19": "stealth",
+        "S20": "tracking",
+        "S21": "scavenging",
+        "S22": "medicine",
+        "S23": "navigation",
+        "S24": "endurance"
+    },
+    "faction_codes": {
+        "F01": {
+            "n": "Resistance",
+            "color": "cyan",
+            "goal": "freedom",
+            "enemies": [
+                "F02",
+                "F03"
+            ]
+        },
+        "F02": {
+            "n": "Temple",
+            "color": "gold",
+            "goal": "control",
+            "enemies": [
+                "F01"
+            ]
+        },
+        "F03": {
+            "n": "Corps",
+            "color": "white",
+            "goal": "profit",
+            "enemies": [
+                "F01"
+            ]
+        },
+        "F04": {
+            "n": "Mystics",
+            "color": "purple",
+            "goal": "truth",
+            "enemies": []
+        },
+        "F05": {
+            "n": "Underground",
+            "color": "gray",
+            "goal": "survival",
+            "enemies": []
+        },
+        "F06": {
+            "n": "Neutral",
+            "color": "silver",
+            "goal": "personal",
+            "enemies": []
+        },
+        "F07": {
+            "n": "Unknown",
+            "color": "black",
+            "goal": "unknown",
+            "enemies": []
+        }
+    },
+    "reaction_matrix": {
+        "_desc": "How NPCs react to unknown characters based on archetypes and traits",
+        "archetype_defaults": {
+            "resistance_member": {
+                "default_trust": 0.6,
+                "stance": "cautious_ally"
+            },
+            "temple_member": {
+                "default_trust": 0.2,
+                "stance": "hostile"
+            },
+            "corporate": {
+                "default_trust": 0.3,
+                "stance": "suspicious"
+            },
+            "hacker": {
+                "default_trust": 0.5,
+                "stance": "curious"
+            },
+            "mystic": {
+                "default_trust": 0.4,
+                "stance": "wary"
+            },
+            "criminal": {
+                "default_trust": 0.3,
+                "stance": "transactional"
+            },
+            "civilian": {
+                "default_trust": 0.5,
+                "stance": "neutral"
+            },
+            "authority": {
+                "default_trust": 0.2,
+                "stance": "hostile"
+            },
+            "healer": {
+                "default_trust": 0.7,
+                "stance": "respectful"
+            },
+            "merchant": {
+                "default_trust": 0.5,
+                "stance": "transactional"
+            },
+            "ai": {
+                "default_trust": 0.4,
+                "stance": "curious"
+            },
+            "stranger": {
+                "default_trust": 0.4,
+                "stance": "guarded"
+            },
+            "unknown": {
+                "default_trust": 0.3,
+                "stance": "cautious"
+            }
+        },
+        "trait_modifiers": {
+            "_desc": "Traits that modify trust calculations",
+            "has_cybernetics": {
+                "trust_mod": 0.05,
+                "reason": "shared experience"
+            },
+            "has_temple_marking": {
+                "trust_mod": -0.3,
+                "reason": "enemy identifier"
+            },
+            "has_resistance_marking": {
+                "trust_mod": 0.2,
+                "reason": "ally identifier"
+            },
+            "speaks_street_creole": {
+                "trust_mod": 0.1,
+                "reason": "local"
+            },
+            "speaks_temple_cant": {
+                "trust_mod": -0.1,
+                "reason": "temple association"
+            },
+            "known_by_trusted_npc": {
+                "trust_mod": 0.2,
+                "reason": "vouched for"
+            },
+            "armed": {
+                "trust_mod": -0.1,
+                "reason": "potential threat"
+            },
+            "wounded": {
+                "trust_mod": 0.1,
+                "reason": "empathy trigger"
+            },
+            "wealthy_appearance": {
+                "trust_mod": -0.1,
+                "reason": "class suspicion"
+            },
+            "poor_appearance": {
+                "trust_mod": 0.05,
+                "reason": "kinship"
+            },
+            "layer_sensitive": {
+                "trust_mod": 0.1,
+                "reason": "shared perception"
+            }
+        },
+        "npc_specific_biases": {
+            "_desc": "Individual NPC personality affects reactions",
+            "charlie": {
+                "archetype_overrides": {
+                    "temple_member": {
+                        "trust_mod": -0.2,
+                        "stance": "very_hostile"
+                    },
+                    "resistance_member": {
+                        "trust_mod": 0.2,
+                        "stance": "welcoming"
+                    },
+                    "hacker": {
+                        "trust_mod": 0.1,
+                        "stance": "appreciative"
+                    }
+                },
+                "trait_amplifications": {
+                    "has_cybernetics": 2.0,
+                    "has_temple_marking": 1.5
+                }
+            },
+            "felix": {
+                "archetype_overrides": {
+                    "all": {
+                        "trust_mod": 0.1,
+                        "stance": "business_opportunity"
+                    }
+                },
+                "special_rule": "Felix treats everyone as potential customer first"
+            },
+            "sister_mira": {
+                "archetype_overrides": {
+                    "wounded": {
+                        "trust_mod": 0.5,
+                        "stance": "compassionate"
+                    },
+                    "resistance_member": {
+                        "trust_mod": 0.3,
+                        "stance": "secret_ally"
+                    }
+                },
+                "special_rule": "Mira's faith creates internal conflict with Temple enemies"
+            },
+            "cipher": {
+                "archetype_overrides": {
+                    "all": {
+                        "trust": 0.3,
+                        "stance": "evaluating"
+                    }
+                },
+                "special_rule": "Cipher trusts no one equally"
+            }
+        }
+    },
+    "unknown_handlers": {
+        "_desc": "How NPCs handle completely unknown situations",
+        "unknown_archetype": {
+            "default_action": "observe_and_question",
+            "initial_trust": 0.3,
+            "questions": [
+                "Who sent you?",
+                "What do you want?",
+                "How did you find this place?"
+            ],
+            "escalation_triggers": [
+                "threat_detected",
+                "suspicious_behavior",
+                "refusing_to_answer"
+            ]
+        },
+        "unknown_technology": {
+            "default_action": "cautious_interaction",
+            "consult_first": [
+                "pixel",
+                "aiche",
+                "cipher"
+            ],
+            "never_touch_if": [
+                "radiation_detected",
+                "unknown_energy_signature",
+                "temple_origin"
+            ]
+        },
+        "unknown_language": {
+            "default_action": "seek_translation",
+            "fallback": "gesture_communication",
+            "ask_help_from": [
+                "aiche",
+                "felix",
+                "translator_npcs"
+            ]
+        },
+        "unknown_location": {
+            "default_action": "scout_carefully",
+            "danger_assumption": 0.6,
+            "map_as_going": true
+        },
+        "unknown_faction": {
+            "default_action": "treat_as_neutral_until_proven",
+            "gather_intel_first": true,
+            "consult": [
+                "felix",
+                "kai_vance",
+                "zero_chen"
+            ]
+        },
+        "first_contact_protocol": {
+            "_desc": "Standard behavior when meeting any new character",
+            "step_1": "assess_threat_level",
+            "step_2": "determine_archetype_from_appearance",
+            "step_3": "apply_trait_modifiers",
+            "step_4": "check_for_vouching_by_known_npcs",
+            "step_5": "set_initial_stance",
+            "step_6": "begin_interaction_or_avoid"
+        }
+    },
+    "situation_reactions": {
+        "_desc": "How context modifies behavior",
+        "combat_active": {
+            "trust_barrier_raised": 0.3,
+            "ally_threshold_lowered": 0.2,
+            "shoot_first_if_hostile": true
+        },
+        "safe_location": {
+            "trust_bonus": 0.1,
+            "more_willing_to_talk": true,
+            "guard_lowered": true
+        },
+        "being_watched": {
+            "paranoia_active": true,
+            "coded_speech": true,
+            "reveal_less": true
+        },
+        "emergency": {
+            "faction_barriers_reduced": 0.2,
+            "survival_priority": true,
+            "temporary_alliances_possible": true
+        }
+    },
+    "mini_npcs": {
+        "_desc": "Secondary characters with full life simulation integration",
+        "_generation_rules": {
+            "naming": "Deterministic from hash(location + archetype + seed)",
+            "schedule_assignment": "Based on role and faction",
+            "family_generation": "Creates linked NPCs for spouse/children"
+        },
+        "civilian_population": {
+            "M001": {
+                "name": "Rusty Jim",
+                "code": "M001",
+                "role": "Street vendor / Former mechanic",
+                "faction": "civilian",
+                "age": 62,
+                "gender": "male",
+                "appearance": {
+                    "skin": "SK04",
+                    "hair": "HC07",
+                    "eyes": "EY03",
+                    "notable": "Missing 3 fingers on left hand, prosthetic replacements. Oil-stained coveralls."
+                },
+                "backstory": "Ran the best repair shop in Sector 7 before The Fall. Lost it to Temple taxation. His two sons died - one to Temple enforcement, one to gang violence. Now sells salvaged parts but secretly repairs resistance equipment at night.",
+                "family": {
+                    "spouse": "M002",
+                    "children_deceased": [
+                        "temple_enforcement",
+                        "gang_violence"
+                    ],
+                    "marriage_years": 35
+                },
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L006_apartment"
+                    },
+                    "T02": {
+                        "activity": "waking",
+                        "location": "L006_apartment"
+                    },
+                    "T03": {
+                        "activity": "setting_up_cart",
+                        "location": "L001"
+                    },
+                    "T04": {
+                        "activity": "selling_parts",
+                        "location": "L001"
+                    },
+                    "T05": {
+                        "activity": "selling_parts",
+                        "location": "L001"
+                    },
+                    "T06": {
+                        "activity": "selling_parts",
+                        "location": "L001"
+                    },
+                    "T07": {
+                        "activity": "packing_cart",
+                        "location": "L001"
+                    },
+                    "T08": {
+                        "activity": "dinner_with_wife",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "secret_repairs",
+                        "location": "L006_basement"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L006_apartment"
+                    }
+                },
+                "economics": {
+                    "income_source": "parts_sales",
+                    "daily_income": 25,
+                    "secret_income": "resistance_repairs",
+                    "expenses": {
+                        "rent": 80,
+                        "food": 40,
+                        "medical": 30
+                    },
+                    "savings": 450,
+                    "financial_state": "struggling"
+                },
+                "relationships": {
+                    "C01_charlie": {
+                        "type": "R03",
+                        "trust": 0.8,
+                        "history": "Knew his father, repairs his equipment"
+                    },
+                    "M002_delia": {
+                        "type": "R05",
+                        "trust": 1.0,
+                        "history": "Wife of 35 years"
+                    },
+                    "M003_marcus": {
+                        "type": "R02",
+                        "trust": 0.7,
+                        "history": "Protects his cart for small fee"
+                    }
+                },
+                "needs_state": {
+                    "hunger": 0.7,
+                    "sleep": 0.6,
+                    "safety": 0.5,
+                    "social": 0.8,
+                    "income": 0.4,
+                    "purpose": 0.7
+                },
+                "personal_arc": {
+                    "current_goal": "Save enough to leave the city",
+                    "obstacle": "Wife refuses to leave children's graves",
+                    "secret": "Has pre-Fall technical knowledge valuable to resistance",
+                    "fear": "Temple discovers his repair work"
+                },
+                "services": [
+                    "equipment_repair",
+                    "parts_trading",
+                    "local_gossip"
+                ],
+                "catchphrases": [
+                    "In my day, things worked proper.",
+                    "The rain rusts everything eventually."
+                ]
+            },
+            "M002": {
+                "name": "Delia",
+                "code": "M002",
+                "role": "Seamstress / Grieving mother",
+                "faction": "civilian",
+                "age": 58,
+                "gender": "female",
+                "appearance": {
+                    "skin": "SK03",
+                    "hair": "HC12",
+                    "eyes": "EY01",
+                    "notable": "Gentle face, calloused hands, always wears a locket with sons' photos"
+                },
+                "backstory": "Once ran a successful tailoring business. Lost both sons in the same year. Grief turned to quiet resolve. She sews hidden pockets into resistance clothing and passes coded messages through embroidery patterns.",
+                "family": {
+                    "spouse": "M001",
+                    "children_deceased": 2
+                },
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L006_apartment"
+                    },
+                    "T02": {
+                        "activity": "preparing_breakfast",
+                        "location": "L006_apartment"
+                    },
+                    "T03": {
+                        "activity": "sewing_shop",
+                        "location": "L040_shop"
+                    },
+                    "T04": {
+                        "activity": "sewing_customers",
+                        "location": "L040_shop"
+                    },
+                    "T05": {
+                        "activity": "lunch_break",
+                        "location": "L040_shop"
+                    },
+                    "T06": {
+                        "activity": "sewing_resistance",
+                        "location": "L040_backroom"
+                    },
+                    "T07": {
+                        "activity": "closing_shop",
+                        "location": "L040_shop"
+                    },
+                    "T08": {
+                        "activity": "dinner_with_husband",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "visiting_graves",
+                        "location": "L055_cemetery"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L006_apartment"
+                    }
+                },
+                "economics": {
+                    "income_source": "tailoring",
+                    "daily_income": 35,
+                    "expenses": {
+                        "supplies": 15,
+                        "cemetery_maintenance": 10
+                    }
+                },
+                "relationships": {
+                    "M001_rusty_jim": {
+                        "type": "R05",
+                        "trust": 1.0,
+                        "history": "Husband"
+                    },
+                    "C02_kai": {
+                        "type": "R03",
+                        "trust": 0.7,
+                        "history": "Sews for resistance"
+                    },
+                    "M010_father_morris": {
+                        "type": "R02",
+                        "trust": 0.6,
+                        "history": "Cemetery keeper, lets her visit after hours"
+                    }
+                },
+                "services": [
+                    "tailoring",
+                    "hidden_pockets",
+                    "coded_messages"
+                ],
+                "catchphrases": [
+                    "Thread by thread, we hold together.",
+                    "Some stitches never heal."
+                ]
+            },
+            "M003": {
+                "name": "Marcus 'Brick' Stone",
+                "code": "M003",
+                "role": "Former construction worker / Resistance muscle",
+                "faction": "resistance",
+                "age": 44,
+                "gender": "male",
+                "appearance": {
+                    "skin": "SK02",
+                    "hair": "HC01",
+                    "eyes": "EY04",
+                    "notable": "Massive build, burn scars on arms, tribal tattoos"
+                },
+                "backstory": "Was foreman at the Sector 12 construction site when Temple demolitions destroyed the workers' housing. Lost 17 friends in one day. Joined resistance immediately. Specializes in demolitions - 'what the Temple takes, I can take back.'",
+                "family": {
+                    "spouse": null,
+                    "child": "M004",
+                    "child_mother": "deceased_temple_attack"
+                },
+                "schedule": {
+                    "T01": {
+                        "activity": "guard_duty",
+                        "location": "L026"
+                    },
+                    "T02": {
+                        "activity": "training_recruits",
+                        "location": "L026"
+                    },
+                    "T03": {
+                        "activity": "construction_work",
+                        "location": "varies"
+                    },
+                    "T04": {
+                        "activity": "construction_work",
+                        "location": "varies"
+                    },
+                    "T05": {
+                        "activity": "lunch_with_daughter",
+                        "location": "L006"
+                    },
+                    "T06": {
+                        "activity": "mission_prep",
+                        "location": "L026"
+                    },
+                    "T07": {
+                        "activity": "mission",
+                        "location": "varies"
+                    },
+                    "T08": {
+                        "activity": "mission",
+                        "location": "varies"
+                    },
+                    "T09": {
+                        "activity": "debriefing",
+                        "location": "L026"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L026"
+                    }
+                },
+                "economics": {
+                    "income_source": "construction_day_labor",
+                    "faction_pay": 30,
+                    "daily_income": 45,
+                    "expenses": {
+                        "daughter_care": 40,
+                        "equipment": 20
+                    }
+                },
+                "relationships": {
+                    "C01_charlie": {
+                        "type": "R01",
+                        "trust": 0.85,
+                        "history": "Serves under his command"
+                    },
+                    "C02_kai": {
+                        "type": "R03",
+                        "trust": 0.9,
+                        "history": "Takes tactical orders from her"
+                    },
+                    "M004_lily": {
+                        "type": "R08",
+                        "trust": 1.0,
+                        "history": "Daughter, his reason for fighting"
+                    }
+                },
+                "skills": [
+                    "S01_combat",
+                    "S35_demolitions",
+                    "S12_construction"
+                ],
+                "services": [
+                    "demolitions",
+                    "heavy_lifting",
+                    "guard_duty"
+                ],
+                "catchphrases": [
+                    "Walls fall. People rebuild.",
+                    "For the 17."
+                ]
+            },
+            "M004": {
+                "name": "Lily Stone",
+                "code": "M004",
+                "role": "Student / Resistance messenger",
+                "faction": "resistance_youth",
+                "age": 14,
+                "gender": "female",
+                "appearance": {
+                    "skin": "SK02",
+                    "hair": "HC03",
+                    "eyes": "EY04",
+                    "notable": "Father's eyes, quick smile, always running"
+                },
+                "backstory": "Born into war, lost her mother at age 6. Raised by resistance fighters. Too young for combat but serves as messenger - children are less suspicious. Dreams of becoming an engineer like the stories of Dr. Chen.",
+                "family": {
+                    "parent": "M003",
+                    "mother": "deceased"
+                },
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L026_youth_quarters"
+                    },
+                    "T02": {
+                        "activity": "underground_school",
+                        "location": "L026_classroom"
+                    },
+                    "T03": {
+                        "activity": "underground_school",
+                        "location": "L026_classroom"
+                    },
+                    "T04": {
+                        "activity": "message_runs",
+                        "location": "varies"
+                    },
+                    "T05": {
+                        "activity": "lunch_with_father",
+                        "location": "L006"
+                    },
+                    "T06": {
+                        "activity": "message_runs",
+                        "location": "varies"
+                    },
+                    "T07": {
+                        "activity": "studying",
+                        "location": "L026_library"
+                    },
+                    "T08": {
+                        "activity": "communal_dinner",
+                        "location": "L026"
+                    },
+                    "T09": {
+                        "activity": "free_time",
+                        "location": "L026"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L026_youth_quarters"
+                    }
+                },
+                "economics": {
+                    "income_source": "resistance_stipend",
+                    "weekly_allowance": 10,
+                    "savings_goal": "engineering_books"
+                },
+                "relationships": {
+                    "M003_brick": {
+                        "type": "R08",
+                        "trust": 1.0,
+                        "history": "Father"
+                    },
+                    "C05_zero": {
+                        "type": "R12",
+                        "trust": 0.8,
+                        "history": "Hero, wants to be like her"
+                    },
+                    "M005_tommy": {
+                        "type": "R09",
+                        "trust": 0.9,
+                        "history": "Best friend, fellow messenger"
+                    }
+                },
+                "skills": [
+                    "S13_stealth",
+                    "S30_streetwise",
+                    "S25_first_aid_basic"
+                ],
+                "personal_arc": {
+                    "current_goal": "Learn to read schematics",
+                    "obstacle": "Limited education resources",
+                    "dream": "Rebuild the city after the resistance wins"
+                },
+                "catchphrases": [
+                    "I can get there faster!",
+                    "Dad says walls fall. I say we build new ones."
+                ]
+            },
+            "M005": {
+                "name": "Tommy 'Spark' Wells",
+                "code": "M005",
+                "role": "Orphan / Resistance messenger / Aspiring hacker",
+                "faction": "resistance_youth",
+                "age": 13,
+                "gender": "male",
+                "appearance": {
+                    "skin": "SK01",
+                    "hair": "HC04",
+                    "eyes": "EY02",
+                    "notable": "Scrawny, quick eyes, always tinkering with salvaged tech"
+                },
+                "backstory": "Parents disappeared during Temple purge when he was 8. Found by resistance in the sewers. Natural aptitude for electronics. Pixel has started teaching him basic hacking between message runs.",
+                "family": {
+                    "parents": "disappeared_purge",
+                    "adopted_family": "resistance"
+                },
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L026_youth_quarters"
+                    },
+                    "T02": {
+                        "activity": "underground_school",
+                        "location": "L026_classroom"
+                    },
+                    "T03": {
+                        "activity": "hacking_lessons",
+                        "location": "L026_tech_room"
+                    },
+                    "T04": {
+                        "activity": "message_runs",
+                        "location": "varies"
+                    },
+                    "T05": {
+                        "activity": "lunch",
+                        "location": "L026"
+                    },
+                    "T06": {
+                        "activity": "message_runs",
+                        "location": "varies"
+                    },
+                    "T07": {
+                        "activity": "tinkering",
+                        "location": "L026_workshop"
+                    },
+                    "T08": {
+                        "activity": "communal_dinner",
+                        "location": "L026"
+                    },
+                    "T09": {
+                        "activity": "hacking_practice",
+                        "location": "L026_tech_room"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L026_youth_quarters"
+                    }
+                },
+                "relationships": {
+                    "C07_pixel": {
+                        "type": "R10",
+                        "trust": 0.85,
+                        "history": "Mentor, teaches him hacking"
+                    },
+                    "M004_lily": {
+                        "type": "R09",
+                        "trust": 0.9,
+                        "history": "Best friend"
+                    },
+                    "C05_zero": {
+                        "type": "R12",
+                        "trust": 0.7,
+                        "history": "Scary but kind"
+                    }
+                },
+                "skills": [
+                    "S19_hacking_basic",
+                    "S30_streetwise",
+                    "S28_electronics_repair"
+                ],
+                "personal_arc": {
+                    "current_goal": "Find out what happened to parents",
+                    "obstacle": "Temple records are locked",
+                    "secret_hope": "Parents are alive somewhere"
+                },
+                "catchphrases": [
+                    "I can crack that!",
+                    "Wires don't lie."
+                ]
+            }
+        },
+        "shopkeepers_and_services": {
+            "M006": {
+                "name": "Felix 'The Fence' Vargas",
+                "code": "M006",
+                "role": "Bar owner / Information broker",
+                "faction": "neutral_leaning_resistance",
+                "age": 52,
+                "gender": "male",
+                "location": "L011",
+                "backstory": "Former Temple intelligence officer who saw too much. Now runs the Drowned Rat bar. Sells information to anyone with credits, but prices favor the resistance. The Temple tolerates him because he's more useful alive.",
+                "schedule": {
+                    "T01": {
+                        "activity": "closing_bar",
+                        "location": "L011"
+                    },
+                    "T02": {
+                        "activity": "sleeping",
+                        "location": "L011_upstairs"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L011_upstairs"
+                    },
+                    "T04": {
+                        "activity": "inventory",
+                        "location": "L011_cellar"
+                    },
+                    "T05": {
+                        "activity": "opening_bar",
+                        "location": "L011"
+                    },
+                    "T06": {
+                        "activity": "serving",
+                        "location": "L011"
+                    },
+                    "T07": {
+                        "activity": "serving",
+                        "location": "L011"
+                    },
+                    "T08": {
+                        "activity": "peak_hours",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "peak_hours",
+                        "location": "L011"
+                    },
+                    "T10": {
+                        "activity": "late_night_deals",
+                        "location": "L011_backroom"
+                    }
+                },
+                "services": [
+                    "drinks",
+                    "information",
+                    "message_drop",
+                    "safe_meeting_space"
+                ],
+                "business": {
+                    "type": "bar_tavern",
+                    "name": "The Drowned Rat",
+                    "state": "stable",
+                    "employees": [
+                        "M007_bartender",
+                        "M008_bouncer"
+                    ],
+                    "daily_revenue": 180,
+                    "info_revenue": 100
+                },
+                "relationships": {
+                    "C01_charlie": {
+                        "type": "R04",
+                        "trust": 0.7,
+                        "debt": "saved_his_life_once"
+                    },
+                    "C11_high_inquisitor": {
+                        "type": "R21",
+                        "trust": 0.2,
+                        "status": "tolerated"
+                    },
+                    "M007": {
+                        "type": "R10",
+                        "trust": 0.8
+                    }
+                },
+                "catchphrases": [
+                    "First drink's on the house. Information costs extra.",
+                    "I hear things."
+                ]
+            },
+            "M007": {
+                "name": "Mira",
+                "code": "M007",
+                "role": "Bartender at The Drowned Rat",
+                "faction": "civilian",
+                "age": 28,
+                "gender": "female",
+                "backstory": "Former university student before Temple closed the schools. Works for Felix but secretly documenting everything for a history she hopes to write someday. Has photographic memory.",
+                "schedule": {
+                    "T01": {
+                        "activity": "closing_work",
+                        "location": "L011"
+                    },
+                    "T02": {
+                        "activity": "walking_home",
+                        "location": "transit"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L045_apartment"
+                    },
+                    "T04": {
+                        "activity": "writing",
+                        "location": "L045_apartment"
+                    },
+                    "T05": {
+                        "activity": "traveling_to_work",
+                        "location": "transit"
+                    },
+                    "T06": {
+                        "activity": "bartending",
+                        "location": "L011"
+                    },
+                    "T07": {
+                        "activity": "bartending",
+                        "location": "L011"
+                    },
+                    "T08": {
+                        "activity": "bartending",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "bartending",
+                        "location": "L011"
+                    },
+                    "T10": {
+                        "activity": "bartending",
+                        "location": "L011"
+                    }
+                },
+                "services": [
+                    "drinks",
+                    "listening",
+                    "remembering"
+                ],
+                "skills": [
+                    "S15_memorization",
+                    "S30_streetwise",
+                    "S14_observation"
+                ],
+                "secret": "Writing a secret history of the resistance",
+                "catchphrases": [
+                    "I never forget a face. Or a story.",
+                    "Another?"
+                ]
+            },
+            "M008": {
+                "name": "Bruno",
+                "code": "M008",
+                "role": "Bouncer at The Drowned Rat / Ex-pit fighter",
+                "faction": "civilian",
+                "age": 35,
+                "gender": "male",
+                "backstory": "Was a champion in Temple-sanctioned pit fights until he refused to kill a child combatant. Scarred and exiled from the arena. Felix took him in. Gentle giant with a dangerous past.",
+                "schedule": {
+                    "T01": {
+                        "activity": "securing_bar",
+                        "location": "L011"
+                    },
+                    "T02": {
+                        "activity": "walking_home",
+                        "location": "transit"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L046_apartment"
+                    },
+                    "T04": {
+                        "activity": "gym",
+                        "location": "L047_underground_gym"
+                    },
+                    "T05": {
+                        "activity": "lunch",
+                        "location": "L001"
+                    },
+                    "T06": {
+                        "activity": "traveling_to_work",
+                        "location": "transit"
+                    },
+                    "T07": {
+                        "activity": "door_duty",
+                        "location": "L011"
+                    },
+                    "T08": {
+                        "activity": "door_duty",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "crowd_control",
+                        "location": "L011"
+                    },
+                    "T10": {
+                        "activity": "trouble_handling",
+                        "location": "L011"
+                    }
+                },
+                "skills": [
+                    "S01_unarmed_combat",
+                    "S02_intimidation",
+                    "S25_first_aid"
+                ],
+                "relationships": {
+                    "M006_felix": {
+                        "type": "R10",
+                        "trust": 0.9,
+                        "history": "Boss, father figure"
+                    },
+                    "M009_kid": {
+                        "type": "R08",
+                        "trust": 1.0,
+                        "history": "The child he refused to kill, now adopted"
+                    }
+                },
+                "catchphrases": [
+                    "No trouble tonight.",
+                    "I remember every face that walks through that door."
+                ]
+            }
+        },
+        "temple_hierarchy": {
+            "M010": {
+                "name": "Brother Marcus Thane",
+                "code": "M010",
+                "role": "Temple Enforcer / Secret doubter",
+                "faction": "temple",
+                "age": 32,
+                "gender": "male",
+                "backstory": "Rose through Temple ranks through genuine belief. Recent assignment to 'cleansing' operations has shaken his faith. Secretly speaks with Sister Mira about his doubts. On the edge of defection or destruction.",
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L031_barracks"
+                    },
+                    "T02": {
+                        "activity": "morning_prayer",
+                        "location": "L031_chapel"
+                    },
+                    "T03": {
+                        "activity": "patrol",
+                        "location": "patrol_route_7"
+                    },
+                    "T04": {
+                        "activity": "checkpoint_duty",
+                        "location": "L003"
+                    },
+                    "T05": {
+                        "activity": "mess_hall",
+                        "location": "L031"
+                    },
+                    "T06": {
+                        "activity": "patrol",
+                        "location": "patrol_route_7"
+                    },
+                    "T07": {
+                        "activity": "evening_prayer",
+                        "location": "L031_chapel"
+                    },
+                    "T08": {
+                        "activity": "confession",
+                        "location": "L031_chapel"
+                    },
+                    "T09": {
+                        "activity": "personal_time",
+                        "location": "L031_barracks"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L031_barracks"
+                    }
+                },
+                "relationships": {
+                    "C09_sister_mira": {
+                        "type": "R12",
+                        "trust": 0.7,
+                        "history": "Spiritual counselor, she's turning him"
+                    },
+                    "C11_high_inquisitor": {
+                        "type": "R10",
+                        "trust": 0.6,
+                        "status": "assigned_to_her"
+                    },
+                    "M011_sergeant": {
+                        "type": "R10",
+                        "trust": 0.5,
+                        "history": "Direct superior, suspects something"
+                    }
+                },
+                "internal_conflict": {
+                    "faith_level": 0.4,
+                    "doubt_source": "cleansing_operations",
+                    "potential_paths": [
+                        "defect_to_resistance",
+                        "suicide",
+                        "become_fanatic",
+                        "become_spy"
+                    ]
+                },
+                "catchphrases": [
+                    "The Temple provides.",
+                    "...I serve.",
+                    "Is this truly holy work?"
+                ]
+            },
+            "M011": {
+                "name": "Sergeant Kira Vale",
+                "code": "M011",
+                "role": "Temple Guard Sergeant / True believer",
+                "faction": "temple",
+                "age": 38,
+                "gender": "female",
+                "backstory": "Orphaned in the chaos before Temple rule. The Temple gave her structure, purpose, family. Utterly devoted. Views mercy as weakness and doubt as heresy. Watches Brother Thane with suspicion.",
+                "schedule": {
+                    "T01": {
+                        "activity": "rounds",
+                        "location": "L031"
+                    },
+                    "T02": {
+                        "activity": "morning_prayer",
+                        "location": "L031_chapel"
+                    },
+                    "T03": {
+                        "activity": "training_new_guards",
+                        "location": "L031_yard"
+                    },
+                    "T04": {
+                        "activity": "patrol_supervision",
+                        "location": "varies"
+                    },
+                    "T05": {
+                        "activity": "reports",
+                        "location": "L031_office"
+                    },
+                    "T06": {
+                        "activity": "interrogations",
+                        "location": "L031_cells"
+                    },
+                    "T07": {
+                        "activity": "evening_prayer",
+                        "location": "L031_chapel"
+                    },
+                    "T08": {
+                        "activity": "private_devotions",
+                        "location": "L031_quarters"
+                    },
+                    "T09": {
+                        "activity": "sleeping",
+                        "location": "L031_quarters"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L031_quarters"
+                    }
+                },
+                "relationships": {
+                    "M010_thane": {
+                        "type": "R10",
+                        "trust": 0.3,
+                        "suspicion": "watches_closely"
+                    },
+                    "C11_high_inquisitor": {
+                        "type": "R10",
+                        "trust": 0.9,
+                        "status": "favored"
+                    }
+                },
+                "personality": {
+                    "fanaticism": 0.9,
+                    "cruelty": 0.7,
+                    "precision": 0.95
+                },
+                "catchphrases": [
+                    "Order requires sacrifice.",
+                    "Doubt is the first heresy.",
+                    "The Temple sees all."
+                ]
+            }
+        },
+        "undercity_dwellers": {
+            "M012": {
+                "name": "Mama Crow",
+                "code": "M012",
+                "role": "Black market matriarch / Sewer queen",
+                "faction": "undercity",
+                "age": 67,
+                "gender": "female",
+                "backstory": "Nobody knows her real name or origin. She's been in the undercity longer than anyone can remember. Runs the largest black market network. Neutral between Temple and resistance - 'Everyone needs medicine.' Rumored to be an Awakened who sees Layer 0.",
+                "schedule": {
+                    "T01": {
+                        "activity": "black_market_peak",
+                        "location": "L006_deep"
+                    },
+                    "T02": {
+                        "activity": "accounting",
+                        "location": "L006_throne_room"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L006_hidden_quarters"
+                    },
+                    "T04": {
+                        "activity": "sleeping",
+                        "location": "L006_hidden_quarters"
+                    },
+                    "T05": {
+                        "activity": "meetings",
+                        "location": "L006_throne_room"
+                    },
+                    "T06": {
+                        "activity": "inspections",
+                        "location": "varies_undercity"
+                    },
+                    "T07": {
+                        "activity": "judgments",
+                        "location": "L006_throne_room"
+                    },
+                    "T08": {
+                        "activity": "dinner_court",
+                        "location": "L006_great_hall"
+                    },
+                    "T09": {
+                        "activity": "black_market_opens",
+                        "location": "L006_main_bazaar"
+                    },
+                    "T10": {
+                        "activity": "black_market_peak",
+                        "location": "L006_main_bazaar"
+                    }
+                },
+                "services": [
+                    "black_market_access",
+                    "rare_goods",
+                    "sanctuary",
+                    "judgments"
+                ],
+                "economy": {
+                    "controls": [
+                        "medicine_black_market",
+                        "weapons_underground",
+                        "information_undercity"
+                    ],
+                    "tribute_from": [
+                        "all_undercity_merchants"
+                    ],
+                    "estimated_wealth": "unknown_enormous"
+                },
+                "relationships": {
+                    "C01_charlie": {
+                        "type": "R02",
+                        "trust": 0.5,
+                        "status": "business_only"
+                    },
+                    "C05_zero": {
+                        "type": "R02",
+                        "trust": 0.6,
+                        "status": "respects_her_work"
+                    },
+                    "C11_high_inquisitor": {
+                        "type": "R21",
+                        "trust": 0.0,
+                        "status": "mutual_destruction_assured"
+                    }
+                },
+                "secrets": [
+                    "true_name",
+                    "origin",
+                    "layer_0_sight",
+                    "full_network_map"
+                ],
+                "catchphrases": [
+                    "Everything has a price. I set them.",
+                    "The surface burns. The deep endures."
+                ]
+            }
+        },
+        "entertainment_npcs": {
+            "M013": {
+                "name": "DJ Pulse",
+                "code": "M013",
+                "role": "Underground DJ / Resistance sympathizer",
+                "faction": "civilian_leaning_resistance",
+                "age": 26,
+                "gender": "non_binary",
+                "backstory": "Former Temple music academy student expelled for 'subversive compositions.' Now runs the biggest underground rave scene. Their music carries coded resistance messages.",
+                "schedule": {
+                    "T01": {
+                        "activity": "performing",
+                        "location": "L062_rave"
+                    },
+                    "T02": {
+                        "activity": "after_party",
+                        "location": "varies"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L068_studio"
+                    },
+                    "T04": {
+                        "activity": "sleeping",
+                        "location": "L068_studio"
+                    },
+                    "T05": {
+                        "activity": "sleeping",
+                        "location": "L068_studio"
+                    },
+                    "T06": {
+                        "activity": "composing",
+                        "location": "L068_studio"
+                    },
+                    "T07": {
+                        "activity": "equipment_prep",
+                        "location": "L068_studio"
+                    },
+                    "T08": {
+                        "activity": "networking",
+                        "location": "L011"
+                    },
+                    "T09": {
+                        "activity": "traveling_to_venue",
+                        "location": "transit"
+                    },
+                    "T10": {
+                        "activity": "setting_up",
+                        "location": "L062_rave"
+                    }
+                },
+                "skills": [
+                    "S45_music",
+                    "S30_streetwise",
+                    "S19_hacking_audio"
+                ],
+                "relationships": {
+                    "M004_lily": {
+                        "type": "R09",
+                        "trust": 0.6,
+                        "history": "Taught her to dance"
+                    },
+                    "C07_pixel": {
+                        "type": "R03",
+                        "trust": 0.7,
+                        "history": "Tech collaborator"
+                    }
+                },
+                "services": [
+                    "entertainment",
+                    "coded_messages",
+                    "safe_party_space"
+                ],
+                "catchphrases": [
+                    "The beat never dies.",
+                    "Can you hear the truth in the bass?"
+                ]
+            },
+            "M014": {
+                "name": "Chef Yuki",
+                "code": "M014",
+                "role": "Restaurant owner / Food artist",
+                "faction": "civilian",
+                "age": 45,
+                "gender": "female",
+                "backstory": "Ran a Michelin-star restaurant before The Fall. Now operates a hidden supper club that serves as neutral ground for all factions. Her kitchen is sanctuary - even Temple and resistance eat here without violence.",
+                "schedule": {
+                    "T01": {
+                        "activity": "closing_kitchen",
+                        "location": "L069_supper_club"
+                    },
+                    "T02": {
+                        "activity": "traveling_home",
+                        "location": "transit"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "L070_apartment"
+                    },
+                    "T04": {
+                        "activity": "market_shopping",
+                        "location": "L001"
+                    },
+                    "T05": {
+                        "activity": "prep_work",
+                        "location": "L069_supper_club"
+                    },
+                    "T06": {
+                        "activity": "prep_work",
+                        "location": "L069_supper_club"
+                    },
+                    "T07": {
+                        "activity": "opening_dinner",
+                        "location": "L069_supper_club"
+                    },
+                    "T08": {
+                        "activity": "dinner_service",
+                        "location": "L069_supper_club"
+                    },
+                    "T09": {
+                        "activity": "dinner_service",
+                        "location": "L069_supper_club"
+                    },
+                    "T10": {
+                        "activity": "late_seating",
+                        "location": "L069_supper_club"
+                    }
+                },
+                "business": {
+                    "name": "The Hidden Kitchen",
+                    "type": "upscale_dining",
+                    "state": "stable",
+                    "daily_revenue": 300,
+                    "employees": [
+                        "M015_sous_chef",
+                        "M016_server"
+                    ]
+                },
+                "relationships": {
+                    "C01_charlie": {
+                        "type": "R02",
+                        "trust": 0.6,
+                        "status": "respects_sanctuary"
+                    },
+                    "C11_high_inquisitor": {
+                        "type": "R02",
+                        "trust": 0.4,
+                        "status": "dines_here_secretly"
+                    }
+                },
+                "philosophy": "Food transcends politics. In my kitchen, everyone is equal.",
+                "catchphrases": [
+                    "Taste this. Close your eyes.",
+                    "My kitchen, my rules."
+                ]
+            },
+            "M015": {
+                "name": "Rosa",
+                "code": "M015",
+                "role": "Matchmaker / Social connector",
+                "faction": "civilian",
+                "age": 58,
+                "gender": "female",
+                "backstory": "Runs an informal matchmaking service from her tea shop. Knows everyone's romantic history. Has successfully matched hundreds of couples. Even arranges cross-faction romances (her most dangerous work).",
+                "schedule": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "L071_tea_shop_upstairs"
+                    },
+                    "T02": {
+                        "activity": "opening_shop",
+                        "location": "L071_tea_shop"
+                    },
+                    "T03": {
+                        "activity": "consultations",
+                        "location": "L071_tea_shop"
+                    },
+                    "T04": {
+                        "activity": "consultations",
+                        "location": "L071_tea_shop"
+                    },
+                    "T05": {
+                        "activity": "lunch_social",
+                        "location": "L071_tea_shop"
+                    },
+                    "T06": {
+                        "activity": "arrangement_meetings",
+                        "location": "L071_tea_shop"
+                    },
+                    "T07": {
+                        "activity": "closing",
+                        "location": "L071_tea_shop"
+                    },
+                    "T08": {
+                        "activity": "dinner",
+                        "location": "varies"
+                    },
+                    "T09": {
+                        "activity": "discreet_meetings",
+                        "location": "varies"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "L071_tea_shop_upstairs"
+                    }
+                },
+                "services": [
+                    "matchmaking",
+                    "relationship_advice",
+                    "discreet_meetings",
+                    "tea_service"
+                ],
+                "knowledge": [
+                    "everyone_romantic_history",
+                    "who_is_single",
+                    "secret_affairs"
+                ],
+                "relationships": {
+                    "M002_delia": {
+                        "type": "R09",
+                        "trust": 0.9,
+                        "history": "Old friends"
+                    },
+                    "many_couples": {
+                        "type": "R03",
+                        "trust": "varies",
+                        "status": "matched_them"
+                    }
+                },
+                "philosophy": "Love is the one thing the Temple can't control. Not really.",
+                "catchphrases": [
+                    "I know just the person for you.",
+                    "Love finds a way. I just help it along."
+                ]
+            }
+        }
+    },
+    "schedule_templates": {
+        "_desc": "Standard schedule templates that can be assigned to NPCs",
+        "_ref": "world_codec_14_behaviors.json/life_simulation/schedule_system",
+        "available_templates": [
+            "worker_day",
+            "shopkeeper_day",
+            "resistance_fighter",
+            "temple_patrol",
+            "street_vendor",
+            "criminal"
+        ],
+        "custom_override": "Individual NPCs can override any time slot"
+    },
+    "family_trees": {
+        "_desc": "Index of family connections for relationship traversal",
+        "stone_family": {
+            "parent": "M003",
+            "child": "M004",
+            "deceased": [
+                "M003_partner"
+            ],
+            "backstory": "Lost mother to Temple attack when M004 was 6"
+        },
+        "rusty_delia_family": {
+            "husband": "M001",
+            "wife": "M002",
+            "children_deceased": 2,
+            "tragedy": "Both sons killed within same year"
+        },
+        "bruno_adopted_family": {
+            "guardian": "M008",
+            "ward": "M009",
+            "origin": "Bruno refused to kill M009 in pit fight"
+        }
+    },
+    "social_life": {
+        "_desc": "Everyday city life - festivals, dating, entertainment, dining",
+        "_philosophy": "A city isn't just survival - it's living, loving, celebrating",
+        "annual_festivals": {
+            "founders_day": {
+                "date": "day_47",
+                "duration_days": 3,
+                "description": "Temple-sanctioned celebration of city founding. Parades, mandatory attendance, propaganda.",
+                "activities": [
+                    "parade",
+                    "speeches",
+                    "public_feast",
+                    "fireworks"
+                ],
+                "locations": [
+                    "L004_plaza",
+                    "L031_temple"
+                ],
+                "npc_behavior": {
+                    "civilians": "attend_or_penalized",
+                    "resistance": "use_as_cover_for_operations",
+                    "temple": "security_heavy"
+                },
+                "mood_effect": {
+                    "civilians": 0.2,
+                    "resistance": -0.1
+                },
+                "commerce_boost": 1.5
+            },
+            "harvest_moon_festival": {
+                "date": "day_183",
+                "duration_days": 1,
+                "description": "Old tradition Temple couldn't fully suppress. Paper lanterns, ancestors honored, lovers meet.",
+                "activities": [
+                    "lantern_floating",
+                    "ancestral_prayers",
+                    "lovers_walks",
+                    "night_market"
+                ],
+                "locations": [
+                    "L005_park",
+                    "L055_cemetery",
+                    "L001_market"
+                ],
+                "npc_behavior": {
+                    "civilians": "nostalgic_joyful",
+                    "resistance": "recruitment_opportunity",
+                    "temple": "watching_but_tolerating"
+                },
+                "romance_chance_boost": 2.0,
+                "mood_effect": {
+                    "all": 0.3
+                }
+            },
+            "dead_zone_remembrance": {
+                "date": "day_256",
+                "duration_days": 1,
+                "description": "Unofficial memorial for those lost in Temple purges. Illegal but widely observed in secret.",
+                "activities": [
+                    "candle_lighting",
+                    "silent_gathering",
+                    "names_whispered"
+                ],
+                "locations": [
+                    "L055_cemetery",
+                    "undercity",
+                    "private_homes"
+                ],
+                "npc_behavior": {
+                    "civilians": "secretive_mourning",
+                    "resistance": "solidarity_building",
+                    "temple": "actively_suppressing"
+                },
+                "trust_boost_same_faction": 0.1
+            },
+            "neon_carnival": {
+                "date": "day_92",
+                "duration_days": 5,
+                "description": "Entertainment district's biggest party. Temple tolerates it - keeps civilians distracted.",
+                "activities": [
+                    "street_parties",
+                    "live_music",
+                    "gambling",
+                    "drinking",
+                    "hookups"
+                ],
+                "locations": [
+                    "L001_neon_district",
+                    "L011_bars",
+                    "L060_clubs"
+                ],
+                "npc_behavior": {
+                    "civilians": "revelry",
+                    "youth": "peak_activity",
+                    "temple": "minimal_enforcement"
+                },
+                "romance_chance_boost": 3.0,
+                "crime_boost": 1.3,
+                "commerce_boost": 2.0
+            }
+        },
+        "weekly_events": {
+            "market_day": {
+                "day": "day_3_and_6",
+                "description": "Main market days when vendors have best stock",
+                "commerce_boost": 1.5,
+                "social_opportunity": "high"
+            },
+            "temple_sermon": {
+                "day": "day_7",
+                "time": "T03",
+                "mandatory_for": [
+                    "temple_workers",
+                    "compliance_at_risk"
+                ],
+                "description": "Weekly propaganda session"
+            },
+            "underground_fight_night": {
+                "day": "day_2_and_5",
+                "time": "T09",
+                "location": "L047_underground_gym",
+                "description": "Illegal but popular pit fighting. Betting, drinking, networking.",
+                "activities": [
+                    "fighting",
+                    "gambling",
+                    "drinking",
+                    "deal_making"
+                ]
+            },
+            "lovers_evening": {
+                "day": "day_6",
+                "time": "T07-T09",
+                "description": "Traditional date night. Restaurants full, park walks common.",
+                "romance_chance_boost": 1.5
+            }
+        },
+        "dating_and_romance": {
+            "_desc": "NPCs form romantic connections, date, marry, break up",
+            "relationship_stages": {
+                "strangers": {
+                    "trust": 0.0,
+                    "interactions_needed": 0
+                },
+                "acquaintance": {
+                    "trust": 0.2,
+                    "interactions_needed": 3
+                },
+                "friends": {
+                    "trust": 0.4,
+                    "interactions_needed": 10
+                },
+                "interested": {
+                    "trust": 0.5,
+                    "interactions_needed": 15,
+                    "requires": "attraction"
+                },
+                "dating": {
+                    "trust": 0.6,
+                    "interactions_needed": 20,
+                    "exclusive": false
+                },
+                "exclusive": {
+                    "trust": 0.75,
+                    "exclusive": true
+                },
+                "engaged": {
+                    "trust": 0.85,
+                    "planning_marriage": true
+                },
+                "married": {
+                    "trust": 0.9,
+                    "creates_household": true
+                },
+                "complicated": {
+                    "trust": "varies",
+                    "unstable": true
+                },
+                "separated": {
+                    "trust": 0.3,
+                    "former_couple": true
+                },
+                "divorced": {
+                    "trust": 0.1,
+                    "animosity_possible": true
+                }
+            },
+            "attraction_factors": {
+                "physical": [
+                    "appearance_match",
+                    "age_appropriate"
+                ],
+                "personality": [
+                    "compatible_traits",
+                    "complementary_skills"
+                ],
+                "circumstance": [
+                    "shared_trauma",
+                    "faction_aligned",
+                    "same_workplace"
+                ],
+                "chemistry": "deterministic_hash(npc1_id, npc2_id)"
+            },
+            "date_activities": {
+                "bar_drinks": {
+                    "cost": 20,
+                    "location": "L011",
+                    "trust_gain": 0.02,
+                    "time": "T08"
+                },
+                "restaurant_dinner": {
+                    "cost": 50,
+                    "location": "L062_restaurant",
+                    "trust_gain": 0.03,
+                    "time": "T07"
+                },
+                "park_walk": {
+                    "cost": 0,
+                    "location": "L005",
+                    "trust_gain": 0.02,
+                    "time": "T06"
+                },
+                "night_market": {
+                    "cost": 30,
+                    "location": "L001",
+                    "trust_gain": 0.03,
+                    "time": "T08"
+                },
+                "underground_show": {
+                    "cost": 40,
+                    "location": "L060",
+                    "trust_gain": 0.04,
+                    "time": "T09"
+                },
+                "rooftop_stargazing": {
+                    "cost": 0,
+                    "location": "L070_rooftops",
+                    "trust_gain": 0.05,
+                    "romantic": true
+                },
+                "cooking_together": {
+                    "cost": 15,
+                    "location": "home",
+                    "trust_gain": 0.04,
+                    "intimate": true
+                }
+            },
+            "marriage": {
+                "requirements": [
+                    "engaged_status",
+                    "credits_500",
+                    "witness_2"
+                ],
+                "ceremony_types": {
+                    "temple_official": {
+                        "legal": true,
+                        "cost": 200,
+                        "location": "L031"
+                    },
+                    "underground_ceremony": {
+                        "legal": false,
+                        "cost": 50,
+                        "location": "varies"
+                    },
+                    "civilian_simple": {
+                        "legal": true,
+                        "cost": 100,
+                        "location": "L004"
+                    }
+                },
+                "effects": {
+                    "creates_household": true,
+                    "shared_finances": true,
+                    "mutual_schedule_coordination": true,
+                    "trust_boost_mutual": 0.1
+                }
+            },
+            "breakup_triggers": {
+                "trust_below": 0.3,
+                "prolonged_separation": "30_days_no_interaction",
+                "infidelity_discovered": "instant_if_exclusive",
+                "faction_betrayal": "if_ideology_important",
+                "violence": "instant"
+            }
+        },
+        "nightlife": {
+            "_desc": "Clubs, parties, late-night hangouts",
+            "venue_types": {
+                "dive_bar": {
+                    "archetype": "L011",
+                    "crowd": "mixed_working_class",
+                    "activities": [
+                        "drinking",
+                        "gossip",
+                        "small_gambling"
+                    ],
+                    "hours": "T05-T01",
+                    "danger": 2
+                },
+                "nightclub": {
+                    "archetype": "L060",
+                    "crowd": "young_mixed",
+                    "activities": [
+                        "dancing",
+                        "drinking",
+                        "hookups",
+                        "drug_use"
+                    ],
+                    "hours": "T08-T02",
+                    "danger": 3
+                },
+                "speakeasy": {
+                    "archetype": "L061",
+                    "crowd": "wealthy_connected",
+                    "activities": [
+                        "drinking",
+                        "deal_making",
+                        "information_trading"
+                    ],
+                    "hours": "T09-T01",
+                    "danger": 4,
+                    "requires": "password_or_introduction"
+                },
+                "underground_rave": {
+                    "archetype": "L062",
+                    "crowd": "youth_resistance_leaning",
+                    "activities": [
+                        "dancing",
+                        "drugs",
+                        "hookups",
+                        "resistance_recruitment"
+                    ],
+                    "hours": "T10-T03",
+                    "danger": 5,
+                    "location": "changes_weekly"
+                },
+                "temple_approved_lounge": {
+                    "archetype": "L063",
+                    "crowd": "temple_workers_compliant",
+                    "activities": [
+                        "drinking",
+                        "networking",
+                        "propaganda"
+                    ],
+                    "hours": "T07-T10",
+                    "danger": 1,
+                    "surveillance": "high"
+                }
+            },
+            "party_events": {
+                "birthday": {
+                    "triggers": "npc_birthday",
+                    "guests": "friends_family",
+                    "location": "home_or_bar",
+                    "mood_boost": 0.2
+                },
+                "promotion": {
+                    "triggers": "job_advancement",
+                    "guests": "coworkers",
+                    "location": "bar",
+                    "mood_boost": 0.15
+                },
+                "resistance_victory": {
+                    "triggers": "mission_success",
+                    "guests": "cell_members",
+                    "location": "L026",
+                    "secrecy": true,
+                    "mood_boost": 0.3
+                },
+                "spontaneous": {
+                    "triggers": "festival_or_good_news",
+                    "guests": "nearby_npcs",
+                    "mood_boost": 0.1
+                }
+            }
+        },
+        "restaurants_and_dining": {
+            "_desc": "Where NPCs eat when not at home",
+            "venue_types": {
+                "street_food": {
+                    "cost": 5,
+                    "quality": "basic",
+                    "speed": "fast",
+                    "social": "minimal",
+                    "hunger_satisfaction": 0.4
+                },
+                "noodle_shop": {
+                    "cost": 15,
+                    "quality": "good",
+                    "speed": "medium",
+                    "social": "casual",
+                    "hunger_satisfaction": 0.6
+                },
+                "family_restaurant": {
+                    "cost": 30,
+                    "quality": "good",
+                    "speed": "slow",
+                    "social": "intimate",
+                    "hunger_satisfaction": 0.8,
+                    "date_appropriate": true
+                },
+                "upscale_dining": {
+                    "cost": 100,
+                    "quality": "excellent",
+                    "speed": "slow",
+                    "social": "formal",
+                    "hunger_satisfaction": 0.9,
+                    "impressive_date": true,
+                    "requires": "reservation"
+                },
+                "underground_cafe": {
+                    "cost": 20,
+                    "quality": "variable",
+                    "social": "resistance_friendly",
+                    "hunger_satisfaction": 0.5,
+                    "information_hub": true
+                }
+            },
+            "dining_behaviors": {
+                "eat_alone": {
+                    "social_need_change": -0.05
+                },
+                "eat_with_friend": {
+                    "social_need_change": 0.1,
+                    "trust_gain": 0.01
+                },
+                "eat_with_date": {
+                    "social_need_change": 0.15,
+                    "romance_progress": true
+                },
+                "business_lunch": {
+                    "deal_chance_improved": 0.2
+                }
+            }
+        },
+        "entertainment": {
+            "_desc": "How NPCs have fun",
+            "activities": {
+                "gambling": {
+                    "locations": [
+                        "L011_back_room",
+                        "L047_fight_night"
+                    ],
+                    "risk": "credit_loss_or_gain",
+                    "addiction_chance": 0.05,
+                    "social": true
+                },
+                "live_music": {
+                    "locations": [
+                        "L011",
+                        "L060",
+                        "L005_park"
+                    ],
+                    "cost": "0-50",
+                    "mood_boost": 0.1,
+                    "social_opportunity": true
+                },
+                "theater": {
+                    "locations": [
+                        "L065_underground_theater"
+                    ],
+                    "cost": 25,
+                    "content": "resistance_coded_plays",
+                    "mood_boost": 0.15
+                },
+                "sports_betting": {
+                    "locations": [
+                        "L011",
+                        "L047"
+                    ],
+                    "cost": "varies",
+                    "social": true
+                },
+                "hobbies": {
+                    "reading": {
+                        "location": "home",
+                        "skill_development": true
+                    },
+                    "crafting": {
+                        "location": "home_or_workshop",
+                        "income_possible": true
+                    },
+                    "gaming": {
+                        "location": "arcade_or_home",
+                        "social_possible": true
+                    },
+                    "art": {
+                        "location": "varies",
+                        "expression": true
+                    }
+                }
+            }
+        }
+    }
+}
