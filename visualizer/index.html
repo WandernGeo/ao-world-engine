@@ -4,8 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RE:ECHO City - Simulation Visualizer</title>
+    <title>AO World Engine - Neon Heights Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(25, 25, 35, 0.9);
+            --accent-cyan: #00ffff;
+            --accent-magenta: #ff00ff;
+            --accent-gold: #ffd700;
+            --accent-green: #00ff88;
+            --accent-red: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #888899;
+            --border-glow: rgba(0, 255, 255, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,972 +30,906 @@
         }
 
         body {
-            background: #0a0a0f;
-            color: #00CED1;
-            font-family: 'Courier New', monospace;
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow: hidden;
-        }
-
-        #container {
-            display: flex;
             height: 100vh;
         }
 
-        #sidebar {
-            width: 280px;
-            background: #12121a;
-            border-right: 1px solid #00CED1;
-            padding: 15px;
-            overflow-y: auto;
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-glow);
         }
 
-        #canvas-container {
-            flex: 1;
-            position: relative;
-        }
-
-        canvas {
-            display: block;
-        }
-
-        h1 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #00CED1;
-            text-shadow: 0 0 10px #00CED1;
-        }
-
-        h2 {
-            font-size: 12px;
-            margin: 15px 0 10px 0;
-            color: #888;
-            text-transform: uppercase;
-        }
-
-        .control-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 11px;
-            margin-bottom: 5px;
-            color: #666;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            accent-color: #00CED1;
-        }
-
-        .tick-display {
-            font-size: 24px;
-            text-align: center;
-            padding: 10px;
-            background: #1a1a25;
-            border: 1px solid #00CED1;
-            margin-bottom: 15px;
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--accent-cyan);
         }
 
         .time-display {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2em;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Main Canvas */
+        #canvas {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 280px;
+            bottom: 80px;
+            background: var(--bg-primary);
+        }
+
+        /* Right Panel */
+        .panel {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 280px;
+            bottom: 80px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-glow);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .panel h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85em;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 500;
+            color: var(--accent-gold);
+        }
+
+        .npc-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .npc-item {
+            padding: 8px;
+            margin: 4px 0;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-cyan);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .npc-item:hover {
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateX(3px);
+        }
+
+        .npc-item.resistance {
+            border-left-color: var(--accent-magenta);
+        }
+
+        .npc-item.temple {
+            border-left-color: var(--accent-gold);
+        }
+
+        .npc-item.criminal {
+            border-left-color: var(--accent-red);
+        }
+
+        .npc-name {
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .npc-info {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        /* Bottom Controls */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-label {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
         }
 
         button {
-            width: 100%;
-            padding: 8px;
-            margin: 3px 0;
-            background: #1a1a25;
-            border: 1px solid #00CED1;
-            color: #00CED1;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 10px 20px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9em;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 11px;
+            border-radius: 4px;
+            transition: all 0.2s;
         }
 
         button:hover {
-            background: #00CED1;
-            color: #0a0a0f;
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--accent-cyan);
         }
 
         button.active {
-            background: #00CED1;
-            color: #0a0a0f;
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
         }
 
+        input[type="range"] {
+            width: 150px;
+            accent-color: var(--accent-cyan);
+        }
+
+        select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glow);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            font-family: 'Roboto', sans-serif;
+            border-radius: 4px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-cyan);
+            padding: 10px 15px;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 200;
+            max-width: 250px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            display: none;
+        }
+
+        .tooltip h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .tooltip p {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+
+        /* Legend */
         .legend {
-            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            margin: 5px 0;
-            font-size: 11px;
+            gap: 5px;
+            font-size: 0.8em;
         }
 
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            margin-right: 8px;
         }
 
-        .legend-square {
-            width: 12px;
-            height: 12px;
-            margin-right: 8px;
-        }
-
-        #npc-list {
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 10px;
-        }
-
-        .npc-item {
-            padding: 5px;
-            border-bottom: 1px solid #222;
-            cursor: pointer;
-        }
-
-        .npc-item:hover {
-            background: #1a1a25;
-        }
-
-        .npc-item.selected {
-            background: #00CED1;
-            color: #0a0a0f;
-        }
-
-        #tooltip {
-            position: absolute;
-            background: rgba(10, 10, 15, 0.95);
-            border: 1px solid #00CED1;
-            padding: 10px;
-            font-size: 11px;
-            pointer-events: none;
-            display: none;
-            max-width: 200px;
-        }
-
-        .zoom-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+        /* Loading */
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .zoom-controls button {
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
+        .loading.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-glow);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-cyan);
+        }
+
+        /* Building popup */
+        .building-popup {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 150;
+            min-width: 200px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            display: none;
+        }
+
+        .building-popup h4 {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
         }
     </style>
 </head>
 
 <body>
-    <div id="container">
-        <div id="sidebar">
-            <h1>🌃 RE:ECHO CITY</h1>
-            <div class="tick-display">
-                TICK: <span id="tick-value">0</span>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">LOADING NEON HEIGHTS...</div>
+    </div>
+
+    <div class="header">
+        <div class="logo">AO WORLD ENGINE</div>
+        <div class="time-display" id="time-display">DAY 1 • T01 00:00</div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #00ffff"></div> Civilian
             </div>
-            <div class="time-display">
-                Day <span id="day-value">1</span> | <span id="time-period">T04</span> | <span
-                    id="hour-value">12</span>:00
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff00ff"></div> Resistance
             </div>
-
-            <div class="control-group">
-                <label>Simulation Speed</label>
-                <input type="range" id="speed" min="0" max="100" value="50">
-                <div style="display: flex; gap: 5px; margin-top: 5px;">
-                    <button id="play-btn" class="active">▶ Play</button>
-                    <button id="pause-btn">⏸ Pause</button>
-                    <button id="step-btn">⏭ Step</button>
-                </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ffd700"></div> Temple
             </div>
-
-            <h2>View Mode</h2>
-            <div class="control-group">
-                <button id="view-building" class="active">🏢 Building</button>
-                <button id="view-district">🏘️ District</button>
-                <button id="view-city">🌆 City</button>
-            </div>
-
-            <h2>Current Location</h2>
-            <select id="location-select"
-                style="width: 100%; padding: 5px; background: #1a1a25; color: #00CED1; border: 1px solid #00CED1;">
-                <option value="neon_bar">Neon Bar</option>
-                <option value="resistance_hideout">Resistance Hideout</option>
-                <option value="market">Neon Market</option>
-                <option value="temple_plaza">Temple Plaza</option>
-                <option value="undercity">Undercity</option>
-            </select>
-
-            <h2>Show Layers</h2>
-            <div class="control-group">
-                <label><input type="checkbox" id="show-walls" checked> Walls & Structure</label>
-                <label><input type="checkbox" id="show-furniture" checked> Furniture</label>
-                <label><input type="checkbox" id="show-npcs" checked> NPCs</label>
-                <label><input type="checkbox" id="show-objects" checked> Objects</label>
-                <label><input type="checkbox" id="show-paths"> NPC Paths</label>
-            </div>
-
-            <h2>Legend</h2>
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: #00CED1;"></div> Player
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: #00FF00;"></div> Resistance
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: #FF4444;"></div> Temple Guard
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: #FFFF00;"></div> Civilian
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot" style="background: #FF00FF;"></div> Merchant
-                </div>
-                <div class="legend-item">
-                    <div class="legend-square" style="background: #333;"></div> Wall
-                </div>
-                <div class="legend-item">
-                    <div class="legend-square" style="background: #553300;"></div> Furniture
-                </div>
-                <div class="legend-item">
-                    <div class="legend-square" style="background: #004444;"></div> Tech
-                </div>
-            </div>
-
-            <h2>NPCs in View (<span id="npc-count">0</span>)</h2>
-            <div id="npc-list"></div>
-        </div>
-
-        <div id="canvas-container">
-            <canvas id="canvas"></canvas>
-            <div id="tooltip"></div>
-            <div class="zoom-controls">
-                <button id="zoom-in">+</button>
-                <button id="zoom-out">−</button>
-                <button id="zoom-reset">⌂</button>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff4444"></div> Criminal
             </div>
         </div>
     </div>
 
+    <canvas id="canvas"></canvas>
+
+    <div class="panel">
+        <h3>📊 SIMULATION STATS</h3>
+        <div id="stats">
+            <div class="stat-row">
+                <span class="stat-label">Total NPCs</span>
+                <span class="stat-value" id="stat-npcs">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Buildings</span>
+                <span class="stat-value" id="stat-buildings">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Current Tick</span>
+                <span class="stat-value" id="stat-tick">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Events</span>
+                <span class="stat-value" id="stat-events">0</span>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 20px;">📍 LOCATION: <span id="current-location">Overview</span></h3>
+        <div id="location-stats"></div>
+
+        <h3 style="margin-top: 20px;">👥 NPCs AT LOCATION</h3>
+        <div class="npc-list" id="npc-list"></div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <button id="btn-play">▶ PLAY</button>
+            <button id="btn-step">⏭ STEP</button>
+            <button id="btn-reset">⏮ RESET</button>
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Speed</span>
+            <input type="range" id="speed" min="1" max="10" value="5">
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">View</span>
+            <select id="view-mode">
+                <option value="district">District Overview</option>
+                <option value="building">Building View</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Building</span>
+            <select id="building-select">
+                <option value="">Select building...</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <button id="btn-labels">🏷 LABELS</button>
+            <button id="btn-export">📸 CAPTURE</button>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+    <div class="building-popup" id="building-popup"></div>
+
     <script>
-        // =====================================================
-        // SIMULATION DATA
-        // =====================================================
-
-        const LOCATIONS = {
-            neon_bar: {
-                name: "The Neon Bar",
-                width: 40,
-                height: 30,
-                walls: [
-                    // Outer walls
-                    { x: 0, y: 0, w: 40, h: 1 },
-                    { x: 0, y: 29, w: 40, h: 1 },
-                    { x: 0, y: 0, w: 1, h: 30 },
-                    { x: 39, y: 0, w: 1, h: 30 },
-                    // Bar counter
-                    { x: 5, y: 10, w: 15, h: 1 },
-                    // Back room wall
-                    { x: 30, y: 0, w: 1, h: 20 },
-                    // Bathroom wall
-                    { x: 30, y: 22, w: 1, h: 8 },
-                ],
-                furniture: [
-                    { x: 6, y: 8, w: 2, h: 2, type: "stool" },
-                    { x: 10, y: 8, w: 2, h: 2, type: "stool" },
-                    { x: 14, y: 8, w: 2, h: 2, type: "stool" },
-                    { x: 5, y: 15, w: 4, h: 3, type: "table" },
-                    { x: 5, y: 22, w: 4, h: 3, type: "table" },
-                    { x: 15, y: 15, w: 4, h: 3, type: "booth" },
-                    { x: 15, y: 22, w: 4, h: 3, type: "booth" },
-                    { x: 25, y: 15, w: 3, h: 3, type: "couch" },
-                    { x: 32, y: 5, w: 5, h: 3, type: "storage" },
-                    { x: 32, y: 24, w: 3, h: 3, type: "toilet" },
-                ],
-                objects: [
-                    { x: 8, y: 11, type: "bottle", color: "#00CED1" },
-                    { x: 12, y: 11, type: "glass", color: "#00CED1" },
-                    { x: 16, y: 11, type: "bottle", color: "#FF6600" },
-                ],
-                doors: [
-                    { x: 20, y: 0, w: 3, h: 1, to: "street" },
-                    { x: 30, y: 21, w: 1, h: 1, to: "back_room" },
-                ],
-                spawnPoints: [
-                    { x: 21, y: 2, role: "entrance" },
-                    { x: 10, y: 12, role: "bartender" },
-                    { x: 8, y: 8, role: "customer" },
-                    { x: 16, y: 16, role: "customer" },
-                    { x: 26, y: 16, role: "vip" },
-                ]
-            },
-
-            resistance_hideout: {
-                name: "Resistance Hideout",
-                width: 50,
-                height: 40,
-                walls: [
-                    // Outer bunker
-                    { x: 0, y: 0, w: 50, h: 2 },
-                    { x: 0, y: 38, w: 50, h: 2 },
-                    { x: 0, y: 0, w: 2, h: 40 },
-                    { x: 48, y: 0, w: 2, h: 40 },
-                    // Command room
-                    { x: 15, y: 2, w: 1, h: 15 },
-                    { x: 15, y: 17, w: 20, h: 1 },
-                    // Sleeping quarters
-                    { x: 2, y: 25, w: 25, h: 1 },
-                    // Armory
-                    { x: 35, y: 2, w: 1, h: 20 },
-                ],
-                furniture: [
-                    // Command table
-                    { x: 20, y: 8, w: 8, h: 5, type: "table" },
-                    // Bunks
-                    { x: 4, y: 28, w: 3, h: 5, type: "bed" },
-                    { x: 9, y: 28, w: 3, h: 5, type: "bed" },
-                    { x: 14, y: 28, w: 3, h: 5, type: "bed" },
-                    { x: 19, y: 28, w: 3, h: 5, type: "bed" },
-                    // Armory racks
-                    { x: 38, y: 4, w: 8, h: 2, type: "rack" },
-                    { x: 38, y: 8, w: 8, h: 2, type: "rack" },
-                    { x: 38, y: 12, w: 8, h: 2, type: "rack" },
-                    // Tech station
-                    { x: 4, y: 5, w: 8, h: 4, type: "tech" },
-                ],
-                objects: [
-                    { x: 24, y: 10, type: "hologram", color: "#00CED1" },
-                    { x: 40, y: 5, type: "weapon", color: "#FF4444" },
-                    { x: 8, y: 7, type: "terminal", color: "#00FF00" },
-                ],
-                spawnPoints: [
-                    { x: 25, y: 35, role: "entrance" },
-                    { x: 24, y: 10, role: "command" },
-                    { x: 8, y: 7, role: "tech" },
-                    { x: 40, y: 10, role: "armory" },
-                    { x: 10, y: 30, role: "rest" },
-                ]
-            },
-
-            market: {
-                name: "Neon Market",
-                width: 80,
-                height: 60,
-                walls: [
-                    // Stall dividers
-                    { x: 10, y: 10, w: 1, h: 15 },
-                    { x: 25, y: 10, w: 1, h: 15 },
-                    { x: 40, y: 10, w: 1, h: 15 },
-                    { x: 55, y: 10, w: 1, h: 15 },
-                    { x: 70, y: 10, w: 1, h: 15 },
-                    { x: 10, y: 35, w: 1, h: 15 },
-                    { x: 25, y: 35, w: 1, h: 15 },
-                    { x: 40, y: 35, w: 1, h: 15 },
-                    { x: 55, y: 35, w: 1, h: 15 },
-                    { x: 70, y: 35, w: 1, h: 15 },
-                ],
-                furniture: [
-                    // Market stalls
-                    { x: 3, y: 12, w: 5, h: 3, type: "stall" },
-                    { x: 13, y: 12, w: 10, h: 3, type: "stall" },
-                    { x: 28, y: 12, w: 10, h: 3, type: "stall" },
-                    { x: 43, y: 12, w: 10, h: 3, type: "stall" },
-                    { x: 58, y: 12, w: 10, h: 3, type: "stall" },
-                    { x: 3, y: 37, w: 5, h: 3, type: "stall" },
-                    { x: 13, y: 37, w: 10, h: 3, type: "stall" },
-                    { x: 28, y: 37, w: 10, h: 3, type: "stall" },
-                    { x: 43, y: 37, w: 10, h: 3, type: "stall" },
-                ],
-                spawnPoints: [
-                    { x: 5, y: 5, role: "vendor" },
-                    { x: 18, y: 15, role: "vendor" },
-                    { x: 33, y: 15, role: "vendor" },
-                    { x: 40, y: 30, role: "customer" },
-                    { x: 60, y: 45, role: "customer" },
-                ]
-            }
-        };
-
-        // NPC definitions
-        const NPCS = [
-            { id: "charlie", name: "Charlie", faction: "resistance", color: "#00FF00", schedule: "resistance_fighter" },
-            { id: "felix", name: "Felix", faction: "neutral", color: "#FF00FF", schedule: "shopkeeper" },
-            { id: "zero_chen", name: "Zero Chen", faction: "resistance", color: "#00FF00", schedule: "resistance_fighter" },
-            { id: "kira", name: "Kira", faction: "neutral", color: "#FFFF00", schedule: "oracle" },
-            { id: "pixel", name: "Pixel", faction: "resistance", color: "#00FF00", schedule: "resistance_fighter" },
-            { id: "guard_01", name: "Temple Guard", faction: "temple", color: "#FF4444", schedule: "temple_guard" },
-            { id: "guard_02", name: "Temple Guard", faction: "temple", color: "#FF4444", schedule: "temple_guard" },
-            { id: "civilian_01", name: "Worker", faction: "civilian", color: "#FFFF00", schedule: "worker" },
-            { id: "civilian_02", name: "Vendor", faction: "civilian", color: "#FF00FF", schedule: "shopkeeper" },
-        ];
-
-        // Schedule mappings
-        const SCHEDULES = {
-            resistance_fighter: {
-                T01: { location: "resistance_hideout", activity: "sleeping" },
-                T02: { location: "resistance_hideout", activity: "training" },
-                T03: { location: "market", activity: "intel" },
-                T04: { location: "resistance_hideout", activity: "meeting" },
-                T05: { location: "market", activity: "mission" },
-                T06: { location: "market", activity: "mission" },
-                T07: { location: "resistance_hideout", activity: "returning" },
-                T08: { location: "neon_bar", activity: "socializing" },
-                T09: { location: "neon_bar", activity: "drinking" },
-                T10: { location: "resistance_hideout", activity: "sleeping" },
-            },
-            shopkeeper: {
-                T01: { location: "neon_bar", activity: "closing" },
-                T02: { location: "neon_bar", activity: "sleeping" },
-                T03: { location: "neon_bar", activity: "sleeping" },
-                T04: { location: "neon_bar", activity: "opening" },
-                T05: { location: "neon_bar", activity: "working" },
-                T06: { location: "neon_bar", activity: "working" },
-                T07: { location: "neon_bar", activity: "working" },
-                T08: { location: "neon_bar", activity: "peak_hours" },
-                T09: { location: "neon_bar", activity: "peak_hours" },
-                T10: { location: "neon_bar", activity: "closing" },
-            },
-            temple_guard: {
-                T01: { location: "market", activity: "patrol" },
-                T02: { location: "market", activity: "patrol" },
-                T03: { location: "temple_plaza", activity: "shift_change" },
-                T04: { location: "market", activity: "patrol" },
-                T05: { location: "neon_bar", activity: "patrol" },
-                T06: { location: "market", activity: "patrol" },
-                T07: { location: "neon_bar", activity: "patrol" },
-                T08: { location: "neon_bar", activity: "patrol" },
-                T09: { location: "temple_plaza", activity: "off_duty" },
-                T10: { location: "temple_plaza", activity: "sleeping" },
-            },
-            worker: {
-                T01: { location: "resistance_hideout", activity: "sleeping" },
-                T02: { location: "resistance_hideout", activity: "sleeping" },
-                T03: { location: "market", activity: "commuting" },
-                T04: { location: "market", activity: "working" },
-                T05: { location: "market", activity: "working" },
-                T06: { location: "market", activity: "working" },
-                T07: { location: "neon_bar", activity: "leisure" },
-                T08: { location: "neon_bar", activity: "drinking" },
-                T09: { location: "market", activity: "commuting" },
-                T10: { location: "resistance_hideout", activity: "sleeping" },
-            },
-            oracle: {
-                T01: { location: "market", activity: "sleeping" },
-                T02: { location: "market", activity: "meditation" },
-                T03: { location: "market", activity: "visions" },
-                T04: { location: "market", activity: "readings" },
-                T05: { location: "market", activity: "readings" },
-                T06: { location: "neon_bar", activity: "wandering" },
-                T07: { location: "market", activity: "trading" },
-                T08: { location: "neon_bar", activity: "socializing" },
-                T09: { location: "market", activity: "visions" },
-                T10: { location: "market", activity: "sleeping" },
-            }
-        };
-
-        // =====================================================
-        // SIMULATION STATE
-        // =====================================================
-
-        let state = {
+        // =============================================================================
+        // STATE
+        // =============================================================================
+        const API_BASE = "http://localhost:8081";
+        
+        const state = {
             tick: 0,
-            playing: true,
-            speed: 50,
-            zoom: 15,
-            panX: 0,
-            panY: 0,
-            currentLocation: "neon_bar",
-            viewMode: "building",
-            selectedNPC: null,
-            showLayers: {
-                walls: true,
-                furniture: true,
-                npcs: true,
-                objects: true,
-                paths: false
-            },
-            npcStates: {}
+            playing: false,
+            speed: 5,
+            viewMode: "district",
+            currentBuilding: null,
+            showLabels: true,
+            npcs: [],
+            buildings: [],
+            simulation: null,
+            hoveredNpc: null,
+            selectedNpc: null,
+            camera: { x: 0, y: 0, zoom: 1 },
+            dragging: false,
+            lastMouse: { x: 0, y: 0 }
         };
 
-        // =====================================================
-        // CANVAS SETUP
-        // =====================================================
+        // District layout (6 blocks, 3x2 grid)
+        const DISTRICT = {
+            width: 1200,
+            height: 800,
+            blocks: [
+                { id: 1, x: 0, y: 0, w: 400, h: 400, name: "Block A" },
+                { id: 2, x: 400, y: 0, w: 400, h: 400, name: "Block B" },
+                { id: 3, x: 800, y: 0, w: 400, h: 400, name: "Block C" },
+                { id: 4, x: 0, y: 400, w: 400, h: 400, name: "Block D" },
+                { id: 5, x: 400, y: 400, w: 400, h: 400, name: "Block E" },
+                { id: 6, x: 800, y: 400, w: 400, h: 400, name: "Block F" },
+            ]
+        };
 
+        const FACTION_COLORS = {
+            civilian: "#00ffff",
+            resistance: "#ff00ff",
+            temple: "#ffd700",
+            criminal: "#ff4444",
+            corporate: "#00ff88"
+        };
+
+        const BUILDING_COLORS = {
+            residential: "#334455",
+            commercial: "#445566",
+            entertainment: "#554477",
+            industrial: "#556644",
+            temple: "#665544",
+            corporate: "#446655"
+        };
+
+        // =============================================================================
+        // CANVAS SETUP
+        // =============================================================================
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
-        const container = document.getElementById("canvas-container");
 
         function resizeCanvas() {
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            canvas.style.width = rect.width + "px";
+            canvas.style.height = rect.height + "px";
         }
-        resizeCanvas();
+
         window.addEventListener("resize", resizeCanvas);
 
-        // =====================================================
-        // TIME UTILITIES
-        // =====================================================
-
-        function getTimePeriod(tick) {
-            const dayTick = tick % 240;
-            if (dayTick < 24) return "T01";
-            if (dayTick < 72) return "T02";
-            if (dayTick < 120) return "T03";
-            if (dayTick < 168) return "T04";
-            if (dayTick < 192) return "T05";
-            if (dayTick < 204) return "T06";
-            if (dayTick < 216) return "T07";
-            if (dayTick < 228) return "T08";
-            if (dayTick < 236) return "T09";
-            return "T10";
+        // =============================================================================
+        // API CALLS
+        // =============================================================================
+        async function fetchJSON(endpoint, params = {}) {
+            const url = new URL(API_BASE + endpoint);
+            Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+            const response = await fetch(url);
+            return response.json();
         }
 
-        function getHour(tick) {
-            return Math.floor((tick % 240) / 10);
-        }
+        async function loadInitialData() {
+            try {
+                const [stats, buildings, npcs] = await Promise.all([
+                    fetchJSON("/api/stats"),
+                    fetchJSON("/api/buildings"),
+                    fetchJSON("/api/npcs", { limit: 500 })
+                ]);
 
-        function getDay(tick) {
-            return Math.floor(tick / 240) + 1;
-        }
+                state.buildings = buildings.buildings || [];
+                state.npcs = npcs.npcs || [];
 
-        // =====================================================
-        // NPC SIMULATION
-        // =====================================================
+                document.getElementById("stat-npcs").textContent = stats.total_npcs;
+                document.getElementById("stat-buildings").textContent = stats.total_buildings;
 
-        function hashString(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                hash = hash & hash;
+                // Populate building selector
+                const select = document.getElementById("building-select");
+                state.buildings.forEach(b => {
+                    const opt = document.createElement("option");
+                    opt.value = b.id;
+                    opt.textContent = `${b.id}: ${b.name}`;
+                    select.appendChild(opt);
+                });
+
+                // Assign building positions
+                assignBuildingPositions();
+
+                document.getElementById("loading").classList.add("hidden");
+                await updateSimulation();
+                draw();
+            } catch (err) {
+                console.error("Failed to load data:", err);
+                document.querySelector(".loading-text").textContent = "ERROR: API not running";
             }
-            return Math.abs(hash);
         }
 
-        function getNPCState(npc, tick) {
-            const timePeriod = getTimePeriod(tick);
-            const schedule = SCHEDULES[npc.schedule] || SCHEDULES.worker;
-            const slot = schedule[timePeriod] || { location: "market", activity: "idle" };
+        async function updateSimulation() {
+            try {
+                state.simulation = await fetchJSON("/api/simulation/tick", { tick: state.tick });
+                
+                document.getElementById("stat-tick").textContent = state.tick;
+                document.getElementById("stat-events").textContent = state.simulation.events?.length || 0;
 
-            // Get spawn point in location
-            const location = LOCATIONS[slot.location] || LOCATIONS.neon_bar;
-            const spawnPoints = location.spawnPoints || [{ x: 10, y: 10 }];
+                const time = state.simulation.time || {};
+                document.getElementById("time-display").textContent = 
+                    `DAY ${time.day || 1} • ${time.period || "T01"} ${time.hour || "00"}:00`;
 
-            // Deterministic position based on NPC and tick
-            const hash = hashString(npc.id + "_" + Math.floor(tick / 5));
-            const spawnIndex = hash % spawnPoints.length;
-            const spawn = spawnPoints[spawnIndex];
-
-            // Add some movement within area
-            const moveHash = hashString(npc.id + "_move_" + tick);
-            const offsetX = (moveHash % 5) - 2;
-            const offsetY = ((moveHash >> 4) % 5) - 2;
-
-            return {
-                x: spawn.x + offsetX,
-                y: spawn.y + offsetY,
-                location: slot.location,
-                activity: slot.activity,
-                ...npc
-            };
+                // Update NPC states
+                await updateNpcStates();
+                updateNpcList();
+            } catch (err) {
+                console.error("Failed to update simulation:", err);
+            }
         }
 
-        function updateNPCStates() {
-            state.npcStates = {};
-            NPCS.forEach(npc => {
-                state.npcStates[npc.id] = getNPCState(npc, state.tick);
+        async function updateNpcStates() {
+            // Get NPCs at current location
+            const location = state.currentBuilding || "B001";
+            try {
+                const data = await fetchJSON(`/api/npcs/at/${location}`, { tick: state.tick });
+                state.npcsAtLocation = data.npcs || [];
+            } catch {
+                state.npcsAtLocation = [];
+            }
+        }
+
+        // =============================================================================
+        // POSITIONING
+        // =============================================================================
+        function assignBuildingPositions() {
+            state.buildings.forEach((building, i) => {
+                const blockIndex = parseInt(building.id.replace("B", "")) % 6;
+                const block = DISTRICT.blocks[blockIndex];
+                
+                const buildingsPerBlock = 3;
+                const posInBlock = i % buildingsPerBlock;
+                
+                building.x = block.x + 50 + (posInBlock % 3) * 120;
+                building.y = block.y + 50 + Math.floor(posInBlock / 3) * 120;
+                building.w = 100;
+                building.h = 80;
             });
         }
 
-        // =====================================================
-        // RENDERING
-        // =====================================================
+        function getNpcPosition(npc, index) {
+            // Find the building
+            const building = state.buildings.find(b => b.id === npc.location);
+            if (!building) {
+                // Random position based on NPC ID hash
+                const hash = npc.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+                return {
+                    x: 100 + (hash * 13) % (DISTRICT.width - 200),
+                    y: 100 + (hash * 17) % (DISTRICT.height - 200)
+                };
+            }
 
-        function worldToScreen(x, y) {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+            // Position around building
+            const spread = 30;
+            const angle = (index * 0.618033988749895) * Math.PI * 2;
+            const radius = 10 + (index % 5) * 8;
+            
             return {
-                x: centerX + (x - state.panX) * state.zoom,
-                y: centerY + (y - state.panY) * state.zoom
+                x: building.x + building.w / 2 + Math.cos(angle) * radius,
+                y: building.y + building.h / 2 + Math.sin(angle) * radius
             };
         }
 
-        function drawRect(x, y, w, h, color) {
-            const screen = worldToScreen(x, y);
-            ctx.fillStyle = color;
-            ctx.fillRect(screen.x, screen.y, w * state.zoom, h * state.zoom);
-        }
+        // =============================================================================
+        // DRAWING
+        // =============================================================================
+        function draw() {
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
 
-        function drawCircle(x, y, radius, color) {
-            const screen = worldToScreen(x, y);
-            ctx.beginPath();
-            ctx.arc(screen.x, screen.y, radius * state.zoom, 0, Math.PI * 2);
-            ctx.fillStyle = color;
-            ctx.fill();
-        }
+            // Clear
+            ctx.fillStyle = "#0a0a0f";
+            ctx.fillRect(0, 0, width, height);
 
-        function drawLocation(location) {
-            const loc = LOCATIONS[location];
-            if (!loc) return;
-
-            // Center on location
-            state.panX = loc.width / 2;
-            state.panY = loc.height / 2;
-
-            // Draw floor
-            drawRect(0, 0, loc.width, loc.height, "#1a1a25");
+            // Apply camera transform
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(state.camera.zoom, state.camera.zoom);
+            ctx.translate(-DISTRICT.width / 2 + state.camera.x, -DISTRICT.height / 2 + state.camera.y);
 
             // Draw grid
-            ctx.strokeStyle = "#222";
-            ctx.lineWidth = 1;
-            for (let x = 0; x <= loc.width; x += 5) {
-                const s1 = worldToScreen(x, 0);
-                const s2 = worldToScreen(x, loc.height);
+            drawGrid();
+
+            // Draw blocks
+            drawBlocks();
+
+            // Draw buildings
+            drawBuildings();
+
+            // Draw NPCs
+            drawNpcs();
+
+            ctx.restore();
+
+            // Draw UI overlay
+            drawOverlay(width, height);
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = "rgba(0, 255, 255, 0.1)";
+            ctx.lineWidth = 0.5;
+
+            for (let x = 0; x <= DISTRICT.width; x += 50) {
                 ctx.beginPath();
-                ctx.moveTo(s1.x, s1.y);
-                ctx.lineTo(s2.x, s2.y);
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, DISTRICT.height);
                 ctx.stroke();
             }
-            for (let y = 0; y <= loc.height; y += 5) {
-                const s1 = worldToScreen(0, y);
-                const s2 = worldToScreen(loc.width, y);
+
+            for (let y = 0; y <= DISTRICT.height; y += 50) {
                 ctx.beginPath();
-                ctx.moveTo(s1.x, s1.y);
-                ctx.lineTo(s2.x, s2.y);
+                ctx.moveTo(0, y);
+                ctx.lineTo(DISTRICT.width, y);
                 ctx.stroke();
             }
+        }
 
-            // Draw walls
-            if (state.showLayers.walls) {
-                loc.walls?.forEach(wall => {
-                    drawRect(wall.x, wall.y, wall.w, wall.h, "#444");
-                });
-            }
+        function drawBlocks() {
+            DISTRICT.blocks.forEach(block => {
+                ctx.fillStyle = "rgba(20, 20, 30, 0.8)";
+                ctx.fillRect(block.x, block.y, block.w, block.h);
 
-            // Draw furniture
-            if (state.showLayers.furniture) {
-                const furnitureColors = {
-                    stool: "#553300",
-                    table: "#442200",
-                    booth: "#553322",
-                    couch: "#443322",
-                    storage: "#333",
-                    toilet: "#224444",
-                    bed: "#334455",
-                    rack: "#444",
-                    tech: "#004444",
-                    stall: "#443355"
-                };
-                loc.furniture?.forEach(f => {
-                    drawRect(f.x, f.y, f.w, f.h, furnitureColors[f.type] || "#333");
-                });
-            }
+                ctx.strokeStyle = "rgba(0, 255, 255, 0.3)";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(block.x, block.y, block.w, block.h);
 
-            // Draw objects
-            if (state.showLayers.objects) {
-                loc.objects?.forEach(obj => {
-                    drawCircle(obj.x + 0.5, obj.y + 0.5, 0.3, obj.color);
-                });
-            }
-
-            // Draw doors
-            loc.doors?.forEach(door => {
-                drawRect(door.x, door.y, door.w, door.h, "#00CED1");
+                // Block label
+                ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
+                ctx.font = "bold 14px Orbitron";
+                ctx.fillText(block.name, block.x + 10, block.y + 25);
             });
         }
 
-        function drawNPCs() {
-            if (!state.showLayers.npcs) return;
+        function drawBuildings() {
+            state.buildings.forEach(building => {
+                const isSelected = state.currentBuilding === building.id;
+                const color = BUILDING_COLORS[building.type] || "#334455";
 
-            const npcsInLocation = [];
+                // Building shadow
+                ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                ctx.fillRect(building.x + 4, building.y + 4, building.w, building.h);
 
-            Object.values(state.npcStates).forEach(npc => {
-                if (npc.location === state.currentLocation) {
-                    npcsInLocation.push(npc);
+                // Building
+                ctx.fillStyle = color;
+                ctx.fillRect(building.x, building.y, building.w, building.h);
 
-                    // Draw NPC dot
-                    const isSelected = state.selectedNPC === npc.id;
-                    const radius = isSelected ? 0.8 : 0.5;
+                // Border
+                ctx.strokeStyle = isSelected ? "#ffd700" : "rgba(255, 255, 255, 0.3)";
+                ctx.lineWidth = isSelected ? 2 : 1;
+                ctx.strokeRect(building.x, building.y, building.w, building.h);
 
-                    // Glow effect for selected
-                    if (isSelected) {
-                        drawCircle(npc.x, npc.y, 1.2, "rgba(0, 206, 209, 0.3)");
+                // Building label
+                if (state.showLabels) {
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "10px Roboto";
+                    ctx.fillText(building.id, building.x + 5, building.y + 15);
+                    
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                    ctx.font = "8px Roboto";
+                    const name = building.name?.substring(0, 15) || building.type;
+                    ctx.fillText(name, building.x + 5, building.y + 26);
+                }
+
+                // NPC count indicator
+                const npcCount = state.simulation?.location_summary?.[building.id] || 0;
+                if (npcCount > 0) {
+                    ctx.fillStyle = "#00ffff";
+                    ctx.font = "bold 11px Orbitron";
+                    ctx.fillText(`${npcCount}`, building.x + building.w - 20, building.y + 15);
+                }
+            });
+        }
+
+        function drawNpcs() {
+            // Get all NPCs with their current locations
+            const npcsByLocation = {};
+            state.npcs.forEach(npc => {
+                const loc = npc.home;  // Use home as default location
+                if (!npcsByLocation[loc]) npcsByLocation[loc] = [];
+                npcsByLocation[loc].push(npc);
+            });
+
+            // Draw based on simulation state
+            const locSummary = state.simulation?.location_summary || {};
+            
+            let npcIndex = 0;
+            Object.keys(locSummary).forEach(loc => {
+                const count = locSummary[loc];
+                const building = state.buildings.find(b => b.id === loc);
+                if (!building) return;
+
+                for (let i = 0; i < Math.min(count, 20); i++) {  // Cap at 20 visible per building
+                    const npc = state.npcs[npcIndex % state.npcs.length];
+                    npcIndex++;
+
+                    const pos = getNpcPosition({ ...npc, location: loc }, i);
+                    const color = FACTION_COLORS[npc.faction] || "#00ffff";
+                    const isHovered = state.hoveredNpc?.id === npc.id;
+                    const isSelected = state.selectedNpc?.id === npc.id;
+
+                    // NPC dot
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, isHovered || isSelected ? 5 : 3, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+
+                    // Glow effect
+                    if (isHovered || isSelected) {
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
                     }
 
-                    drawCircle(npc.x, npc.y, radius, npc.color);
-
-                    // Activity indicator
-                    if (npc.activity === "sleeping") {
-                        // Z's
-                        const screen = worldToScreen(npc.x + 0.5, npc.y - 0.5);
-                        ctx.fillStyle = "#888";
-                        ctx.font = "10px monospace";
-                        ctx.fillText("z", screen.x, screen.y);
+                    // Label
+                    if (state.showLabels && (isHovered || isSelected || i < 5)) {
+                        ctx.fillStyle = color;
+                        ctx.font = "9px Roboto";
+                        const name = npc.name?.split(" ")[0] || npc.id;
+                        ctx.fillText(name, pos.x + 6, pos.y + 3);
                     }
                 }
             });
+        }
 
-            // Update NPC list
-            document.getElementById("npc-count").textContent = npcsInLocation.length;
-            const npcList = document.getElementById("npc-list");
-            npcList.innerHTML = npcsInLocation.map(npc => `
-                <div class="npc-item ${state.selectedNPC === npc.id ? 'selected' : ''}" 
-                     onclick="selectNPC('${npc.id}')"
-                     style="border-left: 3px solid ${npc.color};">
-                    <strong>${npc.name}</strong><br>
-                    ${npc.activity}
+        function drawOverlay(width, height) {
+            // Mini-map (bottom left corner)
+            const mapSize = 120;
+            const mapX = 10;
+            const mapY = height - mapSize - 10;
+
+            ctx.fillStyle = "rgba(10, 10, 15, 0.8)";
+            ctx.fillRect(mapX, mapY, mapSize, mapSize);
+            ctx.strokeStyle = "rgba(0, 255, 255, 0.5)";
+            ctx.strokeRect(mapX, mapY, mapSize, mapSize);
+
+            // Mini blocks
+            const scale = mapSize / DISTRICT.width;
+            DISTRICT.blocks.forEach(block => {
+                ctx.fillStyle = "rgba(0, 255, 255, 0.2)";
+                ctx.fillRect(
+                    mapX + block.x * scale,
+                    mapY + block.y * scale * (DISTRICT.height / DISTRICT.width),
+                    block.w * scale,
+                    block.h * scale * (DISTRICT.height / DISTRICT.width)
+                );
+            });
+        }
+
+        // =============================================================================
+        // UI UPDATES
+        // =============================================================================
+        function updateNpcList() {
+            const list = document.getElementById("npc-list");
+            const npcs = state.npcsAtLocation || state.npcs.slice(0, 20);
+            
+            list.innerHTML = npcs.slice(0, 30).map(npc => `
+                <div class="npc-item ${npc.faction}" data-id="${npc.id}">
+                    <div class="npc-name">${npc.name}</div>
+                    <div class="npc-info">${npc.archetype} • ${npc.faction}</div>
+                    <div class="npc-info">${npc.activity || "idle"} @ ${npc.location || npc.home}</div>
                 </div>
             `).join("");
-        }
 
-        function draw() {
-            // Clear
-            ctx.fillStyle = "#0a0a0f";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw based on view mode
-            if (state.viewMode === "building") {
-                drawLocation(state.currentLocation);
-                drawNPCs();
-            } else if (state.viewMode === "district") {
-                // Simplified district view
-                drawDistrictView();
-            } else if (state.viewMode === "city") {
-                // City overview
-                drawCityView();
-            }
-
-            // Draw location name
-            const loc = LOCATIONS[state.currentLocation];
-            if (loc) {
-                ctx.fillStyle = "#00CED1";
-                ctx.font = "14px monospace";
-                ctx.fillText(loc.name, 10, canvas.height - 10);
-            }
-        }
-
-        function drawDistrictView() {
-            // Show multiple buildings
-            const buildings = ["neon_bar", "resistance_hideout", "market"];
-            let offsetX = -60;
-
-            buildings.forEach((bldg, i) => {
-                const loc = LOCATIONS[bldg];
-                if (!loc) return;
-
-                const x = offsetX + i * 30;
-                const y = -20 + i * 15;
-
-                // Draw building footprint
-                drawRect(x, y, loc.width / 3, loc.height / 3, "#1a1a25");
-                ctx.strokeStyle = "#00CED1";
-                const screen = worldToScreen(x, y);
-                ctx.strokeRect(screen.x, screen.y, loc.width / 3 * state.zoom, loc.height / 3 * state.zoom);
-
-                // Draw NPC dots
-                Object.values(state.npcStates).forEach(npc => {
-                    if (npc.location === bldg) {
-                        drawCircle(x + npc.x / 3, y + npc.y / 3, 0.3, npc.color);
-                    }
+            // Click handlers
+            list.querySelectorAll(".npc-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    const npc = state.npcs.find(n => n.id === item.dataset.id);
+                    if (npc) selectNpc(npc);
                 });
-
-                // Label
-                ctx.fillStyle = "#888";
-                ctx.font = "10px monospace";
-                ctx.fillText(loc.name, screen.x, screen.y - 5);
             });
+
+            document.getElementById("current-location").textContent = 
+                state.currentBuilding || "District Overview";
         }
 
-        function drawCityView() {
-            // Abstract city map
-            const districts = [
-                { name: "Downtown", x: 0, y: 0, w: 30, h: 30, color: "#00CED1" },
-                { name: "Industrial", x: 35, y: 0, w: 25, h: 20, color: "#FF6600" },
-                { name: "Temple", x: 0, y: 35, w: 20, h: 25, color: "#FF4444" },
-                { name: "Undercity", x: 25, y: 40, w: 35, h: 20, color: "#00FF00" },
-            ];
-
-            districts.forEach(d => {
-                drawRect(d.x, d.y, d.w, d.h, "#1a1a25");
-                ctx.strokeStyle = d.color;
-                const screen = worldToScreen(d.x, d.y);
-                ctx.strokeRect(screen.x, screen.y, d.w * state.zoom, d.h * state.zoom);
-
-                // Label
-                ctx.fillStyle = d.color;
-                ctx.font = "12px monospace";
-                ctx.fillText(d.name, screen.x + 5, screen.y + 15);
-            });
-
-            // Draw all NPCs as dots
-            Object.values(state.npcStates).forEach(npc => {
-                // Map location to district position
-                const locMap = {
-                    neon_bar: { x: 15, y: 15 },
-                    resistance_hideout: { x: 30, y: 50 },
-                    market: { x: 10, y: 20 },
-                    temple_plaza: { x: 10, y: 45 }
-                };
-                const pos = locMap[npc.location] || { x: 30, y: 30 };
-                const hash = hashString(npc.id);
-                drawCircle(pos.x + (hash % 5), pos.y + ((hash >> 3) % 5), 0.4, npc.color);
-            });
+        function selectNpc(npc) {
+            state.selectedNpc = npc;
+            console.log("Selected NPC:", npc);
+            draw();
         }
 
-        // =====================================================
+        // =============================================================================
         // CONTROLS
-        // =====================================================
-
-        // Play/Pause
-        document.getElementById("play-btn").onclick = () => {
-            state.playing = true;
-            document.getElementById("play-btn").classList.add("active");
-            document.getElementById("pause-btn").classList.remove("active");
-        };
-
-        document.getElementById("pause-btn").onclick = () => {
-            state.playing = false;
-            document.getElementById("play-btn").classList.remove("active");
-            document.getElementById("pause-btn").classList.add("active");
-        };
-
-        document.getElementById("step-btn").onclick = () => {
-            state.tick++;
-            updateNPCStates();
-        };
-
-        // Speed
-        document.getElementById("speed").oninput = (e) => {
-            state.speed = e.target.value;
-        };
-
-        // View modes
-        document.getElementById("view-building").onclick = () => {
-            state.viewMode = "building";
-            state.zoom = 15;
-            document.querySelectorAll("#sidebar button").forEach(b => b.classList.remove("active"));
-            document.getElementById("view-building").classList.add("active");
-        };
-
-        document.getElementById("view-district").onclick = () => {
-            state.viewMode = "district";
-            state.zoom = 8;
-            state.panX = 0;
-            state.panY = 0;
-            document.querySelectorAll("#sidebar button").forEach(b => b.classList.remove("active"));
-            document.getElementById("view-district").classList.add("active");
-        };
-
-        document.getElementById("view-city").onclick = () => {
-            state.viewMode = "city";
-            state.zoom = 6;
-            state.panX = 30;
-            state.panY = 30;
-            document.querySelectorAll("#sidebar button").forEach(b => b.classList.remove("active"));
-            document.getElementById("view-city").classList.add("active");
-        };
-
-        // Location select
-        document.getElementById("location-select").onchange = (e) => {
-            state.currentLocation = e.target.value;
-        };
-
-        // Layer toggles
-        document.getElementById("show-walls").onchange = (e) => state.showLayers.walls = e.target.checked;
-        document.getElementById("show-furniture").onchange = (e) => state.showLayers.furniture = e.target.checked;
-        document.getElementById("show-npcs").onchange = (e) => state.showLayers.npcs = e.target.checked;
-        document.getElementById("show-objects").onchange = (e) => state.showLayers.objects = e.target.checked;
-        document.getElementById("show-paths").onchange = (e) => state.showLayers.paths = e.target.checked;
-
-        // Zoom
-        document.getElementById("zoom-in").onclick = () => state.zoom *= 1.2;
-        document.getElementById("zoom-out").onclick = () => state.zoom /= 1.2;
-        document.getElementById("zoom-reset").onclick = () => {
-            state.zoom = 15;
-            const loc = LOCATIONS[state.currentLocation];
-            if (loc) {
-                state.panX = loc.width / 2;
-                state.panY = loc.height / 2;
-            }
-        };
-
-        // Mouse wheel zoom
-        canvas.addEventListener("wheel", (e) => {
-            e.preventDefault();
-            if (e.deltaY < 0) {
-                state.zoom *= 1.1;
-            } else {
-                state.zoom /= 1.1;
-            }
+        // =============================================================================
+        document.getElementById("btn-play").addEventListener("click", () => {
+            state.playing = !state.playing;
+            document.getElementById("btn-play").textContent = state.playing ? "⏸ PAUSE" : "▶ PLAY";
+            document.getElementById("btn-play").classList.toggle("active", state.playing);
         });
 
-        // Pan
-        let isPanning = false;
-        let lastMouse = { x: 0, y: 0 };
+        document.getElementById("btn-step").addEventListener("click", async () => {
+            state.tick++;
+            await updateSimulation();
+            draw();
+        });
+
+        document.getElementById("btn-reset").addEventListener("click", async () => {
+            state.tick = 0;
+            state.playing = false;
+            document.getElementById("btn-play").textContent = "▶ PLAY";
+            await updateSimulation();
+            draw();
+        });
+
+        document.getElementById("speed").addEventListener("input", (e) => {
+            state.speed = parseInt(e.target.value);
+        });
+
+        document.getElementById("view-mode").addEventListener("change", (e) => {
+            state.viewMode = e.target.value;
+            draw();
+        });
+
+        document.getElementById("building-select").addEventListener("change", async (e) => {
+            state.currentBuilding = e.target.value || null;
+            await updateNpcStates();
+            updateNpcList();
+            draw();
+        });
+
+        document.getElementById("btn-labels").addEventListener("click", () => {
+            state.showLabels = !state.showLabels;
+            document.getElementById("btn-labels").classList.toggle("active", state.showLabels);
+            draw();
+        });
+
+        document.getElementById("btn-export").addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.download = `neon_heights_tick_${state.tick}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+
+        // Mouse controls
+        canvas.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            state.camera.zoom *= e.deltaY > 0 ? 0.9 : 1.1;
+            state.camera.zoom = Math.max(0.5, Math.min(3, state.camera.zoom));
+            draw();
+        });
 
         canvas.addEventListener("mousedown", (e) => {
-            isPanning = true;
-            lastMouse = { x: e.clientX, y: e.clientY };
+            state.dragging = true;
+            state.lastMouse = { x: e.clientX, y: e.clientY };
         });
 
         canvas.addEventListener("mousemove", (e) => {
-            if (isPanning) {
-                const dx = (e.clientX - lastMouse.x) / state.zoom;
-                const dy = (e.clientY - lastMouse.y) / state.zoom;
-                state.panX -= dx;
-                state.panY -= dy;
-                lastMouse = { x: e.clientX, y: e.clientY };
+            if (state.dragging) {
+                state.camera.x += (e.clientX - state.lastMouse.x) / state.camera.zoom;
+                state.camera.y += (e.clientY - state.lastMouse.y) / state.camera.zoom;
+                state.lastMouse = { x: e.clientX, y: e.clientY };
+                draw();
             }
         });
 
-        canvas.addEventListener("mouseup", () => isPanning = false);
-        canvas.addEventListener("mouseleave", () => isPanning = false);
+        canvas.addEventListener("mouseup", () => {
+            state.dragging = false;
+        });
 
-        // NPC selection
-        window.selectNPC = (id) => {
-            state.selectedNPC = state.selectedNPC === id ? null : id;
-        };
-
-        // =====================================================
-        // MAIN LOOP
-        // =====================================================
-
+        // =============================================================================
+        // GAME LOOP
+        // =============================================================================
         let lastUpdate = 0;
 
-        function update(timestamp) {
-            const delta = timestamp - lastUpdate;
-            const interval = 1000 / (state.speed / 10 + 0.1);
-
-            if (state.playing && delta > interval) {
-                state.tick++;
-                lastUpdate = timestamp;
+        function gameLoop(timestamp) {
+            if (state.playing) {
+                const interval = 1000 / state.speed;
+                if (timestamp - lastUpdate > interval) {
+                    state.tick++;
+                    updateSimulation();
+                    draw();
+                    lastUpdate = timestamp;
+                }
             }
-
-            updateNPCStates();
-
-            // Update UI
-            document.getElementById("tick-value").textContent = state.tick;
-            document.getElementById("day-value").textContent = getDay(state.tick);
-            document.getElementById("time-period").textContent = getTimePeriod(state.tick);
-            document.getElementById("hour-value").textContent = getHour(state.tick);
-
-            draw();
-            requestAnimationFrame(update);
+            requestAnimationFrame(gameLoop);
         }
 
-        // Start
-        updateNPCStates();
-        requestAnimationFrame(update);
+        // =============================================================================
+        // INIT
+        // =============================================================================
+        resizeCanvas();
+        loadInitialData();
+        requestAnimationFrame(gameLoop);
     </script>
 </body>
 

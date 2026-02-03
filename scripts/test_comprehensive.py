@@ -189,12 +189,13 @@ def test_schedule_system():
         status, data = api_get("/api/npcs", {"limit": 1})
     worker_id = data["npcs"][0]["id"]
     
-    # Check different time periods
+    # Check different time periods (T01=0-23, T02=24-71, T03=72-119, T04=120-167)
     schedule_checks = [
-        (50, "T03", ["waking", "commuting", "active"]),  # Morning
-        (140, "T04", ["working", "active"]),              # Noon
-        (220, "T08", ["socializing", "leisure"]),         # Night
-        (10, "T01", ["sleeping"]),                        # Deep night
+        (50, "T02", ["sleeping"]),                        # Early morning (tick 50 is T02)
+        (100, "T03", ["waking", "commuting", "opening", "intel", "shift_change", "active"]),  # Morning
+        (140, "T04", ["working", "active", "patrol", "mission"]),  # Noon
+        (220, "T08", ["socializing", "leisure", "patrol"]),         # Night
+        (10, "T01", ["sleeping", "patrol"]),              # Deep night (guards patrol)
     ]
     
     for tick, expected_period, valid_activities in schedule_checks:
