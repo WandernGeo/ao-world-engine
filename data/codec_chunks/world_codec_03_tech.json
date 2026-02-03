@@ -1340,5 +1340,371 @@
             ],
             "hope": "resistance_victory_or_escape"
         }
+    },
+    "transportation_system": {
+        "_desc": "Multi-modal transit for RE:ECHO City - from ground to sky",
+        "_philosophy": "The Temple controls movement. Every trip is tracked.",
+        "transit_layers": {
+            "underground": {
+                "depth": "-50m to -10m",
+                "access": "Temple ID required except undercity tunnels"
+            },
+            "ground": {
+                "depth": "0m",
+                "access": "Public but monitored"
+            },
+            "elevated": {
+                "depth": "10m to 50m",
+                "access": "Premium tier"
+            },
+            "sky": {
+                "depth": "100m+",
+                "access": "Elite only"
+            }
+        },
+        "public_transit": {
+            "metro_subway": {
+                "code": "TRANS_METRO",
+                "name": "Temple Metro",
+                "type": "underground_rail",
+                "speed_kmh": 120,
+                "capacity_per_car": 200,
+                "frequency_minutes": 3,
+                "cost_credits": 5,
+                "routes": {
+                    "red_line": [
+                        "Temple_Central",
+                        "Neon_Heights",
+                        "Industrial_East",
+                        "Port_District"
+                    ],
+                    "blue_line": [
+                        "Uptown",
+                        "Financial",
+                        "Temple_Central",
+                        "Entertainment"
+                    ],
+                    "green_line": [
+                        "Residential_North",
+                        "Neon_Heights",
+                        "Medical_District",
+                        "University"
+                    ]
+                },
+                "features": [
+                    "biometric_scan",
+                    "cctv",
+                    "temple_guards"
+                ],
+                "undercity_access": "Abandoned stations connect to shadow network"
+            },
+            "maglev_express": {
+                "code": "TRANS_MAGLEV",
+                "name": "Hyperloop Express",
+                "type": "magnetic_levitation",
+                "speed_kmh": 400,
+                "capacity_per_pod": 30,
+                "frequency_minutes": 10,
+                "cost_credits": 50,
+                "routes": {
+                    "intercity": [
+                        "RE_ECHO_City",
+                        "New_Shanghai",
+                        "Neo_Mumbai",
+                        "Atlantic_Hub"
+                    ],
+                    "crosstown": [
+                        "Temple_Spire",
+                        "Corporate_Heights",
+                        "Space_Port"
+                    ]
+                },
+                "features": [
+                    "luxury_pods",
+                    "priority_boarding",
+                    "refreshments"
+                ],
+                "class_restriction": "Upper_class and above"
+            },
+            "city_bus": {
+                "code": "TRANS_BUS",
+                "name": "Temple Transit Bus",
+                "type": "electric_ground",
+                "speed_kmh": 40,
+                "capacity": 60,
+                "frequency_minutes": 8,
+                "cost_credits": 2,
+                "routes": "Dynamic based on AI demand prediction",
+                "features": [
+                    "standing_room",
+                    "basic_monitoring"
+                ],
+                "note": "Working class primary transport"
+            },
+            "tram_streetcar": {
+                "code": "TRANS_TRAM",
+                "name": "Heritage Tram",
+                "type": "electric_rail_ground",
+                "speed_kmh": 25,
+                "capacity": 80,
+                "frequency_minutes": 12,
+                "cost_credits": 3,
+                "routes": {
+                    "scenic": [
+                        "Old_Town",
+                        "Harbor",
+                        "Temple_Gardens",
+                        "Museum_Row"
+                    ],
+                    "market": [
+                        "Neon_Market",
+                        "Fish_Market",
+                        "Tech_Bazaar"
+                    ]
+                },
+                "features": [
+                    "windows",
+                    "tourist_friendly"
+                ],
+                "aesthetic": "Retro-futuristic brass and neon"
+            }
+        },
+        "private_transit": {
+            "hypercars": {
+                "code": "TRANS_HYPERCAR",
+                "name": "Personal Hypercar",
+                "type": "magnetic_hover",
+                "speed_kmh": 200,
+                "lanes": {
+                    "ground": {
+                        "speed_limit": 60,
+                        "access": "all"
+                    },
+                    "elevated_1": {
+                        "speed_limit": 120,
+                        "access": "premium_license"
+                    },
+                    "elevated_2": {
+                        "speed_limit": 200,
+                        "access": "elite_only"
+                    }
+                },
+                "cost_to_own": 500000,
+                "cost_to_rent_daily": 500,
+                "features": [
+                    "autopilot",
+                    "entertainment",
+                    "armored_option"
+                ],
+                "models": {
+                    "worker_pod": {
+                        "seats": 2,
+                        "speed": 80,
+                        "cost": 50000
+                    },
+                    "family_cruiser": {
+                        "seats": 6,
+                        "speed": 120,
+                        "cost": 150000
+                    },
+                    "executive_phantom": {
+                        "seats": 4,
+                        "speed": 200,
+                        "cost": 500000,
+                        "features": [
+                            "meeting_room",
+                            "bar"
+                        ]
+                    },
+                    "temple_enforcer": {
+                        "seats": 4,
+                        "speed": 250,
+                        "armored": true,
+                        "weapons": true
+                    }
+                }
+            },
+            "hover_taxi": {
+                "code": "TRANS_TAXI",
+                "name": "SkyLift Taxi",
+                "type": "autonomous_hover",
+                "speed_kmh": 150,
+                "capacity": 4,
+                "cost_base": 20,
+                "cost_per_km": 5,
+                "wait_time_avg": "2-5 minutes",
+                "features": [
+                    "door_to_door",
+                    "no_surges",
+                    "premium_AI_driver"
+                ],
+                "hail_method": [
+                    "app",
+                    "street_beacon",
+                    "voice"
+                ]
+            },
+            "rideshare": {
+                "code": "TRANS_SHARE",
+                "name": "NeonPool",
+                "type": "shared_pod",
+                "speed_kmh": 80,
+                "capacity": 8,
+                "cost_base": 5,
+                "cost_per_km": 1,
+                "features": [
+                    "share_with_strangers",
+                    "dynamic_routing"
+                ],
+                "danger": "Undercover temple monitoring, occasional robbery"
+            }
+        },
+        "cargo_logistics": {
+            "delivery_drones": {
+                "code": "TRANS_DRONE",
+                "name": "SwiftPod Drone",
+                "type": "autonomous_aerial",
+                "speed_kmh": 100,
+                "payload_kg": 25,
+                "range_km": 50,
+                "cost_per_delivery": 10,
+                "features": [
+                    "package_tracking",
+                    "photo_proof",
+                    "signature_pad"
+                ],
+                "restrictions": "No-fly zones around Temple areas"
+            },
+            "cargo_trucks": {
+                "code": "TRANS_TRUCK",
+                "name": "AutoHauler",
+                "type": "autonomous_ground",
+                "speed_kmh": 60,
+                "payload_tons": 20,
+                "operating_hours": "22:00-06:00 (night only)",
+                "features": [
+                    "convoy_mode",
+                    "refrigeration_option"
+                ]
+            },
+            "flying_platforms": {
+                "code": "TRANS_PLATFORM",
+                "name": "SkyBarge",
+                "type": "vtol_cargo",
+                "speed_kmh": 80,
+                "payload_tons": 100,
+                "cost_per_trip": 5000,
+                "features": [
+                    "heavy_lift",
+                    "construction_support"
+                ],
+                "restrictions": "Permit required"
+            }
+        },
+        "special_transit": {
+            "temple_convoy": {
+                "code": "TRANS_TEMPLE",
+                "name": "Temple Procession",
+                "type": "armored_column",
+                "description": "VIP Temple officials + guards",
+                "right_of_way": "Absolute - all traffic stops",
+                "composition": [
+                    "2x escort_bikes",
+                    "1x command_vehicle",
+                    "2x transport_vans",
+                    "1x gunship"
+                ]
+            },
+            "emergency_response": {
+                "code": "TRANS_EMERGENCY",
+                "ambulance": {
+                    "speed": 200,
+                    "priority": "high"
+                },
+                "fire_drone": {
+                    "capacity": "5000L water",
+                    "response_time": "90 seconds"
+                },
+                "police_interceptor": {
+                    "speed": 300,
+                    "weapons": true
+                }
+            },
+            "undercity_tunnels": {
+                "code": "TRANS_SHADOW",
+                "name": "Shadow Network",
+                "type": "unmapped_tunnels",
+                "speed": "walking",
+                "cost": "favors_or_bribes",
+                "features": [
+                    "no_monitoring",
+                    "dangerous",
+                    "resistance_controlled"
+                ],
+                "access_points": [
+                    "abandoned_stations",
+                    "maintenance_hatches",
+                    "sewer_system"
+                ]
+            }
+        },
+        "transit_stations": {
+            "neon_heights_station": {
+                "id": "STATION_NH",
+                "name": "Neon Heights Central",
+                "type": "multimodal_hub",
+                "levels": {
+                    "-2": "Metro platforms (Red, Green lines)",
+                    "-1": "Underground mall, connections",
+                    "0": "Bus terminal, taxi stand",
+                    "1": "Hypercar parking, rentals",
+                    "2": "Maglev platform (crosstown)"
+                },
+                "daily_passengers": 50000,
+                "temple_presence": "Heavy - checkpoint, ID scans",
+                "undercity_connection": "Abandoned platform at -3"
+            }
+        },
+        "fare_system": {
+            "payment_methods": [
+                "implant_chip",
+                "wrist_band",
+                "temple_card",
+                "credits_app"
+            ],
+            "fare_classes": {
+                "basic": {
+                    "discount": 0,
+                    "access": [
+                        "bus",
+                        "tram",
+                        "metro"
+                    ]
+                },
+                "plus": {
+                    "discount": 0.1,
+                    "access": [
+                        "plus basic",
+                        "taxi",
+                        "rideshare"
+                    ]
+                },
+                "premium": {
+                    "discount": 0.2,
+                    "access": [
+                        "all_public",
+                        "priority_boarding"
+                    ]
+                },
+                "elite": {
+                    "discount": 0.5,
+                    "access": [
+                        "everything",
+                        "vip_lanes"
+                    ]
+                }
+            },
+            "temple_tracking": "All transit logged to citizen file"
+        }
     }
 }
