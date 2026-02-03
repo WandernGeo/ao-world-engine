@@ -3,16 +3,22 @@
     "charlie": {
       "first_met_tick": 150,
       "impressions": [
-        "thoughtful"
+        "thoughtful",
+        "businesslike"
       ],
       "interactions": [
         {
           "type": "deep_conversation",
           "tick": 150,
           "location": "neon_bar"
+        },
+        {
+          "type": "trade",
+          "tick": 300,
+          "location": "market"
         }
       ],
-      "last_seen_tick": 150
+      "last_seen_tick": 300
     }
   },
   "events": [
@@ -22,6 +28,13 @@
       "interaction": "deep_conversation",
       "location": "neon_bar",
       "tick": 150
+    },
+    {
+      "type": "interaction",
+      "with_npc": "charlie",
+      "interaction": "trade",
+      "location": "market",
+      "tick": 300
     }
   ],
   "facts": {}

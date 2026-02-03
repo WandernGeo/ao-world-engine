@@ -3,16 +3,64 @@
     "felix": {
       "first_met_tick": 150,
       "impressions": [
-        "thoughtful"
+        "thoughtful",
+        "businesslike"
       ],
       "interactions": [
         {
           "type": "deep_conversation",
           "tick": 150,
           "location": "neon_bar"
+        },
+        {
+          "type": "trade",
+          "tick": 300,
+          "location": "market"
         }
       ],
-      "last_seen_tick": 150
+      "last_seen_tick": 300
+    },
+    "NPC_00001": {
+      "first_met_tick": 200,
+      "impressions": [
+        "contentious"
+      ],
+      "interactions": [
+        {
+          "type": "argument",
+          "tick": 200,
+          "location": "market"
+        }
+      ],
+      "last_seen_tick": 200
+    },
+    "kai_vance": {
+      "first_met_tick": 350,
+      "impressions": [
+        "brave"
+      ],
+      "interactions": [
+        {
+          "type": "helped_in_combat",
+          "tick": 350,
+          "location": "alley"
+        }
+      ],
+      "last_seen_tick": 350
+    },
+    "nova_chen": {
+      "first_met_tick": 400,
+      "impressions": [
+        "contentious"
+      ],
+      "interactions": [
+        {
+          "type": "argument",
+          "tick": 400,
+          "location": "hideout"
+        }
+      ],
+      "last_seen_tick": 400
     }
   },
   "events": [
@@ -22,6 +70,34 @@
       "interaction": "deep_conversation",
       "location": "neon_bar",
       "tick": 150
+    },
+    {
+      "type": "interaction",
+      "with_npc": "NPC_00001",
+      "interaction": "argument",
+      "location": "market",
+      "tick": 200
+    },
+    {
+      "type": "interaction",
+      "with_npc": "felix",
+      "interaction": "trade",
+      "location": "market",
+      "tick": 300
+    },
+    {
+      "type": "interaction",
+      "with_npc": "kai_vance",
+      "interaction": "helped_in_combat",
+      "location": "alley",
+      "tick": 350
+    },
+    {
+      "type": "interaction",
+      "with_npc": "nova_chen",
+      "interaction": "argument",
+      "location": "hideout",
+      "tick": 400
     }
   ],
   "facts": {}

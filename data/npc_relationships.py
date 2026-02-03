@@ -85,7 +85,7 @@ RELATIONSHIP_EFFECTS = {
 # Significant events that get stored long-term
 SIGNIFICANT_INTERACTION_TYPES = {
     "deep_conversation", "favor_exchange", "helped_in_combat",
-    "fight", "betrayal", "witnessed_crime", "trade"
+    "fight", "betrayal", "witnessed_crime", "trade", "argument"
 }
 
 
