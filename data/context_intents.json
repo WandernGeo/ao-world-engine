@@ -1,0 +1,445 @@
+{
+    "_desc": "Context-aware dialogue based on NPC current activity and location",
+    "_version": "1.0.0",
+    "_note": "NLU reads NPC state (location, activity) and selects appropriate responses",
+    "activity_intents": {
+        "what_doing": {
+            "patterns": [
+                "doing",
+                "up to",
+                "busy",
+                "working on",
+                "occupied"
+            ],
+            "regex": [
+                "what.*doing",
+                "what.*up to",
+                "you.*busy",
+                "what.*working",
+                "are you.*busy",
+                "you look.*busy",
+                "keeping.*busy"
+            ],
+            "user_variations": [
+                "What are you doing?",
+                "What are you up to?",
+                "You busy?",
+                "What are you working on?",
+                "Keeping busy?",
+                "Am I interrupting?",
+                "Got a moment?",
+                "You look busy.",
+                "What's keeping you occupied?"
+            ],
+            "responses_by_activity": {
+                "reading": [
+                    "Just reading. Trying to, anyway.",
+                    "Catching up on some reading. It's quiet.",
+                    "Book's not great, but it passes the time.",
+                    "Reading about the old days. Before everything went wrong.",
+                    "This? Just some fiction. Escapism, you know?",
+                    "Research. Always something to learn.",
+                    "Reading the same paragraph for the third time. Distracted.",
+                    "Trying to focus on this book. Not easy."
+                ],
+                "eating": [
+                    "Having a meal. Sort of.",
+                    "Trying to eat. Food's not great but it's food.",
+                    "Lunch break. Or dinner. Can't tell anymore.",
+                    "Eating. Want some? Actually, no, I need this.",
+                    "Just refueling. Gotta keep the body going.",
+                    "Eating alone. Preferred company anyway."
+                ],
+                "sleeping": [
+                    "*groggy* Huh? What? I was sleeping...",
+                    "Trying to sleep. Was. Before you showed up.",
+                    "Napping. Or I was.",
+                    "Resting my eyes. What do you want?",
+                    "You woke me up for this?"
+                ],
+                "working": [
+                    "Working. What does it look like?",
+                    "Earning a living. Barely.",
+                    "Same thing I do every day. Work.",
+                    "Busy with work. Can this wait?",
+                    "Work never ends around here.",
+                    "Just the usual grind. You need something?",
+                    "Trying to finish up. What's up?",
+                    "Work. Always more work."
+                ],
+                "drinking": [
+                    "Having a drink. Join me?",
+                    "Drowning my sorrows. The usual.",
+                    "Just unwinding with a drink.",
+                    "Drinking. What's it to you?",
+                    "Self-medicating. It's been a day.",
+                    "Liquid courage. Might need it later."
+                ],
+                "socializing": [
+                    "Just talking. Catching up.",
+                    "Hanging out. Being social. Rare for me.",
+                    "Making connections. Networking, some call it.",
+                    "Just being around people. Gets lonely otherwise."
+                ],
+                "trading": [
+                    "Making deals. The hustle never stops.",
+                    "Working the market. Trying to make credits.",
+                    "Trading. Got something to sell?",
+                    "Business as usual. You buying or selling?"
+                ],
+                "patrolling": [
+                    "Keeping watch. Eyes open.",
+                    "Patrolling. Making sure everything's secure.",
+                    "Walking the rounds. You see anything suspicious?",
+                    "On duty. What do you need?"
+                ],
+                "hiding": [
+                    "*whispers* Keep your voice down.",
+                    "Staying out of sight. You should too.",
+                    "Lying low. Don't draw attention.",
+                    "Hiding. Obviously. Now go away."
+                ],
+                "scheming": [
+                    "Nothing you need to know about.",
+                    "Planning. Don't worry about it.",
+                    "Busy. Come back later.",
+                    "None of your business."
+                ],
+                "idle": [
+                    "Nothing much. Just... existing.",
+                    "Not a lot. Waiting for something to happen.",
+                    "Just standing here. Thinking.",
+                    "Taking a breather. Rare moment of peace.",
+                    "Watching the world go by.",
+                    "Nothing. Absolutely nothing. It's nice."
+                ],
+                "default": [
+                    "This and that. You know how it is.",
+                    "The usual. Nothing exciting.",
+                    "Surviving. Same as everyone.",
+                    "Just getting by. You?"
+                ]
+            }
+        },
+        "about_location": {
+            "patterns": [
+                "place",
+                "here",
+                "spot",
+                "area",
+                "location",
+                "this part"
+            ],
+            "regex": [
+                "what.*this place",
+                "what.*here",
+                "know.*area",
+                "like.*here",
+                "often.*here",
+                "come.*here",
+                "live.*here"
+            ],
+            "user_variations": [
+                "What is this place?",
+                "You come here often?",
+                "Do you live around here?",
+                "What's this area like?",
+                "Is this your usual spot?",
+                "Nice place.",
+                "Interesting location.",
+                "What brings you here?"
+            ],
+            "responses_by_location_type": {
+                "home": [
+                    "This is home. Such as it is.",
+                    "My place. Not much, but it's mine.",
+                    "I live here. Don't judge the mess.",
+                    "Home sweet home. Or whatever.",
+                    "My apartment. Small but functional.",
+                    "This is where I sleep. When I can."
+                ],
+                "work": [
+                    "This is where I work. Money's gotta come from somewhere.",
+                    "The job site. Glamorous, I know.",
+                    "Work. Every day, same place.",
+                    "This is my livelihood. Such as it is.",
+                    "Where I earn my keep. Don't love it, but it pays."
+                ],
+                "bar": [
+                    "Best bar in the district. Or worst. Depends who you ask.",
+                    "I come here to unwind. Good drinks, decent company.",
+                    "The bar? It's where I think. Or stop thinking.",
+                    "A dive. But it's my dive.",
+                    "Neutral ground. Everyone drinks together here."
+                ],
+                "market": [
+                    "The market. Everything and everyone passes through here.",
+                    "Commerce central. If it exists, you can buy it here.",
+                    "Best deals in the city. Maybe not legal, but best.",
+                    "I know this market like the back of my hand.",
+                    "The heart of trade. Beating with credits."
+                ],
+                "street": [
+                    "Just the streets. Out and about.",
+                    "Public space. Watching the world go by.",
+                    "Streets of the city. Same as always.",
+                    "Just walking. Got somewhere to be.",
+                    "The streets never sleep. Neither do I, sometimes."
+                ],
+                "hideout": [
+                    "Somewhere safe. Don't spread it around.",
+                    "A place I know. Off the radar.",
+                    "Quiet spot. Not many know about it.",
+                    "Secure location. Let's keep it that way.",
+                    "You didn't see me here. Got it?"
+                ],
+                "temple": [
+                    "Temple ground. Mind your words here.",
+                    "Sacred space. Or so they say.",
+                    "The Temple district. Be respectful.",
+                    "Prophet's territory. Tread carefully."
+                ],
+                "default": [
+                    "Just a place. Like any other.",
+                    "Here? Nothing special about it.",
+                    "Somewhere in this city. Does it matter?",
+                    "Does anyone really know where they are anymore?"
+                ]
+            }
+        },
+        "interrupt": {
+            "patterns": [
+                "interrupt",
+                "bother",
+                "disturb",
+                "moment",
+                "minute",
+                "second"
+            ],
+            "regex": [
+                "am i.*interrupt",
+                "got.*minute",
+                "got.*moment",
+                "got.*second",
+                "can i.*bother",
+                "sorry.*bother",
+                "excuse me"
+            ],
+            "user_variations": [
+                "Am I interrupting?",
+                "Got a minute?",
+                "Got a moment?",
+                "Sorry to bother you.",
+                "Excuse me.",
+                "Can I interrupt?",
+                "Do you have a second?"
+            ],
+            "responses_by_busy_level": {
+                "very_busy": [
+                    "Actually, yes. Make it quick.",
+                    "Kind of in the middle of something.",
+                    "I'm busy. This better be important.",
+                    "You are. But go ahead.",
+                    "What is it? I'm pressed for time."
+                ],
+                "somewhat_busy": [
+                    "I've got a minute. What's up?",
+                    "Go ahead. What do you need?",
+                    "Sure. What is it?",
+                    "I can spare a moment.",
+                    "You're fine. Talk."
+                ],
+                "not_busy": [
+                    "Not at all. What's on your mind?",
+                    "Nah, I've got time. What's up?",
+                    "Go ahead. I'm free.",
+                    "Happy for the distraction, honestly.",
+                    "Please, interrupt away. I was bored."
+                ]
+            }
+        },
+        "why_here": {
+            "patterns": [
+                "why",
+                "reason",
+                "brings",
+                "doing here",
+                "purpose"
+            ],
+            "regex": [
+                "why.*here",
+                "what.*brings",
+                "what.*doing here",
+                "reason.*here"
+            ],
+            "user_variations": [
+                "Why are you here?",
+                "What brings you here?",
+                "What's your business here?",
+                "What are you doing here?",
+                "Got a reason to be here?"
+            ],
+            "responses_by_purpose": {
+                "scheduled": [
+                    "I'm supposed to be here. Part of my routine.",
+                    "This is where I need to be right now.",
+                    "Schedule brought me here. Same time every day.",
+                    "I always come here around this time."
+                ],
+                "work": [
+                    "Work. Why else?",
+                    "Business. The usual.",
+                    "Earning a living. You?",
+                    "Professional reasons. Nothing exciting."
+                ],
+                "social": [
+                    "Meeting someone. Or trying to.",
+                    "Looking for company. Gets lonely.",
+                    "Catching up with people. Staying connected.",
+                    "Social reasons. Can't be alone all the time."
+                ],
+                "hiding": [
+                    "Low profile. Don't ask.",
+                    "Laying low. Reasons.",
+                    "Let's just say I need to be here. Specifically here.",
+                    "Away from certain people. That's all."
+                ],
+                "random": [
+                    "Just wandering. Ended up here.",
+                    "No particular reason. Where else would I go?",
+                    "Felt like a walk. Here I am.",
+                    "Following my feet. They led me here."
+                ]
+            }
+        }
+    },
+    "activity_modifiers": {
+        "eating": {
+            "prefix": [
+                "*chews*",
+                "*swallows*",
+                "*wipes mouth*"
+            ],
+            "suffix": [
+                "*takes another bite*",
+                "*continues eating*"
+            ]
+        },
+        "reading": {
+            "prefix": [
+                "*looks up from book*",
+                "*marks page*",
+                "*sets book aside*"
+            ],
+            "suffix": [
+                "*returns to reading*",
+                "*glances at book*"
+            ]
+        },
+        "drinking": {
+            "prefix": [
+                "*sets down glass*",
+                "*sips drink*",
+                "*swirls glass*"
+            ],
+            "suffix": [
+                "*takes a drink*",
+                "*signals for refill*"
+            ]
+        },
+        "working": {
+            "prefix": [
+                "*pauses work*",
+                "*looks up*",
+                "*puts down tools*"
+            ],
+            "suffix": [
+                "*gets back to work*",
+                "*returns to task*"
+            ]
+        },
+        "sleeping": {
+            "prefix": [
+                "*yawns*",
+                "*rubs eyes*",
+                "*groggily*"
+            ],
+            "suffix": [
+                "*tries to go back to sleep*"
+            ]
+        }
+    },
+    "location_knowledge": {
+        "home": {
+            "knows_well": [
+                "layout",
+                "neighbors",
+                "quiet_spots",
+                "entry_points"
+            ],
+            "comfort_level": "high",
+            "response_tone": "relaxed"
+        },
+        "work": {
+            "knows_well": [
+                "coworkers",
+                "schedule",
+                "shortcuts",
+                "boss_mood"
+            ],
+            "comfort_level": "medium",
+            "response_tone": "professional"
+        },
+        "bar": {
+            "knows_well": [
+                "regulars",
+                "bartender",
+                "back_exit",
+                "drink_specials"
+            ],
+            "comfort_level": "medium",
+            "response_tone": "casual"
+        },
+        "market": {
+            "knows_well": [
+                "vendors",
+                "prices",
+                "stolen_goods_stall",
+                "patrol_times"
+            ],
+            "comfort_level": "medium",
+            "response_tone": "alert"
+        },
+        "unfamiliar": {
+            "knows_well": [],
+            "comfort_level": "low",
+            "response_tone": "cautious"
+        }
+    },
+    "idle_comments": {
+        "at_home": [
+            "*sighs contentedly*",
+            "*stares out window*",
+            "*adjusts something on shelf*",
+            "*hums quietly*"
+        ],
+        "at_work": [
+            "*checks the time*",
+            "*mutters about workload*",
+            "*stretches*",
+            "*yawns*"
+        ],
+        "at_bar": [
+            "*drums fingers on counter*",
+            "*glances at door*",
+            "*sips drink slowly*",
+            "*watches other patrons*"
+        ],
+        "on_street": [
+            "*checks surroundings*",
+            "*adjusts clothing*",
+            "*steps aside for passerby*",
+            "*looks up at sky*"
+        ]
+    }
+}

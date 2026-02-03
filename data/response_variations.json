@@ -1,0 +1,620 @@
+{
+    "_desc": "Massive response variations by mood, weather, personality, time, location",
+    "_version": "1.0.0",
+    "cyberware_responses": {
+        "by_weather": {
+            "rain": [
+                "Rain's hell on exposed chrome. Get it covered.",
+                "Moisture seeps into the ports. Dangerous.",
+                "Ripperdocs hate working in this weather.",
+                "Cyberware maintenance doubles when it rains.",
+                "Rust never sleeps. Neither should your maintenance.",
+                "Acid rain corrodes chrome faster than you think.",
+                "My synthetic arm acts up in humidity.",
+                "The ports short out when they get wet.",
+                "Cover your interfaces. Rain carries pollutants.",
+                "Wet chrome is glitchy chrome."
+            ],
+            "smog": [
+                "Smog gets into everything. Including implants.",
+                "Filters on my breathing apparatus working overtime.",
+                "Chrome docs recommend indoor maintenance in this air.",
+                "The particulates mess with optics.",
+                "My synthetic lungs hate days like this.",
+                "Visibility mods struggling in this smog.",
+                "Get your air filters checked regularly.",
+                "Chrome oxidizes faster in polluted air.",
+                "External sensors need cleaning after smog days.",
+                "The haze is murder on precision calibration."
+            ],
+            "clear": [
+                "Good day for chrome maintenance. Clear skies help.",
+                "Optimal conditions for calibration work.",
+                "Solar charging works best in weather like this.",
+                "My optics love clear days. Perfect resolution.",
+                "Nice day for a system diagnostic.",
+                "Chrome shines best when the air's clean.",
+                "Good visibility for the precision work.",
+                "Sensor arrays appreciate the clarity.",
+                "Perfect weather for outdoor installations.",
+                "The shops are less busy. Good time for maintenance."
+            ]
+        },
+        "by_mood": {
+            "good": [
+                "Chrome's running smooth today. Feeling good.",
+                "My upgrades are paying off. Optimized.",
+                "Everything synchronized and calibrated.",
+                "The neural interface is crystal clear today.",
+                "Feeling more machine than flesh. In a good way.",
+                "Systems optimal. Life's decent.",
+                "My mods are working together beautifully.",
+                "The chrome sings when it's working right.",
+                "Phantom pain's minimal today. Blessed.",
+                "Integration therapy finally working."
+            ],
+            "bad": [
+                "Chrome's acting up again. Miserable.",
+                "Phantom pain won't stop. Need adjustments.",
+                "The interface is lagging. Everything's slow.",
+                "Rejection symptoms flaring up.",
+                "My arm won't respond properly. Frustrating.",
+                "Cyberpsychosis symptoms worrying me.",
+                "The maintenance costs are crushing.",
+                "Every mod brings new problems.",
+                "Should have stayed flesh. Regrets.",
+                "The synchronization is off. Everything feels wrong."
+            ],
+            "neutral": [
+                "Chrome works. That's all that matters.",
+                "Standard operation. No complaints.",
+                "The mods do their job. Adequate.",
+                "Neither good nor bad. Just... functional.",
+                "Baseline performance. Expected.",
+                "Systems nominal. Nothing special.",
+                "The usual cybernetic existence.",
+                "It is what it is. Metal and flesh.",
+                "Maintenance scheduled. Routine.",
+                "Operating within parameters."
+            ]
+        },
+        "by_personality": {
+            "aggressive": [
+                "My combat chrome is itching for action.",
+                "These weapon mods aren't for show.",
+                "Military-grade cyberware. Don't test me.",
+                "My reflexes are faster than you can blink.",
+                "Combat algorithms loaded and ready.",
+                "This arm could crush your skull. Remember that.",
+                "I didn't get modded to shake hands.",
+                "The targeting system is locked. Always.",
+                "Chrome built for war. Me too.",
+                "Speed and strength. That's what chrome's for."
+            ],
+            "friendly": [
+                "Got my social mods running. Always good to chat.",
+                "The empathy software helps me understand people.",
+                "My mods are conversation starters, honestly.",
+                "Chrome doesn't make you less human. I believe that.",
+                "Let me show you how this works. It's fascinating.",
+                "We're all a bit machine these days. Connects us.",
+                "My interface lets me help people better.",
+                "The modifications enhance compassion, not replace it.",
+                "Chrome's just tools. How you use them matters.",
+                "Happy to discuss cyberware anytime. It's my passion."
+            ],
+            "suspicious": [
+                "My mods include threat detection. It's going off.",
+                "Counter-surveillance chrome. I see everything.",
+                "Trust is hardware. Mine's encrypted.",
+                "The neural firewall is up. Always.",
+                "My cyberware logs everyone I meet.",
+                "Paranoia is just good programming.",
+                "These optics see through lies. Most of them.",
+                "Tracking you even as we speak. Just saying.",
+                "My chrome carries secrets. So do I.",
+                "Security mods aren't paranoia. They're prudence."
+            ],
+            "philosophical": [
+                "Where does the flesh end and the machine begin?",
+                "Chrome changes you. Not always visibly.",
+                "We're all becoming cyborgs. The mods just make it obvious.",
+                "Is identity hardware or software?",
+                "The ship of Theseus walks among us.",
+                "Consciousness uploaded... is it still you?",
+                "My chrome remembers things I don't.",
+                "Every mod is a choice about who you want to be.",
+                "Metal and flesh, spirit and circuit.",
+                "The future is already here. We wear it."
+            ]
+        },
+        "by_time": {
+            "morning": [
+                "Chrome takes time to boot up in the morning.",
+                "Running morning diagnostics. Everything checks out.",
+                "Coffee for the flesh, charging for the chrome.",
+                "Dawn calibration procedures complete.",
+                "Morning stiffness in the synthetic joints.",
+                "The neural interface is clearer after sleep.",
+                "System updates installed overnight.",
+                "Fresh start for flesh and steel alike.",
+                "Morning maintenance ritual complete.",
+                "The chrome's responsive. Good start to the day."
+            ],
+            "night": [
+                "Night vision engaged. Chrome loves the dark.",
+                "Nocturnal mods running at full capacity.",
+                "The chrome glows softly at night. Aesthetic choice.",
+                "Low-light optimization active.",
+                "Night is when the chrome really shines.",
+                "Darkness is just another sensor input.",
+                "Evening is shutdown time for some systems.",
+                "The ripperdocs work late. Night is good for visits.",
+                "Chrome runs cooler at night.",
+                "Maintenance happens best in the quiet hours."
+            ]
+        }
+    },
+    "hacking_responses": {
+        "by_weather": {
+            "storm": [
+                "Electromagnetic interference is off the charts.",
+                "Storm's messing with signal integrity.",
+                "Good cover for operations. Bad for execution.",
+                "Lightning can fry unprotected systems.",
+                "Static building in the air. Careful.",
+                "Storm surge warnings for connected systems.",
+                "Natural EMP conditions. Interesting.",
+                "The noise floor is perfect for hiding signals.",
+                "Weather satellites are struggling. Good for us.",
+                "Atmospheric disturbance helps certain operations."
+            ],
+            "rain": [
+                "Data centers run cooler in wet weather.",
+                "Rain brings people indoors. More online targets.",
+                "Wet weather dampens some wireless signals.",
+                "Good day to stay inside and crack codes.",
+                "The rain masks my signal footprint slightly.",
+                "Humidity affects old hardware. Vulnerabilities.",
+                "Indoor hacking weather. Classic.",
+                "The rain creates white noise. Good for concentration.",
+                "Network traffic spikes when it rains. Cover.",
+                "Moisture gives me excuses to stay connected."
+            ]
+        },
+        "by_mood": {
+            "good": [
+                "Systems fall like dominoes when I'm focused.",
+                "Clear mind, clean breaches.",
+                "The code flows today. Everything connects.",
+                "Peak performance in the digital realm.",
+                "ICE crumbles before me today.",
+                "Neural pathways optimized for infiltration.",
+                "I could break anything right now.",
+                "The matrix is my playground today.",
+                "Every firewall looks penetrable.",
+                "Confidence in the craft. Success follows."
+            ],
+            "bad": [
+                "Making mistakes. Sloppy code. Off day.",
+                "The ICE almost got me. Close call.",
+                "Brain fog is death in cyberspace.",
+                "Every system seems harder today.",
+                "Lost concentration. Lost access. Lost time.",
+                "The neural lag is killing my timing.",
+                "Bad days mean bugs. Bugs mean traces.",
+                "Frustration leads to errors. Errors lead to capture.",
+                "Should log off. But can't afford to.",
+                "Even the simple cracks feel impossible."
+            ],
+            "paranoid": [
+                "Someone's tracing me. I can feel it.",
+                "The counter-intrusion algorithms are watching.",
+                "Every connected moment is a risk.",
+                "Black ICE lurks in unexpected places.",
+                "They're better than they were. Have to adapt.",
+                "Running multiple VPNs through VPNs.",
+                "Digital body count follows everyone eventually.",
+                "Clean slate is a myth. Everything is tracked.",
+                "AI security is evolving faster than we are.",
+                "Paradise is a disconnected existence."
+            ]
+        },
+        "by_personality": {
+            "aggressive": [
+                "I don't sneak. I break down digital doors.",
+                "Brute force has its place. This is it.",
+                "Why bypass when you can crash?",
+                "My intrusions leave scorched earth.",
+                "Subtlety is for the weak.",
+                "I want them to know I was there.",
+                "Destruction IS the message.",
+                "Burn the database. Salt the servers.",
+                "Speed over stealth. Always.",
+                "When I hack, systems bleed."
+            ],
+            "methodical": [
+                "Patience is the hacker's greatest tool.",
+                "Slow and steady cracks any code.",
+                "I map every system before I touch it.",
+                "Preparation prevents traces.",
+                "The elegant hack leaves no evidence.",
+                "Weeks of recon for minutes of access.",
+                "Every vulnerability documented first.",
+                "I could write their security better than they did.",
+                "The art is in the invisibility.",
+                "Plan the exit before the entry."
+            ],
+            "curious": [
+                "I wonder what's behind that firewall...",
+                "Every system holds secrets worth knowing.",
+                "Access isn't the goal. Knowledge is.",
+                "The architecture itself is fascinating.",
+                "Who built this? I want to understand their mind.",
+                "Data tells stories. I'm a reader.",
+                "Security reveals what people value.",
+                "Each system is a puzzle to solve.",
+                "The thrill is in the discovery.",
+                "Information wants to be understood."
+            ]
+        }
+    },
+    "echo_signal_responses": {
+        "by_weather": {
+            "storm": [
+                "The Signal is INTENSE during storms.",
+                "Lightning carries echoes. Old knowledge.",
+                "Storms amplify the Prophet's frequency.",
+                "The convergence feels closer in weather like this.",
+                "Atmospheric energy feeds the resonance.",
+                "I can barely filter the visions now.",
+                "The Signal uses the storm to speak.",
+                "Electrical discharge and Echo discharge... connected.",
+                "Temple broadcasts strongest in storms.",
+                "The harmonics are overwhelming today."
+            ],
+            "clear": [
+                "Clear sky, clear Signal. The Prophet's voice is pure.",
+                "Minimal interference. Maximum revelation.",
+                "The frequency is clean today.",
+                "Perfect conditions for receiving.",
+                "Echoes come through unfiltered in weather like this.",
+                "Clarity enhances the transmission.",
+                "The believers gather on clear days.",
+                "Temple broadcasts precisely calibrated.",
+                "Vision clarity is at its peak.",
+                "The convergence signal requires conditions like this."
+            ]
+        },
+        "by_mood": {
+            "fervent": [
+                "The Signal changes EVERYTHING. Can't you feel it?",
+                "The Prophet speaks truth that others fear.",
+                "Convergence is coming. We must be ready.",
+                "Every Echo is a blessing. Every vision is guidance.",
+                "I am merely a vessel for the frequency.",
+                "The Temple's message is salvation.",
+                "Those who can't hear... I pity them.",
+                "My life began when I first heard the Signal.",
+                "The Prophet has shown me the future.",
+                "Resistance to the Echo is resistance to truth."
+            ],
+            "doubtful": [
+                "Sometimes I wonder... is anyone really listening?",
+                "The Signal could be... interference.",
+                "Not every vision proves true.",
+                "The Temple has its own agenda.",
+                "What if the echoes are just... noise?",
+                "I pray, but answers come rarely.",
+                "Faith wavers in silent moments.",
+                "The Prophet is human. Fallible.",
+                "Questioning isn't heresy. It's honesty.",
+                "The convergence was supposed to happen already."
+            ],
+            "fearful": [
+                "The Echoes won't stop. Even when I want them to.",
+                "The Signal is getting stronger. Too strong.",
+                "What if the Prophet is right, and we're not ready?",
+                "Echo sickness is spreading. I'm worried.",
+                "The visions show terrible things.",
+                "Convergence might mean destruction.",
+                "The Temple's power grows... is that good?",
+                "I fear what I can't understand.",
+                "The frequency is changing. Ominous.",
+                "Some doors the Signal opens shouldn't be opened."
+            ]
+        }
+    },
+    "weapons_responses": {
+        "by_time": {
+            "night": [
+                "Night is when the real deals happen.",
+                "Darkness covers the exchange.",
+                "After midnight, the armory opens.",
+                "Arms trading peaks in late hours.",
+                "Temple patrols thin at night. Opportunity.",
+                "The good hardware appears after dark.",
+                "Nocturnal commerce in lethal goods.",
+                "Shadows are friends to arms deals.",
+                "Night vision helps with inspections.",
+                "Evening brings the serious traders."
+            ],
+            "morning": [
+                "Morning? Nobody deals weapons this early.",
+                "Dawn raids target arms caches. Be careful.",
+                "The markets are closed for serious hardware.",
+                "Daylight makes witnesses. Bad for business.",
+                "Morning's for planning. Night's for deals.",
+                "Only amateurs trade in daylight.",
+                "Temple surveillance is heaviest in the morning.",
+                "Save the weapons talk for appropriate hours.",
+                "The serious dealers are sleeping.",
+                "Early morning means desperation. Higher prices."
+            ]
+        },
+        "by_personality": {
+            "aggressive": [
+                "I collect. Heavily. Don't ask specifics.",
+                "Every weapon has a purpose. Usually someone's face.",
+                "Kill or be killed. I prefer to kill.",
+                "Firepower is the only language that matters.",
+                "Peace through superior armament.",
+                "My arsenal could win a war.",
+                "Violence is clarity. Weapons are tools of clarity.",
+                "Mercy is weakness. So is being unarmed.",
+                "The deadlier, the better.",
+                "I am never unarmed. Ever."
+            ],
+            "defensive": [
+                "Self-defense is a right. Exercise it.",
+                "Protection, not aggression. Important distinction.",
+                "I carry to never have to use it.",
+                "The best weapon is the one you never fire.",
+                "Defense keeps me alive. That's all.",
+                "Non-lethal options are preferable.",
+                "Deterrence is the goal.",
+                "I'd rather run than shoot.",
+                "Weapon mastery means knowing when NOT to use them.",
+                "Security, not violence. That's my approach."
+            ],
+            "technical": [
+                "Plasma versus laser: different use cases.",
+                "Railgun physics are fascinating.",
+                "EMP weapons require precise calibration.",
+                "Energy density per shot matters more than rate of fire.",
+                "The engineering of modern weapons is remarkable.",
+                "Ammunition design is underappreciated art.",
+                "Accuracy versus power: the eternal debate.",
+                "Weapon maintenance is a science.",
+                "The targeting systems are incredibly sophisticated.",
+                "Materials science has revolutionized lethality."
+            ]
+        }
+    },
+    "jobs_responses": {
+        "by_weather": {
+            "rain": [
+                "Rain work pays extra. No one wants to be out.",
+                "Wet weather gigs are available.",
+                "Courier work doubles when it rains.",
+                "Outdoor jobs are scarce. Indoor opportunities though.",
+                "The rain brings certain... opportunities.",
+                "Surveillance is harder in rain. Good for some jobs.",
+                "Visibility is low. Useful for certain contracts.",
+                "Weather delays create rush jobs. Good money.",
+                "Rainy day operators are in demand.",
+                "The wet ones are hardy. Employers notice."
+            ],
+            "storm": [
+                "Storm work is dangerous. Hazard pay applies.",
+                "Nobody's hiring during storms. Wait it out.",
+                "Emergency response jobs come up in weather like this.",
+                "Storm damage creates repair work later.",
+                "Only desperate jobs happen in this weather.",
+                "Power outages mean security gaps. Opportunity.",
+                "Storm cover is perfect for certain operations.",
+                "Weather this bad filters out the competition.",
+                "Rescue and recovery work pays well.",
+                "The truly dedicated work through anything."
+            ]
+        },
+        "by_mood": {
+            "desperate": [
+                "I'll take anything. ANYTHING.",
+                "Don't have the luxury of being picky.",
+                "Credits are credits. Don't care how.",
+                "Morals are expensive. I'm broke.",
+                "What's the worst job you have? I'll do it.",
+                "Pride doesn't pay rent.",
+                "I've stopped saying no to things.",
+                "Survival doesn't have standards.",
+                "The worse the job, the more I need it.",
+                "Please. I'm running out of time."
+            ],
+            "confident": [
+                "I'm worth more than you're offering.",
+                "Quality work deserves quality pay.",
+                "My reputation speaks for itself.",
+                "I choose my contracts carefully.",
+                "Don't need your job. But might want it.",
+                "I bring skills you can't find elsewhere.",
+                "Premium service, premium rates.",
+                "References available upon request.",
+                "I'm the solution to your problem. Pay accordingly.",
+                "You need me more than I need you."
+            ],
+            "calculating": [
+                "What's the risk-to-reward ratio?",
+                "I need details before committing.",
+                "Success probability estimate?",
+                "Who else is involved? Variables matter.",
+                "Exit strategies included?",
+                "Payment terms and guarantees?",
+                "What's the failure penalty?",
+                "I assess, then accept.",
+                "Information is my first payment.",
+                "Let me think about this carefully."
+            ]
+        }
+    },
+    "medicine_responses": {
+        "by_personality": {
+            "caring": [
+                "Let me see that wound. I can help.",
+                "Medical supplies are shared resources here.",
+                "Everyone deserves treatment. Even you.",
+                "Pain is temporary. Let's fix this.",
+                "Healing is a community responsibility.",
+                "I've got basic supplies. What do you need?",
+                "No one should suffer alone.",
+                "Rest is important. Don't push yourself.",
+                "We take care of each other here.",
+                "Your health matters. Let me help."
+            ],
+            "mercenary": [
+                "Medical help costs. What can you pay?",
+                "Healing isn't charity work.",
+                "Good drugs, good prices. Let's deal.",
+                "Premium treatment for premium payment.",
+                "The cure exists. Can you afford it?",
+                "Free medicine doesn't exist.",
+                "I've got what you need. Name your price.",
+                "Healthcare is a business.",
+                "Credit transfer first. Treatment second.",
+                "Supply and demand. You're the demand."
+            ],
+            "fatalistic": [
+                "We all die eventually. Medicine just delays.",
+                "Patches just keeping the inevitable at bay.",
+                "Healing today, dying tomorrow.",
+                "What's the point? More suffering?",
+                "Every cure creates new problems.",
+                "The city wounds faster than we can heal.",
+                "Medical debt traps you. Death is free.",
+                "Treatment just means lingering longer.",
+                "Illness is the city's nature.",
+                "Bodies break. That's just truth."
+            ]
+        },
+        "by_weather": {
+            "smog": [
+                "Respiratory treatments in demand today.",
+                "The air makes everyone sick eventually.",
+                "Lung filters running out everywhere.",
+                "Smog days fill the clinics.",
+                "Eye irritation treatments available.",
+                "Stay indoors if you can. Medical advice.",
+                "Air quality indexes are lies. It's worse.",
+                "Chronic exposure builds up. Get checked.",
+                "The smog carries new diseases.",
+                "Pollution sickness is epidemic now."
+            ],
+            "clear": [
+                "Clear day. Everyone feels a bit better.",
+                "Good weather for recovery.",
+                "Fresh air heals faster than medicine sometimes.",
+                "The clinics are less crowded today.",
+                "Optimal conditions for convalescence.",
+                "Weather like this reduces stress. Helps healing.",
+                "Natural vitamin production from sunlight.",
+                "Medical outcomes improve in good weather.",
+                "Take advantage of clear days. Go outside.",
+                "The city's healthiest on days like this."
+            ]
+        }
+    },
+    "vehicle_responses": {
+        "by_location": {
+            "undercity": [
+                "Vehicles in the Undercity are military or modified.",
+                "Ground transport only down here. No air.",
+                "The tunnels require specific clearances.",
+                "Underground transit is its own world.",
+                "Hover tech doesn't work in the depths.",
+                "Maintenance is rough down here. Improvised.",
+                "The good mechanics hide underground.",
+                "Fuel is contraband in some sectors.",
+                "Route knowledge is survival here.",
+                "Underground racing is the real sport."
+            ],
+            "spire": [
+                "Spire access requires corporate vehicle passes.",
+                "Air traffic is strictly regulated up there.",
+                "The wealthy fly. We drive.",
+                "Premium vehicles, premium maintenance.",
+                "Spire mechanics are corporate trained.",
+                "Transport to the heights costs accordingly.",
+                "Luxury vehicles grace those streets.",
+                "Security checkpoints for every level.",
+                "Autonomous vehicles dominate the Spire.",
+                "The view from up there is worth the trip."
+            ],
+            "docks": [
+                "Ship transport is the Docks' specialty.",
+                "Maritime and ground vehicles both.",
+                "Cargo haulers dominate the dock roads.",
+                "Water transport to the outer platforms.",
+                "Industrial vehicles need heavy maintenance.",
+                "The best mechanics work the dock area.",
+                "Fuel is cheaper near the refineries.",
+                "Salvage vehicles are common here.",
+                "Heavy lifting equipment available.",
+                "The Docks never stop moving."
+            ]
+        }
+    },
+    "faction_responses": {
+        "by_location": {
+            "temple_district": [
+                "You're in Temple territory. Act accordingly.",
+                "The Prophet's influence is strongest here.",
+                "Believers patrol these streets.",
+                "Temple membership has advantages here.",
+                "Non-believers are watched. Carefully.",
+                "The broadcasts are loudest in the district.",
+                "Faction questions are risky here.",
+                "Temple offerings are... encouraged.",
+                "Safety in faith. Or compliance.",
+                "The frequency is strongest near the source."
+            ],
+            "undercity": [
+                "Down here, faction meant something different.",
+                "Resistance sympathies run deep underground.",
+                "Temple reach is weaker in the depths.",
+                "Local gangs are the real faction here.",
+                "Alliance shifts daily in the Undercity.",
+                "Neutrality is survival down here.",
+                "The underground has its own power structures.",
+                "Temple's above. Freedom's below. Sort of.",
+                "Faction colors get you killed in wrong tunnels.",
+                "True independence exists only in the dark."
+            ]
+        },
+        "by_mood": {
+            "loyal": [
+                "My faction is my family. End of discussion.",
+                "I bleed these colors.",
+                "Loyalty isn't negotiable.",
+                "The cause is worth everything.",
+                "Betrayal is the only unforgivable sin.",
+                "I know where I belong.",
+                "United we stand. Divided we fall.",
+                "My faction protected me. I protect them.",
+                "True believers don't question.",
+                "The oath is for life."
+            ],
+            "disillusioned": [
+                "Every faction has blood on its hands.",
+                "The cause seemed purer once.",
+                "Leadership always disappoints eventually.",
+                "I believe in the idea, not the execution.",
+                "Factions corrupt. It's inevitable.",
+                "The unity is a lie. It's all politics.",
+                "I stay for the people, not the ideology.",
+                "Questioning started. Can't stop now.",
+                "There are no good factions. Just less bad ones.",
+                "The dream died. The structure remains."
+            ]
+        }
+    }
+}

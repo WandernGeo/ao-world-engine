@@ -37,9 +37,198 @@ def load_json(filename: str) -> dict:
             return json.load(f)
     return {}
 
+# Load context intents (activity/location aware)
+CONTEXT_INTENTS = load_json("context_intents.json")
 # Load intent data
 SMALL_TALK = load_json("small_talk_intents.json")
 CANNED_RESPONSES = load_json("canned_responses.json")
+# Load cyberpunk-themed intents
+CYBERPUNK_INTENTS = load_json("cyberpunk_intents.json")
+# Load response variations by mood/weather/personality/time/location
+RESPONSE_VARIATIONS = load_json("response_variations.json")
+
+
+def get_npc_context(npc: dict) -> dict:
+    """
+    Extract NPC's current context from their state.
+    
+    NPC state should include:
+    - current_location: where they are
+    - current_activity: what they're doing
+    - next_destination: where they're going next
+    - schedule: their daily schedule
+    - needs: hunger, energy, etc.
+    """
+    return {
+        "location": npc.get("current_location", "unknown"),
+        "location_type": npc.get("location_type", "street"),
+        "activity": npc.get("current_activity", "idle"),
+        "next_destination": npc.get("next_destination"),
+        "is_busy": npc.get("is_busy", False),
+        "needs": npc.get("needs", {}),
+        "mood": calculate_mood_from_needs(npc.get("needs", {}))
+    }
+
+
+def calculate_mood_from_needs(needs: dict) -> str:
+    """Calculate NPC mood from their needs state."""
+    hunger = needs.get("hunger", 0.5)
+    energy = needs.get("energy", 0.5)
+    social = needs.get("social", 0.5)
+    
+    # Low needs = bad mood
+    if hunger > 0.7 or energy < 0.3:
+        return "bad"
+    elif hunger < 0.3 and energy > 0.6 and social > 0.5:
+        return "good"
+    else:
+        return "neutral"
+
+
+def select_response_with_context(
+    intent_match: "IntentMatch",
+    world_state: dict,
+    npc: dict,
+    npc_context: dict,
+    tick: int
+) -> str:
+    """
+    Select response based on intent, world state, AND NPC's current context.
+    
+    Priority:
+    1. Activity-specific responses (if asking about what they're doing)
+    2. Location-specific responses
+    3. World state (weather, time)
+    4. Default personality-based
+    """
+    intent = intent_match.intent
+    
+    # Check if this is a context-aware intent
+    context_intent_data = CONTEXT_INTENTS.get("activity_intents", {}).get(intent, {})
+    
+    # Try activity-specific responses first
+    if "responses_by_activity" in context_intent_data:
+        activity = npc_context.get("activity", "idle")
+        responses = context_intent_data["responses_by_activity"].get(
+            activity,
+            context_intent_data["responses_by_activity"].get("default", [])
+        )
+        if responses:
+            return deterministic_pick(responses, npc, intent, tick)
+    
+    # Try location-type responses
+    if "responses_by_location_type" in context_intent_data:
+        loc_type = npc_context.get("location_type", "default")
+        responses = context_intent_data["responses_by_location_type"].get(
+            loc_type,
+            context_intent_data["responses_by_location_type"].get("default", [])
+        )
+        if responses:
+            return deterministic_pick(responses, npc, intent, tick)
+    
+    # Try busy-level responses
+    if "responses_by_busy_level" in context_intent_data:
+        if npc_context.get("is_busy"):
+            busy_level = "very_busy"
+        elif npc_context.get("activity") in ["working", "patrolling", "trading"]:
+            busy_level = "somewhat_busy"
+        else:
+            busy_level = "not_busy"
+        responses = context_intent_data["responses_by_busy_level"].get(busy_level, [])
+        if responses:
+            return deterministic_pick(responses, npc, intent, tick)
+    
+    # Fall back to regular response selection
+    return select_response(intent_match, world_state, npc, tick)
+
+
+def add_activity_modifier(response: str, npc_context: dict, tick: int) -> str:
+    """Add activity-based prefix/suffix to response."""
+    activity = npc_context.get("activity", "idle")
+    modifiers = CONTEXT_INTENTS.get("activity_modifiers", {}).get(activity, {})
+    
+    # Add prefix 30% of the time
+    prefixes = modifiers.get("prefix", [])
+    if prefixes and (tick % 10) < 3:
+        prefix = prefixes[tick % len(prefixes)]
+        response = f"{prefix} {response}"
+    
+    return response
+
+
+def deterministic_pick(items: list, npc: dict, intent: str, tick: int) -> str:
+    """Deterministically pick from list based on NPC and context."""
+    if not items:
+        return "..."
+    npc_id = npc.get("id", "unknown")
+    seed = f"{npc_id}_{intent}_{tick}"
+    idx = int(hashlib.md5(seed.encode()).hexdigest()[:8], 16) % len(items)
+    return items[idx]
+
+
+# =============================================================================
+# MAIN NLU FUNCTION
+# =============================================================================
+
+def process_input(
+    user_input: str,
+    npc: dict,
+    world_state: dict,
+    tick: int = 0
+) -> Dict[str, Any]:
+    """
+    Full NLU pipeline: classify intent and select response.
+    
+    NPC dict should include runtime state:
+    - id, name, personality (static)
+    - current_location, current_activity, next_destination (runtime)
+    - needs, is_busy, schedule (runtime)
+    
+    Returns:
+        {
+            "user_input": str,
+            "intent": str,
+            "confidence": float,
+            "entities": dict,
+            "response": str,
+            "npc_context": dict,
+            "nlu_source": "embedded"
+        }
+    """
+    # Get NPC's current context
+    npc_context = get_npc_context(npc)
+    
+    # Classify intent - try context intents first, then general
+    all_intents = {
+        **SMALL_TALK.get("intents", {}),
+        **CONTEXT_INTENTS.get("activity_intents", {})
+    }
+    intent_match = classify_intent(user_input, all_intents)
+    
+    # Select response with full context awareness
+    response = select_response_with_context(
+        intent_match, world_state, npc, npc_context, tick
+    )
+    
+    # Add activity modifier
+    response = add_activity_modifier(response, npc_context, tick)
+    
+    return {
+        "user_input": user_input,
+        "intent": intent_match.intent,
+        "confidence": intent_match.confidence,
+        "matched_keywords": intent_match.matched_keywords,
+        "matched_patterns": intent_match.matched_patterns,
+        "entities": intent_match.entities,
+        "response": response,
+        "npc_context": {
+            "location": npc_context["location"],
+            "activity": npc_context["activity"],
+            "next_destination": npc_context["next_destination"],
+            "mood": npc_context["mood"]
+        },
+        "nlu_source": "embedded"
+    }
 
 
 # =============================================================================
@@ -437,47 +626,6 @@ def select_response(
     idx = int(hashlib.md5(seed.encode()).hexdigest()[:8], 16) % len(responses)
     
     return responses[idx]
-
-
-# =============================================================================
-# MAIN NLU FUNCTION
-# =============================================================================
-
-def process_input(
-    user_input: str,
-    npc: dict,
-    world_state: dict,
-    tick: int = 0
-) -> Dict[str, Any]:
-    """
-    Full NLU pipeline: classify intent and select response.
-    
-    Returns:
-        {
-            "user_input": str,
-            "intent": str,
-            "confidence": float,
-            "entities": dict,
-            "response": str,
-            "nlu_source": "embedded"
-        }
-    """
-    # Classify intent
-    intent_match = classify_intent(user_input)
-    
-    # Select response based on world state
-    response = select_response(intent_match, world_state, npc, tick)
-    
-    return {
-        "user_input": user_input,
-        "intent": intent_match.intent,
-        "confidence": intent_match.confidence,
-        "matched_keywords": intent_match.matched_keywords,
-        "matched_patterns": intent_match.matched_patterns,
-        "entities": intent_match.entities,
-        "response": response,
-        "nlu_source": "embedded"
-    }
 
 
 # =============================================================================
