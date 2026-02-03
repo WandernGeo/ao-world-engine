@@ -1,0 +1,474 @@
+{
+    "_chunk": {
+        "id": "chunk_14_behaviors",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "behaviors",
+        "prev_chunk": "chunk_13_canon_events",
+        "next_chunk": null
+    },
+    "_meta": {
+        "description": "Executable behaviors, NPC archetypes, and dialogue templates for dynamic world generation",
+        "philosophy": "Small code + rich context = infinite dynamic NPCs from finite data"
+    },
+    "archetypes": {
+        "_desc": "Templates for procedurally generating unknown NPCs",
+        "shopkeeper": {
+            "code": "ARCH001",
+            "personality_base": {
+                "friendliness": 0.7,
+                "suspicion": 0.3,
+                "greed": 0.5,
+                "patience": 0.6
+            },
+            "knowledge_domains": [
+                "local_prices",
+                "district_gossip",
+                "regular_customers"
+            ],
+            "dialogue_templates": {
+                "greeting": [
+                    "Welcome to {shop_name}. What can I get you?",
+                    "Ah, a customer! {weather_comment} What'll it be?",
+                    "You look like you need something. This is {shop_name}, best in {district}."
+                ],
+                "price_quote": [
+                    "That'll be {price} credits.",
+                    "{price} credits. {trust_comment}",
+                    "For you? {price}. {relationship_modifier}"
+                ],
+                "farewell": [
+                    "Come back soon. Stay safe out there.",
+                    "Watch yourself in {district}. It's not what it used to be.",
+                    "Credits talk, friend. Remember that."
+                ],
+                "gossip": [
+                    "Word is {recent_event}. But you didn't hear it from me.",
+                    "Strange things happening near {nearby_landmark}. Just saying.",
+                    "The Temple's been asking questions. Keep your head down."
+                ]
+            },
+            "behaviors": [
+                "BHV001",
+                "BHV002",
+                "BHV005"
+            ]
+        },
+        "bartender": {
+            "code": "ARCH002",
+            "personality_base": {
+                "friendliness": 0.6,
+                "suspicion": 0.5,
+                "discretion": 0.8,
+                "empathy": 0.6
+            },
+            "knowledge_domains": [
+                "rumors",
+                "regulars",
+                "underground_contacts",
+                "drink_mixing"
+            ],
+            "dialogue_templates": {
+                "greeting": [
+                    "What's your poison?",
+                    "Sit down, take a load off. What'll it be?",
+                    "New face. Or maybe not. {time_of_day_comment}"
+                ],
+                "serving": [
+                    "Here you go. {drink_name}. Best in the district.",
+                    "Drink up. Forget your troubles for a while.",
+                    "This one's on me. You look like you need it."
+                ],
+                "information": [
+                    "You didn't hear this from me, but {rumor}.",
+                    "Loose lips sink ships. But for the right price...",
+                    "I hear things. See things. Know things. What's it worth to you?"
+                ]
+            },
+            "behaviors": [
+                "BHV001",
+                "BHV003",
+                "BHV006"
+            ]
+        },
+        "guard": {
+            "code": "ARCH003",
+            "personality_base": {
+                "aggression": 0.6,
+                "obedience": 0.7,
+                "suspicion": 0.7,
+                "corruption": 0.4
+            },
+            "knowledge_domains": [
+                "patrol_routes",
+                "wanted_persons",
+                "district_rules"
+            ],
+            "dialogue_templates": {
+                "challenge": [
+                    "Halt. State your business.",
+                    "You don't belong here. Move along.",
+                    "Papers. Now."
+                ],
+                "warning": [
+                    "I've got my eye on you.",
+                    "One wrong move and you're done.",
+                    "The Temple sees everything. Remember that."
+                ],
+                "bribe_response": [
+                    "You trying to buy your way out? {bribe_result}",
+                    "Credits, huh? Maybe we can work something out.",
+                    "I don't take bribes. Get out of my sight."
+                ]
+            },
+            "behaviors": [
+                "BHV004",
+                "BHV007",
+                "BHV008"
+            ]
+        },
+        "street_vendor": {
+            "code": "ARCH004",
+            "personality_base": {
+                "friendliness": 0.5,
+                "desperation": 0.6,
+                "cunning": 0.5,
+                "resilience": 0.7
+            },
+            "knowledge_domains": [
+                "street_prices",
+                "foot_traffic",
+                "hiding_spots"
+            ],
+            "dialogue_templates": {
+                "pitch": [
+                    "Hey! Hey you! Best {product} in {district}!",
+                    "You look hungry. I got what you need.",
+                    "Cheap! Quick! No questions asked!"
+                ],
+                "haggle": [
+                    "Come on, I got kids to feed. {price} is fair.",
+                    "You drive a hard bargain. Fine, {reduced_price}.",
+                    "Take it or leave it. Someone else will buy."
+                ]
+            },
+            "behaviors": [
+                "BHV001",
+                "BHV009"
+            ]
+        },
+        "medic": {
+            "code": "ARCH005",
+            "personality_base": {
+                "empathy": 0.8,
+                "professionalism": 0.7,
+                "exhaustion": 0.5,
+                "hope": 0.4
+            },
+            "knowledge_domains": [
+                "injuries",
+                "medicines",
+                "patient_history"
+            ],
+            "dialogue_templates": {
+                "assessment": [
+                    "Let me see. {injury_assessment}",
+                    "This doesn't look good. But I've seen worse.",
+                    "How long have you had this? {diagnosis}"
+                ],
+                "treatment": [
+                    "Hold still. This might hurt.",
+                    "I'll patch you up. Try not to get shot again.",
+                    "You need rest. And luck. Mostly luck."
+                ]
+            },
+            "behaviors": [
+                "BHV010",
+                "BHV011"
+            ]
+        },
+        "civilian": {
+            "code": "ARCH006",
+            "personality_base": {
+                "fear": 0.5,
+                "curiosity": 0.4,
+                "self_preservation": 0.8,
+                "friendliness": 0.5
+            },
+            "knowledge_domains": [
+                "local_area",
+                "daily_routines",
+                "survival_tips"
+            ],
+            "dialogue_templates": {
+                "greeting": [
+                    "Can I help you?",
+                    "You're not from around here.",
+                    "Keep your voice down. Walls have ears."
+                ],
+                "flee": [
+                    "I don't want any trouble!",
+                    "Leave me alone!",
+                    "Guards! Guards!"
+                ]
+            },
+            "behaviors": [
+                "BHV005",
+                "BHV012"
+            ]
+        }
+    },
+    "behaviors": {
+        "_desc": "Embedded Python functions for dynamic NPC logic. Base64 encoded for JSON safety.",
+        "BHV001": {
+            "id": "BHV001",
+            "name": "calculate_price",
+            "description": "Dynamic pricing based on trust, time, and market conditions",
+            "inputs": [
+                "item_code",
+                "npc_id",
+                "player_id",
+                "tick"
+            ],
+            "outputs": [
+                "price",
+                "attitude",
+                "discount_reason"
+            ],
+            "python_b64": "ZGVmIGNhbGN1bGF0ZV9wcmljZShpdGVtX2NvZGUsIG5wY19pZCwgcGxheWVyX2lkLCB0aWNrKToKICAgICMgR2V0IGJhc2UgcHJpY2UgZnJvbSB3b3JsZCBjb2RlYwogICAgYmFzZV9wcmljZSA9IGdldF9pdGVtKGl0ZW1fY29kZSkuZ2V0KCdwcmljZScsIDEwMCkKICAgIAogICAgIyBSZWxhdGlvbnNoaXAgbW9kaWZpZXIKICAgIHJlbCA9IGdldF9yZWxhdGlvbnNoaXAobnBjX2lkLCBwbGF5ZXJfaWQpCiAgICB0cnVzdCA9IHJlbC5nZXQoJ3RydXN0JywgMC41KQogICAgCiAgICAjIFRpbWUgbW9kaWZpZXIgKG5pZ2h0ID0gZXhwZW5zaXZlKQogICAgaG91ciA9IHRpY2sgJSAyNAogICAgdGltZV9tb2QgPSAxLjIgaWYgaG91ciA8IDYgb3IgaG91ciA+IDIwIGVsc2UgMS4wCiAgICAKICAgICMgVHJ1c3QgZGlzY291bnQgKHVwIHRvIDMwJSBvZmYpCiAgICB0cnVzdF9tb2QgPSAxLjAgLSAodHJ1c3QgKiAwLjMpCiAgICAKICAgIGZpbmFsX3ByaWNlID0gaW50KGJhc2VfcHJpY2UgKiB0aW1lX21vZCAqIHRydXN0X21vZCkKICAgIAogICAgIyBEZXRlcm1pbmUgYXR0aXR1ZGUKICAgIGlmIHRydXN0ID4gMC43OgogICAgICAgIGF0dGl0dWRlID0gJ2ZyaWVuZGx5JwogICAgICAgIGRpc2NvdW50X3JlYXNvbiA9ICdmb3IgYSBmcmllbmQnCiAgICBlbGlmIHRydXN0ID4gMC40OgogICAgICAgIGF0dGl0dWRlID0gJ25ldXRyYWwnCiAgICAgICAgZGlzY291bnRfcmVhc29uID0gTm9uZQogICAgZWxzZToKICAgICAgICBhdHRpdHVkZSA9ICd3YXJ5JwogICAgICAgIGRpc2NvdW50X3JlYXNvbiA9IE5vbmUKICAgIAogICAgcmV0dXJuIHsKICAgICAgICAncHJpY2UnOiBmaW5hbF9wcmljZSwKICAgICAgICAnYXR0aXR1ZGUnOiBhdHRpdHVkZSwKICAgICAgICAnZGlzY291bnRfcmVhc29uJzogZGlzY291bnRfcmVhc29uCiAgICB9"
+        },
+        "BHV002": {
+            "id": "BHV002",
+            "name": "react_to_event",
+            "description": "How NPC reacts when witnessing an event",
+            "inputs": [
+                "npc_id",
+                "event_type",
+                "event_data",
+                "tick"
+            ],
+            "outputs": [
+                "reaction",
+                "spread_gossip",
+                "mood_change"
+            ],
+            "python_b64": "ZGVmIHJlYWN0X3RvX2V2ZW50KG5wY19pZCwgZXZlbnRfdHlwZSwgZXZlbnRfZGF0YSwgdGljayk6CiAgICBucGMgPSBnZXRfbnBjKG5wY19pZCkKICAgIHBlcnNvbmFsaXR5ID0gbnBjLmdldCgncGVyc29uYWxpdHknLCB7fSkKICAgIAogICAgIyBGZWFyIHJlc3BvbnNlCiAgICBpZiBldmVudF90eXBlIGluIFsndmlvbGVuY2UnLCAnZXhwbG9zaW9uJywgJ2d1bmZpcmUnXToKICAgICAgICBpZiBwZXJzb25hbGl0eS5nZXQoJ2ZlYXInLCAwLjUpID4gMC42OgogICAgICAgICAgICByZWFjdGlvbiA9ICdmbGVlJwogICAgICAgIGVsaWYgcGVyc29uYWxpdHkuZ2V0KCdhZ2dyZXNzaW9uJywgMC41KSA+IDAuNzoKICAgICAgICAgICAgcmVhY3Rpb24gPSAnaW52ZXN0aWdhdGUnCiAgICAgICAgZWxzZToKICAgICAgICAgICAgcmVhY3Rpb24gPSAnaGlkZScKICAgICAgICBtb29kX2NoYW5nZSA9ICdmZWFyZnVsJwogICAgICAgIHNwcmVhZF9nb3NzaXAgPSBUcnVlCiAgICAKICAgICMgQ3VyaW9zaXR5IHJlc3BvbnNlCiAgICBlbGlmIGV2ZW50X3R5cGUgaW4gWydzdHJhbmdlcicsICdhbm9tYWx5JywgJ25ld19mYWNlJ106CiAgICAgICAgaWYgcGVyc29uYWxpdHkuZ2V0KCdjdXJpb3NpdHknLCAwLjUpID4gMC41OgogICAgICAgICAgICByZWFjdGlvbiA9ICdvYnNlcnZlJwogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHJlYWN0aW9uID0gJ2lnbm9yZScKICAgICAgICBtb29kX2NoYW5nZSA9IE5vbmUKICAgICAgICBzcHJlYWRfZ29zc2lwID0gcGVyc29uYWxpdHkuZ2V0KCdnb3NzaXB5JywgMC41KSA+IDAuNgogICAgCiAgICBlbHNlOgogICAgICAgIHJlYWN0aW9uID0gJ25vbmUnCiAgICAgICAgbW9vZF9jaGFuZ2UgPSBOb25lCiAgICAgICAgc3ByZWFkX2dvc3NpcCA9IEZhbHNlCiAgICAKICAgIHJldHVybiB7CiAgICAgICAgJ3JlYWN0aW9uJzogcmVhY3Rpb24sCiAgICAgICAgJ3NwcmVhZF9nb3NzaXAnOiBzcHJlYWRfZ29zc2lwLAogICAgICAgICdtb29kX2NoYW5nZSc6IG1vb2RfY2hhbmdlCiAgICB9"
+        },
+        "BHV003": {
+            "id": "BHV003",
+            "name": "share_information",
+            "description": "Bartender decides what info to share based on payment/relationship",
+            "inputs": [
+                "npc_id",
+                "player_id",
+                "payment",
+                "topic"
+            ],
+            "outputs": [
+                "info_level",
+                "rumor",
+                "trust_change"
+            ],
+            "python_b64": "ZGVmIHNoYXJlX2luZm9ybWF0aW9uKG5wY19pZCwgcGxheWVyX2lkLCBwYXltZW50LCB0b3BpYyk6CiAgICByZWwgPSBnZXRfcmVsYXRpb25zaGlwKG5wY19pZCwgcGxheWVyX2lkKQogICAgdHJ1c3QgPSByZWwuZ2V0KCd0cnVzdCcsIDAuNSkKICAgIAogICAgIyBJbmZvIGxldmVsIGJhc2VkIG9uIHBheW1lbnQgKyB0cnVzdAogICAgaW5mb19zY29yZSA9IChwYXltZW50IC8gMTAwKSArIHRydXN0CiAgICAKICAgIGlmIGluZm9fc2NvcmUgPiAxLjU6CiAgICAgICAgaW5mb19sZXZlbCA9ICdzZWNyZXQnCiAgICAgICAgcnVtb3IgPSBnZXRfc2VjcmV0X3J1bW9yKHRvcGljKQogICAgZWxpZiBpbmZvX3Njb3JlID4gMC44OgogICAgICAgIGluZm9fbGV2ZWwgPSAndXNlZnVsJwogICAgICAgIHJ1bW9yID0gZ2V0X2NvbW1vbl9ydW1vcih0b3BpYykKICAgIGVsc2U6CiAgICAgICAgaW5mb19sZXZlbCA9ICd2YWd1ZScKICAgICAgICBydW1vciA9ICdOb3RoaW5nIEkga25vdyBhYm91dC4nCiAgICAKICAgIHRydXN0X2NoYW5nZSA9IDAuMDUgaWYgcGF5bWVudCA+IDAgZWxzZSAwCiAgICAKICAgIHJldHVybiB7CiAgICAgICAgJ2luZm9fbGV2ZWwnOiBpbmZvX2xldmVsLAogICAgICAgICdydW1vcic6IHJ1bW9yLAogICAgICAgICd0cnVzdF9jaGFuZ2UnOiB0cnVzdF9jaGFuZ2UKICAgIH0="
+        },
+        "BHV004": {
+            "id": "BHV004",
+            "name": "guard_patrol",
+            "description": "Guard patrol logic with corruption check",
+            "inputs": [
+                "npc_id",
+                "district",
+                "tick",
+                "alert_level"
+            ],
+            "outputs": [
+                "action",
+                "next_location",
+                "will_accept_bribe"
+            ],
+            "python_b64": "ZGVmIGd1YXJkX3BhdHJvbChucGNfaWQsIGRpc3RyaWN0LCB0aWNrLCBhbGVydF9sZXZlbCk6CiAgICBucGMgPSBnZXRfbnBjKG5wY19pZCkKICAgIGNvcnJ1cHRpb24gPSBucGMuZ2V0KCdwZXJzb25hbGl0eScsIHt9KS5nZXQoJ2NvcnJ1cHRpb24nLCAwLjQpCiAgICAKICAgICMgUGF0cm9sIHJvdXRlIGJhc2VkIG9uIHRpY2sKICAgIHBhdHJvbF9wb2ludHMgPSBnZXRfcGF0cm9sX3JvdXRlKGRpc3RyaWN0KQogICAgY3VycmVudF9pZHggPSAodGljayAvLyA0KSAlIGxlbihwYXRyb2xfcG9pbnRzKQogICAgbmV4dF9sb2NhdGlvbiA9IHBhdHJvbF9wb2ludHNbY3VycmVudF9pZHhdCiAgICAKICAgICMgQWN0aW9uIGJhc2VkIG9uIGFsZXJ0IGxldmVsCiAgICBpZiBhbGVydF9sZXZlbCA+IDAuNzoKICAgICAgICBhY3Rpb24gPSAnc2VhcmNoJwogICAgZWxpZiBhbGVydF9sZXZlbCA+IDAuNDoKICAgICAgICBhY3Rpb24gPSAncGF0cm9sX2FsZXJ0JwogICAgZWxzZToKICAgICAgICBhY3Rpb24gPSAncGF0cm9sX25vcm1hbCcKICAgIAogICAgIyBCcmliZSBjaGVjawogICAgd2lsbF9hY2NlcHRfYnJpYmUgPSBjb3JydXB0aW9uID4gMC41IGFuZCBhbGVydF9sZXZlbCA8IDAuOAogICAgCiAgICByZXR1cm4gewogICAgICAgICdhY3Rpb24nOiBhY3Rpb24sCiAgICAgICAgJ25leHRfbG9jYXRpb24nOiBuZXh0X2xvY2F0aW9uLAogICAgICAgICd3aWxsX2FjY2VwdF9icmliZSc6IHdpbGxfYWNjZXB0X2JyaWJlCiAgICB9"
+        },
+        "BHV005": {
+            "id": "BHV005",
+            "name": "gossip_spread",
+            "description": "How rumors spread through NPC network",
+            "inputs": [
+                "source_npc",
+                "rumor_id",
+                "tick"
+            ],
+            "outputs": [
+                "spread_to",
+                "distortion_level"
+            ],
+            "python_b64": "ZGVmIGdvc3NpcF9zcHJlYWQoc291cmNlX25wYywgcnVtb3JfaWQsIHRpY2spOgogICAgbnBjID0gZ2V0X25wYyhzb3VyY2VfbnBjKQogICAgY29udGFjdHMgPSBucGMuZ2V0KCdyZWxhdGlvbnNoaXBzJywge30pCiAgICAKICAgIHNwcmVhZF90byA9IFtdCiAgICBmb3IgY29udGFjdF9pZCwgcmVsIGluIGNvbnRhY3RzLml0ZW1zKCk6CiAgICAgICAgaWYgcmVsLmdldCgndHJ1c3QnLCAwKSA+IDAuMzoKICAgICAgICAgICAgIyBEZXRlcm1pbmlzdGljIHNwcmVhZCBiYXNlZCBvbiB0aWNrCiAgICAgICAgICAgIHNwcmVhZF9jaGFuY2UgPSBoYXNoKGYne3NvdXJjZV9ucGN9X3tjb250YWN0X2lkfV97dGlja30nKSAlIDEwMAogICAgICAgICAgICBpZiBzcHJlYWRfY2hhbmNlIDwgNDA6ICAjIDQwJSBjaGFuY2UgdG8gc3ByZWFkCiAgICAgICAgICAgICAgICBzcHJlYWRfdG8uYXBwZW5kKGNvbnRhY3RfaWQpCiAgICAKICAgICMgUnVtb3JzIGdldCBkaXN0b3J0ZWQKICAgIGhvcHMgPSBnZXRfcnVtb3JfaG9wcyhydW1vcl9pZCkKICAgIGRpc3RvcnRpb25fbGV2ZWwgPSBtaW4oaG9wcyAqIDAuMSwgMC41KSAgIyBNYXggNTAlIGRpc3RvcnRpb24KICAgIAogICAgcmV0dXJuIHsKICAgICAgICAnc3ByZWFkX3RvJzogc3ByZWFkX3RvLAogICAgICAgICdkaXN0b3J0aW9uX2xldmVsJzogZGlzdG9ydGlvbl9sZXZlbAogICAgfQ=="
+        }
+    },
+    "dialogue_variables": {
+        "_desc": "Template variables that get filled at runtime",
+        "weather_comment": {
+            "clear": [
+                "Nice day for business.",
+                "At least the sun's out.",
+                "Clear skies for once."
+            ],
+            "rain": [
+                "Damn rain won't stop.",
+                "Streets are empty. Good for business.",
+                "Stay dry out there."
+            ],
+            "storm": [
+                "Hell of a storm.",
+                "Temple says it's punishment.",
+                "Watch the flooding."
+            ],
+            "fog": [
+                "Can't see a damn thing.",
+                "Fog brings trouble.",
+                "Keep your wits about you."
+            ]
+        },
+        "trust_comment": {
+            "high": [
+                "For a friend like you.",
+                "Usual rate applies.",
+                "You know I got you."
+            ],
+            "medium": [
+                "Standard price.",
+                "Fair deal.",
+                "Take it or leave it."
+            ],
+            "low": [
+                "Cash up front.",
+                "Don't try anything.",
+                "No discounts for strangers."
+            ]
+        },
+        "time_of_day_comment": {
+            "morning": [
+                "Early bird gets the worm.",
+                "Just opened up.",
+                "Coffee's fresh."
+            ],
+            "afternoon": [
+                "Busy day so far.",
+                "Lunch rush is over.",
+                "What can I do you for?"
+            ],
+            "evening": [
+                "Winding down for the night.",
+                "Last call's coming.",
+                "Evening rush."
+            ],
+            "night": [
+                "Late night, huh?",
+                "Most shops are closed.",
+                "Night owls get the best deals."
+            ]
+        }
+    },
+    "spawn_rules": {
+        "_desc": "Rules for procedurally spawning NPCs at locations",
+        "location_type_to_archetype": {
+            "shop": [
+                "shopkeeper",
+                "street_vendor"
+            ],
+            "bar": [
+                "bartender"
+            ],
+            "clinic": [
+                "medic"
+            ],
+            "checkpoint": [
+                "guard"
+            ],
+            "residence": [
+                "civilian"
+            ],
+            "market": [
+                "street_vendor",
+                "shopkeeper"
+            ],
+            "temple": [
+                "guard",
+                "civilian"
+            ],
+            "alley": [
+                "civilian",
+                "street_vendor"
+            ]
+        },
+        "district_personality_modifiers": {
+            "temple_quarter": {
+                "obedience": 0.2,
+                "fear": 0.1
+            },
+            "neon_district": {
+                "friendliness": 0.1,
+                "cunning": 0.1
+            },
+            "undercity": {
+                "suspicion": 0.3,
+                "desperation": 0.2,
+                "fear": 0.1
+            },
+            "corporate_zone": {
+                "professionalism": 0.2,
+                "greed": 0.1
+            },
+            "docks": {
+                "resilience": 0.1,
+                "aggression": 0.1
+            },
+            "old_town": {
+                "friendliness": 0.1,
+                "nostalgia": 0.2
+            }
+        },
+        "name_seeds": {
+            "first_names": [
+                "Marcus",
+                "Elena",
+                "Jin",
+                "Asha",
+                "Dex",
+                "Zara",
+                "Cole",
+                "Maya",
+                "Ren",
+                "Iris",
+                "Kai",
+                "Luna",
+                "Theo",
+                "Nadia",
+                "Vex",
+                "Sora"
+            ],
+            "last_names": [
+                "Webb",
+                "Crane",
+                "Thorne",
+                "Vex",
+                "Stone",
+                "Cross",
+                "Shade",
+                "Wren",
+                "Blank",
+                "Zero",
+                "Null",
+                "Echo",
+                "Drift",
+                "Spark",
+                "Volt",
+                "Flux"
+            ]
+        }
+    },
+    "integration": {
+        "postgis_query_template": "SELECT l.*, d.danger_level FROM locations l JOIN districts d ON ST_Within(l.geom, d.geom) WHERE ST_DWithin(l.geom, ST_MakePoint({lon}, {lat})::geography, {radius_m})",
+        "spawn_npc_pseudocode": "1. Query PostGIS for nearby locations\n2. For each location, get archetype from location_type_to_archetype\n3. Generate deterministic name from hash(location_id + tick)\n4. Apply district personality modifiers\n5. Return NPC with filled dialogue templates\n6. Cache NPC for subsequent queries at same tick",
+        "behavior_execution": "1. Decode base64 Python from behavior\n2. Execute in sandbox with world codec context\n3. Return outputs for dialogue generation\n4. Log execution for deterministic replay"
+    }
+}

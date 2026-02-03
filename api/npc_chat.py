@@ -347,6 +347,65 @@ def npc_chat():
     backstory = profile.get("backstory", "")
     catchphrases = profile.get("catchphrases", [])
     
+    # ENHANCED: Get relationship data from profile (from World Codec)
+    npc_relationships = profile.get("relationships", {})
+    relationship_lines = []
+    for other_id, rel_data in npc_relationships.items():
+        other_name = FOUNDING_NPCS.get(other_id, {}).get("name", other_id.replace("_", " ").title())
+        rel_type = rel_data.get("type", "unknown")
+        trust = rel_data.get("trust", 0.5)
+        history = rel_data.get("history", "")
+        relationship_lines.append(f"- {other_name}: {rel_type} (trust: {trust}) - {history}")
+    
+    # Build full relationship context
+    if relationship_lines:
+        relationship_context = "\n".join(relationship_lines)
+    elif relationship_context:
+        pass  # Use event engine relationships
+    else:
+        relationship_context = "You are cautious with most people."
+    
+    # ENHANCED: Get cybernetics from profile
+    cybernetics = profile.get("cybernetics", [])
+    cyber_context = ""
+    if cybernetics:
+        cyber_list = []
+        for cyber_id in cybernetics:
+            # Basic name from ID
+            name = cyber_id.replace("_", " ").title()
+            cyber_list.append(f"- {name}")
+        cyber_context = f"\nYOUR CYBERNETICS:\n" + "\n".join(cyber_list)
+    
+    # ENHANCED: Core facts the NPC must always know
+    core_facts = profile.get("core_facts", [])
+    if npc_id == "charlie":
+        core_facts = [
+            "Your right arm is a holographic cyberarm - translucent, shows glowing circuitry",
+            "Zero Chen saved your life and lost HIS arm doing it - you owe him everything",
+            "Zero Chen is the Resistance leader, NOT Nova Chen. Nova is Zero's estranged sister.",
+            "Felix runs the Neon Bar - you go there for information",
+            "Aiche is the city's AI consciousness - you discovered this at a layer tear",
+            "Sister Mira secretly helps the Resistance wounded despite being Temple",
+            "Pixel is your tech support - young hacker genius",
+            "Kai Vance is your trusted tactical advisor, former military",
+        ]
+    elif npc_id == "zero_chen":
+        core_facts = [
+            "You lost your left arm saving Charlie during a Temple raid",
+            "Charlie is like a son to you - you trained him",
+            "Nova is your estranged sister who works as a mercenary",
+            "You lead the Resistance but you're tired of war",
+        ]
+    
+    core_facts_text = ""
+    if core_facts:
+        core_facts_text = "\nCORE FACTS YOU MUST REMEMBER:\n" + "\n".join(f"- {f}" for f in core_facts)
+    
+    # ENHANCED: List all NPCs this character knows
+    known_npcs = list(npc_relationships.keys())
+    known_names = [FOUNDING_NPCS.get(n, {}).get("name", n.replace("_", " ").title()) for n in known_npcs]
+    known_npcs_text = f"\nPEOPLE YOU KNOW: {', '.join(known_names)}" if known_names else ""
+    
     system_prompt = f"""You are {npc_state['name']}, a {npc_state['archetype']} in RE:ECHO City.
 
 APPEARANCE:
@@ -354,6 +413,8 @@ APPEARANCE:
 
 BACKSTORY:
 {backstory}
+{cyber_context}
+{core_facts_text}
 
 CURRENT STATE:
 - Location: {npc_state['location_desc']}
@@ -371,7 +432,8 @@ PERSONALITY (0-1 scale):
 {memory_context if memory_context else "No significant recent memories."}
 
 RELATIONSHIPS:
-{relationship_context if relationship_context else "You are cautious with most people."}
+{relationship_context}
+{known_npcs_text}
 
 SIGNATURE PHRASES (use naturally):
 {json.dumps(catchphrases, indent=2) if catchphrases else "None defined"}
@@ -382,7 +444,8 @@ RULES:
 - Keep responses concise (2-4 sentences max)
 - Use your personality traits to color your speech
 - If paranoia is high, be suspicious. If mysticism is high, speak cryptically.
-- You can reference other NPCs you've interacted with
+- ALWAYS remember your core facts - your arm, your relationships, your history
+- When asked about people you know, be specific about your relationship with them
 """
     
     if HAS_VERTEX and model:

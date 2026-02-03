@@ -1,10 +1,10 @@
 {
     "_meta": {
-        "version": "2.0.0",
+        "version": "2.1.0",
         "name": "RE:ECHO World Codec - Chunked Encyclopedia",
         "description": "Comprehensive world knowledge in chained chunks for Arweave storage",
-        "total_chunks": 14,
-        "total_size_estimate_kb": 312,
+        "total_chunks": 15,
+        "total_size_estimate_kb": 340,
         "created_at": "2026-02-02",
         "location": "NYC / Brooklyn"
     },
@@ -94,6 +94,17 @@
             "file": "world_codec_13_canon_events.json",
             "size_kb": 12,
             "category": "canon"
+        },
+        {
+            "id": "chunk_14_behaviors",
+            "file": "world_codec_14_behaviors.json",
+            "size_kb": 28,
+            "category": "behaviors",
+            "features": [
+                "embedded_python",
+                "archetypes",
+                "postgis_integration"
+            ]
         }
     ],
     "totals": {
@@ -101,6 +112,8 @@
         "objects": 772,
         "locations": 55,
         "npcs": 12,
+        "archetypes": 6,
+        "behaviors": 5,
         "skills": 26,
         "cybernetics": 43,
         "medical_conditions": 60,
@@ -118,7 +131,7 @@
         },
         {
             "name": "Version",
-            "value": "2.0.0"
+            "value": "2.1.0"
         }
     ]
 }
