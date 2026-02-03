@@ -779,6 +779,360 @@
                     ]
                 }
             }
+        },
+        "recreation_bowling": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Main Floor",
+                    "rooms": [
+                        {
+                            "id": "lanes",
+                            "name": "Bowling Lanes",
+                            "type": "sports",
+                            "capacity": 60,
+                            "activities": [
+                                "bowling",
+                                "socializing",
+                                "competing"
+                            ]
+                        },
+                        {
+                            "id": "shoe_rental",
+                            "name": "Shoe Rental",
+                            "type": "service",
+                            "capacity": 4,
+                            "activities": [
+                                "working"
+                            ]
+                        },
+                        {
+                            "id": "snack_bar",
+                            "name": "Snack Bar",
+                            "type": "dining",
+                            "capacity": 25,
+                            "activities": [
+                                "eating",
+                                "drinking",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "arcade",
+                            "name": "Arcade Area",
+                            "type": "entertainment",
+                            "capacity": 15,
+                            "activities": [
+                                "playing_arcade",
+                                "waiting"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "recreation_casino": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Gaming Floor",
+                    "rooms": [
+                        {
+                            "id": "slots",
+                            "name": "Slot Machines",
+                            "type": "gambling",
+                            "capacity": 100,
+                            "activities": [
+                                "gambling",
+                                "watching"
+                            ]
+                        },
+                        {
+                            "id": "tables",
+                            "name": "Table Games",
+                            "type": "gambling",
+                            "capacity": 60,
+                            "activities": [
+                                "gambling",
+                                "playing_cards",
+                                "playing_dice"
+                            ]
+                        },
+                        {
+                            "id": "bar",
+                            "name": "Casino Bar",
+                            "type": "service",
+                            "capacity": 20,
+                            "activities": [
+                                "drinking",
+                                "socializing",
+                                "watching"
+                            ]
+                        },
+                        {
+                            "id": "cage",
+                            "name": "Cashier Cage",
+                            "type": "service",
+                            "capacity": 6,
+                            "activities": [
+                                "working",
+                                "exchanging_credits"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "High Roller Floor",
+                    "rooms": [
+                        {
+                            "id": "vip_tables",
+                            "name": "VIP Tables",
+                            "type": "gambling",
+                            "capacity": 30,
+                            "activities": [
+                                "gambling",
+                                "high_stakes"
+                            ]
+                        },
+                        {
+                            "id": "private_room",
+                            "name": "Private Gaming Room",
+                            "type": "private",
+                            "capacity": 12,
+                            "activities": [
+                                "gambling",
+                                "meeting",
+                                "scheming"
+                            ]
+                        },
+                        {
+                            "id": "lounge",
+                            "name": "VIP Lounge",
+                            "type": "common",
+                            "capacity": 20,
+                            "activities": [
+                                "drinking",
+                                "socializing",
+                                "dealing"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "recreation_library": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Main Hall",
+                    "rooms": [
+                        {
+                            "id": "stacks",
+                            "name": "Book Stacks",
+                            "type": "study",
+                            "capacity": 40,
+                            "activities": [
+                                "reading",
+                                "browsing",
+                                "researching"
+                            ]
+                        },
+                        {
+                            "id": "reading_room",
+                            "name": "Reading Room",
+                            "type": "study",
+                            "capacity": 30,
+                            "activities": [
+                                "reading",
+                                "studying",
+                                "relaxing"
+                            ]
+                        },
+                        {
+                            "id": "circulation",
+                            "name": "Circulation Desk",
+                            "type": "service",
+                            "capacity": 4,
+                            "activities": [
+                                "working",
+                                "helping"
+                            ]
+                        },
+                        {
+                            "id": "computers",
+                            "name": "Computer Lab",
+                            "type": "tech",
+                            "capacity": 15,
+                            "activities": [
+                                "researching",
+                                "hacking",
+                                "working"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Quiet Floor",
+                    "rooms": [
+                        {
+                            "id": "study_rooms",
+                            "name": "Study Rooms",
+                            "type": "study",
+                            "capacity": 20,
+                            "activities": [
+                                "studying",
+                                "meeting",
+                                "reading"
+                            ]
+                        },
+                        {
+                            "id": "archives",
+                            "name": "Archives",
+                            "type": "storage",
+                            "capacity": 5,
+                            "activities": [
+                                "researching",
+                                "working"
+                            ]
+                        },
+                        {
+                            "id": "rare_books",
+                            "name": "Rare Books Room",
+                            "type": "restricted",
+                            "capacity": 8,
+                            "activities": [
+                                "researching",
+                                "reading"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "recreation_gym": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Fitness Floor",
+                    "rooms": [
+                        {
+                            "id": "weights",
+                            "name": "Weight Room",
+                            "type": "sports",
+                            "capacity": 30,
+                            "activities": [
+                                "exercising",
+                                "weightlifting"
+                            ]
+                        },
+                        {
+                            "id": "cardio",
+                            "name": "Cardio Area",
+                            "type": "sports",
+                            "capacity": 25,
+                            "activities": [
+                                "exercising",
+                                "running"
+                            ]
+                        },
+                        {
+                            "id": "studio",
+                            "name": "Group Fitness Studio",
+                            "type": "sports",
+                            "capacity": 30,
+                            "activities": [
+                                "exercising",
+                                "yoga",
+                                "dancing"
+                            ]
+                        },
+                        {
+                            "id": "boxing",
+                            "name": "Boxing Ring",
+                            "type": "sports",
+                            "capacity": 10,
+                            "activities": [
+                                "boxing",
+                                "training",
+                                "watching_fight"
+                            ]
+                        },
+                        {
+                            "id": "locker_room",
+                            "name": "Locker Room",
+                            "type": "utility",
+                            "capacity": 20,
+                            "activities": [
+                                "changing",
+                                "showering"
+                            ]
+                        },
+                        {
+                            "id": "juice_bar",
+                            "name": "Juice Bar",
+                            "type": "service",
+                            "capacity": 10,
+                            "activities": [
+                                "eating",
+                                "drinking",
+                                "socializing"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "recreation_pool": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Pool Area",
+                    "rooms": [
+                        {
+                            "id": "main_pool",
+                            "name": "Main Pool",
+                            "type": "sports",
+                            "capacity": 40,
+                            "activities": [
+                                "swimming",
+                                "exercising",
+                                "relaxing"
+                            ]
+                        },
+                        {
+                            "id": "hot_tub",
+                            "name": "Hot Tub",
+                            "type": "relaxation",
+                            "capacity": 10,
+                            "activities": [
+                                "relaxing",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "sauna",
+                            "name": "Sauna",
+                            "type": "relaxation",
+                            "capacity": 8,
+                            "activities": [
+                                "relaxing",
+                                "meditating"
+                            ]
+                        },
+                        {
+                            "id": "deck",
+                            "name": "Pool Deck",
+                            "type": "outdoor",
+                            "capacity": 30,
+                            "activities": [
+                                "sunbathing",
+                                "relaxing",
+                                "socializing"
+                            ]
+                        }
+                    ]
+                }
+            }
         }
     },
     "activities": {
@@ -1111,6 +1465,195 @@
         "B019": {
             "template": "entertainment_club",
             "name": "Neon Arcade"
+        },
+        "B020": {
+            "template": "recreation_bowling",
+            "name": "Strike Zone Lanes"
+        },
+        "B021": {
+            "template": "recreation_casino",
+            "name": "Lucky Dragon Casino"
+        },
+        "B022": {
+            "template": "recreation_library",
+            "name": "District Archives"
+        },
+        "B023": {
+            "template": "recreation_gym",
+            "name": "Iron Temple Fitness"
+        },
+        "B024": {
+            "template": "recreation_pool",
+            "name": "Neon Springs Spa"
+        }
+    },
+    "hobby_locations": {
+        "_desc": "Maps hobbies to specific building IDs where they can be performed",
+        "bowling": {
+            "buildings": [
+                "B020"
+            ],
+            "room_types": [
+                "sports"
+            ]
+        },
+        "gambling": {
+            "buildings": [
+                "B021",
+                "B004",
+                "B007"
+            ],
+            "room_types": [
+                "gambling",
+                "private"
+            ]
+        },
+        "playing_cards": {
+            "buildings": [
+                "B004",
+                "B014",
+                "B012",
+                "B021"
+            ],
+            "room_types": [
+                "dining",
+                "common",
+                "gambling"
+            ]
+        },
+        "reading": {
+            "buildings": [
+                "B022",
+                "B005"
+            ],
+            "room_types": [
+                "study",
+                "library"
+            ]
+        },
+        "exercising": {
+            "buildings": [
+                "B023",
+                "B002",
+                "B013",
+                "B012"
+            ],
+            "room_types": [
+                "sports",
+                "recreation"
+            ]
+        },
+        "swimming": {
+            "buildings": [
+                "B024"
+            ],
+            "room_types": [
+                "sports",
+                "relaxation"
+            ]
+        },
+        "meditating": {
+            "buildings": [
+                "B005",
+                "B024"
+            ],
+            "room_types": [
+                "sacred",
+                "relaxation"
+            ]
+        },
+        "dancing": {
+            "buildings": [
+                "B007",
+                "B019",
+                "B023"
+            ],
+            "room_types": [
+                "entertainment",
+                "sports"
+            ]
+        },
+        "drinking": {
+            "buildings": [
+                "B004",
+                "B014",
+                "B007",
+                "B021"
+            ],
+            "room_types": [
+                "service",
+                "dining"
+            ]
+        },
+        "socializing": {
+            "buildings": [
+                "B004",
+                "B007",
+                "B012",
+                "B014",
+                "B019",
+                "B020",
+                "B021"
+            ],
+            "room_types": [
+                "common",
+                "dining",
+                "entertainment"
+            ]
+        },
+        "fishing": {
+            "buildings": [
+                "B012"
+            ],
+            "room_types": [
+                "outdoor"
+            ]
+        },
+        "gardening": {
+            "buildings": [
+                "B002",
+                "B012",
+                "B013"
+            ],
+            "room_types": [
+                "outdoor"
+            ]
+        },
+        "boxing": {
+            "buildings": [
+                "B023"
+            ],
+            "room_types": [
+                "sports"
+            ]
+        },
+        "yoga": {
+            "buildings": [
+                "B023",
+                "B024"
+            ],
+            "room_types": [
+                "sports",
+                "relaxation"
+            ]
+        },
+        "researching": {
+            "buildings": [
+                "B022",
+                "B005"
+            ],
+            "room_types": [
+                "study",
+                "storage"
+            ]
+        },
+        "hacking": {
+            "buildings": [
+                "B022"
+            ],
+            "room_types": [
+                "tech"
+            ]
         }
     }
 }

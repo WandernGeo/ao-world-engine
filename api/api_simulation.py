@@ -99,6 +99,136 @@ def get_time_info(tick: int) -> dict:
     }
 
 # =============================================================================
+# SEEDED RANDOM (Dynamic + Deterministic)
+# =============================================================================
+# KEY INSIGHT: Use hash-based randomness. Given same inputs, same output.
+# But different inputs = different outcomes that LOOK random.
+
+def seeded_random(seed: str) -> float:
+    """
+    Generate a random-looking float (0.0 to 1.0) from a seed string.
+    DETERMINISTIC: Same seed always returns same value.
+    DYNAMIC: Different seeds return different values.
+    """
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+    return (h % 10000) / 10000.0
+
+def seeded_choice(options: list, seed: str):
+    """
+    Pick from a list deterministically based on seed.
+    Example: seeded_choice(['bowling', 'cards', 'gym'], 'NPC001_100_leisure')
+    """
+    if not options:
+        return None
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+    return options[h % len(options)]
+
+def weighted_seeded_choice(options: list, weights: list, seed: str):
+    """
+    Pick from options with weights. Higher weight = more likely.
+    Example: weighted_seeded_choice(['bar', 'gym'], [3, 1], 'NPC001_100')
+    NPC with high bar weight visits bar 75% of time, gym 25%.
+    """
+    if not options or not weights:
+        return None
+    
+    # Normalize weights
+    total = sum(weights)
+    cumulative = []
+    running = 0
+    for w in weights:
+        running += w / total
+        cumulative.append(running)
+    
+    # Get deterministic random value
+    r = seeded_random(seed)
+    
+    # Pick based on cumulative weights
+    for i, threshold in enumerate(cumulative):
+        if r <= threshold:
+            return options[i]
+    return options[-1]
+
+def should_do_today(activity: str, frequency: str, npc_id: str, day: int) -> bool:
+    """
+    Check if NPC should do an activity today based on frequency.
+    Frequencies: 'daily', '3_per_week', 'weekly', 'monthly'
+    """
+    seed = f"{npc_id}_{activity}_{day}"
+    r = seeded_random(seed)
+    
+    if frequency == "daily":
+        return True
+    elif frequency == "3_per_week":
+        return r < 0.43  # ~3/7 days
+    elif frequency == "weekly":
+        return r < 0.14  # ~1/7 days
+    elif frequency == "monthly":
+        return r < 0.033  # ~1/30 days
+    return r < 0.5
+
+# =============================================================================
+# HOBBY GENERATION (Based on Personality)
+# =============================================================================
+# NPCs don't have hobbies in the JSON, but we can DERIVE hobbies from personality
+# This is DETERMINISTIC - same NPC always gets same hobbies
+
+HOBBY_TRAITS = {
+    # hobby: (trait, threshold, weight) - hobby if trait > threshold
+    "boxing": ("aggression", 0.6, 2),
+    "gambling": ("greed", 0.5, 2),
+    "reading": ("curiosity", 0.6, 2),
+    "researching": ("curiosity", 0.7, 1),
+    "socializing": ("sociability", 0.5, 3),
+    "dancing": ("sociability", 0.6, 2),
+    "drinking": ("sociability", 0.4, 2),
+    "playing_cards": ("sociability", 0.5, 1),
+    "meditating": ("loyalty", 0.7, 1),
+    "exercising": ("aggression", 0.4, 2),
+    "fishing": ("curiosity", 0.3, 1),
+    "swimming": ("sociability", 0.3, 1),
+    "yoga": ("loyalty", 0.5, 1),
+    "bowling": ("sociability", 0.45, 1),
+}
+
+def generate_hobbies(npc: dict) -> list:
+    """
+    Generate hobbies for an NPC based on their personality traits.
+    DETERMINISTIC: Same NPC always gets same hobbies.
+    DYNAMIC: Different personalities = different hobbies.
+    """
+    personality = npc.get("personality", {})
+    hobbies = []
+    
+    for hobby, (trait, threshold, _) in HOBBY_TRAITS.items():
+        trait_value = personality.get(trait, 0.5)
+        
+        # Add slight per-NPC variation using seeded random
+        seed = f"{npc.get('id', 'unknown')}_{hobby}"
+        variation = seeded_random(seed) * 0.2 - 0.1  # ±0.1 variation
+        
+        if trait_value + variation > threshold:
+            hobbies.append(hobby)
+    
+    # Ensure at least 2 hobbies
+    if len(hobbies) < 2:
+        defaults = ["socializing", "relaxing", "drinking"]
+        for d in defaults:
+            if d not in hobbies:
+                hobbies.append(d)
+            if len(hobbies) >= 2:
+                break
+    
+    # Limit to 5 hobbies max
+    if len(hobbies) > 5:
+        # Keep the most weighted ones
+        scored = [(h, HOBBY_TRAITS.get(h, ("", 0, 1))[2]) for h in hobbies]
+        scored.sort(key=lambda x: -x[1])
+        hobbies = [h[0] for h in scored[:5]]
+    
+    return hobbies
+
+# =============================================================================
 # SCHEDULE SYSTEM
 # =============================================================================
 
@@ -170,6 +300,7 @@ def get_npc_state(npc: dict, tick: int) -> dict:
     """
     Calculate NPC state at a given tick.
     Deterministic based on NPC ID and tick.
+    Now DYNAMIC: Uses hobbies and personality for variety!
     """
     schedule_type = npc.get("schedule", "default")
     schedule = SCHEDULES.get(schedule_type, SCHEDULES["default"])
@@ -177,25 +308,67 @@ def get_npc_state(npc: dict, tick: int) -> dict:
     time_period = get_time_period(tick)
     slot = schedule.get(time_period, {"activity": "idle", "location_type": "home"})
     
-    # Determine actual location from location_type
+    activity = slot["activity"]
     location_type = slot["location_type"]
+    day = tick // 240
+    
+    # =========================================================================
+    # DYNAMIC LEISURE CHOICES (New!)
+    # =========================================================================
+    # If schedule says "leisure" or "socializing", pick a SPECIFIC activity
+    # based on NPC's hobbies and personality
+    
+    if activity in ["leisure", "socializing", "personal", "off_duty"]:
+        hobbies = npc.get("hobbies") or generate_hobbies(npc)
+        
+        # Check each hobby to see if NPC does it today (frequency-based)
+        todays_activities = []
+        for hobby in hobbies:
+            freq = "weekly"  # default frequency
+            if should_do_today(hobby, freq, npc["id"], day):
+                todays_activities.append(hobby)
+        
+        # If nothing scheduled for today, pick from general leisure
+        if not todays_activities:
+            todays_activities = ["socializing", "relaxing", "drinking"]
+        
+        # Pick one activity for this specific time slot
+        seed = f"{npc['id']}_{tick}_{activity}"
+        activity = seeded_choice(todays_activities, seed)
+    
+    # =========================================================================
+    # HOBBY-AWARE LOCATION SELECTION
+    # =========================================================================
+    # Load hobby_locations from building codec
+    building_codec = load_json("world_codec_16_buildings.json")
+    hobby_locations = building_codec.get("hobby_locations", {}) if building_codec else {}
+    
+    # Determine actual location based on activity
     if location_type == "home":
         location = npc.get("home", "B001")
     elif location_type == "workplace":
         location = npc.get("workplace", "B003")
-    elif location_type in ["varies", "public"]:
-        # Deterministic choice based on tick
-        h = int(hashlib.md5(f"{npc['id']}_{tick // 10}".encode()).hexdigest(), 16)
-        buildings = get_buildings()
-        public_buildings = [b for b in buildings if b["type"] in ["commercial", "entertainment", "restaurant"]]
-        if public_buildings:
-            location = public_buildings[h % len(public_buildings)]["id"]
+    elif activity in hobby_locations:
+        # Pick a building that supports this hobby!
+        hobby_buildings = hobby_locations[activity].get("buildings", [])
+        if hobby_buildings:
+            seed = f"{npc['id']}_{tick}_location"
+            location = seeded_choice(hobby_buildings, seed)
         else:
-            location = "B003"
+            location = npc.get("home", "B001")
+    elif location_type in ["varies", "public", "entertainment", "bar"]:
+        # General public place - pick from entertainment venues
+        buildings = get_buildings()
+        public_buildings = [b for b in buildings if b.get("type") in ["commercial", "entertainment", "bar", "recreation"]]
+        if public_buildings:
+            seed = f"{npc['id']}_{tick}_public"
+            location = seeded_choice([b["id"] for b in public_buildings], seed)
+        else:
+            location = "B004"  # Default bar
     else:
         location = npc.get("workplace", npc.get("home", "B001"))
     
-    # Mood based on activity
+    # Mood based on activity (expanded)
     mood_map = {
         "sleeping": "peaceful",
         "working": "focused",
@@ -204,15 +377,23 @@ def get_npc_state(npc: dict, tick: int) -> dict:
         "patrol": "vigilant",
         "training": "determined",
         "leisure": "content",
+        "gambling": "excited",
+        "drinking": "merry",
+        "exercising": "energized",
+        "reading": "contemplative",
+        "meditating": "serene",
+        "bowling": "competitive",
+        "dancing": "joyful",
+        "fishing": "peaceful",
     }
-    mood = mood_map.get(slot["activity"], "neutral")
+    mood = mood_map.get(activity, "neutral")
     
     return {
         "npc_id": npc["id"],
         "name": npc["name"],
         "tick": tick,
         "time_period": time_period,
-        "activity": slot["activity"],
+        "activity": activity,
         "location": location,
         "location_type": location_type,
         "mood": mood,
