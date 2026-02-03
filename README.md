@@ -209,10 +209,12 @@ This protects the community while allowing you to build proprietary worlds **on 
 
 | Doc | What It Covers |
 |-----|----------------|
-| [LOCAL_SETUP.md](./docs/LOCAL_SETUP.md) | **Run locally with local data** - no cloud needed |
-| [GRAPH_VISUALIZATION.md](./docs/GRAPH_VISUALIZATION.md) | **Graph network view** - physics simulation explained |
+| [GETTING_STARTED.md](./docs/GETTING_STARTED.md) | **Start here!** Local install, hosted API, full guide |
+| [CHANGELOG.md](./CHANGELOG.md) | Recent changes and version history |
+| [LOCAL_SETUP.md](./docs/LOCAL_SETUP.md) | Run locally with local data |
+| [GRAPH_VISUALIZATION.md](./docs/GRAPH_VISUALIZATION.md) | Graph network view explained |
 | [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md) | Full API reference |
-| [SIMULATION_SYSTEM.md](./docs/SIMULATION_SYSTEM.md) | How NPC schedules, moods, hobbies work |
+| [SIMULATION_SYSTEM.md](./docs/SIMULATION_SYSTEM.md) | NPC schedules, moods, hobbies |
 | [AI_NPC_SYSTEM.md](./docs/AI_NPC_SYSTEM.md) | LLM chat integration |
 | [BUILDING_YOUR_WORLD.md](./docs/BUILDING_YOUR_WORLD.md) | Create your own world |
 | [ARWEAVE_TRANSACTION_LOG.md](./docs/ARWEAVE_TRANSACTION_LOG.md) | Arweave upload history |
