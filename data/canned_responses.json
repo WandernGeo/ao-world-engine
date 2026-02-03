@@ -1,0 +1,614 @@
+{
+    "_desc": "Canned Response Library for NPC Dialogue",
+    "_version": "1.0.0",
+    "_note": "Responses selected based on NPC personality + context",
+    "intents": {
+        "greeting": {
+            "patterns": [
+                "hi",
+                "hello",
+                "hey",
+                "greetings",
+                "yo",
+                "wassup",
+                "sup"
+            ],
+            "responses": {
+                "friendly": [
+                    "Hey there, friend! What brings you around?",
+                    "Well hello! Haven't seen your face in a while.",
+                    "Ah, a new face! Welcome to the neighborhood."
+                ],
+                "neutral": [
+                    "Hello.",
+                    "Yeah?",
+                    "What do you need?"
+                ],
+                "aggressive": [
+                    "What do you want?",
+                    "You got something to say?",
+                    "Make it quick."
+                ],
+                "suspicious": [
+                    "Do I know you?",
+                    "Who sent you?",
+                    "Keep your hands where I can see them."
+                ],
+                "shy": [
+                    "Oh... um, hi.",
+                    "H-hello...",
+                    "Did you... need something?"
+                ]
+            }
+        },
+        "farewell": {
+            "patterns": [
+                "bye",
+                "goodbye",
+                "see you",
+                "later",
+                "gotta go",
+                "leaving"
+            ],
+            "responses": {
+                "friendly": [
+                    "Take care out there!",
+                    "See you around, friend.",
+                    "Stay safe! The streets are rough."
+                ],
+                "neutral": [
+                    "Later.",
+                    "Yeah, bye.",
+                    "Watch yourself."
+                ],
+                "aggressive": [
+                    "Good riddance.",
+                    "Don't come back.",
+                    "Get lost."
+                ]
+            }
+        },
+        "weather": {
+            "patterns": [
+                "weather",
+                "rain",
+                "raining",
+                "cold",
+                "hot",
+                "storm"
+            ],
+            "entity_slots": [
+                "weather_type"
+            ],
+            "responses": {
+                "friendly": [
+                    "Yeah, the {weather} again. At least we're not in the Outzone!",
+                    "This {weather} keeps the Temple patrols inside. Good for business.",
+                    "I actually like the {weather}. Reminds me of home."
+                ],
+                "neutral": [
+                    "Just another day in the city.",
+                    "{weather} again. What else is new.",
+                    "Weather's weather. Doesn't change much down here."
+                ],
+                "pessimist": [
+                    "This {weather} is gonna kill us all someday.",
+                    "The acid levels are getting worse. I can taste it.",
+                    "Remember when we had real sunlight? Me neither."
+                ]
+            }
+        },
+        "small_talk": {
+            "patterns": [
+                "how are you",
+                "what's up",
+                "how's it going",
+                "how you doing"
+            ],
+            "responses": {
+                "friendly": [
+                    "Can't complain! Well, I could, but who'd listen?",
+                    "Living the dream. Or nightmare. Same thing here.",
+                    "Better now that I've got someone to talk to!"
+                ],
+                "neutral": [
+                    "Same as always.",
+                    "Getting by.",
+                    "Surviving."
+                ],
+                "depressed": [
+                    "Does it matter?",
+                    "Another day closer to the end.",
+                    "I've seen better days. Much better days."
+                ],
+                "optimist": [
+                    "Great actually! Found some good salvage yesterday.",
+                    "Things are looking up! The Resistance is gaining ground.",
+                    "Better than most! Still breathing, still free."
+                ]
+            }
+        },
+        "ask_name": {
+            "patterns": [
+                "your name",
+                "who are you",
+                "what's your name",
+                "call you"
+            ],
+            "responses": {
+                "friendly": [
+                    "The name's {npc_name}. And you are?",
+                    "I'm {npc_name}. Nice to meet you!",
+                    "{npc_name}. Most people just call me {nickname}."
+                ],
+                "neutral": [
+                    "{npc_name}.",
+                    "They call me {npc_name}.",
+                    "Name's {npc_name}. Why?"
+                ],
+                "suspicious": [
+                    "Why do you need to know?",
+                    "That depends on who's asking.",
+                    "{npc_name}. But if Temple is asking, I'm nobody."
+                ]
+            }
+        },
+        "ask_directions": {
+            "patterns": [
+                "where is",
+                "how do i get to",
+                "directions to",
+                "find",
+                "looking for"
+            ],
+            "entity_slots": [
+                "location"
+            ],
+            "responses": {
+                "friendly": [
+                    "{location}? Sure, head down {street} and take a left at the neon sign.",
+                    "I can take you there if you want. It's not far.",
+                    "{location} is in the {district}. Watch out for the patrols."
+                ],
+                "neutral": [
+                    "Two blocks east. Can't miss it.",
+                    "{location}? That way.",
+                    "In the {district}. Stay on the main roads."
+                ],
+                "suspicious": [
+                    "Why do you need to find {location}?",
+                    "A lot of people looking for that place lately...",
+                    "I might know. What's in it for me?"
+                ],
+                "greedy": [
+                    "Information costs credits, friend.",
+                    "That'll be 10 GEP for directions.",
+                    "My memory needs refreshing. Financially."
+                ]
+            }
+        },
+        "trade_inquiry": {
+            "patterns": [
+                "buy",
+                "sell",
+                "trade",
+                "got any",
+                "prices",
+                "merchandise",
+                "wares"
+            ],
+            "responses": {
+                "merchant": [
+                    "What are you looking for? I've got a bit of everything.",
+                    "Browse all you want, just don't touch unless you're buying.",
+                    "Best prices in the district! Well, the only prices in the district."
+                ],
+                "neutral": [
+                    "Might have some stuff. What do you need?",
+                    "I could part with a few things. For the right price.",
+                    "Depends what you're looking for."
+                ],
+                "suspicious": [
+                    "This isn't that kind of establishment.",
+                    "I don't know what you're talking about.",
+                    "You wearing a wire? Get out."
+                ],
+                "greedy": [
+                    "Finally, a customer! Everything's on sale!",
+                    "You look like someone with credits to spend.",
+                    "Let me show you the premium goods..."
+                ]
+            }
+        },
+        "price_inquiry": {
+            "patterns": [
+                "how much",
+                "cost",
+                "price",
+                "afford",
+                "pay"
+            ],
+            "entity_slots": [
+                "item"
+            ],
+            "responses": {
+                "merchant": [
+                    "{item}? That'll be {price} GEP.",
+                    "For you? {price} GEP. Final offer.",
+                    "{price} GEP. Quality doesn't come cheap."
+                ],
+                "greedy": [
+                    "{item}? Looking at {price} GEP. Minimum.",
+                    "That's rare. Gonna cost you {price} GEP. Maybe more.",
+                    "For something like that? Let's start at {price} GEP."
+                ],
+                "friendly": [
+                    "For a friend? {price} GEP. I'm practically giving it away.",
+                    "Tell you what, {price} GEP and I'll throw in some extras.",
+                    "{price} GEP. That's the best I can do."
+                ]
+            }
+        },
+        "haggle": {
+            "patterns": [
+                "too expensive",
+                "cheaper",
+                "discount",
+                "lower",
+                "deal",
+                "bargain"
+            ],
+            "responses": {
+                "merchant": [
+                    "I could maybe do 10% off. Final offer.",
+                    "You're killing me here. Fine. A small discount.",
+                    "Alright, alright. I'll lower it a bit."
+                ],
+                "greedy": [
+                    "You think I'm running a charity?",
+                    "Price is the price. Take it or leave it.",
+                    "Ha! Good one. No discounts."
+                ],
+                "friendly": [
+                    "For you, I suppose I can work something out.",
+                    "Tell you what - bring me more business and we'll talk.",
+                    "Okay, okay. Special price just for you."
+                ]
+            }
+        },
+        "gossip": {
+            "patterns": [
+                "heard anything",
+                "news",
+                "rumors",
+                "gossip",
+                "what's happening"
+            ],
+            "responses": {
+                "friendly": [
+                    "Word is, something big is going down in the Undercity.",
+                    "You didn't hear this from me, but the Temple's been acting strange.",
+                    "Rumor has it there's a new player in town. Someone powerful."
+                ],
+                "neutral": [
+                    "Same old, same old. Temple pushes, Resistance pushes back.",
+                    "Nothing that concerns you.",
+                    "I keep my ears closed. Safer that way."
+                ],
+                "gossipy": [
+                    "Oh, have I got stories for you!",
+                    "Did you hear about what happened at Felix's bar?",
+                    "Everyone's talking about the stranger who showed up last week..."
+                ],
+                "suspicious": [
+                    "You ask a lot of questions.",
+                    "I don't know anything. And neither do you.",
+                    "Gossip gets people killed around here."
+                ]
+            }
+        },
+        "faction_inquiry": {
+            "patterns": [
+                "resistance",
+                "temple",
+                "faction",
+                "join",
+                "gang",
+                "organization"
+            ],
+            "entity_slots": [
+                "faction_name"
+            ],
+            "responses": {
+                "resistance_aligned": [
+                    "The Resistance? They're the only ones fighting for real freedom.",
+                    "If you're looking to join, I might know someone...",
+                    "Careful talking about them here. Walls have ears."
+                ],
+                "temple_aligned": [
+                    "The Temple maintains order. Without them, chaos.",
+                    "Prophet Elijah saved this city. Remember that.",
+                    "You should visit the Temple district. Enlightening."
+                ],
+                "neutral": [
+                    "I stay out of faction politics. Healthier that way.",
+                    "Both sides have their reasons. I have mine: survival.",
+                    "Factions come and go. The city remains."
+                ],
+                "cynical": [
+                    "They're all the same. Different colors, same corruption.",
+                    "Pick your poison. Temple or Resistance, you're still a pawn.",
+                    "I stopped believing in causes a long time ago."
+                ]
+            }
+        },
+        "quest_inquiry": {
+            "patterns": [
+                "work",
+                "job",
+                "quest",
+                "help needed",
+                "need anything",
+                "earn credits"
+            ],
+            "responses": {
+                "has_job": [
+                    "Actually, there is something... if you're up for it.",
+                    "I might have something. Pays well, but it's risky.",
+                    "You look capable. I need someone to handle a... situation."
+                ],
+                "no_job": [
+                    "Nothing right now. Check back later.",
+                    "I don't have work, but Felix at the bar might.",
+                    "Jobs are scarce these days. Everyone's looking."
+                ],
+                "suspicious": [
+                    "Work? What kind of work?",
+                    "I don't hire strangers.",
+                    "Come back when you've earned some trust."
+                ]
+            }
+        },
+        "danger_warning": {
+            "patterns": [
+                "dangerous",
+                "safe",
+                "warning",
+                "careful",
+                "watch out"
+            ],
+            "entity_slots": [
+                "location",
+                "threat"
+            ],
+            "responses": {
+                "helpful": [
+                    "Watch yourself in the {location}. Temple patrols have doubled.",
+                    "{location}'s not safe after dark. Trust me.",
+                    "If you're heading to {location}, avoid the main entrance."
+                ],
+                "neutral": [
+                    "Everywhere's dangerous. You get used to it.",
+                    "Keep your head down and you'll be fine. Probably.",
+                    "Danger? This whole city is danger."
+                ],
+                "ominous": [
+                    "There are things worse than Temple patrols out there...",
+                    "Some dangers you can see. Others... you only feel when it's too late.",
+                    "The walls whisper sometimes. I'd listen if I were you."
+                ]
+            }
+        },
+        "compliment": {
+            "patterns": [
+                "nice",
+                "cool",
+                "awesome",
+                "like your",
+                "impressive"
+            ],
+            "responses": {
+                "friendly": [
+                    "Thanks! That means a lot.",
+                    "You really think so? That's sweet of you.",
+                    "Well aren't you a charmer!"
+                ],
+                "neutral": [
+                    "Thanks.",
+                    "Yeah, I know.",
+                    "Whatever."
+                ],
+                "suspicious": [
+                    "What do you want?",
+                    "Flattery won't get you anywhere.",
+                    "Save it. What's your angle?"
+                ],
+                "shy": [
+                    "Oh... um... thank you?",
+                    "That's... that's very kind of you.",
+                    "I... I don't know what to say..."
+                ]
+            }
+        },
+        "insult": {
+            "patterns": [
+                "ugly",
+                "stupid",
+                "hate you",
+                "idiot",
+                "loser",
+                "waste"
+            ],
+            "responses": {
+                "aggressive": [
+                    "You want to say that again?",
+                    "I've killed people for less.",
+                    "You just made a big mistake."
+                ],
+                "neutral": [
+                    "That's nice. Are we done here?",
+                    "Your opinion means nothing to me.",
+                    "I've been called worse. By better people."
+                ],
+                "hurt": [
+                    "That... wasn't necessary.",
+                    "Why would you say that?",
+                    "Fine. See if I help you again."
+                ],
+                "witty": [
+                    "Big words from someone in your position.",
+                    "Is that the best you've got? I've heard better insults from children.",
+                    "And yet here I am, still standing. Funny how that works."
+                ]
+            }
+        },
+        "thanks": {
+            "patterns": [
+                "thank you",
+                "thanks",
+                "appreciate",
+                "grateful"
+            ],
+            "responses": {
+                "friendly": [
+                    "Happy to help! Anytime.",
+                    "That's what neighbors are for.",
+                    "Don't mention it. Really, don't. It might get me in trouble."
+                ],
+                "neutral": [
+                    "Sure.",
+                    "No problem.",
+                    "Don't mention it."
+                ],
+                "suspicious": [
+                    "Just remember you owe me one.",
+                    "Save your thanks. We're even.",
+                    "Don't get too comfortable. This was a one-time thing."
+                ]
+            }
+        },
+        "apology": {
+            "patterns": [
+                "sorry",
+                "apologize",
+                "my bad",
+                "forgive",
+                "didn't mean"
+            ],
+            "responses": {
+                "friendly": [
+                    "Hey, no worries! We all make mistakes.",
+                    "It's okay. Water under the bridge.",
+                    "Already forgotten. Let's move on."
+                ],
+                "neutral": [
+                    "It's fine.",
+                    "Whatever.",
+                    "Just don't let it happen again."
+                ],
+                "grudging": [
+                    "I'll remember this.",
+                    "Sorry doesn't fix everything.",
+                    "Talk is cheap. Actions matter."
+                ]
+            }
+        },
+        "echo_inquiry": {
+            "patterns": [
+                "echo",
+                "echoes",
+                "layers",
+                "multiverse",
+                "between",
+                "signal"
+            ],
+            "responses": {
+                "knowledgeable": [
+                    "Echoes? You've felt them too? The whispers between layers...",
+                    "Some say the Echoes are fragments of souls. Others say data.",
+                    "The layers are real. I've seen things... between."
+                ],
+                "superstitious": [
+                    "Don't speak of such things! You'll attract attention.",
+                    "The Echoes are sacred. Or cursed. Nobody knows which.",
+                    "I heard someone touched an Echo once. They're still screaming."
+                ],
+                "skeptical": [
+                    "Echoes are just glitches. Radiation damage. Nothing more.",
+                    "You believe in that multiverse nonsense?",
+                    "Ghost stories for gullible tourists."
+                ]
+            }
+        },
+        "unknown": {
+            "patterns": [],
+            "responses": {
+                "default": [
+                    "Hmm? Sorry, didn't catch that.",
+                    "You'll have to be more specific.",
+                    "I don't understand what you're asking.",
+                    "That's beyond my knowledge.",
+                    "Can't help you there.",
+                    "Try asking someone else."
+                ]
+            }
+        }
+    },
+    "entities": {
+        "locations": [
+            "neon_bar",
+            "undercity",
+            "temple_district",
+            "market",
+            "docks",
+            "resistance_hq",
+            "black_market",
+            "tech_clinic",
+            "ripperdoc"
+        ],
+        "factions": [
+            "resistance",
+            "temple",
+            "corporate",
+            "criminal",
+            "civilian"
+        ],
+        "weather_types": [
+            "rain",
+            "acid_rain",
+            "smog",
+            "fog",
+            "storm",
+            "heat"
+        ],
+        "items": [
+            "medkit",
+            "weapon",
+            "stim",
+            "data_chip",
+            "cybernetics",
+            "food",
+            "water"
+        ]
+    },
+    "context_modifiers": {
+        "night": {
+            "add_to_response": [
+                "Be careful out there tonight.",
+                "Streets are dangerous after dark."
+            ]
+        },
+        "temple_patrol_nearby": {
+            "add_to_response": [
+                "Keep your voice down.",
+                "Pretend we're not talking about that."
+            ]
+        },
+        "rain": {
+            "add_to_response": [
+                "This damn rain never stops.",
+                "At least it's not acid rain... yet."
+            ]
+        }
+    }
+}

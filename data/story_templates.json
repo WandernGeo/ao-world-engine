@@ -1,0 +1,563 @@
+{
+    "_desc": "Story templates for NPC daily activities",
+    "_version": "1.0.0",
+    "story_templates": {
+        "bar_visit": {
+            "trigger": {
+                "time": "evening",
+                "need": "social"
+            },
+            "location_type": "bar",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@bar"
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "greet",
+                    "target": "@bartender"
+                },
+                {
+                    "action": "order",
+                    "item": [
+                        "drink",
+                        "synth_whiskey",
+                        "neon_ale"
+                    ]
+                },
+                {
+                    "action": "wait"
+                },
+                {
+                    "action": "receive",
+                    "item": "@ordered_item"
+                },
+                {
+                    "action": "small_talk",
+                    "topic": [
+                        "weather",
+                        "gossip",
+                        "work",
+                        "factions"
+                    ],
+                    "probability": 0.7
+                },
+                {
+                    "action": "gossip_exchange",
+                    "probability": 0.4
+                },
+                {
+                    "action": "pay",
+                    "amount": "@item_price"
+                },
+                {
+                    "action": "farewell"
+                },
+                {
+                    "action": "leave"
+                }
+            ]
+        },
+        "shopping": {
+            "trigger": {
+                "need": "supplies"
+            },
+            "location_type": "market",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@market"
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "browse",
+                    "duration": 2
+                },
+                {
+                    "action": "greet",
+                    "target": "@merchant"
+                },
+                {
+                    "action": "price_inquiry",
+                    "item": "@needed_item"
+                },
+                {
+                    "action": "haggle",
+                    "probability": 0.3
+                },
+                {
+                    "action": "decide",
+                    "options": [
+                        "buy",
+                        "leave"
+                    ]
+                },
+                {
+                    "action": "pay",
+                    "if": "decided_buy"
+                },
+                {
+                    "action": "receive",
+                    "if": "decided_buy"
+                },
+                {
+                    "action": "farewell"
+                },
+                {
+                    "action": "leave"
+                }
+            ]
+        },
+        "work_day": {
+            "trigger": {
+                "schedule": "work_hours"
+            },
+            "location_type": "workplace",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@workplace"
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "greet",
+                    "target": "@coworkers",
+                    "count": [
+                        1,
+                        3
+                    ]
+                },
+                {
+                    "action": "work",
+                    "duration": 4
+                },
+                {
+                    "action": "break",
+                    "activity": [
+                        "eat",
+                        "smoke",
+                        "chat",
+                        "stare"
+                    ],
+                    "duration": 1
+                },
+                {
+                    "action": "small_talk",
+                    "target": "@random_coworker",
+                    "probability": 0.5
+                },
+                {
+                    "action": "work",
+                    "duration": 3
+                },
+                {
+                    "action": "overtime",
+                    "duration": [
+                        0,
+                        2
+                    ],
+                    "probability": 0.3
+                },
+                {
+                    "action": "farewell",
+                    "target": "@coworkers"
+                },
+                {
+                    "action": "leave"
+                }
+            ]
+        },
+        "home_evening": {
+            "trigger": {
+                "time": "night",
+                "location": "@home"
+            },
+            "location_type": "residence",
+            "steps": [
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "relax",
+                    "activity": [
+                        "watch_screen",
+                        "read",
+                        "tinker",
+                        "stare_out_window"
+                    ]
+                },
+                {
+                    "action": "eat",
+                    "item": [
+                        "synth_food",
+                        "real_food",
+                        "ration_bar"
+                    ]
+                },
+                {
+                    "action": "hobby",
+                    "probability": 0.4,
+                    "activity": "@npc_hobby"
+                },
+                {
+                    "action": "sleep_prepare"
+                },
+                {
+                    "action": "sleep",
+                    "duration": 6
+                }
+            ]
+        },
+        "faction_meeting": {
+            "trigger": {
+                "has_faction": true,
+                "day_of_week": [
+                    2,
+                    5
+                ]
+            },
+            "location_type": "faction_hideout",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@faction_hideout",
+                    "cautious": true
+                },
+                {
+                    "action": "check_surroundings"
+                },
+                {
+                    "action": "enter",
+                    "secret": true
+                },
+                {
+                    "action": "greet",
+                    "target": "@faction_members"
+                },
+                {
+                    "action": "meeting",
+                    "duration": 2
+                },
+                {
+                    "action": "discuss",
+                    "topic": [
+                        "operations",
+                        "plans",
+                        "enemies",
+                        "supplies"
+                    ]
+                },
+                {
+                    "action": "receive_orders",
+                    "probability": 0.3
+                },
+                {
+                    "action": "pledge",
+                    "probability": 0.1
+                },
+                {
+                    "action": "farewell"
+                },
+                {
+                    "action": "leave",
+                    "cautious": true
+                }
+            ]
+        },
+        "suspicious_encounter": {
+            "trigger": {
+                "random": 0.05
+            },
+            "location_type": "street",
+            "steps": [
+                {
+                    "action": "notice",
+                    "target": "@stranger"
+                },
+                {
+                    "action": "assess",
+                    "check": [
+                        "threat",
+                        "opportunity",
+                        "recognition"
+                    ]
+                },
+                {
+                    "action": "decide",
+                    "options": [
+                        "approach",
+                        "avoid",
+                        "observe"
+                    ]
+                },
+                {
+                    "action": "approach",
+                    "if": "decided_approach"
+                },
+                {
+                    "action": "greet",
+                    "tone": [
+                        "cautious",
+                        "aggressive",
+                        "friendly"
+                    ]
+                },
+                {
+                    "action": "exchange",
+                    "type": [
+                        "information",
+                        "threat",
+                        "deal"
+                    ]
+                },
+                {
+                    "action": "conclude"
+                },
+                {
+                    "action": "depart"
+                }
+            ]
+        },
+        "gossip_session": {
+            "trigger": {
+                "need": "social",
+                "has_friends": true
+            },
+            "location_type": "any",
+            "steps": [
+                {
+                    "action": "meet",
+                    "target": "@friend"
+                },
+                {
+                    "action": "greet"
+                },
+                {
+                    "action": "small_talk",
+                    "topic": "weather"
+                },
+                {
+                    "action": "gossip",
+                    "topic": "@recent_events"
+                },
+                {
+                    "action": "react",
+                    "emotion": [
+                        "shock",
+                        "interest",
+                        "dismissal",
+                        "fear"
+                    ]
+                },
+                {
+                    "action": "share_secret",
+                    "probability": 0.2
+                },
+                {
+                    "action": "gossip",
+                    "topic": "@local_npcs"
+                },
+                {
+                    "action": "warn",
+                    "about": "@threats",
+                    "probability": 0.3
+                },
+                {
+                    "action": "farewell"
+                },
+                {
+                    "action": "depart"
+                }
+            ]
+        },
+        "medical_visit": {
+            "trigger": {
+                "health": "low"
+            },
+            "location_type": "clinic",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@clinic"
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "wait",
+                    "duration": [
+                        1,
+                        4
+                    ]
+                },
+                {
+                    "action": "greet",
+                    "target": "@medic"
+                },
+                {
+                    "action": "describe_symptoms"
+                },
+                {
+                    "action": "receive_treatment"
+                },
+                {
+                    "action": "pay",
+                    "amount": "@treatment_cost"
+                },
+                {
+                    "action": "thanks"
+                },
+                {
+                    "action": "leave"
+                }
+            ]
+        },
+        "trade_deal": {
+            "trigger": {
+                "has_item": "tradeable",
+                "need": "credits"
+            },
+            "location_type": "black_market",
+            "steps": [
+                {
+                    "action": "travel",
+                    "to": "@black_market",
+                    "cautious": true
+                },
+                {
+                    "action": "enter"
+                },
+                {
+                    "action": "find",
+                    "target": "@buyer"
+                },
+                {
+                    "action": "greet",
+                    "tone": "business"
+                },
+                {
+                    "action": "show_item",
+                    "item": "@tradeable"
+                },
+                {
+                    "action": "negotiate",
+                    "rounds": [
+                        1,
+                        5
+                    ]
+                },
+                {
+                    "action": "decide",
+                    "options": [
+                        "accept",
+                        "reject",
+                        "counter"
+                    ]
+                },
+                {
+                    "action": "exchange",
+                    "if": "deal_made"
+                },
+                {
+                    "action": "farewell"
+                },
+                {
+                    "action": "leave",
+                    "cautious": true
+                }
+            ]
+        }
+    },
+    "interaction_patterns": {
+        "greet_stranger": {
+            "initiator_intents": [
+                "greet"
+            ],
+            "responder_intents": {
+                "friendly": [
+                    "greet_back",
+                    "offer_help"
+                ],
+                "neutral": [
+                    "acknowledge",
+                    "query"
+                ],
+                "hostile": [
+                    "dismiss",
+                    "threaten",
+                    "ignore"
+                ]
+            }
+        },
+        "gossip_exchange": {
+            "initiator_intents": [
+                "share_gossip"
+            ],
+            "responder_intents": {
+                "interested": [
+                    "react_curious",
+                    "ask_more",
+                    "share_gossip_back"
+                ],
+                "dismissive": [
+                    "doubt",
+                    "dismiss"
+                ],
+                "worried": [
+                    "react_fear",
+                    "warn"
+                ]
+            }
+        },
+        "trade_negotiation": {
+            "initiator_intents": [
+                "offer_item",
+                "state_price"
+            ],
+            "responder_intents": {
+                "interested": [
+                    "consider",
+                    "counter_offer",
+                    "accept"
+                ],
+                "uninterested": [
+                    "decline",
+                    "dismiss"
+                ],
+                "suspicious": [
+                    "question_origin",
+                    "refuse"
+                ]
+            }
+        }
+    },
+    "context_actions": {
+        "rain": [
+            "seek_shelter",
+            "complain_weather",
+            "rush"
+        ],
+        "night": [
+            "be_cautious",
+            "check_surroundings",
+            "avoid_alleys"
+        ],
+        "patrol_nearby": [
+            "lower_voice",
+            "change_topic",
+            "act_normal"
+        ],
+        "danger_high": [
+            "flee",
+            "hide",
+            "prepare_weapon"
+        ]
+    }
+}
