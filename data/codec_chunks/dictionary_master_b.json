@@ -1,0 +1,2312 @@
+{
+    "weather": {
+        "_desc": "Weather condition codes - W + 3 digits",
+        "W001": {
+            "name": "clear_night",
+            "sky": "dark",
+            "visibility": "high",
+            "precipitation": "none"
+        },
+        "W002": {
+            "name": "overcast_night",
+            "sky": "cloudy_dark",
+            "visibility": "medium",
+            "precipitation": "none"
+        },
+        "W010": {
+            "name": "light_rain",
+            "sky": "cloudy",
+            "visibility": "medium",
+            "precipitation": "rain_light",
+            "effects": [
+                "wet_surfaces",
+                "reflections"
+            ]
+        },
+        "W011": {
+            "name": "heavy_rain",
+            "sky": "dark",
+            "visibility": "low",
+            "precipitation": "rain_heavy",
+            "effects": [
+                "puddles",
+                "streams",
+                "limited_vision"
+            ]
+        },
+        "W012": {
+            "name": "storm",
+            "sky": "very_dark",
+            "visibility": "very_low",
+            "precipitation": "rain_heavy",
+            "effects": [
+                "lightning",
+                "wind",
+                "debris"
+            ]
+        },
+        "W020": {
+            "name": "fog_light",
+            "sky": "obscured",
+            "visibility": "medium",
+            "precipitation": "none",
+            "effects": [
+                "haze",
+                "muted_lights"
+            ]
+        },
+        "W021": {
+            "name": "fog_heavy",
+            "sky": "obscured",
+            "visibility": "low",
+            "precipitation": "none",
+            "effects": [
+                "atmospheric",
+                "silhouettes"
+            ]
+        },
+        "W030": {
+            "name": "smog",
+            "sky": "hazy",
+            "visibility": "medium",
+            "precipitation": "none",
+            "effects": [
+                "yellow_tint",
+                "pollution"
+            ]
+        }
+    },
+    "time_of_day": {
+        "_desc": "Time codes - T + 2 digits",
+        "T01": {
+            "name": "midnight",
+            "hour_range": [
+                0,
+                3
+            ],
+            "light_level": "very_low",
+            "ambient": "artificial_only"
+        },
+        "T02": {
+            "name": "late_night",
+            "hour_range": [
+                3,
+                6
+            ],
+            "light_level": "very_low",
+            "ambient": "artificial_only"
+        },
+        "T03": {
+            "name": "dawn",
+            "hour_range": [
+                6,
+                8
+            ],
+            "light_level": "low",
+            "ambient": "dim_natural"
+        },
+        "T04": {
+            "name": "morning",
+            "hour_range": [
+                8,
+                11
+            ],
+            "light_level": "medium",
+            "ambient": "natural"
+        },
+        "T05": {
+            "name": "midday",
+            "hour_range": [
+                11,
+                14
+            ],
+            "light_level": "high",
+            "ambient": "bright_natural"
+        },
+        "T06": {
+            "name": "afternoon",
+            "hour_range": [
+                14,
+                17
+            ],
+            "light_level": "medium",
+            "ambient": "warm_natural"
+        },
+        "T07": {
+            "name": "dusk",
+            "hour_range": [
+                17,
+                20
+            ],
+            "light_level": "low",
+            "ambient": "orange_natural"
+        },
+        "T08": {
+            "name": "evening",
+            "hour_range": [
+                20,
+                24
+            ],
+            "light_level": "low",
+            "ambient": "artificial_dominated"
+        },
+        "T99": {
+            "name": "eternal_night",
+            "hour_range": [
+                0,
+                24
+            ],
+            "light_level": "very_low",
+            "ambient": "artificial_only",
+            "note": "RE:ECHO standard - perpetual night"
+        }
+    },
+    "cybernetics": {
+        "_desc": "Cybernetic implant codes - CY + 3 digits",
+        "CY001": {
+            "name": "neural_link",
+            "location": "brain",
+            "visible": false,
+            "features": [
+                "data_uplink",
+                "remote_control"
+            ]
+        },
+        "CY002": {
+            "name": "ar_glasses",
+            "location": "eyes",
+            "visible": true,
+            "color": "CLR010",
+            "features": [
+                "hud",
+                "recording"
+            ]
+        },
+        "CY010": {
+            "name": "cybernetic_eye_left",
+            "location": "left_eye",
+            "visible": true,
+            "color": "CLR010",
+            "features": [
+                "enhanced_vision",
+                "zoom"
+            ]
+        },
+        "CY011": {
+            "name": "cybernetic_eye_right",
+            "location": "right_eye",
+            "visible": true,
+            "color": "CLR010",
+            "features": [
+                "enhanced_vision",
+                "zoom"
+            ]
+        },
+        "CY017": {
+            "name": "hud_monocle",
+            "location": "right_eye",
+            "visible": true,
+            "frame": "CLR040",
+            "lens": "CLR010",
+            "features": [
+                "threat_detection",
+                "facial_recognition"
+            ]
+        },
+        "CY020": {
+            "name": "hearing_enhancement",
+            "location": "ears",
+            "visible": false,
+            "features": [
+                "amplification",
+                "filtering"
+            ]
+        },
+        "CY025": {
+            "name": "cybernetic_arm_left",
+            "location": "left_arm",
+            "visible": true,
+            "material": "MT012",
+            "features": [
+                "enhanced_strength"
+            ]
+        },
+        "CY026": {
+            "name": "cybernetic_arm_right",
+            "location": "right_arm",
+            "visible": true,
+            "material": "MT012",
+            "features": [
+                "enhanced_strength"
+            ]
+        },
+        "CY028": {
+            "name": "holographic_arm_right",
+            "location": "right_arm",
+            "visible": true,
+            "material": "MT020",
+            "color": "CLR010",
+            "features": [
+                "translucent",
+                "scanner",
+                "hacking"
+            ]
+        },
+        "CY030": {
+            "name": "cybernetic_legs",
+            "location": "legs",
+            "visible": true,
+            "material": "MT012",
+            "features": [
+                "speed",
+                "jump_enhancement"
+            ]
+        },
+        "CY040": {
+            "name": "data_glove",
+            "location": "hand",
+            "visible": true,
+            "material": "MT012",
+            "accent": "CLR010",
+            "features": [
+                "hacking",
+                "interface"
+            ]
+        }
+    },
+    "emotions": {
+        "_desc": "Emotional state codes - E + 3 digits",
+        "E001": {
+            "name": "neutral",
+            "intensity": 0,
+            "expression": "relaxed"
+        },
+        "E010": {
+            "name": "happy_slight",
+            "intensity": 0.3,
+            "expression": "hint_of_smile"
+        },
+        "E011": {
+            "name": "happy_moderate",
+            "intensity": 0.6,
+            "expression": "smile"
+        },
+        "E020": {
+            "name": "sad_slight",
+            "intensity": 0.3,
+            "expression": "downcast"
+        },
+        "E021": {
+            "name": "sad_moderate",
+            "intensity": 0.6,
+            "expression": "somber"
+        },
+        "E030": {
+            "name": "angry_slight",
+            "intensity": 0.3,
+            "expression": "tense_jaw"
+        },
+        "E031": {
+            "name": "angry_moderate",
+            "intensity": 0.6,
+            "expression": "glaring"
+        },
+        "E032": {
+            "name": "angry_intense",
+            "intensity": 0.9,
+            "expression": "fury"
+        },
+        "E040": {
+            "name": "fearful",
+            "intensity": 0.5,
+            "expression": "wide_eyes"
+        },
+        "E050": {
+            "name": "suspicious",
+            "intensity": 0.5,
+            "expression": "narrowed_eyes"
+        },
+        "E060": {
+            "name": "determined",
+            "intensity": 0.7,
+            "expression": "set_jaw"
+        },
+        "E070": {
+            "name": "tired",
+            "intensity": 0.5,
+            "expression": "heavy_lids"
+        },
+        "E080": {
+            "name": "guarded",
+            "intensity": 0.5,
+            "expression": "neutral_alert"
+        }
+    },
+    "weapons": {
+        "_desc": "Weapon codes - WP + 3 digits",
+        "_categories": [
+            "pistol",
+            "rifle",
+            "shotgun",
+            "melee",
+            "explosive",
+            "energy",
+            "special"
+        ],
+        "WP001": {
+            "name": "resistance_pistol",
+            "type": "pistol",
+            "caliber": "9mm",
+            "capacity": 15,
+            "material": "MT012",
+            "color": "CLR001",
+            "features": [
+                "semi_auto",
+                "suppressor_ready"
+            ],
+            "damage_class": "medium",
+            "users": [
+                "C01",
+                "C02",
+                "C12"
+            ],
+            "visual": "Compact angular pistol, matte black, cyan holographic sight"
+        },
+        "WP002": {
+            "name": "temple_enforcer_pistol",
+            "type": "pistol",
+            "caliber": "10mm",
+            "capacity": 12,
+            "material": "MT011",
+            "color": "CLR002",
+            "features": [
+                "burst_fire",
+                "biometric_lock"
+            ],
+            "damage_class": "high",
+            "faction": "temple",
+            "visual": "Sleek chrome pistol with amber Temple insignia"
+        },
+        "WP003": {
+            "name": "holdout_derringer",
+            "type": "pistol",
+            "caliber": ".45",
+            "capacity": 2,
+            "material": "MT012",
+            "color": "CLR001",
+            "features": [
+                "concealable",
+                "single_shot"
+            ],
+            "damage_class": "high",
+            "users": [
+                "C04"
+            ],
+            "visual": "Tiny black pistol, fits in palm"
+        },
+        "WP010": {
+            "name": "assault_rifle_resistance",
+            "type": "rifle",
+            "caliber": "5.56mm",
+            "capacity": 30,
+            "material": "MT012",
+            "color": "CLR001",
+            "features": [
+                "full_auto",
+                "modular",
+                "worn"
+            ],
+            "damage_class": "high",
+            "faction": "resistance",
+            "visual": "Black modular rifle, scratched from use, cyan tape on grip"
+        },
+        "WP011": {
+            "name": "temple_pulse_rifle",
+            "type": "rifle",
+            "caliber": "energy_pulse",
+            "capacity": 50,
+            "material": "MT011",
+            "color": "CLR011",
+            "features": [
+                "energy_weapon",
+                "no_recoil",
+                "temple_tech"
+            ],
+            "damage_class": "very_high",
+            "faction": "temple",
+            "visual": "Polished chrome rifle with amber energy cells"
+        },
+        "WP020": {
+            "name": "combat_shotgun",
+            "type": "shotgun",
+            "caliber": "12_gauge",
+            "capacity": 8,
+            "material": "MT012",
+            "color": "CLR001",
+            "features": [
+                "pump_action",
+                "spread"
+            ],
+            "damage_class": "very_high_close",
+            "visual": "Heavy black shotgun, worn wooden grip"
+        },
+        "WP030": {
+            "name": "combat_knife",
+            "type": "melee",
+            "blade_length": "15cm",
+            "material": "MT011",
+            "color": "CLR001",
+            "features": [
+                "serrated",
+                "balanced"
+            ],
+            "damage_class": "medium",
+            "users": [
+                "C01",
+                "C03"
+            ],
+            "visual": "Black tactical knife with serrated back edge"
+        },
+        "WP031": {
+            "name": "electro_baton",
+            "type": "melee",
+            "length": "60cm",
+            "material": "MT012",
+            "color": "CLR010",
+            "features": [
+                "stun",
+                "rechargeable"
+            ],
+            "damage_class": "low_stun",
+            "faction": "temple",
+            "visual": "Black baton with cyan electric arcs at tip"
+        },
+        "WP032": {
+            "name": "molecular_blade",
+            "type": "melee",
+            "blade_length": "45cm",
+            "material": "MT020",
+            "color": "CLR010",
+            "features": [
+                "holographic_edge",
+                "cuts_anything"
+            ],
+            "damage_class": "extreme",
+            "users": [
+                "C12"
+            ],
+            "visual": "Cyan holographic blade emanating from metal handle"
+        },
+        "WP040": {
+            "name": "frag_grenade",
+            "type": "explosive",
+            "radius": "10m",
+            "material": "MT012",
+            "color": "CLR003",
+            "features": [
+                "fragment",
+                "timed_fuse"
+            ],
+            "damage_class": "area_high",
+            "visual": "Cylindrical gray grenade with pull ring"
+        },
+        "WP041": {
+            "name": "flashbang",
+            "type": "explosive",
+            "radius": "15m",
+            "material": "MT012",
+            "color": "CLR002",
+            "features": [
+                "non_lethal",
+                "blind",
+                "deafen"
+            ],
+            "damage_class": "stun_area",
+            "visual": "White cylindrical device"
+        },
+        "WP042": {
+            "name": "emp_grenade",
+            "type": "explosive",
+            "radius": "8m",
+            "material": "MT012",
+            "color": "CLR010",
+            "features": [
+                "disables_electronics",
+                "shorts_cybernetics"
+            ],
+            "damage_class": "tech_destroy",
+            "visual": "Cyan-glowing spherical device"
+        },
+        "WP050": {
+            "name": "plasma_cutter",
+            "type": "energy",
+            "range": "5m",
+            "material": "MT012",
+            "color": "CLR010",
+            "features": [
+                "industrial",
+                "repurposed"
+            ],
+            "damage_class": "extreme_close",
+            "visual": "Industrial tool modified for combat, cyan plasma arc"
+        }
+    },
+    "vehicles": {
+        "_desc": "Vehicle codes - VH + 3 digits",
+        "_categories": [
+            "ground",
+            "air",
+            "water",
+            "rail"
+        ],
+        "VH001": {
+            "name": "street_car_sedan",
+            "type": "ground",
+            "capacity": 4,
+            "speed": "medium",
+            "condition": "worn",
+            "color": "CLR003",
+            "features": [
+                "rusted",
+                "patched"
+            ],
+            "visual": "Boxy gray sedan, dented panels, one working headlight",
+            "faction": "civilian"
+        },
+        "VH002": {
+            "name": "temple_patrol_car",
+            "type": "ground",
+            "capacity": 4,
+            "speed": "high",
+            "condition": "pristine",
+            "color": "CLR002",
+            "features": [
+                "armored",
+                "sirens",
+                "pursuit_mode"
+            ],
+            "visual": "Sleek white cruiser with amber Temple insignia and lights",
+            "faction": "temple"
+        },
+        "VH003": {
+            "name": "resistance_truck",
+            "type": "ground",
+            "capacity": 12,
+            "speed": "low",
+            "condition": "functional",
+            "color": "CLR003",
+            "features": [
+                "cargo",
+                "hidden_compartment",
+                "reinforced"
+            ],
+            "visual": "Large gray cargo truck, unmarked, hiding smuggled goods",
+            "faction": "resistance"
+        },
+        "VH010": {
+            "name": "motorcycle_standard",
+            "type": "ground",
+            "capacity": 2,
+            "speed": "very_high",
+            "condition": "varied",
+            "color": "CLR001",
+            "features": [
+                "agile",
+                "narrow"
+            ],
+            "visual": "Black motorcycle, stripped down, fast"
+        },
+        "VH011": {
+            "name": "hoverbike",
+            "type": "ground",
+            "capacity": 1,
+            "speed": "extreme",
+            "condition": "rare",
+            "color": "CLR010",
+            "features": [
+                "hover",
+                "antigrav",
+                "luxury"
+            ],
+            "visual": "Sleek cyan-lit hovering cycle, no wheels",
+            "faction": "corps"
+        },
+        "VH020": {
+            "name": "temple_dropship",
+            "type": "air",
+            "capacity": 20,
+            "speed": "high",
+            "condition": "military",
+            "color": "CLR002",
+            "features": [
+                "vtol",
+                "armored",
+                "rapid_deploy"
+            ],
+            "visual": "White armored aircraft with amber searchlights",
+            "faction": "temple"
+        },
+        "VH021": {
+            "name": "surveillance_drone",
+            "type": "air",
+            "capacity": 0,
+            "speed": "medium",
+            "condition": "autonomous",
+            "color": "CLR003",
+            "features": [
+                "camera",
+                "silent",
+                "networked"
+            ],
+            "visual": "Small gray quadcopter, single red eye camera",
+            "faction": "temple"
+        },
+        "VH030": {
+            "name": "underground_tram",
+            "type": "rail",
+            "capacity": 50,
+            "speed": "medium",
+            "condition": "operational",
+            "color": "CLR003",
+            "features": [
+                "public_transit",
+                "overcrowded"
+            ],
+            "visual": "Gray metro car, graffiti covered, packed with commuters"
+        },
+        "VH031": {
+            "name": "freight_train",
+            "type": "rail",
+            "capacity": 500,
+            "speed": "low",
+            "condition": "industrial",
+            "color": "CLR020",
+            "features": [
+                "cargo",
+                "cross_city"
+            ],
+            "visual": "Long brown freight train, shipping containers"
+        }
+    },
+    "sounds": {
+        "_desc": "Sound effect codes - SND + 3 digits",
+        "_usage": "For audio cues in scene generation",
+        "SND001": {
+            "name": "rain_light",
+            "category": "ambient",
+            "volume": "low",
+            "loop": true
+        },
+        "SND002": {
+            "name": "rain_heavy",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": true
+        },
+        "SND003": {
+            "name": "thunder_distant",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND004": {
+            "name": "thunder_close",
+            "category": "ambient",
+            "volume": "high",
+            "loop": false
+        },
+        "SND010": {
+            "name": "traffic_distant",
+            "category": "ambient",
+            "volume": "low",
+            "loop": true
+        },
+        "SND011": {
+            "name": "traffic_close",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": true
+        },
+        "SND012": {
+            "name": "car_pass",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND013": {
+            "name": "siren_police",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND014": {
+            "name": "siren_temple",
+            "category": "ambient",
+            "volume": "high",
+            "loop": false,
+            "note": "Distinct amber tone"
+        },
+        "SND020": {
+            "name": "crowd_murmur",
+            "category": "ambient",
+            "volume": "low",
+            "loop": true
+        },
+        "SND021": {
+            "name": "crowd_busy",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": true
+        },
+        "SND022": {
+            "name": "crowd_panic",
+            "category": "ambient",
+            "volume": "high",
+            "loop": false
+        },
+        "SND030": {
+            "name": "neon_hum",
+            "category": "ambient",
+            "volume": "very_low",
+            "loop": true
+        },
+        "SND031": {
+            "name": "neon_flicker",
+            "category": "ambient",
+            "volume": "low",
+            "loop": false
+        },
+        "SND032": {
+            "name": "hologram_static",
+            "category": "ambient",
+            "volume": "low",
+            "loop": true
+        },
+        "SND040": {
+            "name": "footsteps_concrete",
+            "category": "foley",
+            "volume": "low",
+            "loop": false
+        },
+        "SND041": {
+            "name": "footsteps_metal",
+            "category": "foley",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND042": {
+            "name": "footsteps_puddle",
+            "category": "foley",
+            "volume": "low",
+            "loop": false
+        },
+        "SND050": {
+            "name": "pistol_fire",
+            "category": "combat",
+            "volume": "high",
+            "loop": false
+        },
+        "SND051": {
+            "name": "rifle_fire",
+            "category": "combat",
+            "volume": "very_high",
+            "loop": false
+        },
+        "SND052": {
+            "name": "energy_weapon_fire",
+            "category": "combat",
+            "volume": "medium",
+            "loop": false,
+            "note": "Distinctive whine"
+        },
+        "SND053": {
+            "name": "explosion_small",
+            "category": "combat",
+            "volume": "very_high",
+            "loop": false
+        },
+        "SND054": {
+            "name": "explosion_large",
+            "category": "combat",
+            "volume": "extreme",
+            "loop": false
+        },
+        "SND060": {
+            "name": "door_metal",
+            "category": "foley",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND061": {
+            "name": "door_wood",
+            "category": "foley",
+            "volume": "low",
+            "loop": false
+        },
+        "SND062": {
+            "name": "door_automatic",
+            "category": "foley",
+            "volume": "low",
+            "loop": false,
+            "note": "Hydraulic hiss"
+        },
+        "SND070": {
+            "name": "terminal_beep",
+            "category": "tech",
+            "volume": "low",
+            "loop": false
+        },
+        "SND071": {
+            "name": "terminal_typing",
+            "category": "tech",
+            "volume": "low",
+            "loop": true
+        },
+        "SND072": {
+            "name": "data_transfer",
+            "category": "tech",
+            "volume": "low",
+            "loop": false,
+            "note": "Digital chirps"
+        },
+        "SND080": {
+            "name": "cybernetic_whir",
+            "category": "tech",
+            "volume": "low",
+            "loop": false
+        },
+        "SND081": {
+            "name": "cybernetic_power_up",
+            "category": "tech",
+            "volume": "medium",
+            "loop": false
+        },
+        "SND082": {
+            "name": "holographic_activate",
+            "category": "tech",
+            "volume": "low",
+            "loop": false
+        },
+        "SND090": {
+            "name": "temple_chant",
+            "category": "ambient",
+            "volume": "low",
+            "loop": true,
+            "faction": "temple"
+        },
+        "SND091": {
+            "name": "temple_bell",
+            "category": "ambient",
+            "volume": "medium",
+            "loop": false,
+            "faction": "temple"
+        },
+        "SND092": {
+            "name": "temple_announcement",
+            "category": "ambient",
+            "volume": "high",
+            "loop": false,
+            "faction": "temple"
+        }
+    },
+    "poses": {
+        "_desc": "Character pose codes - PS + 3 digits",
+        "_usage": "For image generation and animation keyframes",
+        "PS001": {
+            "name": "standing_neutral",
+            "stance": "feet_shoulder_width",
+            "arms": "at_sides",
+            "weight": "balanced"
+        },
+        "PS002": {
+            "name": "standing_alert",
+            "stance": "feet_apart",
+            "arms": "slightly_raised",
+            "weight": "forward"
+        },
+        "PS003": {
+            "name": "standing_relaxed",
+            "stance": "weight_on_one_leg",
+            "arms": "crossed_or_pockets",
+            "weight": "casual"
+        },
+        "PS010": {
+            "name": "walking_normal",
+            "stance": "mid_stride",
+            "arms": "natural_swing",
+            "weight": "shifting"
+        },
+        "PS011": {
+            "name": "walking_cautious",
+            "stance": "small_steps",
+            "arms": "ready",
+            "weight": "controlled"
+        },
+        "PS012": {
+            "name": "running",
+            "stance": "full_stride",
+            "arms": "pumping",
+            "weight": "forward_lean"
+        },
+        "PS020": {
+            "name": "sitting_chair",
+            "stance": "seated",
+            "arms": "on_armrests_or_lap",
+            "weight": "settled"
+        },
+        "PS021": {
+            "name": "sitting_bar_stool",
+            "stance": "perched",
+            "arms": "on_counter",
+            "weight": "leaning_forward"
+        },
+        "PS022": {
+            "name": "sitting_ground",
+            "stance": "cross_legged_or_knees_up",
+            "arms": "resting_on_knees",
+            "weight": "stable"
+        },
+        "PS030": {
+            "name": "combat_ready",
+            "stance": "athletic",
+            "arms": "weapon_raised",
+            "weight": "balls_of_feet"
+        },
+        "PS031": {
+            "name": "combat_firing",
+            "stance": "braced",
+            "arms": "weapon_extended",
+            "weight": "absorbing_recoil"
+        },
+        "PS032": {
+            "name": "combat_melee",
+            "stance": "dynamic",
+            "arms": "swing_or_thrust",
+            "weight": "in_motion"
+        },
+        "PS033": {
+            "name": "combat_cover",
+            "stance": "crouched",
+            "arms": "weapon_close",
+            "weight": "against_cover"
+        },
+        "PS040": {
+            "name": "conversation_engaged",
+            "stance": "facing_partner",
+            "arms": "gesturing",
+            "weight": "attentive"
+        },
+        "PS041": {
+            "name": "conversation_dismissive",
+            "stance": "turned_away",
+            "arms": "crossed",
+            "weight": "disengaged"
+        },
+        "PS042": {
+            "name": "conversation_intimate",
+            "stance": "close",
+            "arms": "touching_or_near",
+            "weight": "leaning_in"
+        },
+        "PS050": {
+            "name": "drinking_bar",
+            "stance": "seated_or_standing",
+            "arms": "glass_in_hand",
+            "weight": "relaxed"
+        },
+        "PS051": {
+            "name": "smoking",
+            "stance": "leaning",
+            "arms": "cigarette_to_lips",
+            "weight": "casual"
+        },
+        "PS060": {
+            "name": "using_terminal",
+            "stance": "standing_or_seated",
+            "arms": "typing",
+            "weight": "focused_forward"
+        },
+        "PS061": {
+            "name": "examining_object",
+            "stance": "still",
+            "arms": "holding_object",
+            "weight": "studying"
+        },
+        "PS070": {
+            "name": "injured_standing",
+            "stance": "unsteady",
+            "arms": "clutching_wound",
+            "weight": "favoring_side"
+        },
+        "PS071": {
+            "name": "injured_ground",
+            "stance": "fallen",
+            "arms": "bracing_or_weak",
+            "weight": "collapsed"
+        },
+        "PS080": {
+            "name": "dead",
+            "stance": "prone",
+            "arms": "limp",
+            "weight": "none"
+        }
+    },
+    "animations": {
+        "_desc": "Animation state codes - AN + 3 digits",
+        "_usage": "For animation pipeline state machines",
+        "AN001": {
+            "name": "idle_breathing",
+            "type": "loop",
+            "frames": 60,
+            "blend": true
+        },
+        "AN002": {
+            "name": "idle_shift_weight",
+            "type": "trigger",
+            "frames": 30,
+            "blend": true
+        },
+        "AN003": {
+            "name": "idle_look_around",
+            "type": "trigger",
+            "frames": 45,
+            "blend": true
+        },
+        "AN010": {
+            "name": "walk_cycle",
+            "type": "loop",
+            "frames": 24,
+            "blend": true
+        },
+        "AN011": {
+            "name": "run_cycle",
+            "type": "loop",
+            "frames": 18,
+            "blend": true
+        },
+        "AN012": {
+            "name": "sprint_cycle",
+            "type": "loop",
+            "frames": 14,
+            "blend": true
+        },
+        "AN020": {
+            "name": "turn_left_90",
+            "type": "trigger",
+            "frames": 15,
+            "blend": true
+        },
+        "AN021": {
+            "name": "turn_right_90",
+            "type": "trigger",
+            "frames": 15,
+            "blend": true
+        },
+        "AN022": {
+            "name": "turn_180",
+            "type": "trigger",
+            "frames": 24,
+            "blend": true
+        },
+        "AN030": {
+            "name": "sit_down",
+            "type": "trigger",
+            "frames": 30,
+            "blend": false
+        },
+        "AN031": {
+            "name": "stand_up",
+            "type": "trigger",
+            "frames": 30,
+            "blend": false
+        },
+        "AN040": {
+            "name": "draw_pistol",
+            "type": "trigger",
+            "frames": 12,
+            "blend": false
+        },
+        "AN041": {
+            "name": "holster_pistol",
+            "type": "trigger",
+            "frames": 15,
+            "blend": false
+        },
+        "AN042": {
+            "name": "fire_pistol",
+            "type": "trigger",
+            "frames": 6,
+            "blend": false
+        },
+        "AN043": {
+            "name": "reload_pistol",
+            "type": "trigger",
+            "frames": 45,
+            "blend": false
+        },
+        "AN050": {
+            "name": "punch_jab",
+            "type": "trigger",
+            "frames": 8,
+            "blend": false
+        },
+        "AN051": {
+            "name": "punch_cross",
+            "type": "trigger",
+            "frames": 12,
+            "blend": false
+        },
+        "AN052": {
+            "name": "kick_front",
+            "type": "trigger",
+            "frames": 15,
+            "blend": false
+        },
+        "AN060": {
+            "name": "take_hit_front",
+            "type": "trigger",
+            "frames": 10,
+            "blend": true
+        },
+        "AN061": {
+            "name": "take_hit_back",
+            "type": "trigger",
+            "frames": 10,
+            "blend": true
+        },
+        "AN062": {
+            "name": "fall_down",
+            "type": "trigger",
+            "frames": 30,
+            "blend": false
+        },
+        "AN063": {
+            "name": "get_up",
+            "type": "trigger",
+            "frames": 45,
+            "blend": false
+        },
+        "AN070": {
+            "name": "talk_gesture_1",
+            "type": "trigger",
+            "frames": 30,
+            "blend": true
+        },
+        "AN071": {
+            "name": "talk_gesture_2",
+            "type": "trigger",
+            "frames": 25,
+            "blend": true
+        },
+        "AN072": {
+            "name": "nod",
+            "type": "trigger",
+            "frames": 12,
+            "blend": true
+        },
+        "AN073": {
+            "name": "shake_head",
+            "type": "trigger",
+            "frames": 15,
+            "blend": true
+        },
+        "AN080": {
+            "name": "drink",
+            "type": "trigger",
+            "frames": 45,
+            "blend": true
+        },
+        "AN081": {
+            "name": "smoke",
+            "type": "trigger",
+            "frames": 60,
+            "blend": true
+        }
+    },
+    "relationships": {
+        "_desc": "Relationship type codes - R + 2 digits",
+        "_usage": "For NPC relationship mapping",
+        "R01": {
+            "name": "ally",
+            "trust_base": 0.7,
+            "cooperation": "high",
+            "conflict": "low"
+        },
+        "R02": {
+            "name": "friend",
+            "trust_base": 0.8,
+            "cooperation": "high",
+            "conflict": "very_low"
+        },
+        "R03": {
+            "name": "mentor",
+            "trust_base": 0.85,
+            "cooperation": "supportive",
+            "conflict": "none"
+        },
+        "R04": {
+            "name": "protege",
+            "trust_base": 0.8,
+            "cooperation": "learning",
+            "conflict": "none"
+        },
+        "R05": {
+            "name": "romantic",
+            "trust_base": 0.9,
+            "cooperation": "intimate",
+            "conflict": "emotional"
+        },
+        "R06": {
+            "name": "family",
+            "trust_base": 0.85,
+            "cooperation": "loyal",
+            "conflict": "complex"
+        },
+        "R10": {
+            "name": "neutral",
+            "trust_base": 0.5,
+            "cooperation": "transactional",
+            "conflict": "none"
+        },
+        "R11": {
+            "name": "acquaintance",
+            "trust_base": 0.4,
+            "cooperation": "minimal",
+            "conflict": "none"
+        },
+        "R12": {
+            "name": "business",
+            "trust_base": 0.5,
+            "cooperation": "professional",
+            "conflict": "competitive"
+        },
+        "R20": {
+            "name": "rival",
+            "trust_base": 0.3,
+            "cooperation": "reluctant",
+            "conflict": "competitive"
+        },
+        "R21": {
+            "name": "enemy",
+            "trust_base": 0.1,
+            "cooperation": "none",
+            "conflict": "active"
+        },
+        "R22": {
+            "name": "nemesis",
+            "trust_base": 0.0,
+            "cooperation": "never",
+            "conflict": "personal"
+        },
+        "R30": {
+            "name": "unknown",
+            "trust_base": 0.3,
+            "cooperation": "wary",
+            "conflict": "potential"
+        }
+    },
+    "locations": {
+        "_desc": "Location codes - L + 3 digits",
+        "_categories": [
+            "commercial",
+            "residential",
+            "industrial",
+            "temple",
+            "underground",
+            "restricted"
+        ],
+        "L001": {
+            "name": "neon_district_main",
+            "category": "commercial",
+            "density": "high",
+            "danger": "medium",
+            "faction": "neutral"
+        },
+        "L002": {
+            "name": "neon_district_alley",
+            "category": "commercial",
+            "density": "low",
+            "danger": "high",
+            "faction": "neutral"
+        },
+        "L003": {
+            "name": "temple_checkpoint",
+            "category": "temple",
+            "density": "medium",
+            "danger": "low_if_compliant",
+            "faction": "temple"
+        },
+        "L004": {
+            "name": "undercity_market",
+            "category": "underground",
+            "density": "high",
+            "danger": "medium",
+            "faction": "underground"
+        },
+        "L005": {
+            "name": "corporate_tower_lobby",
+            "category": "commercial",
+            "density": "medium",
+            "danger": "low",
+            "faction": "corps"
+        },
+        "L006": {
+            "name": "residential_block_a",
+            "category": "residential",
+            "density": "high",
+            "danger": "medium",
+            "faction": "neutral"
+        },
+        "L007": {
+            "name": "corpo_district",
+            "category": "commercial",
+            "density": "medium",
+            "danger": "low",
+            "faction": "corps"
+        },
+        "L010": {
+            "name": "the_signal_exterior",
+            "category": "commercial",
+            "density": "medium",
+            "danger": "low",
+            "faction": "neutral"
+        },
+        "L011": {
+            "name": "the_signal_interior",
+            "category": "commercial",
+            "density": "medium",
+            "danger": "low",
+            "faction": "neutral",
+            "owner": "C04"
+        },
+        "L020": {
+            "name": "resistance_safehouse",
+            "category": "underground",
+            "density": "low",
+            "danger": "very_low",
+            "faction": "resistance"
+        },
+        "L026": {
+            "name": "resistance_hq",
+            "category": "underground",
+            "density": "medium",
+            "danger": "very_low",
+            "faction": "resistance"
+        },
+        "L030": {
+            "name": "mystic_enclave",
+            "category": "underground",
+            "density": "low",
+            "danger": "weird",
+            "faction": "mystics"
+        },
+        "L031": {
+            "name": "temple_spire",
+            "category": "temple",
+            "density": "high",
+            "danger": "extreme",
+            "faction": "temple"
+        },
+        "L040": {
+            "name": "factory_district",
+            "category": "industrial",
+            "density": "medium",
+            "danger": "medium",
+            "faction": "corps"
+        },
+        "L050": {
+            "name": "outzone_border",
+            "category": "restricted",
+            "density": "low",
+            "danger": "extreme",
+            "faction": "none"
+        }
+    },
+    "generation_prompts": {
+        "_desc": "Reusable prompt templates for AI image generation",
+        "_pipeline": "StudioRam / Vertex AI Imagen",
+        "style_prefix": "Signal Noir cyberpunk: ",
+        "style_suffix": " MANDATORY: 85% grayscale, only cyan (#00CED1) and amber (#FFD700) as accent colors. High contrast film noir lighting. No bright colors.",
+        "character_template": "{style_prefix}Portrait of {character_name}, {age_range}, {ethnicity}. {physical_description}. {clothing_description}. {cybernetics_description}. Expression: {expression}. Lighting: {lighting_type}.{style_suffix}",
+        "scene_template": "{style_prefix}{location_name}: {location_description}. Weather: {weather}. Time: {time}. Foreground: {foreground}. Background: {background}. Atmosphere: {mood}.{style_suffix}",
+        "object_template": "{style_prefix}Detailed view of {object_name}: {object_description}. Material: {material}. Condition: {condition}. Lighting: {lighting}.{style_suffix}",
+        "action_template": "{style_prefix}{character_name} performing {action}: {action_description}. Location: {location}. Weather: {weather}. Camera angle: {camera}.{style_suffix}"
+    },
+    "ai_reasoning": {
+        "_desc": "AI decision-making hints for procedural generation",
+        "_usage": "LLM uses these hints to make contextually appropriate decisions",
+        "action_selection": {
+            "by_personality": {
+                "high_aggression": [
+                    "A021-A045",
+                    "A057",
+                    "A061"
+                ],
+                "high_caution": [
+                    "A001",
+                    "A004",
+                    "A016",
+                    "A017",
+                    "A033-A034"
+                ],
+                "high_social": [
+                    "A046-A070"
+                ],
+                "high_tech": [
+                    "A130-A150"
+                ]
+            },
+            "by_situation": {
+                "danger": [
+                    "A002-A003",
+                    "A016-A020",
+                    "A030-A045"
+                ],
+                "safe": [
+                    "A001",
+                    "A046-A070"
+                ],
+                "trade": [
+                    "A071-A085"
+                ],
+                "investigation": [
+                    "A090-A110"
+                ]
+            }
+        },
+        "emotion_triggers": {
+            "E020_sad": {
+                "triggers": [
+                    "ally_death",
+                    "betrayal",
+                    "failure"
+                ],
+                "duration_ticks": 50
+            },
+            "E030_angry": {
+                "triggers": [
+                    "insult",
+                    "attack",
+                    "injustice"
+                ],
+                "duration_ticks": 20
+            },
+            "E040_fearful": {
+                "triggers": [
+                    "threat",
+                    "danger",
+                    "unknown"
+                ],
+                "duration_ticks": 10
+            },
+            "E060_determined": {
+                "triggers": [
+                    "mission",
+                    "challenge",
+                    "protecting_ally"
+                ],
+                "duration_ticks": 100
+            }
+        },
+        "location_behavior": {
+            "L001_neon_district": {
+                "caution": 0.5,
+                "social": 0.7,
+                "speed": "normal"
+            },
+            "L026_resistance_hq": {
+                "caution": 0.1,
+                "social": 0.8,
+                "speed": "relaxed"
+            },
+            "L031_temple_spire": {
+                "caution": 0.95,
+                "social": 0.2,
+                "speed": "careful"
+            }
+        }
+    },
+    "procedural_weights": {
+        "_desc": "Probability weights for procedural generation",
+        "_usage": "Weighted random selection for event/state generation",
+        "weather_probability": {
+            "W001": 0.15,
+            "W002": 0.25,
+            "W010": 0.3,
+            "W011": 0.15,
+            "W012": 0.05,
+            "W020": 0.05,
+            "W021": 0.02,
+            "W030": 0.03
+        },
+        "time_distribution": {
+            "T01": 0.1,
+            "T02": 0.05,
+            "T03": 0.05,
+            "T04": 0.1,
+            "T05": 0.1,
+            "T06": 0.1,
+            "T07": 0.1,
+            "T08": 0.2,
+            "T99": 0.2
+        },
+        "npc_spawn_by_location": {
+            "L001": [
+                "C01",
+                "C02",
+                "C04",
+                "C11"
+            ],
+            "L011": [
+                "C04",
+                "C01"
+            ],
+            "L026": [
+                "C01",
+                "C02",
+                "C03",
+                "C12"
+            ],
+            "L031": [
+                "C06"
+            ]
+        }
+    },
+    "accessories": {
+        "_desc": "Accessory codes - AC + 3 digits",
+        "_usage": "Wearable items, jewelry, glasses, etc.",
+        "AC001": {
+            "name": "watch_analog",
+            "type": "wrist",
+            "material": "MT010",
+            "color": "CLR040",
+            "style": "classic"
+        },
+        "AC002": {
+            "name": "watch_digital",
+            "type": "wrist",
+            "material": "MT012",
+            "color": "CLR001",
+            "style": "tactical",
+            "features": [
+                "hud_link"
+            ]
+        },
+        "AC003": {
+            "name": "watch_holographic",
+            "type": "wrist",
+            "material": "MT020",
+            "color": "CLR010",
+            "style": "tech",
+            "features": [
+                "projection",
+                "comm_link"
+            ]
+        },
+        "AC010": {
+            "name": "ring_plain_silver",
+            "type": "finger",
+            "material": "MT011",
+            "color": "CLR002",
+            "style": "simple"
+        },
+        "AC011": {
+            "name": "ring_signet",
+            "type": "finger",
+            "material": "MT010",
+            "color": "CLR040",
+            "style": "engraved",
+            "meaning": "faction_symbol"
+        },
+        "AC012": {
+            "name": "ring_data",
+            "type": "finger",
+            "material": "MT012",
+            "color": "CLR010",
+            "style": "tech",
+            "features": [
+                "data_storage",
+                "biometric"
+            ]
+        },
+        "AC020": {
+            "name": "necklace_chain_silver",
+            "type": "neck",
+            "material": "MT011",
+            "color": "CLR002",
+            "style": "simple"
+        },
+        "AC021": {
+            "name": "necklace_pendant",
+            "type": "neck",
+            "material": "MT011",
+            "color": "CLR002",
+            "style": "memorial",
+            "meaning": "personal_loss"
+        },
+        "AC022": {
+            "name": "necklace_dog_tags",
+            "type": "neck",
+            "material": "MT012",
+            "color": "CLR001",
+            "style": "military",
+            "meaning": "past_service"
+        },
+        "AC030": {
+            "name": "glasses_reading",
+            "type": "eyes",
+            "material": "MT012",
+            "color": "CLR001",
+            "style": "functional"
+        },
+        "AC031": {
+            "name": "glasses_sunglasses",
+            "type": "eyes",
+            "material": "MT012",
+            "color": "CLR001",
+            "style": "cool",
+            "features": [
+                "uv_protection"
+            ]
+        },
+        "AC032": {
+            "name": "glasses_ar",
+            "type": "eyes",
+            "material": "MT012",
+            "color": "CLR010",
+            "style": "tech",
+            "features": [
+                "hud",
+                "recording",
+                "comm_link"
+            ]
+        },
+        "AC040": {
+            "name": "hat_fedora",
+            "type": "head",
+            "material": "MT002",
+            "color": "CLR003",
+            "style": "noir_classic"
+        },
+        "AC041": {
+            "name": "hat_beanie",
+            "type": "head",
+            "material": "MT003",
+            "color": "CLR001",
+            "style": "casual"
+        },
+        "AC042": {
+            "name": "hat_hood",
+            "type": "head",
+            "material": "MT003",
+            "color": "CLR003",
+            "style": "concealment"
+        },
+        "AC050": {
+            "name": "scarf_cloth",
+            "type": "neck",
+            "material": "MT002",
+            "color": "CLR003",
+            "style": "warmth"
+        },
+        "AC051": {
+            "name": "mask_face_cloth",
+            "type": "face",
+            "material": "MT003",
+            "color": "CLR001",
+            "style": "concealment"
+        },
+        "AC052": {
+            "name": "mask_respirator",
+            "type": "face",
+            "material": "MT012",
+            "color": "CLR001",
+            "style": "protection",
+            "features": [
+                "air_filter"
+            ]
+        },
+        "AC060": {
+            "name": "belt_leather",
+            "type": "waist",
+            "material": "MT001",
+            "color": "CLR020",
+            "style": "classic"
+        },
+        "AC061": {
+            "name": "belt_tactical",
+            "type": "waist",
+            "material": "MT004",
+            "color": "CLR001",
+            "style": "utility",
+            "features": [
+                "holster_attach",
+                "pouch_attach"
+            ]
+        },
+        "AC070": {
+            "name": "gloves_leather",
+            "type": "hands",
+            "material": "MT001",
+            "color": "CLR020",
+            "style": "classic"
+        },
+        "AC071": {
+            "name": "gloves_tactical",
+            "type": "hands",
+            "material": "MT004",
+            "color": "CLR001",
+            "style": "combat",
+            "features": [
+                "reinforced_knuckles"
+            ]
+        },
+        "AC072": {
+            "name": "gloves_data",
+            "type": "hands",
+            "material": "MT005",
+            "color": "CLR010",
+            "style": "tech",
+            "features": [
+                "haptic_feedback",
+                "neural_interface"
+            ]
+        }
+    },
+    "food_drinks": {
+        "_desc": "Food and drink codes - FD + 3 digits",
+        "_usage": "Consumables for scene dressing and character interaction",
+        "FD001": {
+            "name": "whiskey_neat",
+            "type": "drink",
+            "container": "tumbler",
+            "color": "#8B4513",
+            "temp": "room",
+            "effect": "relaxation",
+            "users": [
+                "C01",
+                "C04"
+            ]
+        },
+        "FD002": {
+            "name": "whiskey_rocks",
+            "type": "drink",
+            "container": "tumbler",
+            "color": "#8B4513",
+            "temp": "cold",
+            "effect": "relaxation"
+        },
+        "FD003": {
+            "name": "beer_bottle",
+            "type": "drink",
+            "container": "bottle",
+            "color": "#DAA520",
+            "temp": "cold",
+            "effect": "social"
+        },
+        "FD004": {
+            "name": "beer_synth",
+            "type": "drink",
+            "container": "can",
+            "color": "#B8860B",
+            "temp": "cold",
+            "effect": "social",
+            "note": "synthetic, cheap"
+        },
+        "FD010": {
+            "name": "coffee_black",
+            "type": "drink",
+            "container": "mug",
+            "color": "#3D2314",
+            "temp": "hot",
+            "effect": "alertness"
+        },
+        "FD011": {
+            "name": "coffee_synth",
+            "type": "drink",
+            "container": "cup",
+            "color": "#2F1810",
+            "temp": "hot",
+            "effect": "minimal_alertness",
+            "note": "synthetic substitute"
+        },
+        "FD012": {
+            "name": "tea_green",
+            "type": "drink",
+            "container": "cup",
+            "color": "#90EE90",
+            "temp": "hot",
+            "effect": "calm"
+        },
+        "FD020": {
+            "name": "water_clean",
+            "type": "drink",
+            "container": "bottle",
+            "color": "transparent",
+            "temp": "cold",
+            "effect": "hydration",
+            "note": "expensive"
+        },
+        "FD021": {
+            "name": "water_recycled",
+            "type": "drink",
+            "container": "canteen",
+            "color": "slightly_cloudy",
+            "temp": "room",
+            "effect": "hydration",
+            "note": "standard issue"
+        },
+        "FD030": {
+            "name": "noodles_street",
+            "type": "food",
+            "container": "bowl",
+            "temp": "hot",
+            "effect": "sustenance",
+            "note": "common street food"
+        },
+        "FD031": {
+            "name": "rice_protein",
+            "type": "food",
+            "container": "box",
+            "temp": "warm",
+            "effect": "sustenance",
+            "note": "resistance rations"
+        },
+        "FD032": {
+            "name": "synth_bar",
+            "type": "food",
+            "container": "wrapper",
+            "temp": "room",
+            "effect": "sustenance",
+            "note": "nutrient paste bar"
+        },
+        "FD040": {
+            "name": "stim_pill",
+            "type": "drug",
+            "container": "bottle",
+            "effect": "combat_boost",
+            "duration": "4_hours",
+            "side_effect": "crash"
+        },
+        "FD041": {
+            "name": "calm_patch",
+            "type": "drug",
+            "container": "patch",
+            "effect": "anxiety_reduction",
+            "duration": "8_hours",
+            "side_effect": "drowsiness"
+        },
+        "FD042": {
+            "name": "echo_tab",
+            "type": "drug",
+            "container": "tablet",
+            "effect": "layer_glimpse",
+            "duration": "30_minutes",
+            "side_effect": "disorientation",
+            "note": "illegal, induces layer bleed visions"
+        }
+    },
+    "furniture": {
+        "_desc": "Furniture codes - FN + 3 digits",
+        "_usage": "Scene props and interactive objects",
+        "FN001": {
+            "name": "chair_office",
+            "type": "seating",
+            "material": "MT005",
+            "color": "CLR003",
+            "capacity": 1,
+            "condition": "worn"
+        },
+        "FN002": {
+            "name": "chair_folding",
+            "type": "seating",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": 1,
+            "condition": "battered"
+        },
+        "FN003": {
+            "name": "stool_bar",
+            "type": "seating",
+            "material": "MT001",
+            "color": "CLR020",
+            "capacity": 1,
+            "condition": "worn_smooth"
+        },
+        "FN010": {
+            "name": "sofa_worn",
+            "type": "seating",
+            "material": "MT002",
+            "color": "CLR003",
+            "capacity": 3,
+            "condition": "patched"
+        },
+        "FN011": {
+            "name": "booth_bar",
+            "type": "seating",
+            "material": "MT001",
+            "color": "CLR020",
+            "capacity": 4,
+            "condition": "worn",
+            "features": [
+                "privacy_screen"
+            ]
+        },
+        "FN020": {
+            "name": "table_round",
+            "type": "surface",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": 4
+        },
+        "FN021": {
+            "name": "table_rectangular",
+            "type": "surface",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": 6
+        },
+        "FN022": {
+            "name": "table_bar_counter",
+            "type": "surface",
+            "material": "MT001",
+            "color": "CLR020",
+            "capacity": 10,
+            "length": "5m"
+        },
+        "FN030": {
+            "name": "desk_terminal",
+            "type": "surface",
+            "material": "MT012",
+            "color": "CLR003",
+            "features": [
+                "built_in_terminal",
+                "cable_management"
+            ]
+        },
+        "FN031": {
+            "name": "workbench",
+            "type": "surface",
+            "material": "MT012",
+            "color": "CLR003",
+            "features": [
+                "tool_storage",
+                "vise"
+            ]
+        },
+        "FN040": {
+            "name": "bed_cot",
+            "type": "sleeping",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": 1,
+            "condition": "military"
+        },
+        "FN041": {
+            "name": "bed_mattress",
+            "type": "sleeping",
+            "material": "MT002",
+            "color": "CLR003",
+            "capacity": 2,
+            "condition": "stained"
+        },
+        "FN050": {
+            "name": "shelf_metal",
+            "type": "storage",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": "medium"
+        },
+        "FN051": {
+            "name": "locker_personal",
+            "type": "storage",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": "small",
+            "features": [
+                "lock"
+            ]
+        },
+        "FN052": {
+            "name": "crate_cargo",
+            "type": "storage",
+            "material": "MT012",
+            "color": "CLR003",
+            "capacity": "large",
+            "features": [
+                "stackable"
+            ]
+        }
+    },
+    "lighting_types": {
+        "_desc": "Lighting setup codes - LT + 3 digits",
+        "_usage": "For scene rendering and mood generation",
+        "LT001": {
+            "name": "noir_key",
+            "style": "high_contrast",
+            "key_angle": 45,
+            "fill_ratio": 0.2,
+            "mood": "dramatic",
+            "shadows": "deep_black"
+        },
+        "LT002": {
+            "name": "noir_fill",
+            "style": "even",
+            "key_angle": 30,
+            "fill_ratio": 0.5,
+            "mood": "readable",
+            "shadows": "soft"
+        },
+        "LT003": {
+            "name": "noir_rim",
+            "style": "backlit",
+            "key_angle": 135,
+            "fill_ratio": 0.1,
+            "mood": "mysterious",
+            "shadows": "silhouette"
+        },
+        "LT010": {
+            "name": "neon_glow",
+            "style": "colored",
+            "source": "signage",
+            "color": "CLR010",
+            "intensity": "medium",
+            "mood": "cyberpunk"
+        },
+        "LT011": {
+            "name": "neon_harsh",
+            "style": "colored",
+            "source": "signage",
+            "color": "CLR010",
+            "intensity": "high",
+            "mood": "aggressive"
+        },
+        "LT020": {
+            "name": "street_lamp",
+            "style": "practical",
+            "source": "overhead",
+            "color": "CLR002",
+            "intensity": "low",
+            "mood": "urban"
+        },
+        "LT021": {
+            "name": "holographic_ambient",
+            "style": "diffuse",
+            "source": "billboards",
+            "color": "CLR010",
+            "intensity": "low",
+            "mood": "tech"
+        },
+        "LT030": {
+            "name": "interior_warm",
+            "style": "practical",
+            "source": "lamps",
+            "color": "CLR011",
+            "intensity": "low",
+            "mood": "intimate"
+        },
+        "LT031": {
+            "name": "interior_cold",
+            "style": "practical",
+            "source": "fluorescent",
+            "color": "CLR002",
+            "intensity": "medium",
+            "mood": "clinical"
+        },
+        "LT040": {
+            "name": "emergency_red",
+            "style": "alert",
+            "source": "warning_lights",
+            "color": "#FF0000",
+            "intensity": "pulsing",
+            "mood": "danger"
+        },
+        "LT041": {
+            "name": "tech_glow",
+            "style": "emanation",
+            "source": "cybernetics",
+            "color": "CLR010",
+            "intensity": "subtle",
+            "mood": "character_accent"
+        },
+        "LT050": {
+            "name": "temple_amber",
+            "style": "religious",
+            "source": "altar_lights",
+            "color": "CLR011",
+            "intensity": "medium",
+            "mood": "reverent"
+        },
+        "LT051": {
+            "name": "temple_searchlight",
+            "style": "surveillance",
+            "source": "tower",
+            "color": "CLR011",
+            "intensity": "high",
+            "mood": "oppressive"
+        }
+    },
+    "scene_templates": {
+        "_desc": "Pre-defined scene composition templates",
+        "_usage": "Quick scene generation with consistent framing",
+        "ST001": {
+            "name": "bar_conversation",
+            "location": "L011",
+            "characters_min": 2,
+            "characters_max": 4,
+            "poses": [
+                "PS021",
+                "PS050"
+            ],
+            "lighting": "LT030",
+            "sounds": [
+                "SND030",
+                "SND031"
+            ],
+            "props": [
+                "FN011",
+                "FN022",
+                "FD001"
+            ],
+            "mood": "intimate_tense"
+        },
+        "ST002": {
+            "name": "street_encounter",
+            "location": "L001",
+            "characters_min": 2,
+            "characters_max": 6,
+            "poses": [
+                "PS001",
+                "PS002",
+                "PS010"
+            ],
+            "lighting": "LT010",
+            "weather": "W010",
+            "sounds": [
+                "SND001",
+                "SND010",
+                "SND030"
+            ],
+            "mood": "urban_noir"
+        },
+        "ST003": {
+            "name": "resistance_briefing",
+            "location": "L026",
+            "characters_min": 3,
+            "characters_max": 8,
+            "poses": [
+                "PS001",
+                "PS040"
+            ],
+            "lighting": "LT021",
+            "sounds": [
+                "SND070",
+                "SND071"
+            ],
+            "props": [
+                "FN020",
+                "FN030"
+            ],
+            "mood": "tense_planning"
+        },
+        "ST004": {
+            "name": "combat_encounter",
+            "location": "any",
+            "characters_min": 2,
+            "poses": [
+                "PS030",
+                "PS031",
+                "PS032",
+                "PS033"
+            ],
+            "lighting": "LT001",
+            "sounds": [
+                "SND050",
+                "SND051",
+                "SND053"
+            ],
+            "mood": "action_danger"
+        },
+        "ST005": {
+            "name": "temple_confrontation",
+            "location": "L031",
+            "characters_min": 2,
+            "poses": [
+                "PS001",
+                "PS002"
+            ],
+            "lighting": "LT050",
+            "sounds": [
+                "SND090",
+                "SND091"
+            ],
+            "mood": "oppressive_danger"
+        }
+    },
+    "narrative_beats": {
+        "_desc": "Story structure codes for procedural narrative",
+        "_usage": "Event generation follows narrative patterns",
+        "NB001": {
+            "name": "inciting_incident",
+            "tension": 0.6,
+            "action": "medium",
+            "required_for": "story_start"
+        },
+        "NB002": {
+            "name": "rising_action",
+            "tension": 0.7,
+            "action": "variable",
+            "follows": "NB001"
+        },
+        "NB003": {
+            "name": "first_crisis",
+            "tension": 0.8,
+            "action": "high",
+            "follows": "NB002"
+        },
+        "NB004": {
+            "name": "false_victory",
+            "tension": 0.5,
+            "action": "low",
+            "follows": "NB003"
+        },
+        "NB005": {
+            "name": "dark_moment",
+            "tension": 0.9,
+            "action": "medium",
+            "follows": "NB004"
+        },
+        "NB006": {
+            "name": "climax",
+            "tension": 1.0,
+            "action": "very_high",
+            "follows": "NB005"
+        },
+        "NB007": {
+            "name": "resolution",
+            "tension": 0.3,
+            "action": "low",
+            "follows": "NB006"
+        },
+        "NB010": {
+            "name": "quiet_moment",
+            "tension": 0.2,
+            "action": "none",
+            "use": "between_beats"
+        },
+        "NB011": {
+            "name": "character_reveal",
+            "tension": 0.6,
+            "action": "none",
+            "use": "any"
+        },
+        "NB012": {
+            "name": "plot_twist",
+            "tension": 0.85,
+            "action": "variable",
+            "use": "strategic"
+        }
+    },
+    "_desc": "Gameplay dictionary - items, locations, animations, systems",
+    "_related": "dictionary_master.json"
+}

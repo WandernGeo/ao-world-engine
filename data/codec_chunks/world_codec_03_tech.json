@@ -718,5 +718,627 @@
                 "network"
             ]
         }
+    },
+    "vehicles": {
+        "_desc": "Futuristic transportation for all social classes",
+        "vehicle_classes": {
+            "elite": {
+                "hover_limousine": {
+                    "code": "VH001",
+                    "type": "luxury_hover",
+                    "seats": 6,
+                    "speed": "fast",
+                    "fuel": "fusion_cell",
+                    "cost_own": 50000,
+                    "cost_rent_daily": 500,
+                    "features": [
+                        "climate_control",
+                        "privacy_glass",
+                        "auto_pilot",
+                        "bar",
+                        "security_escort"
+                    ],
+                    "owners": [
+                        "temple_officials",
+                        "megacorp_execs"
+                    ],
+                    "appearance": "Sleek black, chrome accents, Temple or corp insignia"
+                },
+                "executive_flyer": {
+                    "code": "VH002",
+                    "type": "vtol",
+                    "seats": 4,
+                    "speed": "very_fast",
+                    "fuel": "fusion_cell",
+                    "altitude": "high",
+                    "cost_own": 100000,
+                    "features": [
+                        "flight",
+                        "stealth_mode",
+                        "weapon_mounts"
+                    ],
+                    "owners": [
+                        "high_inquisitor",
+                        "wealthiest"
+                    ],
+                    "appearance": "Matte black, angular, menacing"
+                }
+            },
+            "middle_class": {
+                "hover_sedan": {
+                    "code": "VH003",
+                    "type": "hover",
+                    "seats": 4,
+                    "speed": "medium",
+                    "fuel": "electric",
+                    "cost_own": 5000,
+                    "cost_rent_daily": 50,
+                    "features": [
+                        "basic_auto_pilot",
+                        "climate_control"
+                    ],
+                    "owners": [
+                        "merchants",
+                        "temple_workers",
+                        "skilled_workers"
+                    ],
+                    "appearance": "Mass-produced, various colors, practical"
+                },
+                "utility_van": {
+                    "code": "VH004",
+                    "type": "ground_hover",
+                    "seats": 2,
+                    "cargo": "large",
+                    "speed": "slow",
+                    "fuel": "electric",
+                    "cost_own": 3000,
+                    "cost_rent_daily": 30,
+                    "features": [
+                        "cargo_space",
+                        "work_lights"
+                    ],
+                    "owners": [
+                        "shopkeepers",
+                        "delivery_workers"
+                    ],
+                    "appearance": "Boxy, dented, logos faded"
+                }
+            },
+            "working_class": {
+                "motor_trike": {
+                    "code": "VH005",
+                    "type": "ground",
+                    "seats": 2,
+                    "speed": "medium",
+                    "fuel": "bio_fuel",
+                    "cost_own": 500,
+                    "features": [
+                        "manual_only",
+                        "storage_bin"
+                    ],
+                    "owners": [
+                        "workers",
+                        "couriers",
+                        "resistance"
+                    ],
+                    "appearance": "Patched together, customized, loud"
+                },
+                "rickshaw_hover": {
+                    "code": "VH006",
+                    "type": "low_hover",
+                    "seats": 3,
+                    "speed": "slow",
+                    "fuel": "electric_solar",
+                    "cost_own": 300,
+                    "cost_ride": 5,
+                    "features": [
+                        "human_operated",
+                        "cheap"
+                    ],
+                    "operators": [
+                        "poor_laborers",
+                        "refugees"
+                    ],
+                    "appearance": "Colorful, worn, personal touches"
+                }
+            },
+            "undercity": {
+                "sewer_skiff": {
+                    "code": "VH007",
+                    "type": "water_hover",
+                    "seats": 4,
+                    "speed": "medium",
+                    "fuel": "salvaged_cells",
+                    "cost_own": 200,
+                    "features": [
+                        "waterproof",
+                        "silent_mode",
+                        "smuggling_compartments"
+                    ],
+                    "owners": [
+                        "undercity_dwellers",
+                        "smugglers"
+                    ],
+                    "appearance": "Rusty, patched, no lights"
+                },
+                "tunnel_crawler": {
+                    "code": "VH008",
+                    "type": "tracked",
+                    "seats": 6,
+                    "speed": "slow",
+                    "fuel": "scavenged",
+                    "cost_own": 400,
+                    "features": [
+                        "all_terrain",
+                        "armored",
+                        "cargo"
+                    ],
+                    "owners": [
+                        "mama_crow_network",
+                        "resistance_cells"
+                    ],
+                    "appearance": "Former mining equipment, repurposed"
+                }
+            },
+            "temple_military": {
+                "patrol_hover": {
+                    "code": "VH009",
+                    "type": "hover",
+                    "seats": 4,
+                    "speed": "fast",
+                    "fuel": "temple_grid",
+                    "features": [
+                        "weapons",
+                        "sirens",
+                        "pursuit_mode",
+                        "arrest_cage"
+                    ],
+                    "crew": [
+                        "temple_guards"
+                    ],
+                    "appearance": "White with gold Temple insignia, imposing"
+                },
+                "apc_transport": {
+                    "code": "VH010",
+                    "type": "heavy_ground",
+                    "seats": 12,
+                    "speed": "medium",
+                    "armor": "heavy",
+                    "features": [
+                        "troop_transport",
+                        "weapons",
+                        "battering_ram"
+                    ],
+                    "crew": [
+                        "temple_enforcers"
+                    ],
+                    "appearance": "Massive, white, intimidating"
+                }
+            }
+        },
+        "rental_services": {
+            "temple_approved_rentals": {
+                "requires": "citizen_id",
+                "deposit": "200%_of_daily",
+                "surveillance": true,
+                "available": [
+                    "VH003",
+                    "VH004"
+                ]
+            },
+            "black_market_rentals": {
+                "requires": "credits_or_favor",
+                "deposit": "negotiable",
+                "surveillance": false,
+                "available": [
+                    "VH005",
+                    "VH006",
+                    "VH007"
+                ],
+                "locations": [
+                    "undercity",
+                    "chop_shops"
+                ]
+            }
+        },
+        "traffic_system": {
+            "hover_lanes": {
+                "upper": {
+                    "access": "elite",
+                    "height": "50m",
+                    "speed": "fast"
+                },
+                "middle": {
+                    "access": "permitted",
+                    "height": "20m",
+                    "speed": "medium"
+                },
+                "low": {
+                    "access": "all",
+                    "height": "5m",
+                    "speed": "slow"
+                },
+                "ground": {
+                    "access": "poor_only",
+                    "height": "0m",
+                    "speed": "slow"
+                }
+            },
+            "checkpoints": {
+                "frequency": "every_3_blocks",
+                "checks": [
+                    "id_scan",
+                    "vehicle_registration",
+                    "contraband_scan"
+                ],
+                "bribe_cost": 50
+            }
+        }
+    },
+    "robots": {
+        "_desc": "Automated workers, servants, and enforcers",
+        "robot_classes": {
+            "labor_bots": {
+                "construction_unit": {
+                    "code": "RB001",
+                    "type": "heavy_labor",
+                    "size": "large",
+                    "tasks": [
+                        "building",
+                        "demolition",
+                        "heavy_lifting"
+                    ],
+                    "intelligence": "basic",
+                    "appearance": "Industrial yellow, humanoid but bulky, no face",
+                    "owner_types": [
+                        "megacorp",
+                        "temple"
+                    ],
+                    "cost": 10000
+                },
+                "cleaning_drone": {
+                    "code": "RB002",
+                    "type": "maintenance",
+                    "size": "small",
+                    "tasks": [
+                        "cleaning",
+                        "waste_disposal",
+                        "minor_repairs"
+                    ],
+                    "intelligence": "minimal",
+                    "appearance": "Disc-shaped, utilitarian, often damaged",
+                    "owner_types": [
+                        "any"
+                    ],
+                    "cost": 500
+                },
+                "factory_arm": {
+                    "code": "RB003",
+                    "type": "manufacturing",
+                    "size": "stationary",
+                    "tasks": [
+                        "assembly",
+                        "welding",
+                        "precision_work"
+                    ],
+                    "intelligence": "specialized",
+                    "appearance": "Multi-jointed arms, no body",
+                    "owner_types": [
+                        "factories"
+                    ],
+                    "cost": 5000
+                }
+            },
+            "service_bots": {
+                "butler_unit": {
+                    "code": "RB004",
+                    "type": "domestic",
+                    "size": "human",
+                    "tasks": [
+                        "serving",
+                        "cleaning",
+                        "scheduling",
+                        "security"
+                    ],
+                    "intelligence": "high",
+                    "appearance": "Humanoid, elegant, slightly unnerving",
+                    "owner_types": [
+                        "wealthy_households"
+                    ],
+                    "cost": 25000,
+                    "personality": "programmed_servile"
+                },
+                "companion_bot": {
+                    "code": "RB005",
+                    "type": "social",
+                    "size": "human",
+                    "tasks": [
+                        "companionship",
+                        "conversation",
+                        "entertainment"
+                    ],
+                    "intelligence": "high",
+                    "appearance": "Customizable, very human-like",
+                    "owner_types": [
+                        "lonely_wealthy"
+                    ],
+                    "cost": 50000,
+                    "ethical_debate": "are_they_sentient"
+                },
+                "nanny_unit": {
+                    "code": "RB006",
+                    "type": "childcare",
+                    "size": "human",
+                    "tasks": [
+                        "childcare",
+                        "education",
+                        "protection"
+                    ],
+                    "intelligence": "high",
+                    "appearance": "Friendly, non-threatening",
+                    "owner_types": [
+                        "wealthy_families"
+                    ],
+                    "cost": 30000
+                }
+            },
+            "security_bots": {
+                "patrol_drone": {
+                    "code": "RB007",
+                    "type": "surveillance",
+                    "size": "small",
+                    "tasks": [
+                        "patrolling",
+                        "recording",
+                        "alerting"
+                    ],
+                    "intelligence": "basic",
+                    "appearance": "Flying eye, Temple white",
+                    "owner_types": [
+                        "temple"
+                    ],
+                    "weapons": "none",
+                    "network": "temple_grid"
+                },
+                "enforcer_unit": {
+                    "code": "RB008",
+                    "type": "combat",
+                    "size": "large",
+                    "tasks": [
+                        "crowd_control",
+                        "arrest",
+                        "combat"
+                    ],
+                    "intelligence": "tactical",
+                    "appearance": "Humanoid, armored, imposing, Temple insignia",
+                    "owner_types": [
+                        "temple_only"
+                    ],
+                    "weapons": [
+                        "stun_baton",
+                        "net_launcher",
+                        "lethal_optional"
+                    ],
+                    "cost": 100000
+                },
+                "guard_turret": {
+                    "code": "RB009",
+                    "type": "stationary_defense",
+                    "size": "medium",
+                    "tasks": [
+                        "perimeter_security",
+                        "targeting",
+                        "elimination"
+                    ],
+                    "intelligence": "targeting_only",
+                    "appearance": "Mounted gun, sensor array",
+                    "owner_types": [
+                        "temple",
+                        "megacorp"
+                    ],
+                    "weapons": [
+                        "automatic_fire"
+                    ]
+                }
+            },
+            "underground_bots": {
+                "salvage_crawler": {
+                    "code": "RB010",
+                    "type": "scavenging",
+                    "size": "small",
+                    "tasks": [
+                        "searching",
+                        "collecting",
+                        "sorting"
+                    ],
+                    "intelligence": "basic",
+                    "appearance": "Spider-like, rusty, many eyes",
+                    "owner_types": [
+                        "undercity_scavengers"
+                    ],
+                    "cost": 100,
+                    "origin": "repurposed_junk"
+                },
+                "hacked_enforcer": {
+                    "code": "RB011",
+                    "type": "combat",
+                    "size": "large",
+                    "tasks": [
+                        "resistance_protection",
+                        "raids"
+                    ],
+                    "intelligence": "reprogrammed",
+                    "appearance": "Former Temple unit, resistance markings",
+                    "owner_types": [
+                        "resistance"
+                    ],
+                    "cost": "priceless",
+                    "rarity": "very_rare",
+                    "backstory": "Zero Chen's masterwork reprogramming"
+                }
+            }
+        },
+        "robot_economy": {
+            "labor_displacement": {
+                "jobs_eliminated": [
+                    "factory_worker",
+                    "cleaner",
+                    "security_guard"
+                ],
+                "jobs_created": [
+                    "robot_tech",
+                    "robot_security",
+                    "robot_ethics"
+                ],
+                "social_tension": "high"
+            },
+            "maintenance": {
+                "parts_source": [
+                    "megacorp_official",
+                    "black_market_salvage"
+                ],
+                "technicians": [
+                    "registered_only_legal",
+                    "underground_hackers"
+                ]
+            }
+        }
+    },
+    "social_stratification": {
+        "_desc": "The stark class divide of RE:ECHO City",
+        "upper_class": {
+            "_desc": "Temple elite and megacorp executives",
+            "population_percent": 2,
+            "locations": [
+                "L080_tower_district",
+                "L081_temple_inner",
+                "L082_gated_compounds"
+            ],
+            "lifestyle": {
+                "housing": "penthouses_mansions",
+                "transport": [
+                    "VH001",
+                    "VH002"
+                ],
+                "servants": [
+                    "butler_units",
+                    "human_staff"
+                ],
+                "dining": "private_chefs_exclusive_restaurants",
+                "entertainment": "private_clubs_theaters_off_world_travel",
+                "healthcare": "best_cybernetics_life_extension",
+                "education": "private_tutors_temple_academy"
+            },
+            "daily_concerns": [
+                "political_maneuvering",
+                "wealth_preservation",
+                "reputation"
+            ],
+            "relationship_to_lower_classes": "exploitative_fearful"
+        },
+        "upper_middle": {
+            "_desc": "Temple administrators, successful merchants, skilled professionals",
+            "population_percent": 8,
+            "locations": [
+                "L040_merchant_quarter",
+                "L041_professional_district"
+            ],
+            "lifestyle": {
+                "housing": "nice_apartments_small_houses",
+                "transport": [
+                    "VH003"
+                ],
+                "servants": [
+                    "cleaning_drones",
+                    "occasional_human"
+                ],
+                "dining": "restaurants_home_cooking",
+                "entertainment": "sanctioned_clubs_theater",
+                "healthcare": "good_standard_cybernetics",
+                "education": "temple_schools_apprenticeships"
+            },
+            "daily_concerns": [
+                "maintaining_status",
+                "temple_compliance",
+                "business_success"
+            ],
+            "relationship_to_lower_classes": "nervous_superiority"
+        },
+        "working_class": {
+            "_desc": "Factory workers, service workers, small vendors",
+            "population_percent": 40,
+            "locations": [
+                "L001_neon_district",
+                "L042_worker_housing",
+                "L043_industrial_edge"
+            ],
+            "lifestyle": {
+                "housing": "cramped_apartments_shared_housing",
+                "transport": [
+                    "VH005",
+                    "VH006",
+                    "walking"
+                ],
+                "servants": "none",
+                "dining": "street_food_home_cooking",
+                "entertainment": "bars_street_parties_underground",
+                "healthcare": "basic_clinics_black_market",
+                "education": "minimal_apprenticeships"
+            },
+            "daily_concerns": [
+                "rent",
+                "food",
+                "avoiding_temple_attention",
+                "keeping_job"
+            ],
+            "relationship_to_upper_classes": "resentful_desperate"
+        },
+        "underclass": {
+            "_desc": "Unemployed, refugees, criminals, resistance",
+            "population_percent": 30,
+            "locations": [
+                "L006_undercity",
+                "L044_slums",
+                "L045_abandoned_sectors"
+            ],
+            "lifestyle": {
+                "housing": "squats_tunnels_shelters",
+                "transport": [
+                    "VH007",
+                    "walking"
+                ],
+                "servants": "none",
+                "dining": "scavenged_charity_black_market",
+                "entertainment": "underground_raves_fighting_pits",
+                "healthcare": "underground_medics_none",
+                "education": "none_or_resistance_schools"
+            },
+            "daily_concerns": [
+                "survival",
+                "temple_raids",
+                "gang_violence",
+                "disease"
+            ],
+            "relationship_to_upper_classes": "hatred_revolution"
+        },
+        "invisible": {
+            "_desc": "Those who don't officially exist - purge survivors, unregistered",
+            "population_percent": 20,
+            "locations": [
+                "deep_undercity",
+                "forgotten_sectors",
+                "hidden_communities"
+            ],
+            "lifestyle": {
+                "housing": "wherever_safe",
+                "transport": "shadows",
+                "existence": "off_grid"
+            },
+            "daily_concerns": [
+                "not_being_found",
+                "basic_survival"
+            ],
+            "hope": "resistance_victory_or_escape"
+        }
     }
 }

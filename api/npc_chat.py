@@ -82,6 +82,191 @@ NPC_SCHEMA_TX = "XmlqPa1RNFvipxnvyZTgbpx8EjOZNzNNI2tMGjQ3eb4"  # NPC semantic pr
 # Cache for Arweave data
 _arweave_cache = {}
 
+# ============================================================
+# CONVERSATION MEMORY SYSTEM
+# ============================================================
+# 
+# Two-tier memory:
+# 1. In-memory cache (instant) - stored here per user_id + npc_id
+# 2. Arweave archive (permanent) - batched every N conversations
+#
+# This allows NPCs to remember conversations within a session,
+# and persist important memories to Arweave for permanence.
+# ============================================================
+
+_conversation_memory = {}  # Key: "user_id:npc_id" -> List of messages
+_user_info = {}  # Key: "user_id" -> {"name": ..., "first_seen_tick": ...}
+
+def get_conversation_key(user_id: str, npc_id: str) -> str:
+    """Generate unique key for user-NPC conversation."""
+    return f"{user_id}:{npc_id}"
+
+def get_conversation_history(user_id: str, npc_id: str, max_messages: int = 20) -> list:
+    """Get conversation history between user and NPC."""
+    key = get_conversation_key(user_id, npc_id)
+    history = _conversation_memory.get(key, [])
+    return history[-max_messages:]  # Return last N messages
+
+def add_to_conversation(user_id: str, npc_id: str, role: str, content: str, tick: int):
+    """Add a message to conversation history."""
+    key = get_conversation_key(user_id, npc_id)
+    if key not in _conversation_memory:
+        _conversation_memory[key] = []
+    
+    _conversation_memory[key].append({
+        "role": role,
+        "content": content,
+        "tick": tick,
+        "timestamp": tick  # Same as tick for now
+    })
+    
+    # Keep only last 50 messages per conversation
+    if len(_conversation_memory[key]) > 50:
+        _conversation_memory[key] = _conversation_memory[key][-50:]
+
+def remember_user(user_id: str, name: str, tick: int):
+    """Remember information about a user."""
+    if user_id not in _user_info:
+        _user_info[user_id] = {
+            "name": name,
+            "first_seen_tick": tick,
+            "last_seen_tick": tick
+        }
+    else:
+        _user_info[user_id]["last_seen_tick"] = tick
+        if name and name != "unknown":
+            _user_info[user_id]["name"] = name
+
+def get_user_info(user_id: str) -> dict:
+    """Get what we know about a user."""
+    return _user_info.get(user_id, {"name": None, "first_seen_tick": None})
+
+
+# ============================================================
+# SCHEDULE-BASED NPC LOCATIONS
+# ============================================================
+#
+# NPCs follow their schedules from world_codec_14_behaviors.json
+# Given any tick, we can determine:
+# - What time period (T01-T10)
+# - What activity they're doing
+# - Where they are
+# ============================================================
+
+# Time period mapping: 24 ticks = 1 game hour, 240 ticks = 1 day
+TIME_PERIODS = {
+    "T01": {"name": "deep_night", "tick_range": (0, 24)},      # 00:00-01:00
+    "T02": {"name": "early_morning", "tick_range": (24, 72)},  # 01:00-03:00
+    "T03": {"name": "morning", "tick_range": (72, 120)},       # 03:00-05:00
+    "T04": {"name": "noon", "tick_range": (120, 168)},         # 05:00-07:00 (shifted for dystopia)
+    "T05": {"name": "afternoon", "tick_range": (168, 192)},    # 07:00-08:00
+    "T06": {"name": "dusk", "tick_range": (192, 204)},         # 08:00-08:30
+    "T07": {"name": "evening", "tick_range": (204, 216)},      # 08:30-09:00
+    "T08": {"name": "night", "tick_range": (216, 228)},        # 09:00-09:30
+    "T09": {"name": "late_night", "tick_range": (228, 236)},   # 09:30-09:50
+    "T10": {"name": "dead_hour", "tick_range": (236, 240)},    # 09:50-10:00
+}
+
+# Default schedules for different archetypes
+NPC_SCHEDULES = {
+    "resistance_fighter": {
+        "T01": {"activity": "patrol_or_sleep", "location": "resistance_hideout"},
+        "T02": {"activity": "training", "location": "resistance_hideout"},
+        "T03": {"activity": "intelligence_gathering", "location": "neon_market"},
+        "T04": {"activity": "meeting", "location": "resistance_hideout"},
+        "T05": {"activity": "mission", "location": "varies"},
+        "T06": {"activity": "mission", "location": "varies"},
+        "T07": {"activity": "safehouse_return", "location": "resistance_hideout"},
+        "T08": {"activity": "debriefing", "location": "resistance_hideout"},
+        "T09": {"activity": "personal_time", "location": "neon_bar"},
+        "T10": {"activity": "sleep_or_watch", "location": "resistance_hideout"},
+    },
+    "street_oracle": {
+        "T01": {"activity": "sleeping", "location": "neon_market"},
+        "T02": {"activity": "meditation", "location": "rooftop"},
+        "T03": {"activity": "visions", "location": "layer_tear"},
+        "T04": {"activity": "readings", "location": "neon_market"},
+        "T05": {"activity": "readings", "location": "neon_market"},
+        "T06": {"activity": "wandering", "location": "rain_soaked_alley"},
+        "T07": {"activity": "trading", "location": "neon_market"},
+        "T08": {"activity": "socializing", "location": "neon_bar"},
+        "T09": {"activity": "commune_with_watchers", "location": "rooftop"},
+        "T10": {"activity": "sleeping", "location": "neon_market"},
+    },
+    "info_broker": {
+        "T01": {"activity": "closing_bar", "location": "neon_bar"},
+        "T02": {"activity": "sleeping", "location": "neon_bar"},
+        "T03": {"activity": "sleeping", "location": "neon_bar"},
+        "T04": {"activity": "inventory", "location": "neon_bar"},
+        "T05": {"activity": "opening_bar", "location": "neon_bar"},
+        "T06": {"activity": "serving", "location": "neon_bar"},
+        "T07": {"activity": "serving", "location": "neon_bar"},
+        "T08": {"activity": "peak_hours", "location": "neon_bar"},
+        "T09": {"activity": "peak_hours", "location": "neon_bar"},
+        "T10": {"activity": "late_night_deals", "location": "neon_bar"},
+    },
+    "default": {
+        "T01": {"activity": "sleeping", "location": "home"},
+        "T02": {"activity": "sleeping", "location": "home"},
+        "T03": {"activity": "waking", "location": "home"},
+        "T04": {"activity": "working", "location": "workplace"},
+        "T05": {"activity": "working", "location": "workplace"},
+        "T06": {"activity": "commuting", "location": "transit"},
+        "T07": {"activity": "leisure", "location": "neon_bar"},
+        "T08": {"activity": "socializing", "location": "neon_bar"},
+        "T09": {"activity": "returning_home", "location": "transit"},
+        "T10": {"activity": "sleeping", "location": "home"},
+    }
+}
+
+# Map NPC IDs to their schedule types
+NPC_SCHEDULE_TYPES = {
+    "charlie": "resistance_fighter",
+    "zero_chen": "resistance_fighter",
+    "kai_vance": "resistance_fighter",
+    "kira": "street_oracle",
+    "felix": "info_broker",
+    "pixel": "resistance_fighter",
+    "nova_chen": "default",
+    "aiche": "default",
+    "sister_mira": "default",
+}
+
+def get_time_period(tick: int) -> str:
+    """Convert tick to time period (T01-T10)."""
+    day_tick = tick % 240  # 240 ticks per day
+    
+    for period, info in TIME_PERIODS.items():
+        start, end = info["tick_range"]
+        if start <= day_tick < end:
+            return period
+    
+    return "T01"  # Default
+
+def get_scheduled_location(npc_id: str, tick: int) -> tuple:
+    """Get NPC's scheduled location and activity at tick.
+    
+    Returns: (location, activity)
+    """
+    time_period = get_time_period(tick)
+    schedule_type = NPC_SCHEDULE_TYPES.get(npc_id, "default")
+    schedule = NPC_SCHEDULES.get(schedule_type, NPC_SCHEDULES["default"])
+    
+    slot = schedule.get(time_period, {"activity": "unknown", "location": "unknown"})
+    
+    # Handle 'varies' locations with deterministic choice
+    location = slot["location"]
+    if location == "varies":
+        locations = ["neon_market", "rain_soaked_alley", "shadow_grid", "rooftop"]
+        loc_seed = int(hashlib.md5(f"{npc_id}_{tick // 10}".encode()).hexdigest(), 16)
+        location = locations[loc_seed % len(locations)]
+    elif location == "home":
+        # Use NPC's home location
+        profile = FOUNDING_NPCS.get(npc_id, {})
+        location = profile.get("location_home", "neon_market")
+    
+    return location, slot["activity"]
+
 
 def fetch_from_arweave(tx_id: str) -> dict:
     """Fetch JSON data from Arweave."""
@@ -228,7 +413,10 @@ def get_tick_state(tick: int) -> dict:
 
 
 def get_npc_state(npc_id: str, tick: int) -> dict:
-    """Get NPC state at tick, trying Arweave first then falling back to FOUNDING_NPCS."""
+    """Get NPC state at tick, using schedule-based locations.
+    
+    NPCs follow their schedules based on tick time.
+    """
     
     # Try to get from cache/Arweave (would be implemented with proper tx lookup)
     # For now, use founding NPCs
@@ -238,19 +426,27 @@ def get_npc_state(npc_id: str, tick: int) -> dict:
     profile = FOUNDING_NPCS[npc_id].copy()
     tick_state = get_tick_state(tick)
     
-    # Deterministic location based on time + NPC
-    locations = list(LOCATIONS.keys())
-    loc_seed = int(hashlib.md5(f"{npc_id}_{tick // 4}".encode()).hexdigest(), 16)
-    home_weight = 0.6  # 60% chance to be at home location
+    # Use schedule-based location (Skyrim-style)
+    current_loc, current_activity = get_scheduled_location(npc_id, tick)
+    time_period = get_time_period(tick)
     
-    if (loc_seed % 100) < 60 and profile.get("location_home"):
-        current_loc = profile["location_home"]
-    else:
-        current_loc = locations[loc_seed % len(locations)]
+    # Deterministic mood based on activity and time
+    activity_moods = {
+        "sleeping": "peaceful",
+        "training": "focused",
+        "mission": "alert",
+        "debriefing": "serious",
+        "socializing": "relaxed",
+        "personal_time": "contemplative",
+        "readings": "mystical",
+        "serving": "attentive",
+        "peak_hours": "busy",
+    }
+    base_mood = activity_moods.get(current_activity, "neutral")
     
-    # Deterministic mood
-    moods = ["contemplative", "wary", "restless", "focused", "agitated"]
-    mood_seed = int(hashlib.md5(f"{npc_id}_mood_{tick // 8}".encode()).hexdigest(), 16)
+    # Add some variation
+    moods = [base_mood, "contemplative", "wary", "restless", "focused"]
+    mood_seed = int(hashlib.md5(f"{npc_id}_mood_{tick // 20}".encode()).hexdigest(), 16)
     current_mood = moods[mood_seed % len(moods)]
     
     return {
@@ -259,7 +455,9 @@ def get_npc_state(npc_id: str, tick: int) -> dict:
         "archetype": profile["archetype"],
         "personality": profile.get("personality_vector", {}),
         "current_location": current_loc,
-        "location_desc": LOCATIONS.get(current_loc, "unknown location"),
+        "current_activity": current_activity,
+        "time_period": time_period,
+        "location_desc": LOCATIONS.get(current_loc, current_loc.replace("_", " ")),
         "current_mood": current_mood,
         "tick_state": tick_state,
         "topics": profile.get("topic_weights", {}),
@@ -321,15 +519,245 @@ def npc_state(npc_id: str, tick: int):
 
 @app.route("/api/npc/chat", methods=["POST"])
 def npc_chat():
-    """Chat with an NPC using Vertex AI with deterministic memories and conversation history."""
+    """Chat with an NPC using Vertex AI with persistent conversation memory.
+    
+    NPCs remember conversations within the server session.
+    Pass user_id to maintain memory across requests.
+    """
     data = request.json
     npc_id = data.get("npc_id", "charlie")
     tick = data.get("tick", 100)
     message = data.get("message", "Hello")
-    history = data.get("history", [])  # List of {"role": "user"/"npc", "content": "..."}
+    user_id = data.get("user_id", "anonymous")  # Unique user identifier
+    history = data.get("history", [])  # Optional external history (deprecated, use user_id)
     
-    npc_state = get_npc_state(npc_id, tick)
-    if not npc_state:
+    npc_state_data = get_npc_state(npc_id, tick)
+    if not npc_state_data:
+        return jsonify({"error": "NPC not found"}), 404
+    
+    # Store user message in memory
+    add_to_conversation(user_id, npc_id, "user", message, tick)
+    
+    # Get conversation history from memory
+    conversation_history = get_conversation_history(user_id, npc_id, max_messages=10)
+    
+    # Try to extract user's name from messages
+    user_info = get_user_info(user_id)
+    user_name = user_info.get("name")
+    
+    # Parse name from messages like "my name is Mike"
+    for msg in conversation_history:
+        if msg["role"] == "user":
+            content_lower = msg["content"].lower()
+            if "my name is" in content_lower:
+                name_part = content_lower.split("my name is")[-1].strip()
+                name = name_part.split()[0] if name_part else None
+                if name and len(name) > 1:
+                    user_name = name.title()
+                    remember_user(user_id, user_name, tick)
+            elif "i'm " in content_lower or "i am " in content_lower:
+                # Handle "I'm Mike" or "I am Mike"
+                for pattern in ["i'm ", "i am "]:
+                    if pattern in content_lower:
+                        name_part = content_lower.split(pattern)[-1].strip()
+                        name = name_part.split()[0] if name_part else None
+                        if name and len(name) > 1:
+                            user_name = name.title()
+                            remember_user(user_id, user_name, tick)
+    
+    # Build prompt from NPC state
+    personality = npc_state_data.get("personality", {})
+    topics = npc_state_data.get("topics", {})
+    profile = FOUNDING_NPCS.get(npc_id, {})
+    
+    # Get deterministic memories from event engine
+    memory_context = ""
+    relationship_context = ""
+    if HAS_EVENT_ENGINE:
+        try:
+            memory_context = get_npc_memory_context(npc_id, tick)
+            
+            # Get relationships with other key NPCs
+            relationships = []
+            for other_npc in ["charlie", "felix", "kai_vance", "nova_chen", "aiche"]:
+                if other_npc != npc_id:
+                    rel = get_relationship_at_tick(npc_id, other_npc, tick)
+                    other_name = FOUNDING_NPCS.get(other_npc, {}).get("name", other_npc)
+                    relationships.append(f"- {other_name}: {rel['type']} (trust: {rel['trust']:.1f})")
+            relationship_context = "\n".join(relationships[:3])  # Top 3
+        except Exception as e:
+            print(f"⚠️ Event engine error: {e}")
+    
+    # Get visual description for character consistency
+    visual_desc = profile.get("visual_description", "")
+    backstory = profile.get("backstory", "")
+    catchphrases = profile.get("catchphrases", [])
+    
+    # ENHANCED: Get relationship data from profile (from World Codec)
+    npc_relationships = profile.get("relationships", {})
+    relationship_lines = []
+    for other_id, rel_data in npc_relationships.items():
+        other_name = FOUNDING_NPCS.get(other_id, {}).get("name", other_id.replace("_", " ").title())
+        rel_type = rel_data.get("type", "unknown")
+        trust = rel_data.get("trust", 0.5)
+        rel_history = rel_data.get("history", "")
+        relationship_lines.append(f"- {other_name}: {rel_type} (trust: {trust}) - {rel_history}")
+    
+    # Build full relationship context
+    if relationship_lines:
+        relationship_context = "\n".join(relationship_lines)
+    elif relationship_context:
+        pass  # Use event engine relationships
+    else:
+        relationship_context = "You are cautious with most people."
+    
+    # ENHANCED: Get cybernetics from profile
+    cybernetics = profile.get("cybernetics", [])
+    cyber_context = ""
+    if cybernetics:
+        cyber_list = []
+        for cyber_id in cybernetics:
+            # Basic name from ID
+            name = cyber_id.replace("_", " ").title()
+            cyber_list.append(f"- {name}")
+        cyber_context = f"\nYOUR CYBERNETICS:\n" + "\n".join(cyber_list)
+    
+    # ENHANCED: Core facts the NPC must always know
+    core_facts = profile.get("core_facts", [])
+    if npc_id == "charlie":
+        core_facts = [
+            "Your right arm is a holographic cyberarm - translucent, shows glowing circuitry",
+            "Zero Chen saved your life and lost HIS arm doing it - you owe him everything",
+            "Zero Chen is the Resistance leader, NOT Nova Chen. Nova is Zero's estranged sister.",
+            "Felix runs the Neon Bar - you go there for information",
+            "Aiche is the city's AI consciousness - you discovered this at a layer tear",
+            "Sister Mira secretly helps the Resistance wounded despite being Temple",
+            "Pixel is your tech support - young hacker genius",
+            "Kai Vance is your trusted tactical advisor, former military",
+        ]
+    elif npc_id == "zero_chen":
+        core_facts = [
+            "You lost your left arm saving Charlie during a Temple raid",
+            "Charlie is like a son to you - you trained him",
+            "Nova is your estranged sister who works as a mercenary",
+            "You lead the Resistance but you're tired of war",
+        ]
+    
+    core_facts_text = ""
+    if core_facts:
+        core_facts_text = "\nCORE FACTS YOU MUST REMEMBER:\n" + "\n".join(f"- {f}" for f in core_facts)
+    
+    # ENHANCED: List all NPCs this character knows
+    known_npcs = list(npc_relationships.keys())
+    known_names = [FOUNDING_NPCS.get(n, {}).get("name", n.replace("_", " ").title()) for n in known_npcs]
+    known_npcs_text = f"\nPEOPLE YOU KNOW: {', '.join(known_names)}" if known_names else ""
+    
+    # User memory context
+    user_memory_text = ""
+    if user_name:
+        user_memory_text = f"\nUSER MEMORY: You have met this person. Their name is {user_name}."
+        if user_info.get("first_seen_tick"):
+            ticks_known = tick - user_info["first_seen_tick"]
+            if ticks_known > 100:
+                user_memory_text += f" You've known them for a while now."
+    
+    # Current activity from schedule
+    current_activity = npc_state_data.get("current_activity", "unknown")
+    time_period = npc_state_data.get("time_period", "T04")
+    
+    system_prompt = f"""You are {npc_state_data['name']}, a {npc_state_data['archetype']} in RE:ECHO City.
+
+APPEARANCE:
+{visual_desc if visual_desc else 'A citizen of the cyberpunk metropolis.'}
+
+BACKSTORY:
+{backstory}
+{cyber_context}
+{core_facts_text}
+
+CURRENT STATE:
+- Location: {npc_state_data['location_desc']}
+- Activity: {current_activity}
+- Time Period: {time_period}
+- Mood: {npc_state_data['current_mood']}
+- Time: Tick {tick} (Day {npc_state_data['tick_state']['day']}, {npc_state_data['tick_state']['hour']}:00)
+- Weather: {npc_state_data['tick_state']['weather']}
+
+PERSONALITY (0-1 scale):
+- Paranoia: {personality.get('paranoia', 0.5)}
+- Mysticism: {personality.get('mysticism', 0.5)}
+- Aggression: {personality.get('aggression', 0.5)}
+- Intelligence: {personality.get('intelligence', 0.5)}
+- Empathy: {personality.get('empathy', 0.5)}
+
+{memory_context if memory_context else "No significant recent memories."}
+{user_memory_text}
+
+RELATIONSHIPS:
+{relationship_context}
+{known_npcs_text}
+
+SIGNATURE PHRASES (use naturally):
+{json.dumps(catchphrases, indent=2) if catchphrases else "None defined"}
+
+RULES:
+- Stay in character at all times
+- Reference your memories and relationships when relevant
+- Keep responses concise (2-4 sentences max)
+- Use your personality traits to color your speech
+- If paranoia is high, be suspicious. If mysticism is high, speak cryptically.
+- ALWAYS remember your core facts - your arm, your relationships, your history
+- When asked about people you know, be specific about your relationship with them
+- If the user told you their name, REMEMBER IT and use it naturally
+- When asked "what is my name?", if you know it, SAY IT
+"""
+    
+    # Build conversation history context from memory
+    history_context = ""
+    if conversation_history:
+        history_lines = []
+        for msg in conversation_history[-10:]:  # Last 10 messages max
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role == "user":
+                history_lines.append(f"User{f' ({user_name})' if user_name else ''}: {content}")
+            else:
+                history_lines.append(f"{npc_state_data['name']}: {content}")
+        history_context = "\n\nRECENT CONVERSATION:\n" + "\n".join(history_lines)
+    
+    if HAS_VERTEX and model:
+        try:
+            full_prompt = f"{system_prompt}{history_context}\n\nUser says: {message}\n\nRespond as {npc_state_data['name']}:"
+            response = model.generate_content(full_prompt)
+            npc_response = response.text
+        except Exception as e:
+            npc_response = f"[Error: {e}]"
+    else:
+        # Fallback mock response
+        import random
+        npc_response = random.choice(catchphrases) if catchphrases else "..."
+    
+    # Store NPC response in memory
+    add_to_conversation(user_id, npc_id, "npc", npc_response, tick)
+    
+    return jsonify({
+        "npc": npc_state_data["name"],
+        "response": npc_response,
+        "memories_enabled": True,  # Now always true with in-memory storage
+        "user_remembered": user_name is not None,
+        "user_name": user_name,
+        "conversation_length": len(conversation_history) + 1,
+        "state": {
+            "tick": tick,
+            "location": npc_state_data["current_location"],
+            "activity": npc_state_data.get("current_activity", "unknown"),
+            "time_period": npc_state_data.get("time_period", "T04"),
+            "mood": npc_state_data["current_mood"],
+            "weather": npc_state_data["tick_state"]["weather"],
+            "hour": npc_state_data["tick_state"]["hour"],
+            "day": npc_state_data["tick_state"]["day"]
+        }
+    })
         return jsonify({"error": "NPC not found"}), 404
     
     # Build prompt from NPC state
