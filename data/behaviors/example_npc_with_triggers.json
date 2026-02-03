@@ -1,0 +1,165 @@
+{
+    "$schema": "NPC with embedded behavior triggers",
+    "id": "charlie",
+    "name": "Charlie",
+    "full_name": "Charlie 'Ghost' Reyes",
+    "demographics": {
+        "age": 28,
+        "gender": "male",
+        "faction": "resistance",
+        "job": "rebel_fighter"
+    },
+    "economy": {
+        "gep": 50,
+        "owns_home": false,
+        "inventory": {
+            "med_kit": 2,
+            "comm_device": 1
+        }
+    },
+    "needs": {
+        "hunger": 75,
+        "energy": 60,
+        "hygiene": 80,
+        "social": 40,
+        "safety": 30
+    },
+    "relationships": {
+        "felix": {
+            "trust": 0.6,
+            "type": "friend"
+        },
+        "marcus": {
+            "trust": 0.2,
+            "type": "wary"
+        }
+    },
+    "triggers": [
+        {
+            "id": "TRG_hungry",
+            "event": "needs_check",
+            "condition": "self.needs.hunger < 20",
+            "priority": 10,
+            "behavior_ref": "BEH_npc_life::buy_food",
+            "fallback_arweave": "ar://BEH_npc_life",
+            "description": "Charlie seeks food when hungry"
+        },
+        {
+            "id": "TRG_tired",
+            "event": "needs_check",
+            "condition": "self.needs.energy < 15",
+            "priority": 9,
+            "behavior_ref": "BEH_npc_life::address_need",
+            "params": {
+                "need": "energy"
+            },
+            "description": "Charlie goes to sleep when exhausted"
+        },
+        {
+            "id": "TRG_enemy_spotted",
+            "event": "npc_nearby",
+            "condition": "other.faction == 'temple' and other.job == 'temple_guard'",
+            "priority": 8,
+            "behavior_ref": "BEH_simulation::calculate_interaction",
+            "description": "Charlie reacts to Temple guards"
+        },
+        {
+            "id": "TRG_payday",
+            "event": "tick",
+            "condition": "tick % 24 == 0 and self.job != 'unemployed'",
+            "priority": 5,
+            "behavior_ref": "BEH_npc_life::earn_wage",
+            "description": "Charlie receives daily wage"
+        },
+        {
+            "id": "TRG_faction_meeting",
+            "event": "tick",
+            "condition": "tick % 168 == 0",
+            "priority": 4,
+            "behavior_ref": "BEH_faction_ai::process_faction_tick",
+            "params": {
+                "faction_id": "resistance"
+            },
+            "description": "Weekly faction meeting"
+        },
+        {
+            "id": "TRG_friend_nearby",
+            "event": "npc_nearby",
+            "condition": "self.relationships[other.id].trust > 0.5",
+            "priority": 3,
+            "behavior_ref": "BEH_simulation::calculate_interaction",
+            "description": "Charlie greets friends"
+        }
+    ],
+    "behaviors": {
+        "_comment": "Behavior code references for this NPC",
+        "daily_routine": {
+            "arweave_ref": "ar://BEH_npc_life",
+            "entry_point": "get_scheduled_activity",
+            "description": "Determines what Charlie should be doing at any given time"
+        },
+        "combat": {
+            "arweave_ref": "ar://BEH_simulation",
+            "entry_point": "calculate_interaction",
+            "description": "How Charlie handles combat/confrontation"
+        },
+        "economy": {
+            "arweave_ref": "ar://BEH_npc_life",
+            "entry_point": "earn_wage",
+            "description": "Charlie's economic activities"
+        }
+    },
+    "schedule": {
+        "0-6": {
+            "activity": "sleeping",
+            "location": "resistance_hideout"
+        },
+        "6-8": {
+            "activity": "eating",
+            "location": "hideout_mess"
+        },
+        "8-18": {
+            "activity": "working",
+            "location": "resistance_hideout"
+        },
+        "18-20": {
+            "activity": "training",
+            "location": "training_room"
+        },
+        "20-22": {
+            "activity": "socializing",
+            "location": "bar"
+        },
+        "22-24": {
+            "activity": "patrol",
+            "location": "undercity"
+        }
+    },
+    "memory": {
+        "about_npcs": {
+            "felix": {
+                "first_met_tick": 100,
+                "impressions": [
+                    "helpful",
+                    "knows_smuggling_routes"
+                ],
+                "last_seen_tick": 1500
+            }
+        },
+        "events": [
+            {
+                "type": "joined_resistance",
+                "tick": 500
+            },
+            {
+                "type": "first_mission",
+                "tick": 600
+            }
+        ]
+    },
+    "_execution_notes": {
+        "how_triggers_work": "When an event occurs (tick, npc_nearby, etc.), the system evaluates all triggers. If condition is true, behavior_ref is executed with optional params.",
+        "behavior_resolution": "behavior_ref like 'BEH_npc_life::buy_food' means: fetch BEH_npc_life from Arweave, decode, call buy_food() function",
+        "fallback": "If Arweave is unavailable, system uses local scripts/*.py files"
+    }
+}
