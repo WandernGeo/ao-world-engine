@@ -1,0 +1,331 @@
+{
+    "_chunk": {
+        "id": "chunk_visual_scenes",
+        "version": "1.0.0",
+        "type": "visual_asset_chunk",
+        "category": "scene_visuals",
+        "purpose": "Canonical scene/location visual descriptions for background generation",
+        "pipeline": "StudioRam / Vertex AI Imagen"
+    },
+    "scenes": {
+        "neon_district_street": {
+            "id": "scene_001",
+            "location_code": "L001",
+            "name": "Neon District Street",
+            "type": "exterior",
+            "description": {
+                "overview": "Rain-slicked street in the commercial heart of RE:ECHO City. Towering holographic billboards flicker with propaganda. Neon signs in cyan and amber cast reflections on wet pavement. Art deco architecture looms overhead.",
+                "mood": "Oppressive yet alive. The weight of surveillance mixed with desperate hope.",
+                "time_of_day": "eternal_night",
+                "weather_default": "light_rain"
+            },
+            "composition": {
+                "foreground": {
+                    "elements": [
+                        "Wet pavement with puddles",
+                        "Street vendors' abandoned carts",
+                        "Steam rising from grates"
+                    ],
+                    "detail": "High detail - this is where characters stand"
+                },
+                "midground": {
+                    "elements": [
+                        "Pedestrians in dark coats",
+                        "Neon shop signs",
+                        "Low-hanging cables and wires"
+                    ],
+                    "detail": "Medium detail"
+                },
+                "background": {
+                    "elements": [
+                        "Towering art deco buildings",
+                        "Holographic billboards",
+                        "Temple spires in distance"
+                    ],
+                    "detail": "Atmospheric haze, silhouettes"
+                },
+                "skyline": "Overcast, no stars. Occasional searchlights from Temple district."
+            },
+            "architecture": {
+                "style": "art_deco_noir",
+                "building_materials": [
+                    "Concrete",
+                    "Steel",
+                    "Glass (often broken)",
+                    "Holographic projectors"
+                ],
+                "building_heights": "10-50 stories, varied",
+                "distinctive_features": [
+                    "Geometric patterns on facades",
+                    "Stepped rooflines",
+                    "Large windows with internal glow",
+                    "External cable networks"
+                ]
+            },
+            "lighting": {
+                "primary_sources": [
+                    {
+                        "type": "Holographic billboards",
+                        "color": "#00CED1",
+                        "intensity": "bright"
+                    },
+                    {
+                        "type": "Shop neon signs",
+                        "color": "#FFD700",
+                        "intensity": "medium"
+                    },
+                    {
+                        "type": "Street lamps",
+                        "color": "#FFFFFF",
+                        "intensity": "dim"
+                    }
+                ],
+                "ambient": "Very low, deep shadows dominant",
+                "contrast": "High - pools of light surrounded by darkness",
+                "reflections": "Wet surfaces reflect all light sources, creating streaks of color"
+            },
+            "color_palette": {
+                "dominant": "#1A1A1A",
+                "accent_1": "#00CED1",
+                "accent_2": "#FFD700",
+                "restriction": "85% grayscale, only cyan and amber as accent colors"
+            },
+            "objects_present": [
+                {
+                    "object_id": "O047",
+                    "name": "Street Lamp",
+                    "placement": "Every 20 meters on both sides",
+                    "visual": "Tall, art deco style with geometric housing. Often flickering."
+                },
+                {
+                    "object_id": "O089",
+                    "name": "Holographic Billboard",
+                    "placement": "Building facades, elevated",
+                    "visual": "Large rectangular projections, Temple propaganda or corporate ads"
+                },
+                {
+                    "object_id": "O112",
+                    "name": "Steam Vent",
+                    "placement": "Random along street edges",
+                    "visual": "Metal grates with rising steam, adds atmosphere"
+                }
+            ],
+            "npcs_typical": {
+                "density": "Medium-High",
+                "types": [
+                    "Civilians in dark coats",
+                    "Street vendors",
+                    "Temple patrols (background)",
+                    "Information brokers"
+                ],
+                "behavior": "Moving quickly, avoiding eye contact, huddled in groups"
+            },
+            "sound_cues": {
+                "ambient": [
+                    "Rain on pavement",
+                    "Distant traffic hum",
+                    "Holographic static",
+                    "Muffled conversations"
+                ],
+                "occasional": [
+                    "Temple announcements",
+                    "Electronic shop jingles",
+                    "Police sirens"
+                ]
+            },
+            "camera_angles": {
+                "establishing": {
+                    "angle": "high_wide",
+                    "description": "Looking down the length of the street, showing depth and building height"
+                },
+                "character_focus": {
+                    "angle": "low_medium",
+                    "description": "Slightly below eye level, character framed by neon and architecture"
+                },
+                "atmospheric": {
+                    "angle": "dutch_tilt",
+                    "description": "Slightly tilted, rain visible, buildings looming oppressively"
+                }
+            },
+            "generation_prompt": "Signal Noir cyberpunk cityscape: Rain-slicked street with towering art deco buildings. Holographic billboards cast cyan light. Neon shop signs in amber. Wet pavement reflects all colors. Steam rises from grates. Dark silhouettes of pedestrians. MANDATORY: 85% grayscale, only cyan and amber accents. Deep black shadows, high contrast noir."
+        },
+        "resistance_hq": {
+            "id": "scene_002",
+            "location_code": "L026",
+            "name": "Resistance HQ - War Room",
+            "type": "interior",
+            "description": {
+                "overview": "Underground bunker converted into resistance nerve center. Holographic tactical displays dominate the central table. Walls lined with salvaged tech, weapons, and maps. Cables run everywhere.",
+                "mood": "Tense focus. The last bastion of hope, well-used and well-defended.",
+                "lighting_type": "artificial_harsh"
+            },
+            "composition": {
+                "center": {
+                    "elements": [
+                        "Large holographic tactical table",
+                        "Central data core"
+                    ],
+                    "detail": "Highest detail - main interaction point"
+                },
+                "walls": {
+                    "elements": [
+                        "Weapon racks",
+                        "Terminal stations",
+                        "Physical maps pinned up",
+                        "Photos of missing members"
+                    ],
+                    "detail": "Medium-High detail"
+                },
+                "ceiling": {
+                    "elements": [
+                        "Exposed pipes",
+                        "Hanging cables and conduits",
+                        "Emergency lights"
+                    ],
+                    "detail": "Medium detail"
+                },
+                "floor": {
+                    "elements": [
+                        "Concrete (cracked)",
+                        "Cable runs",
+                        "Worn paths from repeated foot traffic"
+                    ],
+                    "detail": "Visible wear patterns"
+                }
+            },
+            "lighting": {
+                "primary_sources": [
+                    {
+                        "type": "Holographic table",
+                        "color": "#00CED1",
+                        "intensity": "bright"
+                    },
+                    {
+                        "type": "Terminal screens",
+                        "color": "#00FF00",
+                        "intensity": "medium"
+                    },
+                    {
+                        "type": "Emergency strips",
+                        "color": "#444444",
+                        "intensity": "dim"
+                    }
+                ],
+                "ambient": "Low, creates dramatic shadows on faces during meetings",
+                "aesthetic": "Holographic glow illuminating worried faces in darkness"
+            },
+            "objects_present": [
+                {
+                    "object_id": "O201",
+                    "name": "Tactical Holotable",
+                    "placement": "Center of room",
+                    "visual": "Large circular platform projecting 3D city map in cyan. Controls around edge.",
+                    "detail_level": "very_high"
+                },
+                {
+                    "object_id": "O202",
+                    "name": "Weapon Rack",
+                    "placement": "North wall",
+                    "visual": "Metal scaffolding holding rifles, pistols, melee weapons. Some empty slots.",
+                    "detail_level": "high"
+                },
+                {
+                    "object_id": "O203",
+                    "name": "Communication Station",
+                    "placement": "East corner",
+                    "visual": "Multiple screens, headsets, keyboard terminals. Someone always monitoring.",
+                    "detail_level": "high"
+                }
+            ],
+            "generation_prompt": "Signal Noir underground bunker: Resistance war room with central holographic tactical table glowing cyan. Salvaged tech on walls, exposed cables, weapon racks. Concrete floors worn from use. Harsh artificial lighting from screens. Faces lit by holographics. MANDATORY: 85% grayscale, cyan accents only. Dark, tense atmosphere."
+        },
+        "signal_bar": {
+            "id": "scene_003",
+            "location_code": "L011",
+            "name": "The Signal - Felix's Bar",
+            "type": "interior",
+            "description": {
+                "overview": "A dimly lit watering hole that's seen better days. Art deco bar counter with holographic drink menu. Booths with privacy screens. The place where information changes hands.",
+                "mood": "Weary refuge. Neither Temple nor Resistance territory - neutral ground for dangerous conversations.",
+                "owner": "Felix (C04)"
+            },
+            "composition": {
+                "foreground": {
+                    "elements": [
+                        "Bar stools (some occupied)",
+                        "Scattered glasses"
+                    ],
+                    "detail": "High - where conversations happen"
+                },
+                "bar_counter": {
+                    "elements": [
+                        "Long art deco counter",
+                        "Holographic drink menu",
+                        "Bottles on back shelves",
+                        "Felix's space"
+                    ],
+                    "detail": "Highest detail",
+                    "materials": "Dark wood with brass trim, worn smooth"
+                },
+                "seating_area": {
+                    "elements": [
+                        "Circular booths with high backs",
+                        "Privacy holographic screens",
+                        "Small tables"
+                    ],
+                    "detail": "Medium-High"
+                },
+                "background": {
+                    "elements": [
+                        "Entrance door",
+                        "Back room (mysterious)",
+                        "Neon beer signs"
+                    ],
+                    "detail": "Medium, atmospheric"
+                }
+            },
+            "lighting": {
+                "primary": [
+                    {
+                        "type": "Back bar lights",
+                        "color": "#2a1a0a",
+                        "intensity": "warm dim"
+                    },
+                    {
+                        "type": "Neon signs",
+                        "color": "#00CED1",
+                        "intensity": "accent"
+                    },
+                    {
+                        "type": "Booth table lamps",
+                        "color": "#FFD700",
+                        "intensity": "low"
+                    }
+                ],
+                "ambient": "Very low, intimate. Faces half in shadow.",
+                "smoke": "Light haze in air, catches light rays"
+            },
+            "objects_present": [
+                {
+                    "object_id": "O301",
+                    "name": "Bar Counter",
+                    "visual": "Long curved counter, dark wood with brass rail. Worn where elbows rest.",
+                    "detail_level": "very_high"
+                },
+                {
+                    "object_id": "O302",
+                    "name": "Drink Glasses",
+                    "visual": "Various - whiskey tumblers, tall glasses, some empty, some half-full",
+                    "detail_level": "high"
+                },
+                {
+                    "object_id": "O303",
+                    "name": "Privacy Screen",
+                    "visual": "Holographic barrier around booths, translucent cyan, can be opaque on request",
+                    "detail_level": "medium"
+                }
+            ],
+            "generation_prompt": "Signal Noir speakeasy bar: Dimly lit watering hole with art deco bar counter, brass trim. Holographic drink menu glows cyan. Back bar shelves with bottles. Booths with privacy screens. Light haze in air. MANDATORY: 85% grayscale, warm amber lamp light, cyan neon accents only. Noir atmosphere, faces in shadow."
+        }
+    }
+}

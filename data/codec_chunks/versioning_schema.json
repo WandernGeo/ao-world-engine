@@ -1,0 +1,346 @@
+{
+    "_versioning": {
+        "id": "encoding_version_control",
+        "version": "1.0.0",
+        "type": "version_control_schema",
+        "purpose": "Track code changes, deprecations, and story evolution across the RE:ECHO verse"
+    },
+    "_rules": {
+        "immutable_codes": "Once a code is assigned, it NEVER changes meaning. Only deprecated.",
+        "deprecation": "Deprecated codes remain valid for historical data but shouldn't be used in new data.",
+        "supersession": "When code A is superseded by code B, all future queries use B, but A still resolves.",
+        "story_evolution": "Canon changes are marked with effective_from_tick - past events keep old canon."
+    },
+    "code_status": {
+        "ACTIVE": "Currently valid, use in new data",
+        "DEPRECATED": "Still resolves, but don't use in new data",
+        "SUPERSEDED": "Replaced by another code, use replacement",
+        "RETCON": "Canon changed - applies from specific tick forward"
+    },
+    "evolution_log": {
+        "_desc": "All changes to codes are logged here with effective dates/ticks",
+        "EVO001": {
+            "date": "2026-02-03",
+            "effective_tick": 0,
+            "type": "initial_release",
+            "description": "Initial encoding dictionary created",
+            "codes_added": [
+                "CLR001-CLR054",
+                "SH001-SH030",
+                "CLT001-CLT051",
+                "etc"
+            ],
+            "codes_deprecated": [],
+            "codes_superseded": []
+        }
+    },
+    "deprecation_registry": {
+        "_desc": "Codes that are deprecated but still resolve",
+        "_example": {
+            "OLD_CODE": {
+                "status": "DEPRECATED",
+                "deprecated_at_tick": 5000,
+                "reason": "Replaced with more detailed version",
+                "use_instead": "NEW_CODE",
+                "still_resolves_to": "original definition for historical queries"
+            }
+        }
+    },
+    "supersession_registry": {
+        "_desc": "Codes that have been superseded by newer codes",
+        "_example": {
+            "SH001_v1": {
+                "status": "SUPERSEDED",
+                "superseded_at_tick": 3000,
+                "superseded_by": "SH001",
+                "reason": "Added material and toe properties",
+                "historical_queries": "Return original definition",
+                "current_queries": "Redirect to SH001"
+            }
+        }
+    },
+    "retcon_registry": {
+        "_desc": "Canon changes that apply from a specific tick forward",
+        "_note": "Past events keep old canon, future events use new canon",
+        "_example": {
+            "RETCON001": {
+                "effective_from_tick": 5000,
+                "affects": [
+                    "C01"
+                ],
+                "type": "character_update",
+                "description": "Charlie's backstory revealed he has a sister",
+                "old_canon": {
+                    "has_siblings": false
+                },
+                "new_canon": {
+                    "has_siblings": true,
+                    "sibling": "C14"
+                },
+                "reason": "Story evolution - sister discovered in Outzone arc",
+                "historical_queries": {
+                    "tick_before_5000": "Return old_canon (no siblings)",
+                    "tick_5000_plus": "Return new_canon (has sister)"
+                }
+            }
+        }
+    },
+    "mortality_registry": {
+        "_desc": "Tracks character deaths and how they're referenced afterward",
+        "_status_codes": {
+            "ALIVE": "Character is alive and active",
+            "DECEASED": "Character has died - no longer available for scenes",
+            "MISSING": "Presumed dead but not confirmed - can return",
+            "LEGACY": "Deceased but appears in flashbacks/memories"
+        },
+        "death_record_template": {
+            "character": "C##",
+            "status": "DECEASED",
+            "death_tick": 0,
+            "cause": "description of how they died",
+            "location": "L##",
+            "witnesses": [
+                "C##",
+                "C##"
+            ],
+            "confirmed": true,
+            "body_recovered": true,
+            "funeral_tick": null,
+            "legacy": {
+                "mentioned_by": [
+                    "C##"
+                ],
+                "memorials": [
+                    "L##"
+                ],
+                "items_inherited": {
+                    "C##": [
+                        "O##"
+                    ]
+                }
+            },
+            "query_rules": {
+                "before_death_tick": "Return full character, status ALIVE",
+                "at_death_tick": "Return death event details",
+                "after_death_tick": "Return as DECEASED, available for flashbacks only"
+            }
+        },
+        "active_deaths": {
+            "_example": {
+                "DEATH001": {
+                    "character": "C99",
+                    "name": "Example Deceased NPC",
+                    "status": "DECEASED",
+                    "death_tick": 7500,
+                    "cause": "Killed during Temple raid on Resistance HQ",
+                    "location": "L026",
+                    "witnesses": [
+                        "C01",
+                        "C02"
+                    ],
+                    "confirmed": true,
+                    "last_words": "Tell Zero... it was worth it.",
+                    "body_recovered": true,
+                    "funeral_tick": 7520,
+                    "legacy": {
+                        "mentioned_by": [
+                            "C01",
+                            "C02",
+                            "C12"
+                        ],
+                        "catchphrase_inherited": "Their sacrifice quote used by survivors",
+                        "memorial": "Wall of names at L026"
+                    }
+                }
+            }
+        },
+        "missing_presumed_dead": {
+            "_desc": "Characters who may return - Schrodinger's NPC",
+            "_example": {
+                "MISSING001": {
+                    "character": "C98",
+                    "name": "Example Missing NPC",
+                    "status": "MISSING",
+                    "missing_since_tick": 6000,
+                    "last_seen": "L045",
+                    "search_status": "abandoned",
+                    "presumed_cause": "Fell into layer bleed",
+                    "can_return": true,
+                    "return_conditions": "Story needs dictate",
+                    "query_rules": {
+                        "before_missing_tick": "Return full character, status ALIVE",
+                        "after_missing_tick": "Return as MISSING, available for scenes only with explicit author override"
+                    }
+                }
+            }
+        }
+    },
+    "relationship_after_death": {
+        "_desc": "How relationships reference deceased characters",
+        "rules": {
+            "trust_frozen": "Trust values freeze at death_tick, never change",
+            "relationship_type": "Changes to 'was_TYPE' (e.g., R01 ally -> was_ally)",
+            "memories": "All past interactions remain queryable",
+            "grief_modifier": "Living characters gain grief state for N ticks"
+        },
+        "example": {
+            "C01_to_C99_after_death": {
+                "relationship_type": "was_R01",
+                "trust_at_death": 0.9,
+                "grief_ticks": 500,
+                "grief_effect": "E021 (sad_moderate) in relevant scenes",
+                "memorial_actions": [
+                    "visits_memorial",
+                    "mentions_in_conversation"
+                ]
+            }
+        }
+    },
+    "flashback_system": {
+        "_desc": "How deceased characters appear in flashbacks/memories",
+        "flashback_marker": {
+            "type": "flashback",
+            "flashback_to_tick": 3000,
+            "current_tick": 8000,
+            "characters_present": [
+                "C01",
+                "C99"
+            ],
+            "note": "C99 is DECEASED at tick 8000 but ALIVE at tick 3000",
+            "visual_treatment": "sepia_tint or grain_overlay to distinguish from present"
+        },
+        "memory_reference": {
+            "type": "dialogue_memory",
+            "speaker": "C01",
+            "about": "C99",
+            "tone": "grief",
+            "example": "Charlie stares at the empty seat. 'They'd know what to do,' he mutters."
+        }
+    },
+    "character_timeline_markers": {
+        "_desc": "Track character state changes over ticks",
+        "C01": {
+            "timeline": [
+                {
+                    "tick": 0,
+                    "state": "initial",
+                    "appearance": {
+                        "hair": "HC08",
+                        "eyes": "EY01",
+                        "body": "BT01",
+                        "shoes": "SH030",
+                        "top": "CLT001",
+                        "bottom": "CLB001",
+                        "cybernetics": [
+                            "CY017",
+                            "CY028"
+                        ]
+                    },
+                    "text": "Charlie at series start - weathered detective, gray trench coat, holographic arm"
+                },
+                {
+                    "tick": 500,
+                    "state": "post_arm_replacement",
+                    "changes": {
+                        "cybernetics": {
+                            "added": "CY028",
+                            "reason": "Received holographic arm from Zero"
+                        }
+                    },
+                    "text": "After the Temple Archives raid - now has holographic arm"
+                },
+                {
+                    "tick": 10000,
+                    "state": "future_placeholder",
+                    "changes": {
+                        "hair": {
+                            "from": "HC08",
+                            "to": "HC09",
+                            "reason": "Fully gray from stress"
+                        },
+                        "text": "Years later - fully gray hair, more weathered"
+                    }
+                }
+            ]
+        }
+    },
+    "location_timeline_markers": {
+        "_desc": "Track location state changes over ticks",
+        "L011": {
+            "name": "The Signal Bar",
+            "timeline": [
+                {
+                    "tick": 0,
+                    "state": "operational",
+                    "owner": "C04",
+                    "condition": "well_maintained",
+                    "text": "Felix's bar at series start"
+                },
+                {
+                    "tick": 8000,
+                    "state": "damaged",
+                    "condition": "partially_destroyed",
+                    "reason": "Temple raid",
+                    "text": "After Temple raid - partially destroyed but still operational"
+                }
+            ]
+        }
+    },
+    "query_resolution_rules": {
+        "_desc": "How the system resolves codes based on tick context",
+        "rule_1_basic": {
+            "query": "Resolve code SH001",
+            "action": "Return current definition from dictionary_master.json"
+        },
+        "rule_2_deprecated": {
+            "query": "Resolve deprecated code",
+            "action": "Return original definition + deprecation warning + suggested replacement"
+        },
+        "rule_3_historical": {
+            "query": "Resolve code at tick N",
+            "action": "Check timeline_markers, return state at that tick"
+        },
+        "rule_4_retcon": {
+            "query": "Resolve retconned data at tick N",
+            "action": "If tick < effective_tick: return old_canon. Else: return new_canon"
+        },
+        "rule_5_character_full": {
+            "query": "Get full character C01 at tick N",
+            "action": [
+                "1. Get base character definition",
+                "2. Apply timeline_markers up to tick N",
+                "3. Check retcon_registry for any retcons before tick N",
+                "4. Resolve all embedded codes (SH001 -> full shoe definition)",
+                "5. Return complete character state at tick N"
+            ]
+        }
+    },
+    "pulling_strategy": {
+        "_desc": "How to minimize data loading while maintaining interconnection",
+        "lazy_loading": {
+            "step_1": "Request: 'Charlie at tick 5000'",
+            "step_2": "Load only: C01 base, C01 timeline markers up to 5000",
+            "step_3": "Codes found: HC08, EY01, SH030, CLT001, etc",
+            "step_4": "Load only those specific codes from dictionary_master",
+            "step_5": "If location needed, load L011 base + timeline to 5000",
+            "step_6": "Load weather/time only if scene requires"
+        },
+        "graph_traversal": {
+            "if_charlie_at_signal_bar": [
+                "Load C01 (character)",
+                "Codes reference -> load only used codes from dictionary",
+                "Scene is L011 -> load L011",
+                "L011 owner is C04 -> load C04 if needed for scene",
+                "Weather W010 if specified -> load W010",
+                "STOP - don't load unrelated data"
+            ]
+        },
+        "chunk_priority": {
+            "priority_1": "dictionary_master.json (always cached)",
+            "priority_2": "Requested character/location",
+            "priority_3": "Direct references (owner, relationships)",
+            "priority_4": "Scene context (weather, time)",
+            "never_preload": "Unrelated characters, locations, events"
+        }
+    }
+}

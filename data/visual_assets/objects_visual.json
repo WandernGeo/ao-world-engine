@@ -1,0 +1,404 @@
+{
+    "_chunk": {
+        "id": "chunk_visual_objects",
+        "version": "1.0.0",
+        "type": "visual_asset_chunk",
+        "category": "object_visuals",
+        "purpose": "Canonical object visual descriptions for prop generation and scene composition",
+        "pipeline": "StudioRam / Vertex AI Imagen"
+    },
+    "_schema": {
+        "description": "Detailed object specifications for consistent asset generation",
+        "usage": "Objects are composited into scenes. Each object can be generated separately and placed."
+    },
+    "objects": {
+        "holographic_arm": {
+            "id": "obj_001",
+            "object_code": "CY028",
+            "name": "Holographic Arm Mk.III",
+            "owner": "C01",
+            "category": "cybernetic",
+            "description": {
+                "overview": "Full arm prosthetic replacement from shoulder to fingertips. Semi-transparent cyan holographic shell with visible internal tech.",
+                "purpose": "Combat, hacking, enhanced grip, built-in scanner"
+            },
+            "visual_specification": {
+                "material": {
+                    "shell": "Semi-transparent holographic energy field",
+                    "internals": "Visible mechanical components - servo motors, power conduits, data cables",
+                    "joints": "Segmented with energy gaps"
+                },
+                "color": {
+                    "primary": "#00CED1",
+                    "glow_intensity": "subtle constant, brightens during use",
+                    "internal_highlights": "#FFFFFF",
+                    "internal_shadows": "#006B6B"
+                },
+                "dimensions": {
+                    "length": "Shoulder to fingertip, same as natural arm",
+                    "segments": [
+                        "Shoulder joint",
+                        "Upper arm",
+                        "Elbow joint",
+                        "Forearm",
+                        "Wrist joint",
+                        "Hand",
+                        "5 articulated fingers"
+                    ]
+                },
+                "texture": {
+                    "outer": "Smooth energy field with slight flicker at edges",
+                    "inner": "High-detail mechanical - visible gears, cables, circuits"
+                },
+                "effects": {
+                    "idle": "Subtle pulse of light along energy lines",
+                    "active": "Brighter glow, visible data streams",
+                    "combat": "Energy concentrates at hand, shield-like barrier possible"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "extended_side",
+                    "description": "Full arm from shoulder to fingers, side view"
+                },
+                {
+                    "view": "hand_detail",
+                    "description": "Close-up of hand showing finger articulation"
+                },
+                {
+                    "view": "internal_cross_section",
+                    "description": "Cutaway showing internal mechanics"
+                }
+            ],
+            "generation_prompt": "Cyberpunk holographic prosthetic arm: Semi-transparent cyan energy shell with visible internal mechanics. Servo motors, power conduits, circuit boards visible through shell. Segmented at joints with energy lines. Subtle cyan glow. MANDATORY: Cyan (#00CED1) only, high detail on internal tech."
+        },
+        "hud_monocle": {
+            "id": "obj_002",
+            "object_code": "CY017",
+            "name": "HUD Monocle",
+            "owner": "C01",
+            "category": "cybernetic",
+            "description": {
+                "overview": "Mechanical-framed holographic display worn over right eye. Brass-colored frame with cyan holographic lens projection.",
+                "purpose": "Threat detection, facial recognition, low-light vision, data overlay"
+            },
+            "visual_specification": {
+                "frame": {
+                    "material": "Brass-toned metal with visible micro-gears",
+                    "shape": "Circular lens holder with temple attachment",
+                    "color": "#B8860B",
+                    "details": "Small adjustment screws, micro-hinges, thin cables to temple"
+                },
+                "lens": {
+                    "type": "Holographic projection",
+                    "color": "#00CED1",
+                    "transparency": "Semi-transparent, data visible on surface",
+                    "diameter": "Covers entire eye"
+                },
+                "attachment": {
+                    "temple_piece": "Wraps behind ear, contains power source",
+                    "fit": "Snug against face, minimal profile"
+                },
+                "effects": {
+                    "idle": "Dim cyan glow",
+                    "active": "Bright glow, visible HUD elements (targeting reticles, text)",
+                    "scanning": "Pulsing pattern across lens"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "worn_front",
+                    "description": "Monocle on face, front view"
+                },
+                {
+                    "view": "worn_profile",
+                    "description": "Monocle on face, profile showing attachment"
+                },
+                {
+                    "view": "object_detail",
+                    "description": "Monocle alone, showing construction"
+                }
+            ],
+            "generation_prompt": "Steampunk-cyberpunk monocle: Brass-framed circular lens with visible micro-gears. Cyan holographic projection in lens showing HUD elements. Temple piece wraps behind ear. MANDATORY: Brass (#B8860B) frame, Cyan (#00CED1) lens glow."
+        },
+        "tactical_holotable": {
+            "id": "obj_003",
+            "object_code": "O201",
+            "name": "Tactical Holographic Table",
+            "location": "L026",
+            "category": "furniture",
+            "description": {
+                "overview": "Large circular platform in Resistance HQ that projects 3D city maps and tactical data. Central command interface.",
+                "purpose": "Mission planning, real-time tracking, tactical coordination"
+            },
+            "visual_specification": {
+                "base": {
+                    "shape": "Circular platform, 2 meters diameter",
+                    "material": "Dark metal with embedded projector array",
+                    "height": "Waist height (90cm)",
+                    "edge": "Control interface ring around perimeter"
+                },
+                "projection": {
+                    "type": "3D holographic city map",
+                    "color": "#00CED1",
+                    "height": "Projects 50cm above table surface",
+                    "detail": "Buildings, streets, marked locations, moving indicators"
+                },
+                "controls": {
+                    "type": "Touch-sensitive edge, gesture recognition",
+                    "indicators": "Small status lights around rim"
+                },
+                "effects": {
+                    "active": "City projection rotating slowly, data streams visible",
+                    "interaction": "Areas highlight when touched, zoom capability"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "overhead",
+                    "description": "Top-down showing circular shape and projection"
+                },
+                {
+                    "view": "user_perspective",
+                    "description": "From user standing at edge, projection visible"
+                },
+                {
+                    "view": "detail_controls",
+                    "description": "Close-up of control ring"
+                }
+            ],
+            "generation_prompt": "Sci-fi holographic tactical table: Large circular dark metal platform projecting cyan 3D city map. Control ring around edge with status lights. Projection shows buildings, streets, moving markers. MANDATORY: Dark metal base, Cyan (#00CED1) holographic projection."
+        },
+        "whiskey_glass": {
+            "id": "obj_004",
+            "object_code": "O302",
+            "name": "Whiskey Tumbler",
+            "location": "L011",
+            "category": "prop",
+            "description": {
+                "overview": "Classic rocks glass for whiskey. Thick glass bottom, worn from years of use. Charlie's frequent companion at The Signal.",
+                "purpose": "Drinking vessel, character prop"
+            },
+            "visual_specification": {
+                "shape": {
+                    "type": "Old fashioned / Rocks glass",
+                    "dimensions": "8cm tall, 8cm diameter",
+                    "base": "Heavy, thick bottom (stability)"
+                },
+                "material": {
+                    "type": "Clear glass",
+                    "condition": "Slightly worn, micro-scratches from use",
+                    "thickness": "Medium-thick walls"
+                },
+                "contents": {
+                    "liquid": "Amber whiskey, 1/3 full",
+                    "ice": "Optional - usually none (Charlie drinks it neat)"
+                },
+                "lighting_interaction": {
+                    "reflection": "Catches bar lighting, creates amber glow",
+                    "refraction": "Liquid distorts light beautifully"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "three_quarter",
+                    "description": "Glass on bar, amber liquid visible"
+                },
+                {
+                    "view": "held",
+                    "description": "In Charlie's holographic hand"
+                }
+            ],
+            "generation_prompt": "Noir film whiskey glass: Clear rocks glass with amber whiskey, 1/3 full. Heavy thick base. Worn from years of use. Bar lighting creates amber reflection. MANDATORY: Realistic glass material, amber liquid, noir lighting."
+        },
+        "resistance_pistol": {
+            "id": "obj_005",
+            "object_code": "O401",
+            "name": "Standard Resistance Pistol",
+            "category": "weapon",
+            "description": {
+                "overview": "Compact semi-automatic sidearm used by Resistance fighters. Matte black finish, no-nonsense design. Charlie's primary weapon.",
+                "purpose": "Personal defense, close combat"
+            },
+            "visual_specification": {
+                "design": {
+                    "type": "Semi-automatic pistol",
+                    "length": "22cm",
+                    "style": "Angular, futuristic but not over-designed"
+                },
+                "material": {
+                    "body": "Matte black polymer and metal",
+                    "finish": "Non-reflective, tactical",
+                    "grip": "Textured polymer, ergonomic"
+                },
+                "details": {
+                    "barrel": "Short, integrated suppressor option",
+                    "sights": "Small holographic reticle (cyan)",
+                    "magazine": "Standard capacity, visible indicator",
+                    "safety": "Ambidextrous"
+                },
+                "condition": {
+                    "wear": "Well-used but maintained",
+                    "marks": "Small scratches, one worn spot on grip"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "side_profile",
+                    "description": "Full weapon side view"
+                },
+                {
+                    "view": "held_ready",
+                    "description": "In hand, combat ready position"
+                },
+                {
+                    "view": "holstered",
+                    "description": "In hip holster on character"
+                }
+            ],
+            "generation_prompt": "Sci-fi tactical pistol: Compact semi-auto, matte black finish, angular futuristic design. Small cyan holographic sight. Well-used but maintained. MANDATORY: Matte black, minimal design, one cyan accent on sight only."
+        },
+        "neon_sign_signal": {
+            "id": "obj_006",
+            "object_code": "O501",
+            "name": "The Signal Neon Sign",
+            "location": "L011",
+            "category": "signage",
+            "description": {
+                "overview": "Neon sign above Felix's bar. 'THE SIGNAL' in art deco font, cyan glow with occasional flicker.",
+                "purpose": "Location identifier, atmospheric prop"
+            },
+            "visual_specification": {
+                "text": {
+                    "content": "THE SIGNAL",
+                    "font": "Art Deco condensed",
+                    "arrangement": "Horizontal, all caps"
+                },
+                "construction": {
+                    "type": "Neon tubes",
+                    "mounting": "Metal frame, exposed wiring",
+                    "size": "2 meters wide, 40cm tall"
+                },
+                "color": {
+                    "primary": "#00CED1",
+                    "glow_radius": "Soft halo 30cm around letters"
+                },
+                "effects": {
+                    "normal": "Steady glow",
+                    "occasional": "Slight flicker, 'G' sometimes dims",
+                    "rain": "Reflections on wet surfaces below"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "exterior",
+                    "description": "Sign on building, full context"
+                },
+                {
+                    "view": "closeup",
+                    "description": "Detail of lettering and construction"
+                },
+                {
+                    "view": "reflection",
+                    "description": "Sign reflected in wet pavement"
+                }
+            ],
+            "generation_prompt": "Art deco neon sign: 'THE SIGNAL' in condensed art deco font, cyan neon tubes. Metal frame mounting, slightly weathered. Soft cyan glow around letters. MANDATORY: Cyan (#00CED1) only, art deco typography."
+        },
+        "temple_spire": {
+            "id": "obj_007",
+            "object_code": "O601",
+            "name": "Temple Spire",
+            "location": "L031",
+            "category": "architecture",
+            "description": {
+                "overview": "Towering spire of the Temple of ECHO. Art deco design reaching toward the sky, topped with glowing amber beacon. Visible from most of the city.",
+                "purpose": "Temple landmark, symbol of oppression"
+            },
+            "visual_specification": {
+                "design": {
+                    "style": "Art deco religious",
+                    "shape": "Stepped pyramid transitioning to spire",
+                    "height": "Tallest structure in city center"
+                },
+                "materials": {
+                    "primary": "Dark stone or concrete",
+                    "accents": "Gold/amber metal trim",
+                    "windows": "Narrow, vertical, amber glow from within"
+                },
+                "beacon": {
+                    "location": "Top of spire",
+                    "type": "Rotating amber light",
+                    "visibility": "Can be seen for kilometers"
+                },
+                "details": {
+                    "carvings": "Geometric patterns, ECHO symbols",
+                    "statues": "Robed figures at base and mid-levels",
+                    "cables": "Power lines radiating outward"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "full_exterior",
+                    "description": "Complete spire from ground level"
+                },
+                {
+                    "view": "skyline_silhouette",
+                    "description": "Spire against overcast sky"
+                },
+                {
+                    "view": "base_detail",
+                    "description": "Entrance and lower architecture"
+                }
+            ],
+            "generation_prompt": "Art deco religious tower: Massive stepped pyramid spire, dark stone with gold/amber metal accents. Amber beacon at top. Narrow amber-lit windows. Geometric carvings, robed statues. MANDATORY: Dark stone, Gold/Amber (#FFD700) accents only, ominous atmosphere."
+        },
+        "data_terminal": {
+            "id": "obj_008",
+            "object_code": "O701",
+            "name": "Public Data Terminal",
+            "category": "furniture",
+            "description": {
+                "overview": "Public access computer terminal found throughout the city. Used for information, communication, and Temple surveillance.",
+                "purpose": "Information access, plot device"
+            },
+            "visual_specification": {
+                "structure": {
+                    "shape": "Standing kiosk, shoulder height",
+                    "base": "Heavy metal pedestal",
+                    "screen": "Angled holographic display"
+                },
+                "screen": {
+                    "size": "60cm diagonal",
+                    "type": "Holographic projection",
+                    "color": "Cyan text on dark background",
+                    "content": "Menu interface, text prompts, Temple logo"
+                },
+                "input": {
+                    "type": "Touch screen + physical keyboard",
+                    "keyboard": "Mechanical, worn keys"
+                },
+                "details": {
+                    "condition": "Some terminals vandalized, stickers, graffiti",
+                    "surveillance": "Small camera lens (visible to observant)",
+                    "speakers": "For Temple announcements"
+                }
+            },
+            "views_needed": [
+                {
+                    "view": "in_use",
+                    "description": "Character interacting with terminal"
+                },
+                {
+                    "view": "standalone",
+                    "description": "Terminal alone on street"
+                },
+                {
+                    "view": "screen_closeup",
+                    "description": "Detail of holographic interface"
+                }
+            ],
+            "generation_prompt": "Cyberpunk street terminal: Standing kiosk with angled holographic screen showing cyan text. Mechanical keyboard at base. Metal pedestal, slightly worn. Small camera lens visible. MANDATORY: Dark metal, Cyan (#00CED1) screen glow."
+        }
+    }
+}

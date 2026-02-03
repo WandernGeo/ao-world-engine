@@ -1,0 +1,315 @@
+{
+    "_chunk": {
+        "id": "chunk_visual_characters",
+        "version": "1.0.0",
+        "type": "visual_asset_chunk",
+        "category": "character_visuals",
+        "purpose": "Canonical visual descriptions for image generation and reconstruction",
+        "pipeline": "StudioRam / Vertex AI Imagen",
+        "target_size_kb": 100
+    },
+    "_schema": {
+        "description": "Detailed character visual specifications for LLM image-to-image reconstruction",
+        "views": [
+            "front",
+            "three_quarter",
+            "profile",
+            "back"
+        ],
+        "usage": "Feed to Gemini 2.0 Flash with reference image generation for consistent character appearance"
+    },
+    "characters": {
+        "charlie": {
+            "id": "char_visual_001",
+            "npc_code": "C01",
+            "name": "Charlie",
+            "canonical": true,
+            "physical": {
+                "age_apparent": 45,
+                "height_cm": 185,
+                "height_desc": "6'1\" - Tall, commanding presence",
+                "build": {
+                    "type": "lean_athletic",
+                    "description": "Weathered but capable. Not bulky, but every muscle is functional. Moves like someone who's survived a lot of fights.",
+                    "shoulders": "Broad, slightly hunched from years of tension",
+                    "posture": "Alert, weight slightly forward, always ready to move"
+                },
+                "weight_kg": 82,
+                "body_proportions": {
+                    "torso_ratio": 0.52,
+                    "leg_ratio": 0.48,
+                    "arm_span_to_height": 1.02
+                }
+            },
+            "face": {
+                "shape": "angular_square",
+                "description": "Sharp jawline, prominent cheekbones. A face that's taken punches and given them back.",
+                "skin": {
+                    "tone": "olive_weathered",
+                    "texture": "Rough, with visible pores. Fine lines around eyes and mouth.",
+                    "notable": [
+                        "Old scar across left cheekbone, thin white line",
+                        "Stubble shadow on jaw"
+                    ]
+                },
+                "eyes": {
+                    "color": "dark_brown",
+                    "description": "Deep-set, tired but sharp. Always scanning, assessing. The eyes of someone who's seen too much.",
+                    "right_eye": {
+                        "cybernetic": true,
+                        "device": "HUD Monocle",
+                        "description": "Mechanical-framed holographic monocle. Brass-toned frame with cyan holographic lens. Covers entire right eye.",
+                        "glow": "Subtle cyan glow from lens, brightens when active"
+                    },
+                    "left_eye": "Natural, dark brown"
+                },
+                "eyebrows": {
+                    "shape": "heavy_straight",
+                    "color": "dark_gray",
+                    "description": "Thick, slightly unkempt. Often furrowed in thought or suspicion"
+                },
+                "nose": {
+                    "shape": "straight_roman",
+                    "description": "Strong nose, slightly crooked from old break. Character, not flaw."
+                },
+                "mouth": {
+                    "shape": "thin_firm",
+                    "description": "Rarely smiles. When he does, it doesn't reach his eyes. Usually set in a grim line.",
+                    "lips": "Thin, often chapped"
+                },
+                "jaw": {
+                    "shape": "square_prominent",
+                    "description": "Strong jawline, defining feature. Shows tension when stressed."
+                },
+                "ears": {
+                    "shape": "standard",
+                    "notable": "Small notch in left earlobe (old injury)"
+                }
+            },
+            "hair": {
+                "color": "gray_salt_pepper",
+                "color_breakdown": {
+                    "primary": "#4A4A4A",
+                    "highlights": "#8A8A8A",
+                    "darker_streaks": "#2A2A2A"
+                },
+                "style": "short_disheveled",
+                "description": "Short, practical cut that's grown out a bit. Gray dominant with darker streaks. Perpetually slightly disheveled - he runs his hand through it when thinking.",
+                "texture": "Thick, slightly wavy",
+                "hairline": "Intact but slightly receded at temples"
+            },
+            "facial_hair": {
+                "type": "stubble_heavy",
+                "coverage": "Full jaw, chin, upper lip",
+                "color": "salt_pepper",
+                "description": "2-3 day stubble, never clean-shaven, never a full beard. Silver and dark mixed.",
+                "maintenance": "Pragmatically trimmed, not styled"
+            },
+            "cybernetics": {
+                "right_arm": {
+                    "type": "holographic_prosthetic",
+                    "name": "Holographic Arm Mk.III",
+                    "critical": true,
+                    "description": "Full arm replacement from shoulder. Translucent cyan holographic shell with visible tech internals.",
+                    "visual_details": {
+                        "shell": "Semi-transparent cyan energy field, slightly flickering at edges",
+                        "internals": "Visible mechanical components - servo motors, power conduits, data cables",
+                        "joints": "Segmented at shoulder, elbow, wrist. Cyan energy lines at joint gaps",
+                        "hand": "Five articulated fingers, same holographic construction. Can phase through objects briefly.",
+                        "glow_intensity": "Constant subtle glow, brightens during use",
+                        "color_hex": "#00CED1"
+                    },
+                    "attachment_point": "Clean transition at shoulder, slight scarring visible at edge"
+                },
+                "right_eye_monocle": {
+                    "type": "hud_monocle",
+                    "critical": true,
+                    "description": "Mechanical-framed holographic display over right eye",
+                    "visual_details": {
+                        "frame": "Brass-toned mechanical frame, visible gears and micro-adjustments",
+                        "lens": "Cyan holographic projection, displays data overlay",
+                        "attachment": "Wraps around temple and behind ear",
+                        "glow": "Cyan glow when active, dims when inactive"
+                    }
+                }
+            },
+            "clothing": {
+                "signature_outfit": {
+                    "coat": {
+                        "type": "trench_coat",
+                        "color": "worn_gray",
+                        "color_hex": "#5A5A5A",
+                        "description": "Long gray trench coat, weathered and worn. Multiple hidden pockets. Collar often turned up.",
+                        "condition": "Faded, small tears repaired, water stains at hem",
+                        "length": "Below knee",
+                        "details": [
+                            "Epaulettes",
+                            "Belt at waist (often untied)",
+                            "Deep pockets"
+                        ]
+                    },
+                    "shirt": {
+                        "type": "v_neck",
+                        "color": "charcoal",
+                        "color_hex": "#36454F",
+                        "description": "Dark charcoal v-neck, simple and practical",
+                        "fit": "Fitted but not tight",
+                        "condition": "Clean but not new"
+                    },
+                    "undershirt": {
+                        "type": "light_armor",
+                        "description": "Concealed ballistic weave underneath, barely visible",
+                        "color": "black"
+                    },
+                    "pants": {
+                        "type": "tactical_cargo",
+                        "color": "black",
+                        "description": "Black tactical pants, reinforced knees, multiple pockets",
+                        "fit": "Practical, allows full range of motion"
+                    },
+                    "boots": {
+                        "type": "combat_boots",
+                        "color": "black_leather",
+                        "description": "Black leather combat boots, steel-toed, worn but maintained",
+                        "condition": "Scuffed, clearly used heavily"
+                    },
+                    "belt": {
+                        "type": "utility",
+                        "color": "black",
+                        "attachments": [
+                            "Holster (right hip)",
+                            "Pouch (left hip)",
+                            "Communicator clip"
+                        ]
+                    }
+                },
+                "alternate_outfits": {
+                    "stealth": {
+                        "description": "All black tactical gear, no coat, more form-fitting",
+                        "occasions": "Night missions, infiltration"
+                    },
+                    "civilian": {
+                        "description": "Same pants and boots, gray henley shirt instead of v-neck, no coat",
+                        "occasions": "Low-profile meetings"
+                    }
+                }
+            },
+            "accessories": {
+                "always": [
+                    {
+                        "item": "Wrist communicator",
+                        "location": "Left wrist",
+                        "description": "Slim black band with small holographic display"
+                    },
+                    {
+                        "item": "Pistol",
+                        "location": "Right hip holster",
+                        "description": "Compact semi-auto, matte black finish"
+                    }
+                ],
+                "often": [
+                    {
+                        "item": "Cigarette",
+                        "description": "Unlit, usually tucked behind ear or in corner of mouth",
+                        "note": "He quit, but keeps one for emergencies that never come"
+                    }
+                ]
+            },
+            "color_palette": {
+                "accent": {
+                    "name": "Cyan",
+                    "hex": "#00CED1",
+                    "usage": "Cybernetics, tech glow, holographic elements ONLY"
+                },
+                "primary": {
+                    "name": "Gray",
+                    "hex": "#5A5A5A",
+                    "usage": "Coat, overall color scheme"
+                },
+                "secondary": {
+                    "name": "Charcoal",
+                    "hex": "#36454F",
+                    "usage": "Shirt, darker elements"
+                },
+                "skin": {
+                    "name": "Olive Weathered",
+                    "hex": "#C4A777",
+                    "usage": "Skin tone base"
+                },
+                "restriction": "NO colors outside this palette. Scene should be 85% grayscale with cyan accents only."
+            },
+            "poses": {
+                "neutral_standing": {
+                    "description": "Weight on back foot, shoulders slightly hunched, hands in coat pockets or at sides. Head slightly tilted, assessing.",
+                    "expression": "Guarded, neutral, eyes sharp"
+                },
+                "alert": {
+                    "description": "Weight forward, right arm (holographic) slightly raised, monocle glowing brighter. Ready for anything.",
+                    "expression": "Focused, jaw set"
+                },
+                "conversation": {
+                    "description": "Arms crossed or one hand touching chin. Rarely makes eye contact for long.",
+                    "expression": "Thoughtful, occasionally skeptical eyebrow raise"
+                },
+                "combat": {
+                    "description": "Low stance, holographic arm glowing bright, pistol drawn. Fluid movement.",
+                    "expression": "Cold focus, no emotion"
+                }
+            },
+            "expression_library": {
+                "default": "Neutral, guarded, slight frown",
+                "thinking": "Eyes unfocused, hand touches holographic arm",
+                "suspicious": "Narrowed eyes, one eyebrow slightly raised",
+                "angry": "Jaw clenched, eyes hard, very still",
+                "rare_smile": "One corner of mouth slightly up, eyes still guarded",
+                "pain": "Controlled, barely visible wince, refuses to show weakness"
+            },
+            "movement_style": {
+                "walk": "Measured, purposeful. Slightly favors left leg. Always aware of surroundings.",
+                "run": "Efficient, low. Years of training evident.",
+                "fight": "Brutal efficiency. No wasted movement. Uses holographic arm for both offense and defense."
+            },
+            "reference_shots_needed": [
+                {
+                    "view": "front_full_body",
+                    "priority": 1,
+                    "description": "Full body front view, neutral standing pose, coat slightly open to show v-neck"
+                },
+                {
+                    "view": "three_quarter_upper",
+                    "priority": 1,
+                    "description": "Upper body three-quarter view, clearly showing monocle and holographic arm"
+                },
+                {
+                    "view": "face_closeup",
+                    "priority": 1,
+                    "description": "Closeup of face showing monocle detail, stubble, scar, and expression"
+                },
+                {
+                    "view": "holographic_arm_detail",
+                    "priority": 2,
+                    "description": "Detailed view of right arm showing internal components and cyan glow"
+                },
+                {
+                    "view": "profile_right",
+                    "priority": 2,
+                    "description": "Right profile clearly showing monocle attachment"
+                },
+                {
+                    "view": "profile_left",
+                    "priority": 3,
+                    "description": "Left profile showing natural side"
+                },
+                {
+                    "view": "back_view",
+                    "priority": 3,
+                    "description": "Back view showing coat silhouette"
+                }
+            ],
+            "generation_prompt_template": {
+                "base": "Signal Noir cyberpunk scene: Noir detective, rugged mid-40s, salt-and-pepper stubble. Long gray weathered trench coat, dark charcoal v-neck, black boots. Right arm is a translucent cyan holographic cybernetic with visible tech internals. Wears a mechanical-framed cyan holographic monocle over right eye.",
+                "style_suffix": "MANDATORY STYLE: 85% grayscale, high contrast noir. ONLY cyan (#00CED1) for neon/tech/cybernetic accents. Deep black shadows, art deco architecture. Cinematic composition, dramatic lighting. NO bright colors except cyan."
+            }
+        }
+    }
+}

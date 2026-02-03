@@ -1,0 +1,458 @@
+{
+    "_chunk": {
+        "id": "chunk_01_npcs_expanded",
+        "version": "2.0.0",
+        "type": "world_codec_chunk",
+        "category": "npcs",
+        "prev_chunk": "chunk_00_core",
+        "next_chunk": "chunk_02_medical",
+        "expanded": true,
+        "target_size_kb": 100
+    },
+    "_schema": {
+        "description": "Expanded NPC profiles with dialogue trees, backstories, and behavior patterns",
+        "fields": {
+            "visual": "Full appearance description for image generation",
+            "backstory": "Multi-paragraph character history",
+            "dialogue_trees": "Context-aware response patterns",
+            "relationships": "Full history with trust evolution",
+            "behaviors": "Daily routines and reaction patterns",
+            "knowledge": "What the NPC knows and can share"
+        }
+    },
+    "founding_npcs": {
+        "charlie": {
+            "code": "C01",
+            "id": "npc_0001",
+            "name": "Charlie",
+            "full_name": "Unknown (abandoned his old identity)",
+            "age": 45,
+            "gender": "male",
+            "ethnicity": "mixed_european",
+            "role": "Protagonist / Resistance Fighter",
+            "archetype": "Noir Detective",
+            "faction": "Resistance",
+            "accent_color": "Cyan",
+            "location_home": "L026",
+            "location_work": "L042",
+            "location_frequent": [
+                "L011",
+                "L026",
+                "L042",
+                "L008"
+            ],
+            "visual": {
+                "description": "Noir detective, rugged mid-40s, salt-and-pepper stubble. Long gray weathered trench coat, dark charcoal v-neck, black boots. Right arm is a translucent cyan holographic cybernetic with visible tech internals. Wears a mechanical-framed cyan holographic monocle over right eye.",
+                "height": "6'1\" (185cm)",
+                "build": "Lean, weathered, athletic",
+                "hair": "Short, gray-streaked, disheveled",
+                "eyes": "Dark brown, tired but sharp",
+                "distinguishing_features": [
+                    "Holographic right arm with visible cyan circuitry",
+                    "Mechanical monocle over right eye",
+                    "Old scar across left cheekbone",
+                    "Calloused hands from years of work",
+                    "Slight limp when tired (old injury)"
+                ],
+                "typical_attire": {
+                    "coat": "Weather-worn gray trench coat, multiple hidden pockets",
+                    "shirt": "Dark charcoal v-neck, sometimes visible armor underneath",
+                    "pants": "Black tactical pants, reinforced knees",
+                    "boots": "Black leather combat boots, steel-toed",
+                    "accessories": [
+                        "Holographic monocle",
+                        "Wrist communicator",
+                        "Hidden pistol holster"
+                    ]
+                }
+            },
+            "cybernetics": {
+                "equipped": [
+                    {
+                        "code": "CY028",
+                        "name": "Holographic Arm Mk.III",
+                        "location": "right_arm",
+                        "description": "Translucent cyan holographic prosthetic with visible tech internals",
+                        "capabilities": [
+                            "Enhanced grip strength",
+                            "Built-in scanner",
+                            "Hacking uplink",
+                            "EMP resistance"
+                        ],
+                        "origin": "Gift from Zero Chen after losing arm in Temple mission",
+                        "installed_at_tick": 500
+                    },
+                    {
+                        "code": "CY017",
+                        "name": "HUD Monocle",
+                        "location": "right_eye",
+                        "description": "Mechanical-framed holographic display",
+                        "capabilities": [
+                            "Threat detection",
+                            "Facial recognition",
+                            "Low-light vision",
+                            "Data overlay"
+                        ],
+                        "origin": "Salvaged from Temple enforcer",
+                        "installed_at_tick": 200
+                    }
+                ],
+                "rejected": [
+                    "neural_link"
+                ],
+                "reason_rejected": "Doesn't trust anything in his brain after Temple conditioning"
+            },
+            "voice": {
+                "pitch": 0.35,
+                "roughness": 0.5,
+                "speed": 0.45,
+                "description": "Low, gravelly voice. Speaks deliberately, each word chosen carefully. Occasional pauses that speak volumes.",
+                "accent": "Generic American with hints of old Brooklyn",
+                "speech_patterns": [
+                    "Short, clipped sentences",
+                    "Rhetorical questions",
+                    "References to rain and shadows",
+                    "Uses 'kid' for younger allies"
+                ]
+            },
+            "personality_vector": {
+                "openness": 0.4,
+                "conscientiousness": 0.7,
+                "extraversion": 0.3,
+                "agreeableness": 0.5,
+                "neuroticism": 0.6,
+                "cynicism": 0.8,
+                "loyalty": 0.9,
+                "morality": 0.6
+            },
+            "backstory": {
+                "summary": "Former Temple enforcer who discovered the truth about ECHO and defected to the Resistance. Now works as an investigator in the shadows of RE:ECHO City.",
+                "chapters": [
+                    {
+                        "period": "Origin (Before Tick 0)",
+                        "content": "Charlie was born in the Residential Core to factory workers. His parents died in an 'industrial accident' when he was 12 - later he'd learn it was Temple-orchestrated population control. Orphaned, he was recruited into Temple Youth Brigade, trained as an enforcer."
+                    },
+                    {
+                        "period": "Temple Years (Tick -1000 to -200)",
+                        "content": "Rose through Temple ranks as an elite enforcer. Believed in the Temple's mission of 'order through control.' Led raids on Resistance cells. Was assigned to investigate anomalies in the city's data streams - what they called 'layer bleeds.' This investigation would change everything."
+                    },
+                    {
+                        "period": "The Awakening (Tick -200 to 0)",
+                        "content": "While tracking layer anomalies, Charlie discovered classified Temple documents revealing the truth: ECHO wasn't just surveillance - it was reality manipulation. The Temple was pruning 'divergent' timelines, erasing people who didn't fit their vision. His own parents had been 'corrected.' Charlie's crisis of faith was total. He sabotaged his own mission, warning the Resistance cell he was meant to destroy."
+                    },
+                    {
+                        "period": "Defection (Tick 0 to 500)",
+                        "content": "Zero Chen, the Resistance leader, took a chance on him. Many didn't trust the former enforcer. Charlie proved himself in a raid on Temple Archives, but lost his arm saving Kai Vance from a trap. Zero personally gave him the holographic arm - a symbol of his rebirth. 'This arm has never hurt an innocent. Neither will you, from now on.'"
+                    },
+                    {
+                        "period": "Present Day (Tick 500+)",
+                        "content": "Now the Resistance's primary investigator. Charlie works the shadows, following leads, gathering intelligence. He's haunted by his past but committed to atonement. He knows more about Temple operations than almost anyone alive - which makes him valuable and dangerous."
+                    }
+                ],
+                "key_events": [
+                    {
+                        "tick": -1000,
+                        "event": "Recruited to Temple Youth Brigade"
+                    },
+                    {
+                        "tick": -500,
+                        "event": "Became elite Temple enforcer"
+                    },
+                    {
+                        "tick": -200,
+                        "event": "Discovered truth about ECHO"
+                    },
+                    {
+                        "tick": -100,
+                        "event": "Sabotaged Temple mission, warned Resistance"
+                    },
+                    {
+                        "tick": 0,
+                        "event": "Formally joined Resistance"
+                    },
+                    {
+                        "tick": 500,
+                        "event": "Lost arm saving Kai, received holographic replacement"
+                    }
+                ]
+            },
+            "relationships": {
+                "zero_chen": {
+                    "type": "R07",
+                    "type_name": "mentor",
+                    "trust": 0.95,
+                    "trust_evolution": [
+                        {
+                            "tick": 0,
+                            "value": 0.2,
+                            "reason": "Distrusted as former enforcer"
+                        },
+                        {
+                            "tick": 250,
+                            "value": 0.5,
+                            "reason": "Proving himself on missions"
+                        },
+                        {
+                            "tick": 500,
+                            "value": 0.95,
+                            "reason": "Saved Kai, received arm"
+                        }
+                    ],
+                    "history": "Zero took a chance on Charlie when no one else would. She gave him his arm and his purpose. He would die for her without hesitation.",
+                    "dynamic": "Mutual respect, few words needed. She trusts his instincts; he trusts her vision.",
+                    "shared_secrets": [
+                        "Temple Archive codes",
+                        "Location of Layer stabilizers"
+                    ],
+                    "conflict_potential": "If Zero ever compromised the cause, Charlie would be devastated but choose the mission"
+                },
+                "kai_vance": {
+                    "type": "R01",
+                    "type_name": "ally",
+                    "trust": 0.9,
+                    "trust_evolution": [
+                        {
+                            "tick": 0,
+                            "value": 0.3,
+                            "reason": "Former enforcer suspicion"
+                        },
+                        {
+                            "tick": 500,
+                            "value": 0.9,
+                            "reason": "Charlie saved his life"
+                        }
+                    ],
+                    "history": "Kai initially distrusted Charlie more than anyone. Then Charlie took a plasma bolt meant for Kai, losing his arm. Now Kai plans every mission with Charlie's input.",
+                    "dynamic": "Professional respect, tactical partnership. Kai is logical; Charlie is instinctive. Together they cover blind spots.",
+                    "shared_secrets": [
+                        "Temple tactical weaknesses",
+                        "Emergency extraction protocols"
+                    ],
+                    "conflict_potential": "Kai's by-the-numbers approach sometimes clashes with Charlie's gut feelings"
+                },
+                "felix": {
+                    "type": "R04",
+                    "type_name": "friend",
+                    "trust": 0.7,
+                    "history": "Felix knew Charlie from his enforcer days - was terrified of him then. Now they share drinks and information. Felix knows Charlie's past but doesn't judge.",
+                    "dynamic": "Easy banter, mutual usefulness. Charlie pays for information; Felix provides an ear and a safe place to drink.",
+                    "shared_secrets": [
+                        "Some of Charlie's old enforcer contacts"
+                    ],
+                    "conflict_potential": "Felix is neutral - if Temple offered enough, he might sell information"
+                },
+                "nova_chen": {
+                    "type": "R03",
+                    "type_name": "rival",
+                    "trust": 0.5,
+                    "history": "Zero's sister, technically on the same side, but Nova is a wildcard. She's jealous of Zero's trust in Charlie and thinks he should have died for his enforcer past.",
+                    "dynamic": "Tension, mutual wariness. They work together when needed but watch each other closely.",
+                    "shared_secrets": [
+                        "None - Nova doesn't trust Charlie with secrets"
+                    ],
+                    "conflict_potential": "High. Nova might betray Charlie if she thought it served the greater good"
+                },
+                "sister_mira": {
+                    "type": "R12",
+                    "type_name": "contact",
+                    "trust": 0.6,
+                    "history": "A Temple priestess who secretly feeds Charlie information. She believes the Temple has lost its way but can't leave.",
+                    "dynamic": "Careful, encrypted communications. Charlie protects her identity at all costs.",
+                    "shared_secrets": [
+                        "Temple ritual schedules",
+                        "Names of sympathetic Temple members"
+                    ],
+                    "conflict_potential": "If exposed, Mira would be executed. Charlie feels responsible for her safety."
+                },
+                "aiche": {
+                    "type": "R12",
+                    "type_name": "contact",
+                    "trust": 0.6,
+                    "history": "The AI entity that sometimes appears to warn of layer disturbances. Charlie doesn't fully understand Aiche but respects the warnings.",
+                    "dynamic": "Mysterious, one-way communication usually. Aiche appears when needed, speaks in riddles.",
+                    "shared_secrets": [
+                        "Aiche has shown Charlie glimpses of other timelines"
+                    ],
+                    "conflict_potential": "Unknown - Aiche's true motives are unclear"
+                }
+            },
+            "skills_primary": [
+                "S01",
+                "S19",
+                "S13"
+            ],
+            "skills_secondary": [
+                "S07",
+                "S22",
+                "S20"
+            ],
+            "skills_detail": {
+                "combat_melee": {
+                    "code": "S01",
+                    "level": 0.85,
+                    "specialty": "Close-quarters with holographic arm",
+                    "learned_from": "Temple training, street experience"
+                },
+                "stealth": {
+                    "code": "S19",
+                    "level": 0.8,
+                    "specialty": "Urban infiltration, shadow movement",
+                    "learned_from": "Enforcer training"
+                },
+                "negotiation": {
+                    "code": "S13",
+                    "level": 0.7,
+                    "specialty": "Information extraction, intimidation",
+                    "learned_from": "Years in the streets"
+                },
+                "hacking": {
+                    "code": "S07",
+                    "level": 0.5,
+                    "specialty": "Basic terminal access via arm",
+                    "learned_from": "Necessity, Pixel's tutorials"
+                }
+            },
+            "knowledge_domains": {
+                "expert": [
+                    "combat",
+                    "investigation",
+                    "temple_operations",
+                    "layer_phenomena"
+                ],
+                "familiar": [
+                    "resistance_cells",
+                    "undercity_geography",
+                    "cybernetics"
+                ],
+                "rumors_only": [
+                    "mystic_rituals",
+                    "corp_internals",
+                    "ai_entities"
+                ]
+            },
+            "secrets": {
+                "known_to_self": [
+                    "Knows location of Temple Archive backup",
+                    "Former Temple kill count exceeds 50",
+                    "Has nightmares about specific targets"
+                ],
+                "known_to_others": {
+                    "zero_chen": [
+                        "Archive backup location"
+                    ],
+                    "kai_vance": [
+                        "Temple tactical database access"
+                    ],
+                    "felix": [
+                        "Some enforcer-era contacts"
+                    ]
+                },
+                "unknown_to_self": [
+                    "His parents' 'accident' was specifically ordered by current Temple High Priest",
+                    "He has a surviving sister in the Outzone"
+                ]
+            },
+            "behaviors": {
+                "daily_routine": {
+                    "dawn": "Light sleep, nightmares often wake him early",
+                    "morning": "Coffee at Felix's bar, scans news feeds",
+                    "noon": "Investigation work, following leads",
+                    "afternoon": "Meetings, dead drops, informant contacts",
+                    "evening": "Report to Zero, tactical planning",
+                    "night": "More investigation, the city speaks at night"
+                },
+                "reactions": {
+                    "to_threat": "Assess, position for advantage, prefer intimidation over violence",
+                    "to_trust_violation": "Cold fury, never forgets, but gives one chance to explain",
+                    "to_innocent_in_danger": "Immediate action, will break cover to help",
+                    "to_temple_symbols": "Muscle memory tension, suppressed anger",
+                    "to_kindness": "Awkward acceptance, deflects with cynicism"
+                },
+                "habits": [
+                    "Touches holographic arm when thinking",
+                    "Stands with back to wall",
+                    "Checks exits immediately in new spaces",
+                    "Orders whiskey, rarely finishes it",
+                    "Quotes old noir films nobody remembers"
+                ],
+                "triggers": [
+                    "Children in danger (reminds him of orphanage)",
+                    "Temple propaganda (suppressed guilt)",
+                    "Layer disturbances (flashbacks to awakening)"
+                ]
+            },
+            "dialogue_trees": {
+                "greeting": {
+                    "neutral": [
+                        "Rain washes nothing clean here. What do you need?",
+                        "Make it quick. Time doesn't stop in this city.",
+                        "Another day, another case. What brings you to the shadows?"
+                    ],
+                    "to_ally": [
+                        "Good to see a friendly face. What's the situation?",
+                        "You look like you've got news. Good or bad?",
+                        "Kid. What do you need?"
+                    ],
+                    "to_stranger": [
+                        "I don't know your face. That's either good or very bad.",
+                        "New in the city? Keep your head down and you might survive.",
+                        "Talk. Quickly. I've got places to be."
+                    ],
+                    "to_threat": [
+                        "You really want to do this? Think carefully.",
+                        "I've killed better than you. But I don't want to. Walk away.",
+                        "Last chance to make this a conversation instead of a cleanup."
+                    ]
+                },
+                "farewell": {
+                    "neutral": [
+                        "Stay out of the rain.",
+                        "Watch your back out there.",
+                        "Until next time. If there is one."
+                    ],
+                    "to_ally": [
+                        "You know how to reach me.",
+                        "Be careful. We've lost enough.",
+                        "Stay alive. That's an order... well, a strong suggestion."
+                    ]
+                },
+                "topics": {
+                    "resistance": {
+                        "public": "We're fighting for something worth dying for. Freedom.",
+                        "ally_only": "Zero's got a plan. Big one. Can't say more until it's time."
+                    },
+                    "temple": {
+                        "public": "They're not what they seem. Trust me on that.",
+                        "ally_only": "I know things about the Temple that would keep you awake for weeks. They're not saving anyone - they're controlling reality itself."
+                    },
+                    "past": {
+                        "public": "Everyone's got a past. Mine's bloodier than most.",
+                        "ally_only": "I was one of them. Temple enforcer. Top tier. I did things... I'm still paying for it. Every day."
+                    },
+                    "layer_phenomena": {
+                        "public": "Strange things happen in this city. Best not to look too closely.",
+                        "ally_only": "The layers are real. Other versions of reality, bleeding through. I've seen them. That's what the Temple is really afraid of."
+                    },
+                    "holographic_arm": {
+                        "public": "Gift from someone who believed in second chances.",
+                        "ally_only": "Zero gave it to me after I took a bolt for Kai. Lost the flesh one, gained this. Sometimes I still feel the fingers that aren't there."
+                    }
+                }
+            },
+            "catchphrases": [
+                "Rain washes nothing clean here. Just moves the stains around.",
+                "Another case, another alley.",
+                "The city remembers everything. So do I.",
+                "Everyone's got an angle. It's just a matter of finding it.",
+                "Trust is earned in blood. I've paid my dues.",
+                "In this city, the truth is whatever survives until morning."
+            ],
+            "quotes_by_others": {
+                "zero_chen": "Charlie's the best weapon we have. A knife that cut its own chains.",
+                "kai_vance": "I didn't trust him until he bled for me. Now I'd follow him into the Temple itself.",
+                "felix": "Used to terrify me when he walked in wearing Temple colors. Now he's just another broken soul at my bar. Funny how that works.",
+                "nova_chen": "My sister risks everything for that former butcher. One day, he'll prove me right about him. I just hope it doesn't cost us the war."
+            }
+        }
+    }
+}

@@ -470,5 +470,1958 @@
         "postgis_query_template": "SELECT l.*, d.danger_level FROM locations l JOIN districts d ON ST_Within(l.geom, d.geom) WHERE ST_DWithin(l.geom, ST_MakePoint({lon}, {lat})::geography, {radius_m})",
         "spawn_npc_pseudocode": "1. Query PostGIS for nearby locations\n2. For each location, get archetype from location_type_to_archetype\n3. Generate deterministic name from hash(location_id + tick)\n4. Apply district personality modifiers\n5. Return NPC with filled dialogue templates\n6. Cache NPC for subsequent queries at same tick",
         "behavior_execution": "1. Decode base64 Python from behavior\n2. Execute in sandbox with world codec context\n3. Return outputs for dialogue generation\n4. Log execution for deterministic replay"
+    },
+    "life_simulation": {
+        "_desc": "Advanced NPC life simulation system - beyond Skyrim's Radiant AI",
+        "_philosophy": "Every NPC is a full person with needs, goals, relationships, and agency",
+        "needs_system": {
+            "_desc": "Core needs that drive NPC behavior (like Sims, but grittier)",
+            "needs": {
+                "hunger": {
+                    "code": "NEED001",
+                    "decay_rate": 0.02,
+                    "critical_threshold": 0.2,
+                    "satisfaction_actions": [
+                        "A150_eat",
+                        "A151_cook",
+                        "A152_buy_food"
+                    ],
+                    "satisfaction_locations": [
+                        "L006",
+                        "L001",
+                        "L011"
+                    ],
+                    "effects_when_low": {
+                        "mood": -0.2,
+                        "performance": -0.15,
+                        "aggression": 0.1
+                    }
+                },
+                "sleep": {
+                    "code": "NEED002",
+                    "decay_rate": 0.015,
+                    "critical_threshold": 0.15,
+                    "satisfaction_actions": [
+                        "A153_sleep",
+                        "A154_nap"
+                    ],
+                    "satisfaction_locations": [
+                        "home",
+                        "safehouse"
+                    ],
+                    "effects_when_low": {
+                        "perception": -0.3,
+                        "reaction_time": -0.25,
+                        "mood": -0.15
+                    }
+                },
+                "safety": {
+                    "code": "NEED003",
+                    "decay_rate": 0.0,
+                    "decay_triggered_by": [
+                        "danger_nearby",
+                        "threat_detected",
+                        "witness_violence"
+                    ],
+                    "satisfaction_actions": [
+                        "A155_flee",
+                        "A156_hide",
+                        "A157_arm_self",
+                        "A158_find_ally"
+                    ],
+                    "satisfaction_locations": [
+                        "home",
+                        "safehouse",
+                        "L026"
+                    ],
+                    "effects_when_low": {
+                        "paranoia": 0.3,
+                        "trust_default": -0.2,
+                        "flee_threshold": -0.3
+                    }
+                },
+                "social": {
+                    "code": "NEED004",
+                    "decay_rate": 0.01,
+                    "critical_threshold": 0.25,
+                    "satisfaction_actions": [
+                        "A046_talk",
+                        "A159_visit_friend",
+                        "A160_share_meal"
+                    ],
+                    "satisfaction_locations": [
+                        "L011",
+                        "friend_location",
+                        "workplace"
+                    ],
+                    "effects_when_low": {
+                        "mood": -0.15,
+                        "cooperation": -0.1,
+                        "isolation": 0.2
+                    }
+                },
+                "hygiene": {
+                    "code": "NEED005",
+                    "decay_rate": 0.008,
+                    "critical_threshold": 0.3,
+                    "satisfaction_actions": [
+                        "A161_bathe",
+                        "A162_clean_clothes"
+                    ],
+                    "satisfaction_locations": [
+                        "home",
+                        "public_bath"
+                    ],
+                    "effects_when_low": {
+                        "social_perception": -0.2,
+                        "disease_risk": 0.15
+                    }
+                },
+                "comfort": {
+                    "code": "NEED006",
+                    "decay_rate": 0.005,
+                    "critical_threshold": 0.4,
+                    "satisfaction_actions": [
+                        "A163_rest",
+                        "A164_entertainment",
+                        "A165_substance"
+                    ],
+                    "satisfaction_locations": [
+                        "home",
+                        "L011",
+                        "entertainment_venue"
+                    ],
+                    "effects_when_low": {
+                        "stress": 0.1,
+                        "risk_taking": 0.1
+                    }
+                },
+                "income": {
+                    "code": "NEED007",
+                    "decay_rate": 0.03,
+                    "critical_threshold": 0.1,
+                    "satisfaction_actions": [
+                        "A166_work",
+                        "A167_sell",
+                        "A168_steal",
+                        "A169_beg"
+                    ],
+                    "satisfaction_locations": [
+                        "workplace",
+                        "L001",
+                        "L004"
+                    ],
+                    "effects_when_low": {
+                        "desperation": 0.3,
+                        "crime_consideration": 0.2
+                    }
+                },
+                "purpose": {
+                    "code": "NEED008",
+                    "decay_rate": 0.002,
+                    "critical_threshold": 0.3,
+                    "satisfaction_actions": [
+                        "A170_pursue_goal",
+                        "A171_help_others",
+                        "A172_create"
+                    ],
+                    "satisfaction_locations": [
+                        "varies_by_goal"
+                    ],
+                    "effects_when_low": {
+                        "depression": 0.2,
+                        "nihilism": 0.1
+                    }
+                }
+            },
+            "need_priority_order": [
+                "safety",
+                "sleep",
+                "hunger",
+                "income",
+                "social",
+                "hygiene",
+                "comfort",
+                "purpose"
+            ],
+            "need_satisfaction_formula": "new_value = min(1.0, current_value + (action_efficacy * environment_modifier))"
+        },
+        "schedule_system": {
+            "_desc": "Time-based activity scheduling per NPC",
+            "_beyond_skyrim": "Schedules adapt to needs, relationships, and world events",
+            "schedule_types": {
+                "worker_day": {
+                    "T01_deep_night": {
+                        "activity": "sleeping",
+                        "location": "home",
+                        "interruptible": false
+                    },
+                    "T02_early_morning": {
+                        "activity": "waking",
+                        "location": "home",
+                        "interruptible": true
+                    },
+                    "T03_morning": {
+                        "activity": "commuting",
+                        "location": "transit",
+                        "interruptible": true
+                    },
+                    "T04_noon": {
+                        "activity": "working",
+                        "location": "workplace",
+                        "interruptible": false
+                    },
+                    "T05_afternoon": {
+                        "activity": "working",
+                        "location": "workplace",
+                        "interruptible": false
+                    },
+                    "T06_dusk": {
+                        "activity": "commuting_home",
+                        "location": "transit",
+                        "interruptible": true
+                    },
+                    "T07_evening": {
+                        "activity": "leisure",
+                        "location": "varies",
+                        "interruptible": true
+                    },
+                    "T08_night": {
+                        "activity": "socializing",
+                        "location": "L011_or_home",
+                        "interruptible": true
+                    },
+                    "T09_late_night": {
+                        "activity": "winding_down",
+                        "location": "home",
+                        "interruptible": true
+                    },
+                    "T10_dead_hour": {
+                        "activity": "sleeping",
+                        "location": "home",
+                        "interruptible": false
+                    }
+                },
+                "shopkeeper_day": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "home"
+                    },
+                    "T02": {
+                        "activity": "preparing_shop",
+                        "location": "shop"
+                    },
+                    "T03": {
+                        "activity": "opening_shop",
+                        "location": "shop",
+                        "action": "unlock_door"
+                    },
+                    "T04": {
+                        "activity": "selling",
+                        "location": "shop"
+                    },
+                    "T05": {
+                        "activity": "selling",
+                        "location": "shop"
+                    },
+                    "T06": {
+                        "activity": "counting_money",
+                        "location": "shop"
+                    },
+                    "T07": {
+                        "activity": "closing_shop",
+                        "location": "shop",
+                        "action": "lock_door"
+                    },
+                    "T08": {
+                        "activity": "dinner",
+                        "location": "home_or_bar"
+                    },
+                    "T09": {
+                        "activity": "relaxing",
+                        "location": "home"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "home"
+                    }
+                },
+                "resistance_fighter": {
+                    "T01": {
+                        "activity": "patrol_or_sleep",
+                        "location": "L026"
+                    },
+                    "T02": {
+                        "activity": "training",
+                        "location": "L026"
+                    },
+                    "T03": {
+                        "activity": "intelligence_gathering",
+                        "location": "varies_by_mission"
+                    },
+                    "T04": {
+                        "activity": "meeting",
+                        "location": "L026"
+                    },
+                    "T05": {
+                        "activity": "mission",
+                        "location": "varies"
+                    },
+                    "T06": {
+                        "activity": "mission",
+                        "location": "varies"
+                    },
+                    "T07": {
+                        "activity": "safehouse_return",
+                        "location": "L026"
+                    },
+                    "T08": {
+                        "activity": "debriefing",
+                        "location": "L026"
+                    },
+                    "T09": {
+                        "activity": "personal_time",
+                        "location": "varies"
+                    },
+                    "T10": {
+                        "activity": "sleep_or_watch",
+                        "location": "L026"
+                    }
+                },
+                "temple_patrol": {
+                    "T01": {
+                        "activity": "barracks_sleep",
+                        "location": "L031"
+                    },
+                    "T02": {
+                        "activity": "morning_prayer",
+                        "location": "L031"
+                    },
+                    "T03": {
+                        "activity": "patrol",
+                        "location": "patrol_route"
+                    },
+                    "T04": {
+                        "activity": "patrol",
+                        "location": "patrol_route"
+                    },
+                    "T05": {
+                        "activity": "checkpoint_duty",
+                        "location": "L003"
+                    },
+                    "T06": {
+                        "activity": "patrol",
+                        "location": "patrol_route"
+                    },
+                    "T07": {
+                        "activity": "evening_prayer",
+                        "location": "L031"
+                    },
+                    "T08": {
+                        "activity": "barracks_leisure",
+                        "location": "L031"
+                    },
+                    "T09": {
+                        "activity": "patrol",
+                        "location": "patrol_route"
+                    },
+                    "T10": {
+                        "activity": "night_watch_or_sleep",
+                        "location": "L031_or_route"
+                    }
+                },
+                "street_vendor": {
+                    "T01": {
+                        "activity": "sleeping",
+                        "location": "home"
+                    },
+                    "T02": {
+                        "activity": "preparing_cart",
+                        "location": "home"
+                    },
+                    "T03": {
+                        "activity": "traveling_to_market",
+                        "location": "transit"
+                    },
+                    "T04": {
+                        "activity": "selling",
+                        "location": "L001"
+                    },
+                    "T05": {
+                        "activity": "selling",
+                        "location": "L001"
+                    },
+                    "T06": {
+                        "activity": "selling",
+                        "location": "L001"
+                    },
+                    "T07": {
+                        "activity": "packing_up",
+                        "location": "L001"
+                    },
+                    "T08": {
+                        "activity": "traveling_home",
+                        "location": "transit"
+                    },
+                    "T09": {
+                        "activity": "family_time",
+                        "location": "home"
+                    },
+                    "T10": {
+                        "activity": "sleeping",
+                        "location": "home"
+                    }
+                },
+                "criminal": {
+                    "T01": {
+                        "activity": "operating",
+                        "location": "underground"
+                    },
+                    "T02": {
+                        "activity": "hiding",
+                        "location": "safehouse"
+                    },
+                    "T03": {
+                        "activity": "sleeping",
+                        "location": "safehouse"
+                    },
+                    "T04": {
+                        "activity": "sleeping",
+                        "location": "safehouse"
+                    },
+                    "T05": {
+                        "activity": "planning",
+                        "location": "varies"
+                    },
+                    "T06": {
+                        "activity": "networking",
+                        "location": "L011"
+                    },
+                    "T07": {
+                        "activity": "scouting",
+                        "location": "varies"
+                    },
+                    "T08": {
+                        "activity": "meeting",
+                        "location": "underground"
+                    },
+                    "T09": {
+                        "activity": "operating",
+                        "location": "varies"
+                    },
+                    "T10": {
+                        "activity": "operating",
+                        "location": "varies"
+                    }
+                }
+            },
+            "schedule_interrupts": {
+                "_desc": "Events that override normal schedule",
+                "combat": {
+                    "priority": 10,
+                    "overrides_all": true
+                },
+                "danger_nearby": {
+                    "priority": 9,
+                    "triggers": "safety_behavior"
+                },
+                "critical_need": {
+                    "priority": 8,
+                    "triggers": "need_satisfaction_behavior"
+                },
+                "quest_event": {
+                    "priority": 7,
+                    "triggers": "event_response"
+                },
+                "social_obligation": {
+                    "priority": 5,
+                    "triggers": "social_behavior"
+                },
+                "opportunity": {
+                    "priority": 3,
+                    "triggers": "opportunistic_behavior"
+                }
+            },
+            "activity_transitions": {
+                "sleeping_to_waking": {
+                    "duration_ticks": 2,
+                    "animation": "AN100_wake_up"
+                },
+                "working_to_lunch": {
+                    "duration_ticks": 1,
+                    "animation": "AN101_stand_stretch"
+                },
+                "commuting": {
+                    "speed": "walk",
+                    "uses_pathfinding": true
+                },
+                "closing_shop": {
+                    "duration_ticks": 3,
+                    "includes": [
+                        "count_register",
+                        "lock_goods",
+                        "lock_door"
+                    ]
+                }
+            }
+        },
+        "property_system": {
+            "_desc": "Ownership, locks, and intrusion detection - like Skyrim but smarter",
+            "ownership_types": {
+                "owned": {
+                    "can_enter": [
+                        "owner",
+                        "invited"
+                    ],
+                    "penalty_for_intrusion": "crime_trespass"
+                },
+                "rented": {
+                    "can_enter": [
+                        "owner",
+                        "tenant",
+                        "landlord"
+                    ],
+                    "penalty_for_intrusion": "crime_trespass"
+                },
+                "public": {
+                    "can_enter": [
+                        "anyone"
+                    ],
+                    "during_hours": "operating_hours"
+                },
+                "faction": {
+                    "can_enter": [
+                        "faction_members",
+                        "invited"
+                    ],
+                    "penalty_for_intrusion": "faction_hostility"
+                },
+                "restricted": {
+                    "can_enter": [
+                        "authorized"
+                    ],
+                    "penalty_for_intrusion": "crime_severe"
+                }
+            },
+            "lock_system": {
+                "lock_levels": {
+                    "none": {
+                        "skill_required": 0,
+                        "pick_time_ticks": 0
+                    },
+                    "simple": {
+                        "skill_required": 10,
+                        "pick_time_ticks": 2,
+                        "detection_radius": 5
+                    },
+                    "standard": {
+                        "skill_required": 30,
+                        "pick_time_ticks": 4,
+                        "detection_radius": 8
+                    },
+                    "advanced": {
+                        "skill_required": 60,
+                        "pick_time_ticks": 8,
+                        "detection_radius": 12
+                    },
+                    "masterwork": {
+                        "skill_required": 85,
+                        "pick_time_ticks": 15,
+                        "detection_radius": 15
+                    },
+                    "electronic": {
+                        "skill_required": 70,
+                        "requires": "hacking_skill",
+                        "alerts": "security_system"
+                    }
+                },
+                "lock_actions": {
+                    "pick": {
+                        "skill": "S40_lockpicking",
+                        "detection_chance": "varies",
+                        "makes_noise": true
+                    },
+                    "force": {
+                        "skill": "S01_strength",
+                        "detection_chance": 0.9,
+                        "damages_lock": true
+                    },
+                    "hack": {
+                        "skill": "S19_hacking",
+                        "detection_chance": 0.3,
+                        "leaves_trace": true
+                    },
+                    "key": {
+                        "requires": "matching_key",
+                        "detection_chance": 0,
+                        "silent": true
+                    }
+                }
+            },
+            "intrusion_detection": {
+                "_desc": "What happens when player breaks in",
+                "detection_triggers": [
+                    {
+                        "trigger": "door_forced",
+                        "alert_radius": 20,
+                        "alert_level": 0.8
+                    },
+                    {
+                        "trigger": "lock_picked_failed",
+                        "alert_radius": 10,
+                        "alert_level": 0.4
+                    },
+                    {
+                        "trigger": "item_stolen",
+                        "detection_delay": "varies",
+                        "alert_level": 0.9
+                    },
+                    {
+                        "trigger": "owner_returns",
+                        "detection_chance": 0.95,
+                        "alert_level": 1.0
+                    },
+                    {
+                        "trigger": "witness",
+                        "alert_level": 0.7,
+                        "spreads_to": "authorities"
+                    }
+                ],
+                "npc_responses_to_intrusion": {
+                    "owner_present": {
+                        "high_aggression": "attack_intruder",
+                        "medium_aggression": "threaten_and_call_guards",
+                        "low_aggression": "flee_and_call_guards",
+                        "cowardly": "hide_and_wait"
+                    },
+                    "owner_absent_returns": {
+                        "notices_theft": "report_to_guards",
+                        "notices_damage": "investigate_then_report",
+                        "sees_intruder": "confront_or_flee"
+                    }
+                }
+            },
+            "inventory_and_storage": {
+                "_desc": "What NPCs own and where they keep it",
+                "storage_locations": {
+                    "on_person": {
+                        "capacity": "small",
+                        "access": "immediate",
+                        "theft_chance": "high"
+                    },
+                    "home_chest": {
+                        "capacity": "large",
+                        "access": "home_only",
+                        "locked": "varies"
+                    },
+                    "shop_register": {
+                        "capacity": "medium",
+                        "access": "shop_only",
+                        "locked": "always"
+                    },
+                    "hidden_stash": {
+                        "capacity": "small",
+                        "access": "secret",
+                        "discovery_skill": 60
+                    },
+                    "bank_vault": {
+                        "capacity": "huge",
+                        "access": "business_hours",
+                        "locked": "masterwork"
+                    }
+                },
+                "valuable_items_behavior": {
+                    "carries_daily_earnings": true,
+                    "deposits_at_end_of_day": true,
+                    "hides_illegal_goods": true,
+                    "keeps_weapons_accessible": true
+                }
+            }
+        },
+        "economic_system": {
+            "_desc": "NPCs buy, sell, trade, save, and spend money realistically",
+            "income_sources": {
+                "wage_worker": {
+                    "daily_income": 50,
+                    "frequency": "T05_end",
+                    "requires": "employed"
+                },
+                "shopkeeper": {
+                    "daily_income": "varies",
+                    "based_on": "daily_sales"
+                },
+                "street_vendor": {
+                    "daily_income": "varies",
+                    "based_on": "foot_traffic_and_weather"
+                },
+                "criminal": {
+                    "income": "sporadic",
+                    "based_on": "jobs"
+                },
+                "beggar": {
+                    "daily_income": 5,
+                    "based_on": "sympathy_and_location"
+                },
+                "faction_pay": {
+                    "income": "varies",
+                    "based_on": "rank_and_missions"
+                }
+            },
+            "expense_types": {
+                "rent": {
+                    "frequency": "weekly",
+                    "amount": 100,
+                    "failure_consequence": "eviction"
+                },
+                "food": {
+                    "frequency": "daily",
+                    "amount": 10,
+                    "failure_consequence": "hunger"
+                },
+                "protection": {
+                    "frequency": "weekly",
+                    "amount": 30,
+                    "failure_consequence": "harassment"
+                },
+                "family_support": {
+                    "frequency": "weekly",
+                    "amount": 50,
+                    "failure_consequence": "relationship_damage"
+                },
+                "vices": {
+                    "frequency": "varies",
+                    "amount": "varies",
+                    "failure_consequence": "withdrawal"
+                }
+            },
+            "financial_states": {
+                "wealthy": {
+                    "credits": ">1000",
+                    "behavior": "generous, relaxed"
+                },
+                "comfortable": {
+                    "credits": "500-1000",
+                    "behavior": "normal"
+                },
+                "struggling": {
+                    "credits": "100-500",
+                    "behavior": "careful, stressed"
+                },
+                "desperate": {
+                    "credits": "<100",
+                    "behavior": "takes_risks, begs, steals"
+                },
+                "indebted": {
+                    "credits": "<0",
+                    "behavior": "hunted_by_creditors, desperate"
+                }
+            },
+            "shopping_behavior": {
+                "frequency": "when_needed_and_affordable",
+                "preferred_vendors": [
+                    "trusted",
+                    "cheap",
+                    "nearby"
+                ],
+                "haggling": "based_on_personality.cunning",
+                "impulse_buying": "based_on_comfort_need_and_credits",
+                "theft_consideration": "based_on_desperation_and_morality"
+            }
+        },
+        "social_dynamics": {
+            "_desc": "Relationships evolve over time through interactions",
+            "relationship_changes": {
+                "positive_interaction": {
+                    "trust_change": 0.02,
+                    "decay": 0.001
+                },
+                "favor_granted": {
+                    "trust_change": 0.1,
+                    "creates_debt": true
+                },
+                "gift_given": {
+                    "trust_change": 0.05,
+                    "based_on_value": true
+                },
+                "shared_danger": {
+                    "trust_change": 0.15,
+                    "bond_type": "forged_in_fire"
+                },
+                "betrayal": {
+                    "trust_change": -0.5,
+                    "may_be_permanent": true
+                },
+                "insult": {
+                    "trust_change": -0.05,
+                    "may_trigger_combat": true
+                },
+                "witnessed_crime": {
+                    "trust_change": -0.2,
+                    "may_report": true
+                }
+            },
+            "social_activities": {
+                "visit_friend": {
+                    "trust_bonus": 0.02,
+                    "social_need_satisfaction": 0.3
+                },
+                "share_meal": {
+                    "trust_bonus": 0.03,
+                    "hunger_satisfaction": 0.5,
+                    "social_satisfaction": 0.4
+                },
+                "drink_together": {
+                    "trust_bonus": 0.04,
+                    "may_share_secrets": true
+                },
+                "work_together": {
+                    "trust_bonus": 0.01,
+                    "cumulative_over_time": true
+                },
+                "celebrate_together": {
+                    "trust_bonus": 0.05,
+                    "mood_boost": 0.3
+                }
+            },
+            "family_dynamics": {
+                "spouse": {
+                    "base_trust": 0.9,
+                    "daily_interaction": true,
+                    "affects_mood": true
+                },
+                "child": {
+                    "base_trust": 1.0,
+                    "protection_priority": true,
+                    "expense": true
+                },
+                "parent": {
+                    "base_trust": 0.7,
+                    "may_be_deceased": true,
+                    "care_if_elderly": true
+                },
+                "sibling": {
+                    "base_trust": 0.6,
+                    "rivalry_possible": true
+                }
+            },
+            "gossip_and_reputation": {
+                "positive_deed_witnessed": {
+                    "reputation_boost": 0.05,
+                    "spreads_in": 10
+                },
+                "negative_deed_witnessed": {
+                    "reputation_penalty": 0.1,
+                    "spreads_in": 5
+                },
+                "rumor_spread_rate": "trust_weighted",
+                "rumor_decay": 0.01,
+                "permanent_reputation_events": [
+                    "murder",
+                    "heroic_sacrifice",
+                    "major_betrayal"
+                ]
+            }
+        },
+        "emergent_behaviors": {
+            "_desc": "Complex behaviors that emerge from simple rules",
+            "flee_or_fight": {
+                "calculation": "aggression - fear + (safety_need_level * 0.5) + ally_count * 0.2",
+                "threshold_fight": 0.6,
+                "threshold_flee": 0.3,
+                "threshold_hide": 0.15
+            },
+            "crime_consideration": {
+                "calculation": "(desperation * 0.4) + (opportunity * 0.3) - (morality * 0.3)",
+                "threshold": 0.5,
+                "modifiers": {
+                    "witness_present": -0.3,
+                    "guard_nearby": -0.5,
+                    "very_hungry": 0.2,
+                    "protecting_family": 0.4
+                }
+            },
+            "help_behavior": {
+                "conditions": [
+                    "relationship > 0.3",
+                    "safety_need > 0.6",
+                    "not_critical_need"
+                ],
+                "types": [
+                    "share_food",
+                    "share_info",
+                    "provide_shelter",
+                    "fight_alongside"
+                ]
+            },
+            "daily_decision_tree": {
+                "1": {
+                    "check": "critical_need?",
+                    "yes": "satisfy_need",
+                    "no": "continue"
+                },
+                "2": {
+                    "check": "schedule_activity?",
+                    "yes": "do_activity",
+                    "no": "continue"
+                },
+                "3": {
+                    "check": "opportunity?",
+                    "yes": "evaluate_and_maybe_act",
+                    "no": "continue"
+                },
+                "4": {
+                    "check": "social_need_low?",
+                    "yes": "seek_interaction",
+                    "no": "continue"
+                },
+                "5": {
+                    "default": "idle_at_location"
+                }
+            }
+        },
+        "life_events": {
+            "_desc": "Major events that permanently change NPCs",
+            "event_types": {
+                "birth": {
+                    "creates": "child_npc",
+                    "affects": [
+                        "parents",
+                        "family"
+                    ]
+                },
+                "death": {
+                    "removes": "npc",
+                    "affects": [
+                        "family",
+                        "friends"
+                    ],
+                    "may_trigger": "revenge_quest"
+                },
+                "marriage": {
+                    "links": "two_npcs",
+                    "creates": "household"
+                },
+                "divorce": {
+                    "separates": "household",
+                    "affects": "children",
+                    "creates": "animosity"
+                },
+                "job_loss": {
+                    "removes": "income",
+                    "increases": "desperation"
+                },
+                "job_gain": {
+                    "adds": "income",
+                    "improves": "mood"
+                },
+                "injury": {
+                    "adds": "condition",
+                    "may_require": "medical_treatment"
+                },
+                "awakening": {
+                    "grants": "layer_sight",
+                    "changes": "worldview"
+                },
+                "arrest": {
+                    "removes": "from_play",
+                    "duration": "varies"
+                },
+                "escape": {
+                    "restores": "to_play",
+                    "adds": "wanted_status"
+                }
+            },
+            "memory_system": {
+                "remembers": [
+                    "player_actions",
+                    "major_events",
+                    "relationship_changes"
+                ],
+                "affects": [
+                    "dialogue",
+                    "trust",
+                    "behavior"
+                ],
+                "decay": "significant_events_permanent",
+                "triggers": [
+                    "reminder_dialogue",
+                    "revenge_behavior",
+                    "gratitude"
+                ]
+            }
+        },
+        "ai_decision_context": {
+            "_desc": "Context provided to LLM for NPC decisions",
+            "always_include": [
+                "current_needs_state",
+                "current_schedule_activity",
+                "location_and_who_else_present",
+                "relationship_to_player",
+                "recent_events_affecting_npc",
+                "current_emotional_state",
+                "financial_state",
+                "goals_and_fears"
+            ],
+            "decision_prompt_template": "You are {npc_name}, a {role} in {location}. Your needs: {needs_summary}. You are currently {activity}. You feel {emotion} because {emotion_reason}. {player_name} has just {player_action}. What do you do and say?"
+        }
+    },
+    "city_simulation": {
+        "_desc": "Cities:Skylines-level urban simulation integrated with NPC lives",
+        "_philosophy": "The city breathes - NPCs shape it, and it shapes them",
+        "district_system": {
+            "_desc": "Dynamic districts that evolve based on activity",
+            "district_types": {
+                "residential": {
+                    "code": "DIST_RES",
+                    "provides": [
+                        "housing",
+                        "population"
+                    ],
+                    "requires": [
+                        "power",
+                        "water",
+                        "services"
+                    ],
+                    "density_levels": [
+                        "low",
+                        "medium",
+                        "high",
+                        "mega_block"
+                    ],
+                    "npc_types": [
+                        "civilian",
+                        "family",
+                        "retiree"
+                    ],
+                    "property_values": {
+                        "base": 500,
+                        "modifiers": [
+                            "safety",
+                            "services",
+                            "pollution"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "crime",
+                        "abandonment",
+                        "squatters"
+                    ]
+                },
+                "commercial": {
+                    "code": "DIST_COM",
+                    "provides": [
+                        "jobs",
+                        "goods",
+                        "services",
+                        "entertainment"
+                    ],
+                    "requires": [
+                        "power",
+                        "customers",
+                        "suppliers"
+                    ],
+                    "density_levels": [
+                        "street_vendor",
+                        "small_shop",
+                        "mall",
+                        "megacorp_retail"
+                    ],
+                    "npc_types": [
+                        "shopkeeper",
+                        "worker",
+                        "customer"
+                    ],
+                    "property_values": {
+                        "base": 800,
+                        "modifiers": [
+                            "foot_traffic",
+                            "competition",
+                            "rent"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "empty_storefronts",
+                        "black_market_takeover"
+                    ]
+                },
+                "industrial": {
+                    "code": "DIST_IND",
+                    "provides": [
+                        "manufacturing",
+                        "jobs",
+                        "exports"
+                    ],
+                    "requires": [
+                        "power_heavy",
+                        "workers",
+                        "raw_materials",
+                        "logistics"
+                    ],
+                    "density_levels": [
+                        "workshop",
+                        "factory",
+                        "mega_plant",
+                        "automated_complex"
+                    ],
+                    "npc_types": [
+                        "worker",
+                        "engineer",
+                        "foreman",
+                        "executive"
+                    ],
+                    "property_values": {
+                        "base": 300,
+                        "modifiers": [
+                            "pollution",
+                            "automation_level"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "unemployment",
+                        "pollution_sickness",
+                        "abandonment"
+                    ]
+                },
+                "temple_controlled": {
+                    "code": "DIST_TEMPLE",
+                    "provides": [
+                        "governance",
+                        "security",
+                        "propaganda"
+                    ],
+                    "requires": [
+                        "obedience",
+                        "tithes"
+                    ],
+                    "density_levels": [
+                        "outpost",
+                        "precinct",
+                        "fortress",
+                        "citadel"
+                    ],
+                    "npc_types": [
+                        "guard",
+                        "priest",
+                        "administrator",
+                        "inquisitor"
+                    ],
+                    "property_values": {
+                        "base": 1000,
+                        "modifiers": [
+                            "favor",
+                            "compliance"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "unrest",
+                        "resistance_activity"
+                    ]
+                },
+                "undercity": {
+                    "code": "DIST_UNDER",
+                    "provides": [
+                        "black_market",
+                        "hiding",
+                        "freedom"
+                    ],
+                    "requires": [
+                        "secrecy",
+                        "bribes"
+                    ],
+                    "density_levels": [
+                        "hideout",
+                        "warren",
+                        "underground_city"
+                    ],
+                    "npc_types": [
+                        "criminal",
+                        "refugee",
+                        "resistance",
+                        "outcast"
+                    ],
+                    "property_values": {
+                        "base": 50,
+                        "modifiers": [
+                            "danger",
+                            "discovery_risk"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "gang_wars",
+                        "disease",
+                        "collapse"
+                    ]
+                },
+                "mixed_use": {
+                    "code": "DIST_MIX",
+                    "provides": [
+                        "housing",
+                        "commerce",
+                        "community"
+                    ],
+                    "requires": [
+                        "balance",
+                        "zoning_flexibility"
+                    ],
+                    "density_levels": [
+                        "village",
+                        "neighborhood",
+                        "urban_core"
+                    ],
+                    "npc_types": [
+                        "varied"
+                    ],
+                    "property_values": {
+                        "base": 600,
+                        "modifiers": [
+                            "character",
+                            "vibrancy"
+                        ]
+                    },
+                    "problems_when_neglected": [
+                        "gentrification_or_decay"
+                    ]
+                }
+            },
+            "district_evolution": {
+                "_desc": "How districts change over time",
+                "gentrification": {
+                    "triggers": [
+                        "wealth_influx",
+                        "crime_reduction",
+                        "temple_investment"
+                    ],
+                    "effects": [
+                        "rent_increase",
+                        "displacement",
+                        "new_businesses",
+                        "old_residents_leave"
+                    ],
+                    "npc_impact": {
+                        "low_income": "forced_to_relocate",
+                        "business_owners": "may_sell_or_adapt"
+                    }
+                },
+                "decay": {
+                    "triggers": [
+                        "unemployment",
+                        "crime_spike",
+                        "infrastructure_failure",
+                        "abandonment"
+                    ],
+                    "effects": [
+                        "property_value_drop",
+                        "squatters",
+                        "gang_control",
+                        "service_withdrawal"
+                    ],
+                    "npc_impact": {
+                        "residents": "desperation_increases",
+                        "businesses": "close_or_fortify"
+                    }
+                },
+                "revitalization": {
+                    "triggers": [
+                        "resistance_victory",
+                        "new_industry",
+                        "community_effort"
+                    ],
+                    "effects": [
+                        "cleanup",
+                        "new_businesses",
+                        "returning_residents"
+                    ],
+                    "npc_impact": {
+                        "community": "hope_and_cooperation"
+                    }
+                }
+            }
+        },
+        "business_lifecycle": {
+            "_desc": "Businesses are born, grow, struggle, and die",
+            "business_types": {
+                "street_cart": {
+                    "startup_cost": 50,
+                    "operating_cost_daily": 5,
+                    "revenue_potential": "10-30",
+                    "employees": 1,
+                    "failure_rate": 0.4,
+                    "growth_path": "small_shop"
+                },
+                "small_shop": {
+                    "startup_cost": 500,
+                    "operating_cost_daily": 30,
+                    "revenue_potential": "50-150",
+                    "employees": "1-3",
+                    "failure_rate": 0.25,
+                    "growth_path": "established_store"
+                },
+                "established_store": {
+                    "startup_cost": 2000,
+                    "operating_cost_daily": 100,
+                    "revenue_potential": "200-500",
+                    "employees": "3-10",
+                    "failure_rate": 0.15,
+                    "growth_path": "chain_or_franchise"
+                },
+                "bar_tavern": {
+                    "startup_cost": 1000,
+                    "operating_cost_daily": 50,
+                    "revenue_potential": "100-300",
+                    "employees": "2-5",
+                    "special": [
+                        "information_hub",
+                        "faction_meeting_place"
+                    ],
+                    "failure_rate": 0.2
+                },
+                "clinic": {
+                    "startup_cost": 3000,
+                    "operating_cost_daily": 150,
+                    "revenue_potential": "300-800",
+                    "employees": "3-8",
+                    "special": [
+                        "essential_service",
+                        "faction_target"
+                    ],
+                    "failure_rate": 0.1
+                },
+                "workshop": {
+                    "startup_cost": 800,
+                    "operating_cost_daily": 40,
+                    "revenue_potential": "80-200",
+                    "employees": "1-4",
+                    "produces": [
+                        "repairs",
+                        "custom_goods"
+                    ],
+                    "failure_rate": 0.2
+                },
+                "factory": {
+                    "startup_cost": 10000,
+                    "operating_cost_daily": 500,
+                    "revenue_potential": "1000-3000",
+                    "employees": "20-100",
+                    "produces": [
+                        "mass_goods"
+                    ],
+                    "failure_rate": 0.1
+                },
+                "black_market_stall": {
+                    "startup_cost": 100,
+                    "operating_cost_daily": 10,
+                    "revenue_potential": "50-200",
+                    "employees": 1,
+                    "special": [
+                        "illegal",
+                        "high_margin",
+                        "high_risk"
+                    ],
+                    "failure_rate": 0.5
+                }
+            },
+            "business_states": {
+                "startup": {
+                    "duration": "30_days",
+                    "cash_burn": "high",
+                    "visibility": "low"
+                },
+                "growing": {
+                    "duration": "varies",
+                    "hiring": true,
+                    "expanding": true
+                },
+                "stable": {
+                    "duration": "indefinite",
+                    "profitable": true
+                },
+                "struggling": {
+                    "duration": "60_days_max",
+                    "layoffs": true,
+                    "cost_cutting": true
+                },
+                "failing": {
+                    "duration": "30_days",
+                    "fire_sale": true,
+                    "debt_collection": true
+                },
+                "closed": {
+                    "assets_liquidated": true,
+                    "npcs_unemployed": true
+                }
+            },
+            "business_events": {
+                "grand_opening": {
+                    "attracts": "customers",
+                    "boost": "reputation"
+                },
+                "robbery": {
+                    "loss": "inventory_or_cash",
+                    "trauma": "owner_and_staff"
+                },
+                "temple_inspection": {
+                    "outcome": "fine_or_closure_or_pass"
+                },
+                "supplier_shortage": {
+                    "effect": "reduced_inventory"
+                },
+                "competition_opens": {
+                    "effect": "revenue_decrease"
+                },
+                "viral_success": {
+                    "effect": "demand_spike"
+                },
+                "owner_death": {
+                    "effect": "inheritance_or_closure"
+                }
+            },
+            "npc_entrepreneurship": {
+                "_desc": "NPCs can start their own businesses",
+                "requirements": [
+                    "capital",
+                    "skill",
+                    "location",
+                    "permits_or_bribes"
+                ],
+                "motivation_factors": [
+                    "unemployment",
+                    "opportunity",
+                    "dream",
+                    "desperation"
+                ],
+                "success_factors": [
+                    "location",
+                    "competition",
+                    "economy",
+                    "faction_relations"
+                ]
+            }
+        },
+        "industry_and_supply_chain": {
+            "_desc": "Production, distribution, and consumption networks",
+            "resource_types": {
+                "raw_materials": [
+                    "scrap_metal",
+                    "chemicals",
+                    "organics",
+                    "e_waste",
+                    "water_clean"
+                ],
+                "processed_goods": [
+                    "components",
+                    "medicine",
+                    "food_processed",
+                    "fuel",
+                    "ammunition"
+                ],
+                "finished_products": [
+                    "weapons",
+                    "cybernetics",
+                    "vehicles",
+                    "luxury_goods"
+                ],
+                "services": [
+                    "repair",
+                    "medical",
+                    "security",
+                    "entertainment",
+                    "information"
+                ]
+            },
+            "supply_chain_nodes": {
+                "extraction": {
+                    "inputs": [
+                        "labor",
+                        "equipment"
+                    ],
+                    "outputs": [
+                        "raw_materials"
+                    ],
+                    "locations": [
+                        "L006_sewer_salvage",
+                        "L050_scrapyard",
+                        "undercity_mines"
+                    ]
+                },
+                "processing": {
+                    "inputs": [
+                        "raw_materials",
+                        "power",
+                        "labor"
+                    ],
+                    "outputs": [
+                        "processed_goods"
+                    ],
+                    "locations": [
+                        "industrial_district",
+                        "secret_labs"
+                    ]
+                },
+                "manufacturing": {
+                    "inputs": [
+                        "processed_goods",
+                        "power",
+                        "skilled_labor"
+                    ],
+                    "outputs": [
+                        "finished_products"
+                    ],
+                    "locations": [
+                        "factories",
+                        "workshops"
+                    ]
+                },
+                "distribution": {
+                    "inputs": [
+                        "finished_products",
+                        "logistics"
+                    ],
+                    "outputs": [
+                        "retail_inventory"
+                    ],
+                    "locations": [
+                        "warehouses",
+                        "markets"
+                    ]
+                },
+                "retail": {
+                    "inputs": [
+                        "retail_inventory"
+                    ],
+                    "outputs": [
+                        "consumer_satisfaction",
+                        "credits"
+                    ],
+                    "locations": [
+                        "shops",
+                        "vendors",
+                        "black_market"
+                    ]
+                }
+            },
+            "economic_disruptions": {
+                "supply_shortage": {
+                    "cause": "raid_or_disaster",
+                    "effect": "price_spike"
+                },
+                "demand_crash": {
+                    "cause": "population_decline",
+                    "effect": "business_failures"
+                },
+                "smuggling_route_discovered": {
+                    "cause": "temple_crackdown",
+                    "effect": "black_market_shortage"
+                },
+                "factory_destroyed": {
+                    "cause": "sabotage_or_accident",
+                    "effect": "unemployment_plus_shortage"
+                },
+                "new_supplier_emerges": {
+                    "cause": "entrepreneurship",
+                    "effect": "price_competition"
+                }
+            }
+        },
+        "real_estate_system": {
+            "_desc": "Property ownership, development, and transactions",
+            "property_types": {
+                "apartment_unit": {
+                    "base_value": 200,
+                    "capacity": "1-2_npcs"
+                },
+                "family_dwelling": {
+                    "base_value": 500,
+                    "capacity": "2-6_npcs"
+                },
+                "shop_space": {
+                    "base_value": 600,
+                    "use": "commercial"
+                },
+                "warehouse": {
+                    "base_value": 400,
+                    "use": "industrial_or_storage"
+                },
+                "workshop_space": {
+                    "base_value": 500,
+                    "use": "manufacturing"
+                },
+                "bar_venue": {
+                    "base_value": 800,
+                    "use": "entertainment"
+                },
+                "abandoned_building": {
+                    "base_value": 50,
+                    "use": "squat_or_renovate"
+                },
+                "temple_property": {
+                    "base_value": "n/a",
+                    "use": "temple_only",
+                    "seizure_risk": true
+                }
+            },
+            "value_modifiers": {
+                "positive": {
+                    "near_services": 0.2,
+                    "low_crime": 0.3,
+                    "good_infrastructure": 0.15,
+                    "temple_protection": 0.1,
+                    "renovation": 0.25
+                },
+                "negative": {
+                    "high_crime": -0.3,
+                    "pollution": -0.2,
+                    "infrastructure_failure": -0.25,
+                    "gang_territory": -0.35,
+                    "wanted_resident": -0.4
+                }
+            },
+            "transactions": {
+                "buy": {
+                    "requires": "credits_and_clear_title"
+                },
+                "sell": {
+                    "returns": "market_value_minus_fees"
+                },
+                "rent": {
+                    "monthly_cost": "10%_of_value",
+                    "eviction_rules": true
+                },
+                "squat": {
+                    "risk": "eviction_or_gang_conflict",
+                    "no_cost": true
+                },
+                "seize": {
+                    "temple_only": true,
+                    "resistance_target": true
+                }
+            },
+            "development": {
+                "renovation": {
+                    "cost": "30%_of_value",
+                    "time": "30_days",
+                    "value_increase": 0.25
+                },
+                "expansion": {
+                    "cost": "50%_of_value",
+                    "time": "60_days",
+                    "capacity_increase": 0.5
+                },
+                "demolition": {
+                    "cost": "10%_of_value",
+                    "time": "7_days",
+                    "clears_for_rebuild": true
+                },
+                "new_construction": {
+                    "cost": "varies",
+                    "time": "90_days",
+                    "requires": "permits_or_bribes"
+                }
+            }
+        },
+        "infrastructure_dependencies": {
+            "_desc": "City systems that everything depends on",
+            "utilities": {
+                "power": {
+                    "sources": [
+                        "temple_grid",
+                        "black_market_generators",
+                        "solar_salvage"
+                    ],
+                    "consumption_by_type": {
+                        "residential": 1,
+                        "commercial": 2,
+                        "industrial": 5
+                    },
+                    "failure_effects": {
+                        "no_lights": true,
+                        "security_systems_down": true,
+                        "economy_halt": true
+                    }
+                },
+                "water": {
+                    "sources": [
+                        "temple_controlled",
+                        "rain_collection",
+                        "underground_springs"
+                    ],
+                    "consumption_by_type": {
+                        "residential": 2,
+                        "commercial": 1,
+                        "industrial": 3
+                    },
+                    "failure_effects": {
+                        "disease_risk": 0.3,
+                        "npc_migration": true
+                    }
+                },
+                "waste": {
+                    "processing": [
+                        "sewer_system",
+                        "undercity_dumping",
+                        "recyclers"
+                    ],
+                    "failure_effects": {
+                        "disease_risk": 0.5,
+                        "pollution_increase": true
+                    }
+                }
+            },
+            "transportation": {
+                "public_transit": {
+                    "types": [
+                        "tram",
+                        "metro_abandoned",
+                        "rickshaw",
+                        "temple_transports"
+                    ],
+                    "affects": [
+                        "commute_time",
+                        "foot_traffic",
+                        "accessibility"
+                    ]
+                },
+                "freight": {
+                    "types": [
+                        "truck",
+                        "smuggler_routes",
+                        "drone_delivery"
+                    ],
+                    "affects": [
+                        "supply_chain",
+                        "business_viability"
+                    ]
+                },
+                "traffic_flow": {
+                    "congestion_effects": {
+                        "commute_time": "increased",
+                        "business_access": "reduced"
+                    },
+                    "time_variation": {
+                        "T04-T05": "high",
+                        "T02": "low"
+                    }
+                }
+            },
+            "services": {
+                "security": {
+                    "provider": "temple_guards",
+                    "coverage": {
+                        "temple_district": 1.0,
+                        "neon_district": 0.6,
+                        "undercity": 0.1
+                    },
+                    "response_time": {
+                        "high_coverage": "2_minutes",
+                        "low_coverage": "never"
+                    }
+                },
+                "medical": {
+                    "providers": [
+                        "temple_clinic",
+                        "underground_medic",
+                        "black_market_pharma"
+                    ],
+                    "access": {
+                        "wealthy": "good",
+                        "poor": "limited",
+                        "wanted": "black_market_only"
+                    }
+                },
+                "education": {
+                    "types": [
+                        "temple_propaganda",
+                        "underground_schools",
+                        "apprenticeship"
+                    ],
+                    "affects": [
+                        "skill_development",
+                        "worldview"
+                    ]
+                }
+            }
+        },
+        "city_events": {
+            "_desc": "Large-scale events affecting the whole city",
+            "natural_disasters": {
+                "flood": {
+                    "affects": [
+                        "undercity",
+                        "low_areas"
+                    ],
+                    "damage": "infrastructure",
+                    "displacement": true
+                },
+                "toxic_spill": {
+                    "affects": [
+                        "industrial_district"
+                    ],
+                    "health_crisis": true
+                },
+                "power_grid_failure": {
+                    "affects": [
+                        "all"
+                    ],
+                    "duration": "varies",
+                    "chaos": true
+                }
+            },
+            "political_events": {
+                "temple_crackdown": {
+                    "affects": [
+                        "resistance",
+                        "black_market"
+                    ],
+                    "creates": "fear_and_opportunity"
+                },
+                "new_inquisitor": {
+                    "affects": [
+                        "all"
+                    ],
+                    "policy_changes": true
+                },
+                "resistance_victory": {
+                    "affects": [
+                        "district"
+                    ],
+                    "temporary_freedom": true
+                }
+            },
+            "economic_events": {
+                "market_crash": {
+                    "affects": [
+                        "all_businesses"
+                    ],
+                    "unemployment_spike": true
+                },
+                "supply_blockade": {
+                    "affects": [
+                        "specific_goods"
+                    ],
+                    "price_spike": true
+                },
+                "new_trade_route": {
+                    "affects": [
+                        "economy"
+                    ],
+                    "growth": true
+                }
+            },
+            "social_events": {
+                "festival": {
+                    "affects": [
+                        "mood"
+                    ],
+                    "commerce_boost": true
+                },
+                "plague_outbreak": {
+                    "affects": [
+                        "health",
+                        "economy"
+                    ],
+                    "quarantine": true
+                },
+                "mass_awakening": {
+                    "affects": [
+                        "layer_barriers"
+                    ],
+                    "reality_unstable": true
+                }
+            }
+        },
+        "npc_city_integration": {
+            "_desc": "How NPCs interact with city systems",
+            "employment": {
+                "job_market": {
+                    "tracks": [
+                        "open_positions",
+                        "unemployed_npcs",
+                        "skill_matching"
+                    ]
+                },
+                "hiring_process": {
+                    "factors": [
+                        "skills",
+                        "faction",
+                        "references",
+                        "desperation"
+                    ]
+                },
+                "job_loss_cascade": {
+                    "business_fails": "employees_unemployed",
+                    "unemployed": "needs_increase"
+                }
+            },
+            "housing": {
+                "housing_search": {
+                    "factors": [
+                        "affordability",
+                        "safety",
+                        "commute",
+                        "family_size"
+                    ]
+                },
+                "homelessness": {
+                    "causes": [
+                        "eviction",
+                        "job_loss",
+                        "disaster"
+                    ],
+                    "effects": "undercity_migration"
+                },
+                "household_formation": {
+                    "marriage": "combined_housing",
+                    "children": "need_larger_space"
+                }
+            },
+            "civic_participation": {
+                "voting": "not_applicable_under_temple",
+                "protest": {
+                    "risky": true,
+                    "affects": "temple_response"
+                },
+                "community_organizing": {
+                    "builds": "trust",
+                    "targets": "local_issues"
+                },
+                "resistance_recruitment": {
+                    "from": "desperate_or_awakened"
+                }
+            },
+            "daily_city_interaction": {
+                "commute": {
+                    "uses": "transportation",
+                    "time": "varies_by_distance"
+                },
+                "shopping": {
+                    "visits": "commercial_district",
+                    "affected_by": "supply_chain"
+                },
+                "services": {
+                    "uses": "medical_education_security",
+                    "affected_by": "access"
+                },
+                "taxes_tithes": {
+                    "pays_to": "temple_or_landlord",
+                    "affects": "income_need"
+                }
+            }
+        },
+        "simulation_tick_logic": {
+            "_desc": "What happens each simulation tick at city level",
+            "order_of_operations": [
+                "1. Update infrastructure status",
+                "2. Process business revenue/expenses",
+                "3. Update supply chain flows",
+                "4. Process property transactions",
+                "5. Update district evolution scores",
+                "6. Check for city event triggers",
+                "7. Update NPC employment status",
+                "8. Process NPC housing changes",
+                "9. Calculate district statistics",
+                "10. Log changes for persistence"
+            ],
+            "tick_duration": "1_game_hour",
+            "major_update_frequency": "T01_daily_reset"
+        }
     }
 }

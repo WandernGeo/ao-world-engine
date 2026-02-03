@@ -914,5 +914,1074 @@
             "hour_end": 5,
             "activity": 0.2
         }
+    },
+    "action_context": {
+        "_desc": "Detailed context for action selection by AI",
+        "_usage": "LLM uses these to determine appropriate actions",
+        "movement_context": {
+            "A001_walk": {
+                "situations": [
+                    "exploration",
+                    "social",
+                    "patrol",
+                    "casual"
+                ],
+                "speed": "normal",
+                "stealth_modifier": 0.8,
+                "stamina_cost": 0.1,
+                "noise_level": "low",
+                "compatible_emotions": [
+                    "E001",
+                    "E003",
+                    "E010",
+                    "E020"
+                ],
+                "incompatible_with": [
+                    "combat_active",
+                    "fleeing"
+                ],
+                "animation_ref": "AN010"
+            },
+            "A002_run": {
+                "situations": [
+                    "pursuit",
+                    "escape",
+                    "urgent",
+                    "combat_repositioning"
+                ],
+                "speed": "fast",
+                "stealth_modifier": 0.3,
+                "stamina_cost": 0.4,
+                "noise_level": "medium",
+                "compatible_emotions": [
+                    "E030",
+                    "E040",
+                    "E060"
+                ],
+                "triggers": [
+                    "threat_detected",
+                    "time_pressure",
+                    "ally_in_danger"
+                ],
+                "animation_ref": "AN011"
+            },
+            "A003_sprint": {
+                "situations": [
+                    "desperate_escape",
+                    "critical_pursuit"
+                ],
+                "speed": "maximum",
+                "stealth_modifier": 0.0,
+                "stamina_cost": 0.8,
+                "noise_level": "high",
+                "duration_limit": "30_seconds",
+                "cooldown": "60_seconds",
+                "animation_ref": "AN012"
+            },
+            "A004_crawl": {
+                "situations": [
+                    "stealth",
+                    "injured",
+                    "tight_space"
+                ],
+                "speed": "very_slow",
+                "stealth_modifier": 1.0,
+                "stamina_cost": 0.3,
+                "noise_level": "minimal",
+                "visibility_reduction": 0.7
+            },
+            "A005_climb": {
+                "situations": [
+                    "vertical_navigation",
+                    "escape",
+                    "infiltration"
+                ],
+                "requires": [
+                    "climbable_surface"
+                ],
+                "stamina_cost": 0.5,
+                "skill_check": "athletics",
+                "failure_consequence": "A007_fall"
+            },
+            "A016_dodge": {
+                "situations": [
+                    "combat_defense",
+                    "evade_attack"
+                ],
+                "speed": "instant",
+                "stealth_modifier": 0.0,
+                "stamina_cost": 0.2,
+                "success_rate_base": 0.6,
+                "modifiers": [
+                    "agility",
+                    "awareness",
+                    "cover_proximity"
+                ],
+                "cooldown": "3_seconds"
+            }
+        },
+        "combat_context": {
+            "A021_punch": {
+                "damage": "low",
+                "range": "melee",
+                "stamina_cost": 0.1,
+                "stun_chance": 0.1,
+                "skill": "melee",
+                "animation_ref": "AN050",
+                "sound_ref": "SND_impact_flesh",
+                "compatible_emotions": [
+                    "E030",
+                    "E031",
+                    "E060"
+                ]
+            },
+            "A022_kick": {
+                "damage": "medium",
+                "range": "melee",
+                "stamina_cost": 0.15,
+                "knockback": 0.3,
+                "skill": "melee",
+                "animation_ref": "AN052"
+            },
+            "A026_grapple": {
+                "damage": "none_initial",
+                "range": "contact",
+                "stamina_cost": 0.3,
+                "control_chance": 0.5,
+                "requires": "both_hands_free",
+                "follow_up_options": [
+                    "A028_choke",
+                    "A027_throw_person",
+                    "A030_pin"
+                ],
+                "incompatible_with": [
+                    "wielding_weapon",
+                    "outnumbered"
+                ]
+            },
+            "A031_slash": {
+                "damage": "high",
+                "range": "melee_extended",
+                "requires": "bladed_weapon",
+                "stamina_cost": 0.2,
+                "bleed_chance": 0.7
+            },
+            "A036_shoot": {
+                "damage": "varies_by_weapon",
+                "range": "varies_by_weapon",
+                "requires": "ranged_weapon",
+                "ammo_cost": 1,
+                "noise_level": "very_high",
+                "alert_radius": "50m",
+                "accuracy_modifiers": [
+                    "distance",
+                    "movement",
+                    "stress",
+                    "weapon_quality"
+                ],
+                "animation_ref": "AN042",
+                "sound_ref": "SND050"
+            },
+            "A037_aim": {
+                "damage": "none",
+                "accuracy_bonus": 0.3,
+                "duration": "variable",
+                "movement_restriction": 0.8,
+                "follow_up": "A036_shoot"
+            },
+            "A041_grenade_throw": {
+                "damage": "area_high",
+                "range": "thrown",
+                "requires": "grenade_equipped",
+                "delay": "3_seconds",
+                "radius": "10m",
+                "friendly_fire": true,
+                "noise_level": "extreme"
+            }
+        },
+        "social_context": {
+            "A046_talk": {
+                "base_action": true,
+                "trust_requirement": 0.0,
+                "outcomes": [
+                    "information_exchange",
+                    "relationship_change",
+                    "task_negotiation"
+                ],
+                "modifiers": [
+                    "charisma",
+                    "faction_standing",
+                    "reputation"
+                ],
+                "animation_ref": "AN070"
+            },
+            "A047_whisper": {
+                "stealth_modifier": 1.0,
+                "eavesdrop_range": "2m",
+                "trust_requirement": 0.3,
+                "implies": "secrecy"
+            },
+            "A057_threaten": {
+                "trust_modifier": -0.3,
+                "compliance_chance_base": 0.4,
+                "modifiers": [
+                    "intimidation_skill",
+                    "weapon_visible",
+                    "reputation_violent"
+                ],
+                "backfire_chance": 0.2,
+                "backfire_consequence": "combat_initiation",
+                "compatible_emotions": [
+                    "E030",
+                    "E031",
+                    "E032"
+                ]
+            },
+            "A058_bribe": {
+                "requires": "currency_or_item",
+                "success_modifiers": [
+                    "target_greed",
+                    "offer_value",
+                    "observer_presence"
+                ],
+                "trust_modifier": -0.1,
+                "detection_risk": "medium"
+            },
+            "A060_persuade": {
+                "trust_requirement": 0.2,
+                "success_modifiers": [
+                    "charisma",
+                    "argument_quality",
+                    "target_openness"
+                ],
+                "time_required": "variable",
+                "compatible_emotions": [
+                    "E001",
+                    "E010",
+                    "E060"
+                ]
+            },
+            "A062_deceive": {
+                "trust_requirement": 0.1,
+                "detection_modifiers": [
+                    "target_insight",
+                    "lie_complexity",
+                    "body_language"
+                ],
+                "consequence_if_detected": "trust_major_loss",
+                "compatible_emotions": [
+                    "E001",
+                    "E080"
+                ]
+            }
+        },
+        "trade_context": {
+            "A071_buy": {
+                "requires": "currency",
+                "price_modifiers": [
+                    "reputation",
+                    "haggle_skill",
+                    "item_rarity",
+                    "seller_desperation"
+                ],
+                "risk": "low"
+            },
+            "A081_steal": {
+                "detection_chance_base": 0.4,
+                "modifiers": [
+                    "stealth_skill",
+                    "target_awareness",
+                    "crowd_density",
+                    "item_visibility"
+                ],
+                "consequence_if_detected": "combat_or_flee",
+                "trust_modifier_if_detected": -0.5,
+                "compatible_emotions": [
+                    "E080",
+                    "E040"
+                ]
+            },
+            "A083_smuggle": {
+                "requires": [
+                    "hidden_compartment_or_skill",
+                    "contraband_item"
+                ],
+                "detection_chance_by_zone": {
+                    "temple": 0.6,
+                    "urban": 0.2,
+                    "underground": 0.05
+                },
+                "consequence_if_detected": "arrest_or_combat"
+            }
+        }
+    },
+    "procedural_generation": {
+        "_desc": "Weights and rules for event generation",
+        "_usage": "Deterministic simulation uses these for consistency",
+        "event_frequency": {
+            "combat_random": {
+                "base_chance": 0.05,
+                "location_modifiers": {
+                    "L002": 1.5,
+                    "L042": 1.8,
+                    "L031": 0.1
+                }
+            },
+            "social_encounter": {
+                "base_chance": 0.3,
+                "location_modifiers": {
+                    "L011": 2.0,
+                    "L001": 1.5,
+                    "L026": 0.5
+                }
+            },
+            "trade_opportunity": {
+                "base_chance": 0.15,
+                "location_modifiers": {
+                    "L004": 2.5,
+                    "L007": 1.5
+                }
+            },
+            "layer_bleed": {
+                "base_chance": 0.001,
+                "location_modifiers": {
+                    "L052": 100.0,
+                    "L054": 50.0,
+                    "L030": 10.0
+                }
+            },
+            "temple_patrol": {
+                "base_chance": 0.2,
+                "location_modifiers": {
+                    "L031": 3.0,
+                    "L003": 2.0,
+                    "L026": 0.05
+                }
+            },
+            "random_npc_spawn": {
+                "base_chance": 0.4,
+                "time_modifiers": {
+                    "T07": 1.5,
+                    "T08": 1.2,
+                    "T10": 0.3
+                }
+            }
+        },
+        "weather_transitions": {
+            "W01_clear": {
+                "W01": 0.6,
+                "W02": 0.25,
+                "W05": 0.1,
+                "W06": 0.05
+            },
+            "W02_rain_light": {
+                "W02": 0.5,
+                "W03": 0.2,
+                "W01": 0.2,
+                "W05": 0.1
+            },
+            "W03_rain_heavy": {
+                "W03": 0.4,
+                "W02": 0.3,
+                "W04": 0.2,
+                "W05": 0.1
+            },
+            "W04_storm": {
+                "W04": 0.3,
+                "W03": 0.5,
+                "W02": 0.2
+            },
+            "W05_fog": {
+                "W05": 0.5,
+                "W01": 0.3,
+                "W02": 0.2
+            },
+            "W06_smog": {
+                "W06": 0.6,
+                "W01": 0.2,
+                "W05": 0.2
+            }
+        },
+        "time_progression": {
+            "tick_duration_real_minutes": 1,
+            "ticks_per_game_hour": 10,
+            "day_cycle_ticks": 240,
+            "weather_check_frequency": 20,
+            "npc_schedule_check_frequency": 10
+        },
+        "danger_escalation": {
+            "combat_alert_duration": 50,
+            "witness_report_delay": 5,
+            "patrol_response_time": 10,
+            "reinforcement_waves": [
+                {
+                    "delay": 15,
+                    "force": "light"
+                },
+                {
+                    "delay": 30,
+                    "force": "medium"
+                },
+                {
+                    "delay": 60,
+                    "force": "heavy"
+                }
+            ]
+        }
+    },
+    "emotion_system": {
+        "_desc": "Emotion state machine rules",
+        "_usage": "NPCs transition between emotions based on events",
+        "transitions": {
+            "E001_neutral": {
+                "to_E010_happy": {
+                    "triggers": [
+                        "good_news",
+                        "successful_action",
+                        "ally_arrival"
+                    ],
+                    "chance": 0.3
+                },
+                "to_E020_sad": {
+                    "triggers": [
+                        "bad_news",
+                        "loss",
+                        "failure"
+                    ],
+                    "chance": 0.4
+                },
+                "to_E030_angry": {
+                    "triggers": [
+                        "insult",
+                        "betrayal",
+                        "injustice"
+                    ],
+                    "chance": 0.5
+                },
+                "to_E040_fearful": {
+                    "triggers": [
+                        "threat",
+                        "danger",
+                        "violence"
+                    ],
+                    "chance": 0.4
+                },
+                "to_E050_suspicious": {
+                    "triggers": [
+                        "stranger_approach",
+                        "unusual_behavior"
+                    ],
+                    "chance": 0.3
+                }
+            },
+            "E030_angry": {
+                "to_E032_angry_intense": {
+                    "triggers": [
+                        "continued_provocation",
+                        "violence_escalation"
+                    ],
+                    "chance": 0.4
+                },
+                "to_E001_neutral": {
+                    "triggers": [
+                        "time_passage",
+                        "apology"
+                    ],
+                    "delay_ticks": 20,
+                    "chance": 0.1
+                },
+                "to_E060_determined": {
+                    "triggers": [
+                        "focus_on_goal"
+                    ],
+                    "chance": 0.3
+                }
+            },
+            "E040_fearful": {
+                "to_E001_neutral": {
+                    "triggers": [
+                        "threat_removed",
+                        "time_passage"
+                    ],
+                    "delay_ticks": 10,
+                    "chance": 0.2
+                },
+                "to_E060_determined": {
+                    "triggers": [
+                        "cornered",
+                        "protecting_ally"
+                    ],
+                    "chance": 0.4
+                }
+            }
+        },
+        "emotion_effects": {
+            "E010_happy": {
+                "action_bias": [
+                    "social",
+                    "generous"
+                ],
+                "combat_initiative": -0.1,
+                "persuasion_bonus": 0.2
+            },
+            "E020_sad": {
+                "action_bias": [
+                    "withdraw",
+                    "seek_comfort"
+                ],
+                "combat_initiative": -0.2,
+                "social_initiative": -0.3
+            },
+            "E030_angry": {
+                "action_bias": [
+                    "aggressive",
+                    "confrontational"
+                ],
+                "combat_initiative": 0.3,
+                "diplomacy_penalty": 0.3
+            },
+            "E040_fearful": {
+                "action_bias": [
+                    "flee",
+                    "hide",
+                    "seek_help"
+                ],
+                "combat_initiative": -0.4,
+                "stealth_bonus": 0.2
+            },
+            "E050_suspicious": {
+                "action_bias": [
+                    "observe",
+                    "question",
+                    "distance"
+                ],
+                "detection_bonus": 0.3
+            },
+            "E060_determined": {
+                "action_bias": [
+                    "persist",
+                    "focus"
+                ],
+                "stamina_bonus": 0.2,
+                "fear_resistance": 0.5
+            }
+        }
+    },
+    "faction_dynamics": {
+        "_desc": "Inter-faction relationship rules",
+        "_usage": "Determines NPC reactions based on faction",
+        "faction_matrix": {
+            "resistance": {
+                "resistance": 1.0,
+                "temple": -0.9,
+                "corps": -0.3,
+                "underground": 0.4,
+                "mystics": 0.2,
+                "civilian": 0.1
+            },
+            "temple": {
+                "resistance": -0.9,
+                "temple": 1.0,
+                "corps": 0.3,
+                "underground": -0.5,
+                "mystics": -0.4,
+                "civilian": 0.1
+            },
+            "corps": {
+                "resistance": -0.3,
+                "temple": 0.3,
+                "corps": 0.5,
+                "underground": -0.2,
+                "mystics": 0.0,
+                "civilian": -0.1
+            },
+            "underground": {
+                "resistance": 0.4,
+                "temple": -0.5,
+                "corps": -0.2,
+                "underground": 0.7,
+                "mystics": 0.3,
+                "civilian": 0.2
+            },
+            "mystics": {
+                "resistance": 0.2,
+                "temple": -0.4,
+                "corps": 0.0,
+                "underground": 0.3,
+                "mystics": 0.9,
+                "civilian": 0.0
+            },
+            "civilian": {
+                "resistance": 0.0,
+                "temple": 0.0,
+                "corps": 0.0,
+                "underground": 0.0,
+                "mystics": 0.0,
+                "civilian": 0.3
+            }
+        },
+        "faction_behaviors": {
+            "resistance": {
+                "primary_goal": "overthrow_temple",
+                "secondary_goals": [
+                    "protect_civilians",
+                    "gather_intelligence",
+                    "sabotage"
+                ],
+                "preferred_locations": [
+                    "L020",
+                    "L026",
+                    "L046",
+                    "L047"
+                ],
+                "avoided_locations": [
+                    "L031",
+                    "L003"
+                ],
+                "recruitment_criteria": {
+                    "trust_threshold": 0.6,
+                    "skill_preference": [
+                        "combat",
+                        "tech",
+                        "stealth"
+                    ]
+                }
+            },
+            "temple": {
+                "primary_goal": "maintain_control",
+                "secondary_goals": [
+                    "suppress_resistance",
+                    "expand_surveillance",
+                    "convert_population"
+                ],
+                "preferred_locations": [
+                    "L031",
+                    "L003",
+                    "L007"
+                ],
+                "patrol_routes": [
+                    "L001",
+                    "L004",
+                    "L043",
+                    "L044"
+                ],
+                "arrest_protocol": {
+                    "resistance_member": "immediate",
+                    "civilian_violation": "warning_first"
+                }
+            },
+            "underground": {
+                "primary_goal": "survival",
+                "secondary_goals": [
+                    "trade",
+                    "information_brokering",
+                    "territory_control"
+                ],
+                "preferred_locations": [
+                    "L004",
+                    "L046",
+                    "L049"
+                ],
+                "trade_goods": [
+                    "contraband",
+                    "weapons",
+                    "information",
+                    "medical"
+                ]
+            },
+            "mystics": {
+                "primary_goal": "understand_layers",
+                "secondary_goals": [
+                    "protect_echo_points",
+                    "train_sensitives",
+                    "preserve_knowledge"
+                ],
+                "preferred_locations": [
+                    "L030",
+                    "L051",
+                    "L054",
+                    "L055"
+                ],
+                "abilities": [
+                    "layer_sight",
+                    "bleed_prediction",
+                    "mental_communication"
+                ]
+            }
+        }
+    },
+    "skill_checks": {
+        "_desc": "Dice-less deterministic skill resolution",
+        "_usage": "Uses seed + character stats to determine outcomes",
+        "resolution_formula": "success = (skill_value + modifiers + (seed % 20) / 100) > difficulty",
+        "difficulty_levels": {
+            "trivial": 0.1,
+            "easy": 0.3,
+            "moderate": 0.5,
+            "hard": 0.7,
+            "very_hard": 0.85,
+            "near_impossible": 0.95
+        },
+        "common_checks": {
+            "stealth_detection": {
+                "skill": "stealth",
+                "opposed_by": "perception",
+                "modifiers": [
+                    "lighting",
+                    "cover",
+                    "movement_speed"
+                ]
+            },
+            "combat_hit": {
+                "skill": "weapon_skill",
+                "opposed_by": "defense",
+                "modifiers": [
+                    "range",
+                    "cover",
+                    "wounds"
+                ]
+            },
+            "persuasion": {
+                "skill": "charisma",
+                "opposed_by": "willpower",
+                "modifiers": [
+                    "relationship",
+                    "faction",
+                    "argument_quality"
+                ]
+            },
+            "hacking": {
+                "skill": "tech",
+                "difficulty": "system_security",
+                "modifiers": [
+                    "equipment",
+                    "time_taken",
+                    "detection_risk"
+                ]
+            },
+            "repair": {
+                "skill": "tech",
+                "difficulty": "damage_severity",
+                "modifiers": [
+                    "parts_available",
+                    "tools",
+                    "time"
+                ]
+            }
+        }
+    },
+    "object_interactions": {
+        "_desc": "How objects can be used in the world",
+        "_usage": "Action availability based on equipped/nearby objects",
+        "weapon_objects": {
+            "ranged": {
+                "enables_actions": [
+                    "A036",
+                    "A037",
+                    "A038",
+                    "A039",
+                    "A040",
+                    "A043"
+                ],
+                "requires": "ammunition",
+                "maintenance": "degradation_per_use"
+            },
+            "melee": {
+                "enables_actions": [
+                    "A031",
+                    "A032",
+                    "A033",
+                    "A034",
+                    "A035"
+                ],
+                "no_consumables": true
+            },
+            "explosive": {
+                "enables_actions": [
+                    "A041",
+                    "A042"
+                ],
+                "consumable": true,
+                "dangerous": true
+            }
+        },
+        "tech_objects": {
+            "terminal": {
+                "enables_actions": [
+                    "A130",
+                    "A131",
+                    "A132",
+                    "A133"
+                ],
+                "requires": "tech_skill",
+                "location_fixed": true
+            },
+            "communicator": {
+                "enables_actions": [
+                    "A046",
+                    "A047"
+                ],
+                "range": "unlimited",
+                "traceable": true
+            },
+            "hacking_tool": {
+                "modifies_action": "A131",
+                "skill_bonus": 0.2,
+                "illegal": true
+            }
+        },
+        "consumables": {
+            "stim_pack": {
+                "effect": "heal_minor",
+                "duration": "instant",
+                "quantity": 1
+            },
+            "stim_pill": {
+                "effect": "combat_boost",
+                "duration": "4_hours",
+                "side_effect": "crash"
+            },
+            "echo_tab": {
+                "effect": "layer_glimpse",
+                "duration": "30_minutes",
+                "side_effect": "disorientation",
+                "illegal": true
+            }
+        }
+    },
+    "location_details": {
+        "_desc": "Extended location information for scene generation",
+        "_usage": "Provides rich context for each location",
+        "L001_neon_district": {
+            "full_name": "Neon District - Main Strip",
+            "description": "The heart of the city's nightlife and commerce. Towering holographic advertisements cast cyan light over rain-slicked streets. Vendors hawk synth-food, data chips, and questionable services. Temple patrols pass every twenty minutes. The air smells of ozone and cooking grease.",
+            "size": "large",
+            "capacity": 500,
+            "lighting": "LT010",
+            "weather_mod": "exposed",
+            "sounds": [
+                "SND010",
+                "SND030",
+                "SND031"
+            ],
+            "typical_npcs": [
+                "vendor",
+                "civilian",
+                "temple_patrol",
+                "hustler",
+                "info_broker"
+            ],
+            "points_of_interest": {
+                "noodle_stand": {
+                    "type": "food_vendor",
+                    "owner": "anonymous"
+                },
+                "holographic_billboard": {
+                    "type": "decoration",
+                    "content": "temple_propaganda"
+                },
+                "street_terminal": {
+                    "type": "interactive",
+                    "security": "low"
+                }
+            },
+            "connections": [
+                "L002",
+                "L003",
+                "L010",
+                "L043"
+            ],
+            "danger_base": 3,
+            "temple_surveillance": 0.7
+        },
+        "L011_signal_bar": {
+            "full_name": "The Signal - Bar and Information Hub",
+            "description": "A dimly lit bar owned by Felix. Warm amber lighting fights against the cyan glow from outside. Worn leather booths provide privacy for conversations. The jukebox plays pre-Fall music. Everyone here has secrets, and Felix knows most of them.",
+            "size": "medium",
+            "capacity": 40,
+            "lighting": "LT030",
+            "weather_mod": "interior",
+            "sounds": [
+                "SND030",
+                "SND031",
+                "SND060"
+            ],
+            "typical_npcs": [
+                "patron",
+                "info_seeker",
+                "resistance_contact"
+            ],
+            "owner": "C04",
+            "points_of_interest": {
+                "bar_counter": {
+                    "type": "furniture",
+                    "ref": "FN022"
+                },
+                "back_booth": {
+                    "type": "furniture",
+                    "ref": "FN011",
+                    "note": "private_meetings"
+                },
+                "jukebox": {
+                    "type": "decoration",
+                    "effect": "ambiance"
+                },
+                "hidden_door": {
+                    "type": "exit",
+                    "requires": "knowledge",
+                    "leads_to": "L026"
+                }
+            },
+            "connections": [
+                "L010",
+                "L026_secret"
+            ],
+            "danger_base": 1,
+            "temple_surveillance": 0.2
+        },
+        "L026_resistance_hq": {
+            "full_name": "Resistance HQ - The Bunker",
+            "description": "Deep beneath the city, accessible through hidden passages. Former subway maintenance hub converted to command center. Maps cover the walls, terminals blink with intercepted transmissions. Zero Chen's domain. Here the resistance plans its moves against the Temple.",
+            "size": "large",
+            "capacity": 100,
+            "lighting": "LT021",
+            "weather_mod": "underground",
+            "sounds": [
+                "SND070",
+                "SND071"
+            ],
+            "typical_npcs": [
+                "resistance_fighter",
+                "tech_specialist",
+                "strategist"
+            ],
+            "leader": "C12",
+            "points_of_interest": {
+                "war_table": {
+                    "type": "furniture",
+                    "ref": "FN021",
+                    "use": "planning"
+                },
+                "armory": {
+                    "type": "storage",
+                    "contents": "weapons"
+                },
+                "medical_bay": {
+                    "type": "medical",
+                    "capacity": 5
+                },
+                "comm_center": {
+                    "type": "tech",
+                    "function": "communications"
+                }
+            },
+            "connections": [
+                "L011_secret",
+                "L047",
+                "L048"
+            ],
+            "danger_base": 0,
+            "temple_surveillance": 0.0
+        },
+        "L031_temple_spire": {
+            "full_name": "Temple of the Signal - Central Spire",
+            "description": "The massive ivory tower that dominates the skyline. Amber lights pulse with false warmth. Here the High Council makes decrees, Inquisitors receive orders, and the Signal broadcasts its message. Few who enter without clearance leave.",
+            "size": "massive",
+            "capacity": 2000,
+            "lighting": "LT050",
+            "weather_mod": "exposed_high",
+            "sounds": [
+                "SND090",
+                "SND091",
+                "SND092"
+            ],
+            "typical_npcs": [
+                "temple_priest",
+                "temple_guard",
+                "inquisitor",
+                "acolyte"
+            ],
+            "faction_control": "temple",
+            "points_of_interest": {
+                "main_hall": {
+                    "type": "public",
+                    "capacity": 500,
+                    "surveillance": "maximum"
+                },
+                "broadcast_center": {
+                    "type": "restricted",
+                    "security": "extreme"
+                },
+                "inquisition_chambers": {
+                    "type": "restricted",
+                    "security": "extreme",
+                    "purpose": "interrogation"
+                },
+                "high_council_chambers": {
+                    "type": "restricted",
+                    "security": "maximum"
+                }
+            },
+            "connections": [
+                "L003",
+                "L007"
+            ],
+            "danger_base": 9,
+            "temple_surveillance": 1.0
+        }
+    },
+    "ai_hints": {
+        "_desc": "Direct guidance for LLM decision-making",
+        "_usage": "Included in prompts for consistent behavior",
+        "general_principles": [
+            "Actions should be consistent with character personality and current emotional state",
+            "NPCs remember past interactions and adjust behavior accordingly",
+            "Environmental factors (weather, time, location danger) influence available actions",
+            "Every action has potential consequences - consider witnesses, noise, faction response",
+            "The world is persistent - destroyed items stay destroyed, dead NPCs stay dead"
+        ],
+        "character_behavior": {
+            "when_threatened": "Check faction relationship first. Temple forces attack on sight. Others may negotiate.",
+            "when_asked_for_info": "Consider trust level, faction loyalty, potential consequences of sharing",
+            "when_witnessing_crime": "Civilians flee or freeze. Temple calls for backup. Underground ignores or exploits.",
+            "when_injured": "Self-preservation takes priority unless protecting someone. Seek medical help."
+        },
+        "scene_generation": {
+            "always_include": [
+                "weather",
+                "time_of_day",
+                "ambient_sounds",
+                "lighting_conditions"
+            ],
+            "character_details": [
+                "current_emotion",
+                "visible_equipment",
+                "pose",
+                "any_injuries"
+            ],
+            "location_details": [
+                "nearby_objects",
+                "other_npcs_present",
+                "exits",
+                "cover_positions"
+            ],
+            "atmosphere": [
+                "dominant_colors",
+                "temperature",
+                "smells",
+                "overall_mood"
+            ]
+        },
+        "combat_flow": {
+            "initiative_order": "Determined by awareness + agility. Surprised characters act last.",
+            "action_economy": "One major action + one minor action per turn. Movement is minor.",
+            "cover_system": "Partial cover reduces hit chance by 30%. Full cover requires flanking.",
+            "injury_effects": "Each wound level reduces all checks by 10%. Critical wounds may disable limbs."
+        },
+        "social_flow": {
+            "trust_building": "Trust increases slowly (+0.05 per positive interaction) and drops fast (-0.2 per betrayal)",
+            "reputation_spread": "Witnesses spread information. Major actions become known city-wide within 100 ticks.",
+            "faction_reputation": "Actions against a faction affect reputation with all members"
+        }
     }
 }
