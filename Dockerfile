@@ -6,11 +6,10 @@ WORKDIR /app
 COPY demo/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project structure
+# Copy the project structure
 COPY api/ ./api/
 COPY data/ ./data/
 COPY demo/ ./demo/
-COPY assets/ ./demo/static/assets/
 
 # Copy hero image to static folder
 COPY assets/hero.png ./demo/static/hero.png
