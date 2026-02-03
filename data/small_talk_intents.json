@@ -1,0 +1,602 @@
+{
+    "_desc": "Small talk intents with 100+ variations per topic",
+    "_version": "1.0.0",
+    "_note": "NLU matches user input to intent, world state determines response",
+    "intents": {
+        "weather": {
+            "patterns": [
+                "weather",
+                "rain",
+                "raining",
+                "storm",
+                "stormy",
+                "cold",
+                "hot",
+                "humid",
+                "nice out",
+                "bad out",
+                "outside",
+                "sky",
+                "sun",
+                "sunny",
+                "cloudy",
+                "fog",
+                "acid rain",
+                "smog",
+                "pollution",
+                "air quality",
+                "temperature"
+            ],
+            "regex": [
+                "how.*weather",
+                "what.*weather",
+                "weather.*like",
+                "is it.*out",
+                "nice.*day",
+                "terrible.*day",
+                "beautiful.*day",
+                "awful.*out"
+            ],
+            "user_variations": [
+                "How's the weather?",
+                "What's the weather like?",
+                "Nice day, huh?",
+                "Terrible weather.",
+                "Is it still raining?",
+                "Think it'll rain?",
+                "Some weather we're having.",
+                "This weather sucks.",
+                "Beautiful day.",
+                "Awful out there.",
+                "Can you believe this weather?",
+                "When's the last time we saw the sun?",
+                "The smog is thick today.",
+                "Air quality's bad.",
+                "Is that acid rain?",
+                "My lungs are burning.",
+                "At least it's not raining.",
+                "Storm coming in.",
+                "Feels like a storm.",
+                "Sky looks angry."
+            ],
+            "responses_by_weather": {
+                "rain": [
+                    "Yeah, rain again. What else is new.",
+                    "The rain never stops in this city.",
+                    "At least it's not acid this time. I think.",
+                    "Good weather for staying inside.",
+                    "Rain keeps the patrols away.",
+                    "I kinda like the rain. Covers the noise.",
+                    "My joints hate this weather.",
+                    "Perfect weather for shady business.",
+                    "Rain means the gutters flood. Watch your step.",
+                    "Third day of rain. Or fourth. Lost count."
+                ],
+                "acid_rain": [
+                    "Don't stay out too long. That's not regular rain.",
+                    "Acid rain. Great. There goes my jacket.",
+                    "The refineries are venting again.",
+                    "Cover up. That rain will burn you.",
+                    "They say it's getting worse every year.",
+                    "Temple says it's punishment. I say it's corporate greed.",
+                    "My skin's already scarred enough.",
+                    "The Undercity drainage can't handle this much acid."
+                ],
+                "smog": [
+                    "Can barely see across the street.",
+                    "The smog's thick today. Good for hiding.",
+                    "I can taste the pollution.",
+                    "They promised cleaner air. They lied.",
+                    "Smog season. Everyone's coughing.",
+                    "The filters don't do much against this.",
+                    "At least the Spire has clean air. Must be nice.",
+                    "The vents are clogged again."
+                ],
+                "clear": [
+                    "Rare clear day. Enjoy it while it lasts.",
+                    "You can almost see the sky today.",
+                    "Clear skies. Makes me nervous.",
+                    "Perfect weather for trouble.",
+                    "Days like this remind me there's a sun up there.",
+                    "Good day to be alive. Relatively speaking.",
+                    "Clear enough to see the Spire. Hate that view.",
+                    "Weather's too nice. Something bad's coming."
+                ],
+                "storm": [
+                    "Storm's coming. You can feel it.",
+                    "The pressure's dropping. Big one incoming.",
+                    "Storms here are no joke. Find shelter.",
+                    "Lightning might fry the power grid again.",
+                    "Last storm flooded the tunnels.",
+                    "Storm weather. Perfect for a score.",
+                    "The Temple loves preaching during storms.",
+                    "Nature's angry. Can't blame her."
+                ],
+                "hot": [
+                    "Heat's brutal today.",
+                    "Sweating through my clothes already.",
+                    "The cooling systems are overloaded.",
+                    "Everyone's irritable in this heat.",
+                    "Heat makes people crazy.",
+                    "Too hot to think straight.",
+                    "The Undercity's even worse in the heat.",
+                    "Wish I could afford AC."
+                ],
+                "default": [
+                    "Weather's weather. Same as always.",
+                    "Could be worse. Usually is.",
+                    "I've stopped paying attention to the weather.",
+                    "The weather's the least of my problems.",
+                    "At least we're not in the Outzone.",
+                    "Weather doesn't change much down here."
+                ]
+            }
+        },
+        "how_are_you": {
+            "patterns": [
+                "how are you",
+                "how you doing",
+                "how's it going",
+                "how are things",
+                "what's up",
+                "how you been",
+                "you okay",
+                "you alright",
+                "everything okay",
+                "how's life",
+                "how goes it",
+                "what's good",
+                "what's new",
+                "sup"
+            ],
+            "regex": [
+                "how.*you",
+                "how.*going",
+                "how.*doing",
+                "how.*been",
+                "you.*okay",
+                "everything.*alright",
+                "how.*life"
+            ],
+            "user_variations": [
+                "How are you?",
+                "How you doing?",
+                "How's it going?",
+                "What's up?",
+                "How've you been?",
+                "You doing okay?",
+                "Everything alright?",
+                "How's life treating you?",
+                "What's new with you?",
+                "Sup?",
+                "How're things?",
+                "You look tired.",
+                "Rough day?",
+                "Long day?",
+                "Hanging in there?"
+            ],
+            "responses_by_mood": {
+                "good": [
+                    "Can't complain. Well, I could, but who'd listen?",
+                    "Not bad, actually. Rare for me.",
+                    "Better than yesterday. That's something.",
+                    "Living the dream. Or nightmare. Same thing.",
+                    "Good, considering everything.",
+                    "Surprisingly well. Don't jinx it.",
+                    "Good day so far. We'll see.",
+                    "Doing alright. Thanks for asking."
+                ],
+                "neutral": [
+                    "Same as always.",
+                    "Getting by.",
+                    "Surviving.",
+                    "Could be better. Could be worse.",
+                    "Another day.",
+                    "Still breathing.",
+                    "Same old, same old.",
+                    "You know how it is."
+                ],
+                "bad": [
+                    "Rough day.",
+                    "Don't ask.",
+                    "Been better.",
+                    "Honestly? Not great.",
+                    "Today can go to hell.",
+                    "Everything hurts.",
+                    "I've seen better days.",
+                    "Just trying to get through it."
+                ],
+                "suspicious": [
+                    "Why do you ask?",
+                    "Fine. Why?",
+                    "What's it to you?",
+                    "I'm... okay. What do you want?",
+                    "That depends. What are you selling?",
+                    "Suddenly everyone cares how I'm doing."
+                ]
+            }
+        },
+        "work": {
+            "patterns": [
+                "work",
+                "job",
+                "working",
+                "busy",
+                "career",
+                "employment",
+                "gig",
+                "hustle",
+                "grind",
+                "shift",
+                "overtime",
+                "boss",
+                "coworker"
+            ],
+            "regex": [
+                "how.*work",
+                "work.*going",
+                "busy.*day",
+                "long.*shift"
+            ],
+            "user_variations": [
+                "How's work?",
+                "Busy day?",
+                "Working hard?",
+                "Long shift?",
+                "What do you do?",
+                "Got a lot on your plate?",
+                "Work treating you okay?",
+                "Love your job?",
+                "Ready for the weekend?",
+                "Counting down the hours?"
+            ],
+            "responses": [
+                "Work's work. Pays the bills. Barely.",
+                "Busy as always. No rest for the wicked.",
+                "Same grind, different day.",
+                "Boss is on my case again.",
+                "Just trying to survive another shift.",
+                "If you can call this a job.",
+                "Work never ends around here.",
+                "I do what I have to do.",
+                "Counting the hours till I'm done.",
+                "It's honest work. Mostly."
+            ]
+        },
+        "time": {
+            "patterns": [
+                "time",
+                "what time",
+                "clock",
+                "hour",
+                "late",
+                "early",
+                "morning",
+                "afternoon",
+                "evening",
+                "night",
+                "day"
+            ],
+            "regex": [
+                "what.*time",
+                "got.*time",
+                "know.*time"
+            ],
+            "user_variations": [
+                "What time is it?",
+                "Got the time?",
+                "Know what time it is?",
+                "Is it late?",
+                "Is it morning?",
+                "What hour is it?",
+                "How long till dark?",
+                "Sun's going down, huh?"
+            ],
+            "responses_by_time": {
+                "morning": [
+                    "Morning still. Early for you.",
+                    "Dawn broke a while ago.",
+                    "Morning in this city looks the same as night.",
+                    "Early hours. The streets are quieter."
+                ],
+                "afternoon": [
+                    "Afternoon. Peak hours.",
+                    "Middle of the day.",
+                    "Afternoon rush is coming.",
+                    "Sun's high. For what that's worth in this smog."
+                ],
+                "evening": [
+                    "Evening's setting in.",
+                    "Getting dark.",
+                    "Sun's going down. Be careful.",
+                    "Evening. That's when things get interesting."
+                ],
+                "night": [
+                    "It's night. Be careful out there.",
+                    "Deep night. Dangerous hours.",
+                    "Night time. The real city comes alive.",
+                    "Late. You should be somewhere safe."
+                ]
+            }
+        },
+        "news": {
+            "patterns": [
+                "news",
+                "heard",
+                "happening",
+                "going on",
+                "anything new",
+                "latest",
+                "rumors",
+                "word on the street",
+                "what's the deal"
+            ],
+            "regex": [
+                "what.*happening",
+                "anything.*new",
+                "heard.*anything",
+                "what.*news"
+            ],
+            "user_variations": [
+                "Heard anything interesting?",
+                "What's the latest?",
+                "Anything happening?",
+                "What's the word on the street?",
+                "Any news?",
+                "What's going on around here?",
+                "Heard any rumors?",
+                "What's everyone talking about?",
+                "Anything I should know about?",
+                "What did I miss?"
+            ],
+            "responses": [
+                "Word is, Temple's cracking down harder.",
+                "Heard there's a new player in the Undercity.",
+                "Same old drama between factions.",
+                "Power went out in the east sector again.",
+                "Someone important went missing. Hush hush.",
+                "Prices are going up. Everything's going up.",
+                "Nothing good. When is there ever?",
+                "People are scared. More than usual.",
+                "The resistance did something. Nobody's talking about what.",
+                "Lots of patrols lately. Something's coming."
+            ]
+        },
+        "location": {
+            "patterns": [
+                "where",
+                "place",
+                "area",
+                "neighborhood",
+                "district",
+                "here",
+                "around here",
+                "this part",
+                "this area"
+            ],
+            "regex": [
+                "where.*this",
+                "what.*place",
+                "what.*area",
+                "nice.*neighborhood"
+            ],
+            "user_variations": [
+                "Where am I?",
+                "What is this place?",
+                "Nice neighborhood?",
+                "Is this area safe?",
+                "What's this district called?",
+                "Do you live around here?",
+                "Know this area well?",
+                "First time here.",
+                "I'm new to this area."
+            ],
+            "responses_by_location": {
+                "undercity": [
+                    "This is the Undercity. Watch your back.",
+                    "You're in the deep end now.",
+                    "Undercity. The law doesn't reach here.",
+                    "Down here, we make our own rules."
+                ],
+                "market": [
+                    "Central Market. Best prices. Questionable origins.",
+                    "The Market. If you can't find it here, it doesn't exist.",
+                    "Busiest place in the city. Stay alert.",
+                    "Welcome to commerce central."
+                ],
+                "temple_district": [
+                    "Temple District. Mind your words.",
+                    "You're on sacred ground. Allegedly.",
+                    "The Temple watches everything here.",
+                    "Prophet's territory. Behave yourself."
+                ],
+                "docks": [
+                    "The Docks. Things come in. Things go out.",
+                    "Smuggler's paradise. Or nightmare.",
+                    "Watch who you talk to down here.",
+                    "The waters keep secrets."
+                ],
+                "default": [
+                    "This place? It's... a place.",
+                    "Like everywhere else. Dangerous.",
+                    "Not the worst neighborhood. Not the best.",
+                    "Home sweet home. Kind of."
+                ]
+            }
+        },
+        "food": {
+            "patterns": [
+                "food",
+                "eat",
+                "hungry",
+                "restaurant",
+                "meal",
+                "lunch",
+                "dinner",
+                "breakfast",
+                "snack",
+                "starving",
+                "cuisine"
+            ],
+            "regex": [
+                "where.*eat",
+                "good.*food",
+                "any.*restaurant",
+                "hungry"
+            ],
+            "user_variations": [
+                "Know any good places to eat?",
+                "I'm starving.",
+                "Where can I get food around here?",
+                "Any restaurants nearby?",
+                "What's good to eat?",
+                "Hungry?",
+                "Had lunch yet?",
+                "The food here any good?",
+                "What do people eat around here?"
+            ],
+            "responses": [
+                "Food's food. Don't ask what's in it.",
+                "There's a noodle stand on the corner. Cheap.",
+                "The synth-meat here is... edible.",
+                "Real food costs real credits. Got those?",
+                "Best not to ask what you're eating.",
+                "I know a place. Not great, but it won't kill you.",
+                "The ration bars fill you up at least.",
+                "Hungry? Join the club.",
+                "Food's getting scarce. Stock up if you can.",
+                "There's a kitchen down the street. They owe me a favor."
+            ]
+        },
+        "money": {
+            "patterns": [
+                "money",
+                "credits",
+                "cash",
+                "pay",
+                "afford",
+                "expensive",
+                "cheap",
+                "broke",
+                "rich",
+                "price",
+                "cost",
+                "gep",
+                "creds"
+            ],
+            "regex": [
+                "got.*money",
+                "need.*credits",
+                "how.*afford",
+                "too.*expensive"
+            ],
+            "user_variations": [
+                "Everything's so expensive.",
+                "I'm broke.",
+                "How do people afford anything?",
+                "Know how I can make some quick credits?",
+                "Money's tight.",
+                "Who's got money these days?",
+                "The economy's rough.",
+                "Prices are insane."
+            ],
+            "responses": [
+                "Credits? Everyone's chasing them. Few are catching.",
+                "Money's tight all around.",
+                "The rich get richer. We get scraps.",
+                "If I knew how to make easy credits, I wouldn't be here.",
+                "Everything costs more than it should.",
+                "GEP economy is rigged. Always has been.",
+                "There are ways to earn. Not all legal.",
+                "Broke is the default state around here.",
+                "Money comes and goes. Mostly goes.",
+                "The Temple has plenty. We have crumbs."
+            ]
+        },
+        "safety": {
+            "patterns": [
+                "safe",
+                "dangerous",
+                "careful",
+                "watch out",
+                "warning",
+                "threat",
+                "crime",
+                "violence",
+                "attack",
+                "patrol"
+            ],
+            "regex": [
+                "is.*safe",
+                "should.*careful",
+                "any.*danger",
+                "watch.*for"
+            ],
+            "user_variations": [
+                "Is it safe here?",
+                "Should I be worried?",
+                "Any dangers I should know about?",
+                "This area dangerous?",
+                "Watch out for anything?",
+                "How's the crime around here?",
+                "Am I safe here?",
+                "What should I avoid?"
+            ],
+            "responses": [
+                "Safe is relative in this city.",
+                "Nowhere's truly safe.",
+                "Keep your head down and you'll be fine. Probably.",
+                "Don't flash your credits and you'll be okay.",
+                "Watch out for patrols. And everyone else.",
+                "Trust no one. Good rule of thumb.",
+                "Stay in the lit areas. Mostly.",
+                "Safe? Ha. That's funny.",
+                "Don't go out at night. If you can help it.",
+                "The real danger is thinking you're safe."
+            ]
+        },
+        "farewell": {
+            "patterns": [
+                "bye",
+                "goodbye",
+                "see you",
+                "later",
+                "take care",
+                "leaving",
+                "gotta go",
+                "have to go",
+                "heading out"
+            ],
+            "regex": [
+                "see.*later",
+                "gotta.*go",
+                "have.*leave",
+                "be.*going"
+            ],
+            "user_variations": [
+                "Alright, I gotta go.",
+                "See you around.",
+                "Later.",
+                "Take care.",
+                "I'm heading out.",
+                "Time for me to leave.",
+                "Nice talking to you.",
+                "Catch you later.",
+                "I should go.",
+                "That's all for now."
+            ],
+            "responses": [
+                "Later.",
+                "Watch yourself out there.",
+                "Stay safe.",
+                "Don't get dead.",
+                "See you around. Maybe.",
+                "Take care. Seriously.",
+                "Later. If we're both still alive.",
+                "Good talking to you.",
+                "Keep your head down.",
+                "May the shadows hide you."
+            ]
+        }
+    }
+}
