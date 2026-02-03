@@ -47,6 +47,18 @@ except Exception as e:
     print(f"⚠️ Vertex AI not available: {e}")
     print("   Running in mock mode with simple responses")
 
+# Imagen 3 for image generation
+HAS_IMAGEN = False
+imagen_model = None
+
+try:
+    from vertexai.preview.vision_models import ImageGenerationModel
+    imagen_model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")
+    HAS_IMAGEN = True
+    print("✅ Imagen 3 loaded for scene generation")
+except Exception as e:
+    print(f"⚠️ Imagen 3 not available: {e}")
+
 
 # ============================================================
 # ARWEAVE INTEGRATION
@@ -493,6 +505,192 @@ RULES:
 def get_tick(tick: int):
     """Get world state at tick."""
     return jsonify(get_tick_state(tick))
+
+
+# ============================================================
+# LOCATION STATE & SCENE VISUALIZATION
+# ============================================================
+
+def get_location_state(location_id: str, tick: int) -> dict:
+    """Get all NPCs at a specific location at a specific tick."""
+    tick_state = get_tick_state(tick)
+    npcs_here = []
+    
+    for npc_id in FOUNDING_NPCS:
+        state = get_npc_state(npc_id, tick)
+        if state and state["current_location"] == location_id:
+            npcs_here.append({
+                "npc_id": npc_id,
+                "name": state["name"],
+                "archetype": state["archetype"],
+                "mood": state["current_mood"],
+                "visual": FOUNDING_NPCS.get(npc_id, {}).get("visual_description", "")
+            })
+    
+    return {
+        "location": location_id,
+        "location_desc": LOCATIONS.get(location_id, "Unknown location"),
+        "npcs": npcs_here,
+        "npc_count": len(npcs_here),
+        "tick_state": tick_state
+    }
+
+
+@app.route("/api/location/<location_id>", methods=["GET"])
+def location_state(location_id: str):
+    """Get all NPCs at a location at a specific tick."""
+    tick = int(request.args.get("tick", 100))
+    state = get_location_state(location_id, tick)
+    return jsonify(state)
+
+
+@app.route("/api/locations", methods=["GET"])
+def list_locations():
+    """List all available locations."""
+    tick = int(request.args.get("tick", 100))
+    
+    locations_data = []
+    for loc_id, loc_desc in LOCATIONS.items():
+        loc_state = get_location_state(loc_id, tick)
+        locations_data.append({
+            "id": loc_id,
+            "description": loc_desc,
+            "npc_count": loc_state["npc_count"],
+            "npcs": [n["name"] for n in loc_state["npcs"]]
+        })
+    
+    return jsonify({
+        "locations": locations_data,
+        "tick": tick,
+        "total": len(locations_data)
+    })
+
+
+@app.route("/api/scene/generate", methods=["POST"])
+def generate_scene():
+    """Generate a visual scene description and optionally an image."""
+    data = request.json
+    location_id = data.get("location", "neon_bar")
+    tick = data.get("tick", 100)
+    generate_image = data.get("generate_image", False)
+    action = data.get("action", "")
+    
+    # Get location state with all NPCs
+    loc_state = get_location_state(location_id, tick)
+    tick_state = loc_state["tick_state"]
+    
+    # Build NPC descriptions
+    npc_descriptions = []
+    for npc in loc_state["npcs"]:
+        visual = npc.get("visual", "a figure in cyberpunk attire")
+        npc_descriptions.append(f"{npc['name']}: {visual}, currently {npc['mood']}")
+    
+    npcs_text = "\n".join(npc_descriptions) if npc_descriptions else "The location is empty."
+    
+    # Weather description
+    weather_desc = {
+        "clear": "Clear night sky, neon signs cutting through darkness",
+        "rain": "Rain slicks the streets, reflections everywhere",
+        "storm": "Thunder rumbles, lightning illuminates the skyline",
+        "fog": "Thick fog rolls through, obscuring everything"
+    }.get(tick_state["weather"], "Dark atmosphere")
+    
+    # Time description
+    hour = tick_state["hour"]
+    if 6 <= hour < 12:
+        time_desc = f"Morning, {hour}:00 - city still waking"
+    elif 12 <= hour < 18:
+        time_desc = f"Afternoon, {hour}:00 - shadowed even in daylight"
+    elif 18 <= hour < 22:
+        time_desc = f"Evening, {hour}:00 - neon awakening"
+    else:
+        time_desc = f"Night, {hour}:00 - the city's true face"
+    
+    # Generate scene description with LLM
+    scene_prompt = f"""Describe this Signal Noir cyberpunk scene in 3-4 vivid sentences:
+
+LOCATION: {loc_state["location_desc"]}
+WEATHER: {weather_desc}
+TIME: Day {tick_state["day"]}, {time_desc}
+
+CHARACTERS PRESENT:
+{npcs_text}
+
+{f"ACTION: {action}" if action else ""}
+
+Style: Batman: The Animated Series meets cyberpunk. High contrast, dark moody noir. 
+Describe what a viewer would see entering this scene. Mention specific characters by name.
+Keep it cinematic and atmospheric."""
+
+    description = ""
+    if HAS_VERTEX and model:
+        try:
+            response = model.generate_content(scene_prompt)
+            description = response.text.strip()
+        except Exception as e:
+            description = f"[Scene generation error: {e}]"
+    else:
+        description = f"*{loc_state['location_desc']}. {weather_desc}. {npcs_text}*"
+    
+    result = {
+        "location": location_id,
+        "location_desc": loc_state["location_desc"],
+        "tick": tick,
+        "day": tick_state["day"],
+        "hour": tick_state["hour"],
+        "weather": tick_state["weather"],
+        "npcs_present": [n["name"] for n in loc_state["npcs"]],
+        "description": description
+    }
+    
+    # Generate image if requested
+    if generate_image and HAS_IMAGEN and imagen_model:
+        # Build image prompt
+        npc_visuals = ", ".join([n.get("visual", n["name"]) for n in loc_state["npcs"][:3]])  # Max 3 NPCs
+        
+        image_prompt = f"""Signal Noir cyberpunk scene, Batman The Animated Series art style:
+
+{loc_state["location_desc"]} at {time_desc}.
+{weather_desc}.
+{f"Characters: {npc_visuals}" if npc_visuals else "Empty location."}
+
+MANDATORY STYLE:
+- 85% grayscale, high contrast noir
+- ONLY cyan (#00CED1) for neon/tech accents
+- Deep black shadows, art deco architecture
+- Cinematic composition, dramatic lighting
+- NO bright colors except cyan
+"""
+        
+        try:
+            images = imagen_model.generate_images(
+                prompt=image_prompt,
+                number_of_images=1,
+                aspect_ratio="16:9",
+                safety_filter_level="block_only_high"
+            )
+            
+            if images.images:
+                # Return base64 encoded image
+                import io
+                img_bytes = images.images[0]._pil_image
+                buffered = io.BytesIO()
+                img_bytes.save(buffered, format="PNG")
+                img_b64 = base64.b64encode(buffered.getvalue()).decode()
+                result["image_base64"] = img_b64
+                result["image_generated"] = True
+            else:
+                result["image_generated"] = False
+                result["image_error"] = "No image generated"
+        except Exception as e:
+            result["image_generated"] = False
+            result["image_error"] = str(e)
+    else:
+        result["image_generated"] = False
+        if generate_image and not HAS_IMAGEN:
+            result["image_error"] = "Imagen 3 not available"
+    
+    return jsonify(result)
 
 
 # ============================================================
