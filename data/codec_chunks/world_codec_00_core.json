@@ -7,6 +7,76 @@
         "prev_chunk": null,
         "next_chunk": "chunk_01_npcs"
     },
+    "lifespan": {
+        "_desc": "Human lifespan dramatically extended through technology",
+        "base_lifespan_years": 250,
+        "max_lifespan_years": 500,
+        "aging_rate": 0.4,
+        "_note": "Humans age at 40% normal rate due to medical advances",
+        "extension_methods": {
+            "cybernetics": {
+                "desc": "Replacing organs/limbs with synthetic parts",
+                "lifespan_bonus_years": 50,
+                "max_replacements": 0.8,
+                "_note": "Can replace up to 80% of body"
+            },
+            "lab_grown_parts": {
+                "desc": "Cloned biological organs grown in labs",
+                "lifespan_bonus_years": 75,
+                "rejection_risk": 0.05,
+                "_note": "Near-perfect biological compatibility"
+            },
+            "genetic_mods": {
+                "desc": "Telomere extension and cellular repair genes",
+                "lifespan_bonus_years": 100,
+                "mutation_risk": 0.10,
+                "_note": "Can cause unexpected mutations"
+            },
+            "mutant_regeneration": {
+                "desc": "Some mutants can regrow body parts naturally",
+                "lifespan_bonus_years": 150,
+                "occurrence_rate": 0.02,
+                "_note": "Only 2% of population has this trait"
+            },
+            "echo_preservation": {
+                "desc": "Consciousness stored in Echo layer",
+                "lifespan_bonus_years": 999,
+                "_note": "Theoretical immortality, rare and dangerous"
+            }
+        },
+        "age_stages": {
+            "child": {
+                "min": 0,
+                "max": 18,
+                "labor": false
+            },
+            "young_adult": {
+                "min": 18,
+                "max": 50,
+                "prime": true
+            },
+            "adult": {
+                "min": 50,
+                "max": 120,
+                "prime": true
+            },
+            "mature": {
+                "min": 120,
+                "max": 200,
+                "wisdom_bonus": 0.3
+            },
+            "elder": {
+                "min": 200,
+                "max": 350,
+                "wisdom_bonus": 0.5
+            },
+            "ancient": {
+                "min": 350,
+                "max": 500,
+                "rare": true
+            }
+        }
+    },
     "actions": {
         "_desc": "All possible actions (200 unique)",
         "_encoding": "A### where ### is 001-200",
