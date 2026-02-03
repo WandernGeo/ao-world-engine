@@ -14,6 +14,23 @@
 
 ---
 
+## 🎮 Live Demo - Talk to NPCs Now!
+
+**[▶ Test the NPC Chat](https://reecho-demo-1071951656531.us-central1.run.app)**
+
+Chat with RE:ECHO City's founding NPCs and see how they think, remember, and react on any given day.
+
+| What to Test | Description |
+|--------------|-------------|
+| 🧠 **NPC Memory** | Ask Charlie about his holographic arm - he always remembers |
+| 🔗 **Relationships** | Ask about other characters - NPCs know who they trust |
+| ⏰ **Tick Time** | Change the tick to see different days/weather/moods |
+| 🎭 **Consistency** | Same questions, same tick = consistent answers |
+
+> **What's a Tick?** A tick is one unit of simulation time. Day = tick ÷ 24, Hour = tick % 24. At tick 100, it's Day 5 at 4:00 AM. Every NPC's location, mood, and the weather are deterministically calculated from the tick.
+
+---
+
 ## What Is This?
 
 AO World Engine is an **open source simulation framework** for building persistent, decentralized worlds on [Arweave](https://arweave.org) and [AO](https://ao.arweave.dev).
