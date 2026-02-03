@@ -193,6 +193,20 @@ This protects the community while allowing you to build proprietary worlds **on 
 
 ---
 
+## 📚 Documentation
+
+| Doc | What It Covers |
+|-----|----------------|
+| [LOCAL_SETUP.md](./docs/LOCAL_SETUP.md) | **Run locally with local data** - no cloud needed |
+| [API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md) | Full API reference |
+| [SIMULATION_SYSTEM.md](./docs/SIMULATION_SYSTEM.md) | How NPC schedules, moods, hobbies work |
+| [AI_NPC_SYSTEM.md](./docs/AI_NPC_SYSTEM.md) | LLM chat integration |
+| [BUILDING_YOUR_WORLD.md](./docs/BUILDING_YOUR_WORLD.md) | Create your own world |
+| [ARWEAVE_TRANSACTION_LOG.md](./docs/ARWEAVE_TRANSACTION_LOG.md) | Arweave upload history |
+| [WHITEPAPER.md](./docs/WHITEPAPER.md) | Full technical vision |
+
+---
+
 ## Links
 
 - [AO Cookbook](https://cookbook.ao.arweave.dev/)
