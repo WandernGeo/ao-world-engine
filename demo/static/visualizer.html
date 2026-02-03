@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AO World Engine - Neon Heights Visualizer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(25, 25, 35, 0.9);
+            --accent-cyan: #00ffff;
+            --accent-magenta: #ff00ff;
+            --accent-gold: #ffd700;
+            --accent-green: #00ff88;
+            --accent-red: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #888899;
+            --border-glow: rgba(0, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4em;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--accent-cyan);
+        }
+
+        .time-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2em;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* Main Canvas */
+        #canvas {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: calc(100% - 280px);
+            height: calc(100% - 140px);
+            background: var(--bg-primary);
+        }
+
+        /* Right Panel */
+        .panel {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 280px;
+            bottom: 80px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-glow);
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .panel h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85em;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 500;
+            color: var(--accent-gold);
+        }
+
+        .npc-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .npc-item {
+            padding: 8px;
+            margin: 4px 0;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-cyan);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .npc-item:hover {
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateX(3px);
+        }
+
+        .npc-item.resistance {
+            border-left-color: var(--accent-magenta);
+        }
+
+        .npc-item.temple {
+            border-left-color: var(--accent-gold);
+        }
+
+        .npc-item.criminal {
+            border-left-color: var(--accent-red);
+        }
+
+        .npc-name {
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .npc-info {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        /* Bottom Controls */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-label {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        button {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 10px 20px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 20px var(--accent-cyan);
+        }
+
+        button.active {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        input[type="range"] {
+            width: 150px;
+            accent-color: var(--accent-cyan);
+        }
+
+        select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glow);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            font-family: 'Roboto', sans-serif;
+            border-radius: 4px;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-cyan);
+            padding: 10px 15px;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 200;
+            max-width: 250px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            display: none;
+        }
+
+        .tooltip h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .tooltip p {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8em;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-glow);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-cyan);
+        }
+
+        /* Building popup */
+        .building-popup {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 150;
+            min-width: 200px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            display: none;
+        }
+
+        .building-popup h4 {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        /* NPC Profile Popup */
+        .npc-profile {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 300px;
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.95), rgba(10, 10, 15, 0.98));
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 200;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            display: none;
+        }
+
+        .npc-profile.visible {
+            display: block;
+        }
+
+        .npc-profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .npc-profile-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: var(--accent-cyan);
+            margin: 0;
+        }
+
+        .npc-profile-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .npc-profile-close:hover {
+            color: #ff4444;
+        }
+
+        .npc-profile-faction {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .npc-profile-section {
+            margin-bottom: 15px;
+        }
+
+        .npc-profile-section h4 {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .npc-profile-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9em;
+        }
+
+        .npc-profile-stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .npc-location-history {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .npc-location-history li {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .npc-location-history li span:first-child::before {
+            content: "→ ";
+            color: var(--accent-cyan);
+        }
+
+        .mood-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.8em;
+        }
+
+        .mood-happy {
+            background: rgba(63, 185, 80, 0.3);
+            color: #3fb950;
+        }
+
+        .mood-neutral {
+            background: rgba(136, 136, 136, 0.3);
+            color: #888;
+        }
+
+        .mood-stressed {
+            background: rgba(248, 81, 73, 0.3);
+            color: #f85149;
+        }
+
+        .mood-peaceful {
+            background: rgba(88, 166, 255, 0.3);
+            color: #58a6ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">LOADING NEON HEIGHTS...</div>
+    </div>
+
+    <div class="header">
+        <div class="logo"><a href="/"
+                style="text-decoration: none; background: inherit; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">RE:ECHO
+                CITY</a></div>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <a href="/" style="color: #667788; text-decoration: none; font-size: 0.85em;">🏠 Home</a>
+            <a href="/explore" style="color: #00ffff; text-decoration: none; font-size: 0.85em;">🗺️ Explore</a>
+            <a href="/chat" style="color: #667788; text-decoration: none; font-size: 0.85em;">💬 Chat</a>
+            <a href="https://github.com/WandernGeo/ao-world-engine/tree/main/docs" target="_blank"
+                style="color: #667788; text-decoration: none; font-size: 0.85em;">📚 Docs</a>
+        </div>
+        <div class="time-display" id="time-display">DAY 1 • T01 00:00</div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #00ffff"></div> Civilian
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff00ff"></div> Resistance
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ffd700"></div> Temple
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #ff4444"></div> Criminal
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="panel">
+        <h3>📊 SIMULATION STATS</h3>
+        <div id="stats">
+            <div class="stat-row">
+                <span class="stat-label">Total NPCs</span>
+                <span class="stat-value" id="stat-npcs">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Buildings</span>
+                <span class="stat-value" id="stat-buildings">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Current Tick</span>
+                <span class="stat-value" id="stat-tick">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Events</span>
+                <span class="stat-value" id="stat-events">0</span>
+            </div>
+        </div>
+        <!-- Building Info Section -->
+        <div id="building-info"
+            style="display: none; margin-top: 20px; padding: 15px; background: rgba(0,255,255,0.1); border-radius: 8px; border: 1px solid rgba(0,255,255,0.3);">
+            <h3 style="margin: 0 0 10px 0; color: #ffd700;">🏛️ <span id="building-name">Building</span></h3>
+            <div id="building-desc" style="font-size: 0.9em; color: #aaa; margin-bottom: 10px;"></div>
+            <div class="stat-row">
+                <span class="stat-label">Type</span>
+                <span class="stat-value" id="building-type">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Occupants</span>
+                <span class="stat-value" id="building-occupants">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Block</span>
+                <span class="stat-value" id="building-block">-</span>
+            </div>
+
+            <!-- Occupant Activities List -->
+            <div style="margin-top: 15px; max-height: 200px; overflow-y: auto;">
+                <h4 style="font-size: 0.85em; color: #888; margin-bottom: 8px;">👥 Who's Here & What They're Doing</h4>
+                <div id="building-occupant-list" style="font-size: 0.85em;"></div>
+            </div>
+
+            <button onclick="viewBuildingBlueprint()"
+                style="margin-top: 10px; padding: 8px 16px; background: linear-gradient(135deg, #00ffff33, #00888833); border: 1px solid #00ffff; color: #00ffff; border-radius: 6px; cursor: pointer; width: 100%;">
+                🗺️ View Blueprint
+            </button>
+        </div>
+
+        <h3 style="margin-top: 20px;">📍 LOCATION: <span id="current-location">Overview</span></h3>
+        <div id="location-stats"></div>
+
+        <h3 style="margin-top: 20px;">👥 NPCs AT LOCATION</h3>
+        <div class="npc-list" id="npc-list"></div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <button id="btn-play">▶ PLAY</button>
+            <button id="btn-step">⏭ STEP</button>
+            <button id="btn-reset">⏮ RESET</button>
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Speed</span>
+            <input type="range" id="speed" min="1" max="10" value="5">
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">View</span>
+            <select id="view-mode">
+                <option value="district">District Overview</option>
+                <option value="building">Building View</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <span class="control-label">Building</span>
+            <select id="building-select">
+                <option value="">Select building...</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <button id="btn-labels">🏷 LABELS</button>
+            <button id="btn-export">📸 CAPTURE</button>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+    <div class="building-popup" id="building-popup"></div>
+
+    <!-- NPC Profile Popup -->
+    <div class="npc-profile" id="npc-profile">
+        <div class="npc-profile-header">
+            <h3 class="npc-profile-name" id="profile-name">NPC Name</h3>
+            <button class="npc-profile-close" onclick="closeNpcProfile()">×</button>
+        </div>
+        <span class="npc-profile-faction" id="profile-faction">Faction</span>
+
+        <div class="npc-profile-section">
+            <h4>📊 Current Status</h4>
+            <div class="npc-profile-stat">
+                <span class="stat-label">Activity</span>
+                <span class="stat-value" id="profile-activity">-</span>
+            </div>
+            <div class="npc-profile-stat">
+                <span class="stat-label">Location</span>
+                <span class="stat-value" id="profile-location">-</span>
+            </div>
+            <div class="npc-profile-stat">
+                <span class="stat-label">Mood</span>
+                <span class="stat-value" id="profile-mood">-</span>
+            </div>
+            <div class="npc-profile-stat">
+                <span class="stat-label">Archetype</span>
+                <span class="stat-value" id="profile-archetype">-</span>
+            </div>
+        </div>
+
+        <div class="npc-profile-section">
+            <h4>📍 Location History</h4>
+            <ul class="npc-location-history" id="profile-history">
+                <li><span>Loading...</span></li>
+            </ul>
+        </div>
+
+        <div class="npc-profile-section" id="profile-record-section" style="display:none;">
+            <h4>⚠️ Criminal Record</h4>
+            <div id="profile-record">None</div>
+        </div>
+
+        <button id="track-btn" onclick="toggleTrackNpc()"
+            style="margin-top: 10px; padding: 10px 16px; background: linear-gradient(135deg, #ff00ff33, #88008833); border: 1px solid #ff00ff; color: #ff00ff; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;">
+            🎯 Track This NPC
+        </button>
+    </div>
+
+    <script>
+        // =============================================================================
+        // STATE
+        // =============================================================================
+        const API_BASE = "http://localhost:8081";
+
+        const state = {
+            tick: 0,
+            playing: false,
+            speed: 5,
+            viewMode: "district",
+            currentBuilding: null,
+            showLabels: true,
+            npcs: [],
+            buildings: [],
+            simulation: null,
+            hoveredNpc: null,
+            selectedNpc: null,
+            selectedBuilding: null,
+            trackedNpc: null,           // NPC being tracked/followed
+            trackingHistory: [],        // Location history for tracked NPC
+            camera: { x: 0, y: 0, zoom: 1 },
+            dragging: false,
+            lastMouse: { x: 0, y: 0 }
+        };
+
+        // District layout (6 blocks, 3x2 grid)
+        const DISTRICT = {
+            width: 1200,
+            height: 800,
+            blocks: [
+                { id: 1, x: 0, y: 0, w: 400, h: 400, name: "Block A" },
+                { id: 2, x: 400, y: 0, w: 400, h: 400, name: "Block B" },
+                { id: 3, x: 800, y: 0, w: 400, h: 400, name: "Block C" },
+                { id: 4, x: 0, y: 400, w: 400, h: 400, name: "Block D" },
+                { id: 5, x: 400, y: 400, w: 400, h: 400, name: "Block E" },
+                { id: 6, x: 800, y: 400, w: 400, h: 400, name: "Block F" },
+            ]
+        };
+
+        const FACTION_COLORS = {
+            civilian: "#00ffff",
+            resistance: "#ff00ff",
+            temple: "#ffd700",
+            criminal: "#ff4444",
+            corporate: "#00ff88"
+        };
+
+        const BUILDING_COLORS = {
+            residential: "#334455",
+            commercial: "#445566",
+            entertainment: "#554477",
+            industrial: "#556644",
+            temple: "#665544",
+            corporate: "#446655"
+        };
+
+        // Building type descriptions for tooltips
+        const BUILDING_INFO = {
+            residential: {
+                icon: "🏠",
+                label: "Residential",
+                desc: "Housing units for district residents"
+            },
+            commercial: {
+                icon: "🏪",
+                label: "Commercial",
+                desc: "Shops, markets, and retail spaces"
+            },
+            entertainment: {
+                icon: "🎭",
+                label: "Entertainment",
+                desc: "Bars, clubs, and recreation venues"
+            },
+            industrial: {
+                icon: "🏭",
+                label: "Industrial",
+                desc: "Factories and maintenance facilities"
+            },
+            temple: {
+                icon: "⛩️",
+                label: "Temple",
+                desc: "Spiritual center and community hub"
+            },
+            corporate: {
+                icon: "🏢",
+                label: "Corporate",
+                desc: "Office buildings and business centers"
+            },
+            government: {
+                icon: "🏛️",
+                label: "Government",
+                desc: "Admin offices and citizen services"
+            },
+            medical: {
+                icon: "🏥",
+                label: "Medical",
+                desc: "Clinics and medical facilities"
+            }
+        };
+
+        // Translate building names to readable descriptions
+        function getBuildingDescription(building) {
+            const nameMap = {
+                "Citizen Processing": "Government Services Center - ID cards, permits, registrations",
+                "Maintenance Tunnel": "Underground Access - Utilities and infrastructure",
+                "Neon Arcade": "Entertainment Hub - Games, VR, social gathering",
+                "Night Market": "Street Market - Food vendors, traders, black market goods",
+                "Jade Tower": "Residential High-Rise - Mixed income apartments",
+                "Circuit Breakers": "Tech Bar - Hacker hangout, encrypted meetups",
+                "Rust & Redemption": "Repair Shop - Vehicles and cybernetics",
+                "The Pulse": "Nightclub - Music, drinks, underground events"
+            };
+            // Try exact match first
+            if (nameMap[building.name]) return nameMap[building.name];
+            // Otherwise use type info
+            const info = BUILDING_INFO[building.type] || BUILDING_INFO.residential;
+            return `${info.label} - ${info.desc}`;
+        }
+
+        // =============================================================================
+        // CANVAS SETUP
+        // =============================================================================
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            canvas.style.width = rect.width + "px";
+            canvas.style.height = rect.height + "px";
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+
+        // =============================================================================
+        // API CALLS
+        // =============================================================================
+        async function fetchJSON(endpoint, params = {}) {
+            const url = new URL(API_BASE + endpoint);
+            Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+            const response = await fetch(url);
+            return response.json();
+        }
+
+        async function loadInitialData() {
+            try {
+                const [stats, buildings, npcs] = await Promise.all([
+                    fetchJSON("/api/stats"),
+                    fetchJSON("/api/buildings"),
+                    fetchJSON("/api/npcs", { limit: 500 })
+                ]);
+
+                state.buildings = buildings.buildings || [];
+                state.npcs = npcs.npcs || [];
+
+                document.getElementById("stat-npcs").textContent = stats.total_npcs;
+                document.getElementById("stat-buildings").textContent = stats.total_buildings;
+
+                // Populate building selector
+                const select = document.getElementById("building-select");
+                state.buildings.forEach(b => {
+                    const opt = document.createElement("option");
+                    opt.value = b.id;
+                    opt.textContent = `${b.id}: ${b.name}`;
+                    select.appendChild(opt);
+                });
+
+                // Assign building positions
+                assignBuildingPositions();
+
+                document.getElementById("loading").classList.add("hidden");
+                await updateSimulation();
+                draw();
+            } catch (err) {
+                console.error("Failed to load data:", err);
+                document.querySelector(".loading-text").textContent = "ERROR: API not running";
+            }
+        }
+
+        async function updateSimulation() {
+            try {
+                state.simulation = await fetchJSON("/api/simulation/tick", { tick: state.tick });
+
+                document.getElementById("stat-tick").textContent = state.tick;
+                document.getElementById("stat-events").textContent = state.simulation.events?.length || 0;
+
+                const time = state.simulation.time || {};
+                document.getElementById("time-display").textContent =
+                    `DAY ${time.day || 1} • ${time.period || "T01"} ${time.hour || "00"}:00`;
+
+                // Update NPC states
+                await updateNpcStates();
+                updateNpcList();
+            } catch (err) {
+                console.error("Failed to update simulation:", err);
+            }
+        }
+
+        async function updateNpcStates() {
+            // Get NPCs at current location
+            const location = state.currentBuilding || "B001";
+            try {
+                const data = await fetchJSON(`/api/npcs/at/${location}`, { tick: state.tick });
+                state.npcsAtLocation = data.npcs || [];
+            } catch {
+                state.npcsAtLocation = [];
+            }
+        }
+
+        // =============================================================================
+        // POSITIONING
+        // =============================================================================
+        function assignBuildingPositions() {
+            state.buildings.forEach((building, i) => {
+                const blockIndex = parseInt(building.id.replace("B", "")) % 6;
+                const block = DISTRICT.blocks[blockIndex];
+
+                const buildingsPerBlock = 3;
+                const posInBlock = i % buildingsPerBlock;
+
+                building.x = block.x + 50 + (posInBlock % 3) * 120;
+                building.y = block.y + 50 + Math.floor(posInBlock / 3) * 120;
+                building.w = 100;
+                building.h = 80;
+            });
+        }
+
+        function getNpcPosition(npc, index) {
+            // Find the building
+            const building = state.buildings.find(b => b.id === npc.location);
+            if (!building) {
+                // Random position based on NPC ID hash
+                const hash = npc.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+                return {
+                    x: 100 + (hash * 13) % (DISTRICT.width - 200),
+                    y: 100 + (hash * 17) % (DISTRICT.height - 200)
+                };
+            }
+
+            // Position around building
+            const spread = 30;
+            const angle = (index * 0.618033988749895) * Math.PI * 2;
+            const radius = 10 + (index % 5) * 8;
+
+            return {
+                x: building.x + building.w / 2 + Math.cos(angle) * radius,
+                y: building.y + building.h / 2 + Math.sin(angle) * radius
+            };
+        }
+
+        // =============================================================================
+        // DRAWING
+        // =============================================================================
+        function draw() {
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+
+            // Clear
+            ctx.fillStyle = "#0a0a0f";
+            ctx.fillRect(0, 0, width, height);
+
+            // Apply camera transform
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(state.camera.zoom, state.camera.zoom);
+            ctx.translate(-DISTRICT.width / 2 + state.camera.x, -DISTRICT.height / 2 + state.camera.y);
+
+            // Draw grid
+            drawGrid();
+
+            // Draw blocks
+            drawBlocks();
+
+            // Draw buildings
+            drawBuildings();
+
+            // Draw NPCs
+            drawNpcs();
+
+            ctx.restore();
+
+            // Draw UI overlay
+            drawOverlay(width, height);
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = "rgba(0, 255, 255, 0.1)";
+            ctx.lineWidth = 0.5;
+
+            for (let x = 0; x <= DISTRICT.width; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, DISTRICT.height);
+                ctx.stroke();
+            }
+
+            for (let y = 0; y <= DISTRICT.height; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(DISTRICT.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawBlocks() {
+            DISTRICT.blocks.forEach(block => {
+                ctx.fillStyle = "rgba(20, 20, 30, 0.8)";
+                ctx.fillRect(block.x, block.y, block.w, block.h);
+
+                ctx.strokeStyle = "rgba(0, 255, 255, 0.3)";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(block.x, block.y, block.w, block.h);
+
+                // Block label
+                ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
+                ctx.font = "bold 14px Orbitron";
+                ctx.fillText(block.name, block.x + 10, block.y + 25);
+            });
+        }
+
+        function drawBuildings() {
+            state.buildings.forEach(building => {
+                const isSelected = state.currentBuilding === building.id;
+                const color = BUILDING_COLORS[building.type] || "#334455";
+
+                // Building shadow
+                ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                ctx.fillRect(building.x + 4, building.y + 4, building.w, building.h);
+
+                // Building
+                ctx.fillStyle = color;
+                ctx.fillRect(building.x, building.y, building.w, building.h);
+
+                // Border
+                ctx.strokeStyle = isSelected ? "#ffd700" : "rgba(255, 255, 255, 0.3)";
+                ctx.lineWidth = isSelected ? 2 : 1;
+                ctx.strokeRect(building.x, building.y, building.w, building.h);
+
+                // Building label
+                if (state.showLabels) {
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "10px Roboto";
+                    ctx.fillText(building.id, building.x + 5, building.y + 15);
+
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                    ctx.font = "8px Roboto";
+                    const name = building.name?.substring(0, 15) || building.type;
+                    ctx.fillText(name, building.x + 5, building.y + 26);
+                }
+
+                // NPC count indicator
+                const npcCount = state.simulation?.location_summary?.[building.id] || 0;
+                if (npcCount > 0) {
+                    ctx.fillStyle = "#00ffff";
+                    ctx.font = "bold 11px Orbitron";
+                    ctx.fillText(`${npcCount}`, building.x + building.w - 20, building.y + 15);
+                }
+            });
+        }
+
+        function drawNpcs() {
+            // Get all NPCs with their current locations
+            const npcsByLocation = {};
+            state.npcs.forEach(npc => {
+                const loc = npc.home;  // Use home as default location
+                if (!npcsByLocation[loc]) npcsByLocation[loc] = [];
+                npcsByLocation[loc].push(npc);
+            });
+
+            // Draw based on simulation state
+            const locSummary = state.simulation?.location_summary || {};
+
+            let npcIndex = 0;
+            Object.keys(locSummary).forEach(loc => {
+                const count = locSummary[loc];
+                const building = state.buildings.find(b => b.id === loc);
+                if (!building) return;
+
+                for (let i = 0; i < Math.min(count, 20); i++) {  // Cap at 20 visible per building
+                    const npc = state.npcs[npcIndex % state.npcs.length];
+                    npcIndex++;
+
+                    const pos = getNpcPosition({ ...npc, location: loc }, i);
+                    const color = FACTION_COLORS[npc.faction] || "#00ffff";
+                    const isHovered = state.hoveredNpc?.id === npc.id;
+                    const isSelected = state.selectedNpc?.id === npc.id;
+                    const isTracked = state.trackedNpc?.id === npc.id;
+
+                    // NPC dot (larger for tracked)
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, isTracked ? 7 : (isHovered || isSelected ? 5 : 3), 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+
+                    // Tracking ring (pulsing effect)
+                    if (isTracked) {
+                        const pulse = 8 + Math.sin(Date.now() / 200) * 3;
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, pulse, 0, Math.PI * 2);
+                        ctx.strokeStyle = "#ff00ff";
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+
+                        // Outer glow
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, pulse + 5, 0, Math.PI * 2);
+                        ctx.strokeStyle = "rgba(255, 0, 255, 0.3)";
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+
+                    // Glow effect
+                    if (isHovered || isSelected) {
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, 8, 0, Math.PI * 2);
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+
+                    // Label (always show for tracked)
+                    if (state.showLabels && (isTracked || isHovered || isSelected || i < 5)) {
+                        ctx.fillStyle = isTracked ? "#ff00ff" : color;
+                        ctx.font = isTracked ? "bold 11px Roboto" : "9px Roboto";
+                        const name = npc.name?.split(" ")[0] || npc.id;
+                        ctx.fillText(name, pos.x + 6, pos.y + 3);
+                    }
+                }
+            });
+        }
+
+        function drawOverlay(width, height) {
+            // Mini-map (bottom left corner)
+            const mapSize = 120;
+            const mapX = 10;
+            const mapY = height - mapSize - 10;
+
+            ctx.fillStyle = "rgba(10, 10, 15, 0.8)";
+            ctx.fillRect(mapX, mapY, mapSize, mapSize);
+            ctx.strokeStyle = "rgba(0, 255, 255, 0.5)";
+            ctx.strokeRect(mapX, mapY, mapSize, mapSize);
+
+            // Mini blocks
+            const scale = mapSize / DISTRICT.width;
+            DISTRICT.blocks.forEach(block => {
+                ctx.fillStyle = "rgba(0, 255, 255, 0.2)";
+                ctx.fillRect(
+                    mapX + block.x * scale,
+                    mapY + block.y * scale * (DISTRICT.height / DISTRICT.width),
+                    block.w * scale,
+                    block.h * scale * (DISTRICT.height / DISTRICT.width)
+                );
+            });
+        }
+
+        // =============================================================================
+        // UI UPDATES
+        // =============================================================================
+        function updateNpcList() {
+            const list = document.getElementById("npc-list");
+            const npcs = state.npcsAtLocation || state.npcs.slice(0, 20);
+
+            list.innerHTML = npcs.slice(0, 30).map(npc => {
+                const npcId = npc.id || npc.npc_id;  // Handle both field names
+                return `
+                <div class="npc-item ${npc.faction}" data-id="${npcId}">
+                    <div class="npc-name">${npc.name}</div>
+                    <div class="npc-info">${npc.archetype} • ${npc.faction}</div>
+                    <div class="npc-info">${npc.activity || "idle"} @ ${npc.location || npc.home}</div>
+                </div>
+            `}).join("");
+
+            // Click handlers
+            list.querySelectorAll(".npc-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    const npcId = item.dataset.id;
+                    const npc = state.npcs.find(n => (n.id || n.npc_id) === npcId);
+                    if (npc) selectNpc(npc);
+                });
+            });
+
+            document.getElementById("current-location").textContent =
+                state.currentBuilding || "District Overview";
+        }
+
+        async function selectNpc(npc) {
+            state.selectedNpc = npc;
+            console.log("Selected NPC:", npc);
+            draw();
+
+            // Show profile popup
+            const profile = document.getElementById("npc-profile");
+            profile.classList.add("visible");
+
+            // Update basic info
+            document.getElementById("profile-name").textContent = npc.name;
+            document.getElementById("profile-archetype").textContent = npc.archetype || "Unknown";
+
+            // Faction badge with color
+            const factionEl = document.getElementById("profile-faction");
+            factionEl.textContent = npc.faction || "civilian";
+            const factionColors = {
+                civilian: "#00ffff",
+                resistance: "#ff00ff",
+                temple: "#ffd700",
+                criminal: "#ff4444"
+            };
+            factionEl.style.background = `${factionColors[npc.faction] || factionColors.civilian}33`;
+            factionEl.style.color = factionColors[npc.faction] || factionColors.civilian;
+
+            // Fetch current state from API
+            try {
+                const res = await fetch(`${API_BASE}/api/npcs/${npc.id}/state?tick=${state.tick}`);
+                const npcState = await res.json();
+
+                document.getElementById("profile-activity").textContent = npcState.activity || "idle";
+                document.getElementById("profile-location").textContent = npcState.location || npc.home;
+
+                // Mood with styling
+                const moodEl = document.getElementById("profile-mood");
+                const mood = npcState.mood || "neutral";
+                moodEl.innerHTML = `<span class="mood-indicator mood-${mood}">${mood}</span>`;
+
+                // Location history (simulate for now - would come from API)
+                const historyEl = document.getElementById("profile-history");
+                const periods = ["Deep Night", "Pre-Dawn", "Morning Rush", "Work Hours", "Midday"];
+                const locations = [npcState.location || npc.home, npc.home, "B002", npc.home, "B005"];
+                historyEl.innerHTML = periods.slice(0, 5).map((p, i) =>
+                    `<li><span>${locations[i % locations.length]}</span><span>${p}</span></li>`
+                ).join("");
+
+            } catch (e) {
+                console.error("Failed to fetch NPC state:", e);
+                document.getElementById("profile-activity").textContent = "API Error";
+            }
+        }
+
+        function closeNpcProfile() {
+            document.getElementById("npc-profile").classList.remove("visible");
+            state.selectedNpc = null;
+            draw();
+        }
+
+        function toggleTrackNpc() {
+            const btn = document.getElementById("track-btn");
+
+            if (state.trackedNpc?.id === state.selectedNpc?.id) {
+                // Stop tracking
+                state.trackedNpc = null;
+                state.trackingHistory = [];
+                btn.textContent = "🎯 Track This NPC";
+                btn.style.borderColor = "#ff00ff";
+                btn.style.color = "#ff00ff";
+            } else {
+                // Start tracking
+                state.trackedNpc = state.selectedNpc;
+                state.trackingHistory = [{
+                    tick: state.tick,
+                    location: state.selectedNpc?.home || "Unknown"
+                }];
+                btn.textContent = "🔴 TRACKING - Click to Stop";
+                btn.style.borderColor = "#ff4444";
+                btn.style.color = "#ff4444";
+
+                // Focus on NPC
+                focusOnNpc(state.trackedNpc);
+            }
+            draw();
+        }
+
+        function focusOnNpc(npc) {
+            if (!npc) return;
+
+            // Find NPC position
+            const locSummary = state.simulation?.location_summary || {};
+            let npcIndex = 0;
+
+            for (const loc of Object.keys(locSummary)) {
+                const count = locSummary[loc];
+                const building = state.buildings.find(b => b.id === loc);
+                if (!building) continue;
+
+                for (let i = 0; i < Math.min(count, 20); i++) {
+                    const checkNpc = state.npcs[npcIndex % state.npcs.length];
+                    npcIndex++;
+
+                    if ((checkNpc.id || checkNpc.npc_id) === (npc.id || npc.npc_id)) {
+                        const pos = getNpcPosition({ ...checkNpc, location: loc }, i);
+                        // Center camera on NPC
+                        state.camera.x = DISTRICT.width / 2 - pos.x;
+                        state.camera.y = DISTRICT.height / 2 - pos.y;
+                        state.camera.zoom = 2.0;
+                        return;
+                    }
+                }
+            }
+        }
+
+        async function updateTrackedNpc() {
+            if (!state.trackedNpc) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/npcs/${state.trackedNpc.id}/state?tick=${state.tick}`);
+                const npcState = await res.json();
+
+                // Add to tracking history
+                const lastEntry = state.trackingHistory[state.trackingHistory.length - 1];
+                if (!lastEntry || lastEntry.location !== npcState.location) {
+                    state.trackingHistory.push({
+                        tick: state.tick,
+                        location: npcState.location,
+                        activity: npcState.activity
+                    });
+
+                    // Keep only last 20 entries
+                    if (state.trackingHistory.length > 20) {
+                        state.trackingHistory.shift();
+                    }
+                }
+
+                // Update the profile panel if it's showing the tracked NPC
+                if (state.selectedNpc?.id === state.trackedNpc.id) {
+                    document.getElementById("profile-activity").textContent = npcState.activity || "idle";
+                    document.getElementById("profile-location").textContent = npcState.location || "Unknown";
+
+                    // Update history display
+                    const historyEl = document.getElementById("profile-history");
+                    historyEl.innerHTML = state.trackingHistory.slice(-5).reverse().map(h =>
+                        `<li><span>${h.location}</span><span>T${h.tick}</span></li>`
+                    ).join("");
+                }
+
+                // Focus camera on tracked NPC
+                focusOnNpc(state.trackedNpc);
+
+            } catch (e) {
+                console.error("Failed to update tracked NPC:", e);
+            }
+        }
+
+        async function selectBuilding(building) {
+            state.currentBuilding = building.id;
+            state.selectedBuilding = building;
+
+            // Show building info panel
+            const infoPanel = document.getElementById("building-info");
+            infoPanel.style.display = "block";
+
+            // Update building details
+            document.getElementById("building-name").textContent = `${building.id}: ${building.name}`;
+            document.getElementById("building-desc").textContent = getBuildingDescription(building);
+
+            const info = BUILDING_INFO[building.type] || BUILDING_INFO.residential;
+            document.getElementById("building-type").textContent = `${info.icon} ${info.label}`;
+
+            // Get block name
+            const blockIndex = parseInt(building.id.replace("B", "")) % 6;
+            const blockNames = ["A", "B", "C", "D", "E", "F"];
+            document.getElementById("building-block").textContent = `Block ${blockNames[blockIndex]}`;
+
+            // Get occupant count from simulation
+            const locSummary = state.simulation?.location_summary || {};
+            const occupants = locSummary[building.id] || 0;
+            document.getElementById("building-occupants").textContent = occupants;
+
+            // Build occupant list with activities
+            const occupantList = document.getElementById("building-occupant-list");
+            const activityIcons = {
+                sleeping: "😴", eating: "🍽️", cooking: "🍳", watching_tv: "📺",
+                reading: "📖", playing_cards: "🃏", socializing: "💬", working: "💼",
+                shopping: "🛒", exercising: "🏃", dancing: "💃", drinking: "🍺",
+                gambling: "🎰", praying: "🙏", meditating: "🧘", scheming: "🤫",
+                guarding: "🛡️", performing: "🎤", relaxing: "😌", idle: "⏳"
+            };
+
+            // Get NPCs at this building
+            let npcIndex = 0;
+            const npcsHere = [];
+            for (const loc of Object.keys(locSummary)) {
+                const count = locSummary[loc];
+                for (let i = 0; i < count; i++) {
+                    const npc = state.npcs[npcIndex % state.npcs.length];
+                    if (loc === building.id) {
+                        npcsHere.push({ ...npc, activity: npc.activity || "idle" });
+                    }
+                    npcIndex++;
+                }
+            }
+
+            // Render occupant list
+            if (npcsHere.length > 0) {
+                occupantList.innerHTML = npcsHere.slice(0, 15).map(npc => {
+                    const icon = activityIcons[npc.activity] || "⏳";
+                    const factionColor = FACTION_COLORS[npc.faction] || "#00ffff";
+                    return `<div style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: ${factionColor};">${npc.name?.split(" ")[0] || npc.id}</span>
+                        <span style="color: #888;">${icon} ${npc.activity || "idle"}</span>
+                    </div>`;
+                }).join("") + (npcsHere.length > 15 ? `<div style="color: #666; padding-top: 5px;">+${npcsHere.length - 15} more...</div>` : "");
+            } else {
+                occupantList.innerHTML = "<div style='color: #666;'>No one here right now</div>";
+            }
+
+            // Update the building selector dropdown
+            document.getElementById("building-select").value = building.id;
+
+            // Refresh NPC list for this building
+            await updateNpcStates();
+            updateNpcList();
+            draw();
+        }
+
+        function viewBuildingBlueprint() {
+            const building = state.selectedBuilding;
+            if (!building) return;
+
+            // Switch to building view mode
+            state.viewMode = "building";
+            document.getElementById("view-mode").value = "building";
+
+            // Zoom into the building
+            state.camera.x = DISTRICT.width / 2 - building.x - building.w / 2;
+            state.camera.y = DISTRICT.height / 2 - building.y - building.h / 2;
+            state.camera.zoom = 2.5;
+
+            draw();
+
+            // Future: Show interior floor plan
+            alert(`Blueprint view for ${building.name} coming soon!\n\nThis will show:\n- Floor layouts\n- Room positions\n- NPC locations within rooms\n- Entry/exit points`);
+        }
+
+        // =============================================================================
+        // CONTROLS
+        // =============================================================================
+        document.getElementById("btn-play").addEventListener("click", () => {
+            state.playing = !state.playing;
+            document.getElementById("btn-play").textContent = state.playing ? "⏸ PAUSE" : "▶ PLAY";
+            document.getElementById("btn-play").classList.toggle("active", state.playing);
+        });
+
+        document.getElementById("btn-step").addEventListener("click", async () => {
+            state.tick++;
+            await updateSimulation();
+            draw();
+        });
+
+        document.getElementById("btn-reset").addEventListener("click", async () => {
+            state.tick = 0;
+            state.playing = false;
+            document.getElementById("btn-play").textContent = "▶ PLAY";
+            await updateSimulation();
+            draw();
+        });
+
+        document.getElementById("speed").addEventListener("input", (e) => {
+            state.speed = parseInt(e.target.value);
+        });
+
+        document.getElementById("view-mode").addEventListener("change", (e) => {
+            state.viewMode = e.target.value;
+            draw();
+        });
+
+        document.getElementById("building-select").addEventListener("change", async (e) => {
+            state.currentBuilding = e.target.value || null;
+            await updateNpcStates();
+            updateNpcList();
+            draw();
+        });
+
+        document.getElementById("btn-labels").addEventListener("click", () => {
+            state.showLabels = !state.showLabels;
+            document.getElementById("btn-labels").classList.toggle("active", state.showLabels);
+            draw();
+        });
+
+        document.getElementById("btn-export").addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.download = `neon_heights_tick_${state.tick}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+
+        // Mouse controls
+        canvas.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            state.camera.zoom *= e.deltaY > 0 ? 0.9 : 1.1;
+            state.camera.zoom = Math.max(0.5, Math.min(3, state.camera.zoom));
+            draw();
+        });
+
+        canvas.addEventListener("mouseup", (e) => {
+            // Check for NPC click if not dragging significantly
+            if (state.dragDistance < 5) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                // Convert to world coordinates
+                const width = canvas.width / window.devicePixelRatio;
+                const height = canvas.height / window.devicePixelRatio;
+                const worldX = (mouseX - width / 2) / state.camera.zoom + DISTRICT.width / 2 - state.camera.x;
+                const worldY = (mouseY - height / 2) / state.camera.zoom + DISTRICT.height / 2 - state.camera.y;
+
+                // Check each NPC position
+                const locSummary = state.simulation?.location_summary || {};
+                let npcIndex = 0;
+                let clickedNpc = null;
+
+                for (const loc of Object.keys(locSummary)) {
+                    const count = locSummary[loc];
+                    const building = state.buildings.find(b => b.id === loc);
+                    if (!building) continue;
+
+                    for (let i = 0; i < Math.min(count, 20); i++) {
+                        const npc = state.npcs[npcIndex % state.npcs.length];
+                        npcIndex++;
+
+                        const pos = getNpcPosition({ ...npc, location: loc }, i);
+                        const dist = Math.hypot(worldX - pos.x, worldY - pos.y);
+
+                        if (dist < 15) {  // Click radius
+                            clickedNpc = npc;
+                            break;
+                        }
+                    }
+                    if (clickedNpc) break;
+                }
+
+                if (clickedNpc) {
+                    selectNpc(clickedNpc);
+                } else {
+                    // Check if clicked on a building
+                    const clickedBuilding = state.buildings.find(b =>
+                        worldX >= b.x && worldX <= b.x + b.w &&
+                        worldY >= b.y && worldY <= b.y + b.h
+                    );
+                    if (clickedBuilding) {
+                        selectBuilding(clickedBuilding);
+                    }
+                }
+            }
+
+            state.dragging = false;
+            state.dragDistance = 0;
+        });
+
+        canvas.addEventListener("mousedown", (e) => {
+            state.dragging = true;
+            state.dragDistance = 0;
+            state.lastMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        // Track drag distance to distinguish click from drag
+        canvas.addEventListener("mousemove", (e) => {
+            if (state.dragging) {
+                const dx = e.clientX - state.lastMouse.x;
+                const dy = e.clientY - state.lastMouse.y;
+                state.dragDistance = (state.dragDistance || 0) + Math.hypot(dx, dy);
+                state.camera.x += dx / state.camera.zoom;
+                state.camera.y += dy / state.camera.zoom;
+                state.lastMouse = { x: e.clientX, y: e.clientY };
+                draw();
+            }
+        });
+
+        // =============================================================================
+        // GAME LOOP
+        // =============================================================================
+        let lastUpdate = 0;
+
+        function gameLoop(timestamp) {
+            if (state.playing) {
+                const interval = 1000 / state.speed;
+                if (timestamp - lastUpdate > interval) {
+                    state.tick++;
+                    updateSimulation();
+                    updateTrackedNpc();  // Update tracked NPC position
+                    draw();
+                    lastUpdate = timestamp;
+                }
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        // =============================================================================
+        // INIT
+        // =============================================================================
+        resizeCanvas();
+        loadInitialData();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+
+</html>
