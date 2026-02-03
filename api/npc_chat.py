@@ -500,13 +500,14 @@ def get_tick(tick: int):
 # ============================================================
 
 SIGNAL_NOIR_STYLE = """
-SIGNAL NOIR STYLE - MANDATORY:
+SIGNAL NOIR STYLE (Batman: The Animated Series aesthetic):
 - Render in BLACK AND WHITE / GRAYSCALE
 - Deep inky black shadows, high contrast
-- ONLY CYAN (#00CED1) accents for tech/neon  
+- ONLY CYAN (#00CED1) accents for tech/neon elements
 - NO red, green, yellow, orange, pink, purple
-- Cyberpunk dystopian, rain atmosphere
-- Sin City / Blade Runner aesthetic
+- Mostly night setting, dark moody atmosphere
+- Art deco noir meets cyberpunk dystopia
+- NOT always raining - use the actual weather provided
 """
 
 NPC_VISUALS = {
@@ -524,7 +525,7 @@ def describe_scene():
     data = request.json
     npc_id = data.get("npc_id", "kira")
     tick = data.get("tick", 100)
-    action = data.get("action", "standing in the rain")
+    action = data.get("action", "observing the city")
     
     state = get_npc_state(npc_id, tick)
     if not state:
@@ -532,15 +533,30 @@ def describe_scene():
     
     npc_visual = NPC_VISUALS.get(npc_id, NPC_VISUALS["kira"])
     
+    # Determine time of day for scene description
+    hour = state['tick_state']['hour']
+    if 6 <= hour < 18:
+        time_desc = f"Day, {hour}:00 - but the city is always shadowed"
+    else:
+        time_desc = f"Night, {hour}:00"
+    
+    weather = state['tick_state']['weather']
+    weather_desc = {
+        "clear": "Clear skies, neon signs cutting through the darkness",
+        "rain": "Rain slicks the streets, reflections everywhere",
+        "storm": "Thunder rumbles, lightning illuminates the skyline",
+        "fog": "Thick fog rolls through the streets, obscuring everything"
+    }.get(weather, "Dark, moody atmosphere")
+    
     prompt = f"""Describe this Signal Noir cyberpunk scene in 2-3 vivid sentences:
 
 CHARACTER: {npc_visual}
 ACTION: {action}
 LOCATION: {state['location_desc']}
-WEATHER: {state['tick_state']['weather']}
-TIME: Night, {state['tick_state']['hour']}:00
+WEATHER: {weather_desc}
+TIME: {time_desc}
 
-Style: High contrast black and white, cyan neon accents only, rain, noir atmosphere.
+Style: Batman: The Animated Series meets cyberpunk. High contrast black and white with ONLY cyan neon accents. Dark, moody, art deco noir. NOT always raining - match the weather above.
 
 Write a cinematic scene description:"""
     
