@@ -70,6 +70,61 @@ def get_birth_tick(npc_id: str) -> int:
     return int(hashlib.md5(npc_id.encode()).hexdigest()[:8], 16) % 365
 
 
+def get_family_seed(npc_name: str) -> int:
+    """
+    Extract family seed from NPC name.
+    Family members (same last name) get similar base personalities.
+    
+    Examples:
+    - "Nova Chen" and "Zero Chen" share Chen family seed
+    - "Wire Park" and "Alex Park" share Park family seed
+    """
+    import hashlib
+    parts = npc_name.split()
+    if len(parts) >= 2:
+        # Use last name as family identifier
+        family_name = parts[-1].lower()
+    else:
+        # Single name - use first 3 chars as "family"
+        family_name = npc_name[:3].lower()
+    
+    return int(hashlib.md5(family_name.encode()).hexdigest()[:8], 16)
+
+
+def generate_family_influenced_personality(npc_id: str, npc_name: str, birth_tick: int) -> Dict[str, Any]:
+    """
+    Generate personality with family influence.
+    Family members share:
+    - Same base alignment tendency (70% weight)
+    - Same archetype family (50% weight)
+    - Similar zodiac element preferences
+    
+    Individual variation comes from:
+    - Birth tick differences
+    - First name influence
+    """
+    # Get family seed
+    family_seed = get_family_seed(npc_name)
+    
+    # Generate base profile from individual
+    profile = generate_personality_profile(npc_id, birth_tick)
+    
+    # Family-influenced alignment tendency
+    # Families tend toward same signal axis (resonant/neutral/dissonant)
+    family_signal_bias = family_seed % 3  # 0=resonant, 1=neutral, 2=dissonant
+    
+    # Family archetype tendency (families share outlook)
+    family_archetype_idx = family_seed % len(list(REECHO_ARCHETYPES.keys()))
+    archetype_list = list(REECHO_ARCHETYPES.keys())
+    
+    # 30% chance to inherit family archetype vs individual
+    if (birth_tick + family_seed) % 10 < 3:
+        profile.archetype = archetype_list[family_archetype_idx]
+    
+    # Return the profile (now family-influenced)
+    return profile
+
+
 def generate_npc_personality_block(npc_id: str) -> Dict[str, Any]:
     """
     Generate complete personality block for an NPC.
@@ -229,12 +284,129 @@ def generate_personality_codec_schema() -> Dict[str, Any]:
 # MAIN
 # ==============================================================================
 
+def update_bulk_npcs(input_path: str, output_path: str = None) -> None:
+    """
+    Update bulk NPC JSON with full RE:ECHO personality data.
+    
+    Uses FAMILY + FACTION influence for realistic social dynamics:
+    - Family members (same last name) share personality tendencies
+    - Faction members share alignment tendencies
+    - Coworkers (same workplace) share some traits
+    """
+    print(f"\n📥 Loading NPCs from: {input_path}")
+    with open(input_path, 'r') as f:
+        data = json.load(f)
+    
+    npcs = data.get("npcs", [])
+    print(f"   Found {len(npcs)} NPCs")
+    
+    # Faction personality tendencies
+    FACTION_TENDENCIES = {
+        "resistance": {"signal": "resonant", "method": "chaotic", "archetypes": ["catalyst", "operative", "seeker"]},
+        "temple": {"signal": "neutral", "method": "harmonic", "archetypes": ["sentinel", "architect", "commander"]},
+        "civilian": {"signal": "neutral", "method": "adaptive", "archetypes": ["mediator", "advocate", "seeker"]},
+        "corporate": {"signal": "dissonant", "method": "harmonic", "archetypes": ["architect", "commander", "operative"]},
+        "underground": {"signal": "neutral", "method": "chaotic", "archetypes": ["operative", "seeker", "catalyst"]},
+    }
+    
+    updated = 0
+    for npc in npcs:
+        npc_id = npc.get("id", "")
+        npc_name = npc.get("name", "")
+        npc_faction = npc.get("faction", "civilian").lower()
+        npc_workplace = npc.get("workplace", "")
+        
+        if not npc_id:
+            continue
+        
+        # Use NPC index as birth_tick for determinism
+        try:
+            birth_tick = int(npc_id.replace("NPC_", ""))
+        except:
+            birth_tick = get_birth_tick(npc_id)
+        
+        # Get family seed for family similarity
+        family_seed = get_family_seed(npc_name) if npc_name else 0
+        
+        # Get faction tendency
+        faction_tendency = FACTION_TENDENCIES.get(npc_faction, FACTION_TENDENCIES["civilian"])
+        
+        # Generate base profile
+        profile = generate_personality_profile(npc_id, birth_tick)
+        
+        # Apply family influence (30% chance to inherit family archetype)
+        archetype_list = list(REECHO_ARCHETYPES.keys())
+        if family_seed and (birth_tick + family_seed) % 10 < 3:
+            family_archetype_idx = family_seed % len(archetype_list)
+            profile.archetype = archetype_list[family_archetype_idx]
+        
+        # Apply faction influence (40% chance to use faction archetype)
+        if (birth_tick + family_seed) % 10 < 4:
+            faction_archetypes = faction_tendency.get("archetypes", archetype_list)
+            faction_archetype = faction_archetypes[birth_tick % len(faction_archetypes)]
+            profile.archetype = faction_archetype
+        
+        # Merge with existing personality (keep old basic traits)
+        existing_personality = npc.get("personality", {})
+        
+        npc["personality"] = {
+            # Keep existing basic traits
+            "aggression": existing_personality.get("aggression", 0.5),
+            "sociability": existing_personality.get("sociability", 0.5),
+            "greed": existing_personality.get("greed", 0.5),
+            "loyalty": existing_personality.get("loyalty", 0.5),
+            "curiosity": existing_personality.get("curiosity", 0.5),
+            
+            # Add birth_tick for future regeneration
+            "birth_tick": birth_tick,
+            
+            # RE:ECHO Alignment (faction-influenced)
+            "echo_alignment": {
+                "signal": profile.echo_alignment.signal.value if profile.echo_alignment else faction_tendency.get("signal", "neutral"),
+                "method": profile.echo_alignment.method.value if profile.echo_alignment else faction_tendency.get("method", "adaptive"),
+                "name": profile.echo_alignment.name if profile.echo_alignment else "True Neutral"
+            },
+            
+            # Archetype (family/faction influenced)
+            "archetype": profile.archetype,
+            
+            # MBTI
+            "mbti": profile.mbti,
+            
+            # Zodiac
+            "zodiac": profile.zodiac,
+            "zodiac_element": profile.zodiac_element,
+            
+            # Chinese Zodiac
+            "chinese_animal": profile.chinese_animal,
+            "chinese_element": profile.chinese_element,
+            
+            # Top traits (keep compact)
+            "traits": profile.all_traits[:5],
+            "weaknesses": profile.all_weaknesses[:3]
+        }
+        
+        updated += 1
+        if updated % 100 == 0:
+            print(f"   Updated {updated} NPCs...")
+    
+    # Write output
+    out = output_path or input_path
+    with open(out, 'w') as f:
+        json.dump(data, f, indent=2)
+    
+    print(f"\n✅ Updated {updated} NPCs with full personality")
+    print(f"   (Family + Faction influence applied)")
+    print(f"   Saved to: {out}")
+
+
 if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Generate NPC personalities")
     parser.add_argument("--preview", action="store_true", help="Preview personalities")
     parser.add_argument("--update-codec", action="store_true", help="Update the NPC codec")
+    parser.add_argument("--update-bulk", action="store_true", help="Update bulk npcs_generated.json")
     parser.add_argument("--schema", action="store_true", help="Print personality schema")
     parser.add_argument("--npc", type=str, help="Show single NPC personality")
     
@@ -243,12 +415,16 @@ if __name__ == "__main__":
     base_dir = Path(__file__).parent.parent
     codec_path = base_dir / "data" / "codec_chunks" / "world_codec_01_npcs.json"
     output_path = base_dir / "data" / "codec_chunks" / "world_codec_01_npcs_with_personality.json"
+    bulk_npcs_path = base_dir / "data" / "npcs_generated.json"
+    bulk_npcs_output = base_dir / "data" / "npcs_generated_with_personality.json"
     
     if args.preview:
         preview_all_npcs()
     elif args.update_codec:
         print(f"Updating NPC codec: {codec_path}")
         update_codec_npcs(str(codec_path), str(output_path))
+    elif args.update_bulk:
+        update_bulk_npcs(str(bulk_npcs_path), str(bulk_npcs_output))
     elif args.schema:
         schema = generate_personality_codec_schema()
         print(json.dumps(schema, indent=2))

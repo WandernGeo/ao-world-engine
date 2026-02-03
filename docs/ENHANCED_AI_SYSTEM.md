@@ -283,39 +283,105 @@ class SocialGroup:
 
 ---
 
-## 📋 Implementation Priority
+## ✅ IMPLEMENTED: Comprehensive Personality System
 
-| Priority | Feature | Inspiration | Complexity |
-|----------|---------|-------------|------------|
-| 1 | AO Cron Process | AO Network | Medium |
-| 2 | Storyteller AI | RimWorld | Low |
-| 3 | Personality Quirks | Dwarf Fortress | Low |
-| 4 | Social Groups | The Sims | Medium |
-| 5 | Long-term Schemes | Crusader Kings | High |
-| 6 | Dynasty/Lineage | Crusader Kings | Medium |
+### RE:ECHO Alignment (Primary System)
+
+From the series lore, NPCs have a two-axis alignment:
+
+| Axis | Values | Description |
+|------|--------|-------------|
+| **Signal** | Resonant / Neutral / Dissonant | How NPC relates to Echoes (Good/Neutral/Evil) |
+| **Method** | Harmonic / Adaptive / Chaotic | How NPC achieves goals (Law/Neutral/Chaos) |
+
+**9 Possible Alignments:**
+- Harmonic Resonant = Protects Echoes through tradition
+- Chaotic Dissonant = Seeks to destroy Echoes entirely
+- etc.
+
+### RE:ECHO Archetypes (8 Types)
+
+| Archetype | Description | MBTI-Like | Example |
+|-----------|-------------|-----------|---------|
+| Architect | Builds systems for order | INTJ | Zero Chen |
+| Advocate | Champions others' causes | ENFJ | Sister Mira |
+| Commander | Leads with authority | ESTJ | Morack |
+| Seeker | Explores truth and mystery | INTP | Charlie |
+| Catalyst | Sparks change and action | ENFP | Kai Vance |
+| Sentinel | Guards and protects | ISTJ | Prophet Elijah |
+| Mediator | Bridges divides | INFP | Orion Thane |
+| Operative | Gets things done | ESTP | Aiche |
+
+### Additional Personality Layers
+
+- **MBTI** (16 types with compatibility)
+- **Western Zodiac** (12 signs with elements)
+- **Chinese Zodiac** (12 animals × 5 elements)
+- **Combined traits** (aggregated from all systems)
+
+### Family & Faction Influence
+
+NPCs don't have random personalities - social groups share traits:
+
+```python
+# Family members (same last name) share tendencies
+"Nova Chen" and "Zero Chen" → Similar archetype family
+
+# Faction members share alignment tendencies  
+FACTION_TENDENCIES = {
+    "resistance": {"signal": "resonant", "method": "chaotic"},
+    "temple": {"signal": "neutral", "method": "harmonic"},
+    "civilian": {"signal": "neutral", "method": "adaptive"},
+}
+```
+
+### Usage
+
+```bash
+# Preview all NPC personalities
+python scripts/npc_personality_generator.py --preview
+
+# Update bulk NPCs with personality
+python scripts/npc_personality_generator.py --update-bulk
+
+# Single NPC personality
+python scripts/npc_personality_generator.py --npc charlie
+```
 
 ---
 
-## 🚫 AO/Arweave Restrictions?
+## ✅ IMPLEMENTED: Advanced AI Systems
 
-### What IS Allowed:
-- ✅ Unlimited compute time
-- ✅ Up to 16GB memory per process
-- ✅ Cron jobs (autonomous execution)
-- ✅ Python code (via sandbox/WASM)
-- ✅ Message passing between processes
-- ✅ Spawning new processes
+All systems are in `scripts/advanced_ai_systems.py`:
 
-### What Might Be Limited:
-- ⚠️ Network calls (no external APIs from within AO)
-- ⚠️ File system access (no local files, only Arweave)
-- ⚠️ Non-deterministic operations (random must be seeded)
-
-### Current Workaround:
+### 1. Utility System (RimWorld)
+```python
+utility_system = UtilitySystem()
+action, score = utility_system.evaluate_actions(npc_state, available_actions)
 ```
-Python code MUST be deterministic.
-All "random" must use deterministic_hash(seed).
-No external API calls - all data comes from Arweave.
+
+### 2. GOAP (General Game AI)
+```python
+goap = GOAPPlanner()
+plan = goap.plan(npc, current_state, goal_state)
+```
+
+### 3. A-Life Migration (STALKER)
+```python
+alife = ALifeSystem(world)
+migrations = alife.simulate_migrations(tick)
+```
+
+### 4. Personality Quirks (Dwarf Fortress)
+```python
+quirks = QuirkSystem()
+effects = quirks.process_quirks(npc, situation)
+```
+
+### 5. Storyteller AI (RimWorld)
+```python
+storyteller = StorytellerAI(mode="dramatic")
+event = storyteller.pick_next_event(world_state, tick)
 ```
 
 ---
@@ -323,6 +389,9 @@ No external API calls - all data comes from Arweave.
 ## Next Steps
 
 1. **Create AO Process** - Set up the autonomous cron-based process
-2. **Add Storyteller** - RimWorld-style event curation
-3. **Add Quirks** - Dwarf Fortress personality system
-4. **Test on AO Testnet** - Deploy and verify always-running behavior
+2. ✅ **Add Storyteller** - RimWorld-style event curation (DONE)
+3. ✅ **Add Quirks** - Dwarf Fortress personality system (DONE)
+4. ✅ **Add Personality System** - Full RE:ECHO + MBTI + Zodiacs (DONE)
+5. **Test on AO Testnet** - Deploy and verify always-running behavior
+6. **Expand Social Groups** - Sims-style dynamic group formation
+7. **Add Schemes** - Crusader Kings long-term NPC plans
