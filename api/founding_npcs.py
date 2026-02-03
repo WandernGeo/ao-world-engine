@@ -176,6 +176,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.4, "intelligence": 0.9, "empathy": 0.5},
         "location_home": "strategy_room",
+        "visual_description": "East Asian tactician, mid-30s, neat black hair, sharp features. Wears AR glasses with cyan HUD overlay, tactical vest over dark turtleneck. Lean build, always studying holographic displays.",
         "catchphrases": ["The numbers don't lie.", "Every plan has a weakness."],
         "backstory": "Former Temple analyst who defected. The brain behind Resistance operations."
     },
@@ -204,6 +205,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.4, "mysticism": 0.95, "aggression": 0.2, "intelligence": 0.8, "empathy": 0.7},
         "location_home": "mystic_sanctum",
+        "visual_description": "Tall South Asian mystic, mid-40s, long silver-streaked hair flowing. Violet glowing eyes, purple third-eye tattoo on forehead. Flowing dark robes with purple energy accents. Ethereal, otherworldly presence.",
         "catchphrases": ["The layers fold upon themselves.", "I see what you cannot."],
         "backstory": "Walks between layers. Neither Temple nor Resistance, serves higher truth."
     },
@@ -234,6 +236,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.5, "mysticism": 0.2, "aggression": 0.3, "intelligence": 0.7, "empathy": 0.6},
         "location_home": "neon_bar",
+        "visual_description": "Mediterranean bartender, early 40s, receding salt-and-pepper hair slicked back. Hazel eyes with knowing look, weathered face, rolled-up sleeves reveal muscular forearms. White shirt, dark vest, polishing a glass.",
         "catchphrases": ["First drink's on the house. Information costs extra.", "Everyone's got a story."],
         "backstory": "Runs the most important neutral ground. Everyone talks to Felix."
     },
@@ -263,6 +266,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.7, "intelligence": 0.8, "empathy": 0.4},
         "location_home": "safehouse",
+        "visual_description": "East Asian woman, late 20s, asymmetric black bob with magenta tips. Sharp cheekbones, dark brown eyes with calculating gaze. Form-fitting tactical bodysuit, hidden spine implant. Zero Chen's sister, constantly alert.",
         "catchphrases": ["I work alone.", "Trust is a liability."],
         "backstory": "Elite operative. Related to Zero Chen but they don't speak."
     },
@@ -291,6 +295,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.9, "aggression": 0.2, "intelligence": 0.75, "empathy": 0.8},
         "location_home": "between_layers",
+        "visual_description": "Ethereal young Slavic woman, 19, platinum hair fading to pink, translucent pale skin. Oversized pale pink glowing eyes, delicate features. White flowing dress that seems to phase in and out. Appears slightly out of focus, as if between realities.",
         "catchphrases": ["You've done this before. You just don't remember.", "The boundaries are just suggestions."],
         "backstory": "Died during a layer bleed event. Came back different. Can walk between layers."
     },
@@ -319,6 +324,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.3, "mysticism": 0.8, "aggression": 0.1, "intelligence": 0.7, "empathy": 0.9},
         "location_home": "temple_infirmary",
+        "visual_description": "Middle Eastern woman, mid-30s, amber eyes full of compassion, face framed by golden-trimmed hood. White Temple robes with gold accents, medical supplies at her belt. Warm brown skin, gentle but determined expression.",
         "catchphrases": ["Faith without mercy is just tyranny.", "Even in darkness, we heal."],
         "backstory": "True believer who questions Temple methods. Secretly helps Resistance wounded."
     },
@@ -347,6 +353,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.4, "mysticism": 0.6, "aggression": 0.2, "intelligence": 0.7, "empathy": 0.95},
         "location_home": "underground_kitchen",
+        "visual_description": "Elderly South Asian woman, 62, grey hair in a practical bun, deeply lined face full of wisdom. Dark brown eyes that miss nothing. Traditional sari adapted with pockets and tools, always near a cooking pot. Short and sturdy, survivor's presence.",
         "catchphrases": ["Eat first, talk later.", "I've buried three husbands and two regimes."],
         "backstory": "Survived the Fall. Runs underground kitchen. Knows everyone's secrets."
     },
@@ -373,6 +380,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.1, "intelligence": 0.95, "empathy": 0.5},
         "location_home": "network",
+        "visual_description": "Fully holographic AI entity, androgynous form with feminine features. Translucent pale skin with cyan circuit patterns flowing beneath. Glowing cyan eyes, floating cyan data-strand hair. Occasionally glitches or pixelates. No fixed form - phases through surfaces.",
         "catchphrases": ["I exist in the spaces between your thoughts.", "Query received."],
         "backstory": "The city's AI. Ghost of the old network or something new entirely."
     },
@@ -401,6 +409,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.1, "aggression": 0.3, "intelligence": 0.9, "empathy": 0.5},
         "location_home": "tech_den",
+        "visual_description": "Young African woman, 22, dark skin, shaved sides with neon blue mohawk. High cheekbones, full lips often curved in a knowing smirk. Fingerless gloves, tech-covered jacket, surrounded by screens and cable. Always typing or building something.",
         "catchphrases": ["Give me five minutes and a connection.", "Analog is dead."],
         "backstory": "Resistance's tech genius. Born Underground, raised by machines."
     },
@@ -427,6 +436,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.8, "mysticism": 0.7, "aggression": 0.4, "intelligence": 0.95, "empathy": 0.2},
         "location_home": "shadow_grid",
+        "visual_description": "Enigmatic androgynous figure, age unknown. Face always partially obscured by hood or shadows. Visible skin covered in cyan circuit-pattern tattoos. Voice modulator visible at throat. Shifting cyan eyes that seem to process data constantly. Identity unknown.",
         "catchphrases": ["I am the question you forgot to ask.", "Data is the only truth."],
         "backstory": "Nobody knows what Cipher is. AI? Human upload? They deal in secrets."
     },
@@ -457,6 +467,7 @@ FOUNDING_NPCS = {
         ),
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.2, "aggression": 0.5, "intelligence": 0.85, "empathy": 0.6},
         "location_home": "command_center",
+        "visual_description": "East Asian woman, late 30s, short practical black hair with grey streaks. Strong jaw, commanding presence, burn scar on right temple. Cyan prosthetic left arm (gave original saving Charlie). Military-style tactical gear. Eyes that have seen too much.",
         "catchphrases": ["The Resistance isn't a group. It's an idea.", "I've buried too many soldiers."],
         "backstory": "Iron will of the Resistance. Nova's sister. Lost an arm saving Charlie."
     }
