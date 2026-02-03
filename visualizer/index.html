@@ -512,7 +512,6 @@
                 <span class="stat-value" id="stat-events">0</span>
             </div>
         </div>
-
         <!-- Building Info Section -->
         <div id="building-info"
             style="display: none; margin-top: 20px; padding: 15px; background: rgba(0,255,255,0.1); border-radius: 8px; border: 1px solid rgba(0,255,255,0.3);">
@@ -530,6 +529,13 @@
                 <span class="stat-label">Block</span>
                 <span class="stat-value" id="building-block">-</span>
             </div>
+
+            <!-- Occupant Activities List -->
+            <div style="margin-top: 15px; max-height: 200px; overflow-y: auto;">
+                <h4 style="font-size: 0.85em; color: #888; margin-bottom: 8px;">👥 Who's Here & What They're Doing</h4>
+                <div id="building-occupant-list" style="font-size: 0.85em;"></div>
+            </div>
+
             <button onclick="viewBuildingBlueprint()"
                 style="margin-top: 10px; padding: 8px 16px; background: linear-gradient(135deg, #00ffff33, #00888833); border: 1px solid #00ffff; color: #00ffff; border-radius: 6px; cursor: pointer; width: 100%;">
                 🗺️ View Blueprint
@@ -1292,6 +1298,44 @@
             const locSummary = state.simulation?.location_summary || {};
             const occupants = locSummary[building.id] || 0;
             document.getElementById("building-occupants").textContent = occupants;
+
+            // Build occupant list with activities
+            const occupantList = document.getElementById("building-occupant-list");
+            const activityIcons = {
+                sleeping: "😴", eating: "🍽️", cooking: "🍳", watching_tv: "📺",
+                reading: "📖", playing_cards: "🃏", socializing: "💬", working: "💼",
+                shopping: "🛒", exercising: "🏃", dancing: "💃", drinking: "🍺",
+                gambling: "🎰", praying: "🙏", meditating: "🧘", scheming: "🤫",
+                guarding: "🛡️", performing: "🎤", relaxing: "😌", idle: "⏳"
+            };
+
+            // Get NPCs at this building
+            let npcIndex = 0;
+            const npcsHere = [];
+            for (const loc of Object.keys(locSummary)) {
+                const count = locSummary[loc];
+                for (let i = 0; i < count; i++) {
+                    const npc = state.npcs[npcIndex % state.npcs.length];
+                    if (loc === building.id) {
+                        npcsHere.push({ ...npc, activity: npc.activity || "idle" });
+                    }
+                    npcIndex++;
+                }
+            }
+
+            // Render occupant list
+            if (npcsHere.length > 0) {
+                occupantList.innerHTML = npcsHere.slice(0, 15).map(npc => {
+                    const icon = activityIcons[npc.activity] || "⏳";
+                    const factionColor = FACTION_COLORS[npc.faction] || "#00ffff";
+                    return `<div style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: ${factionColor};">${npc.name?.split(" ")[0] || npc.id}</span>
+                        <span style="color: #888;">${icon} ${npc.activity || "idle"}</span>
+                    </div>`;
+                }).join("") + (npcsHere.length > 15 ? `<div style="color: #666; padding-top: 5px;">+${npcsHere.length - 15} more...</div>` : "");
+            } else {
+                occupantList.innerHTML = "<div style='color: #666;'>No one here right now</div>";
+            }
 
             // Update the building selector dropdown
             document.getElementById("building-select").value = building.id;

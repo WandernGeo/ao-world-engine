@@ -1,0 +1,1116 @@
+{
+    "codec_id": "CODEC_16_BUILDINGS",
+    "version": "1.0.0",
+    "description": "Building layouts with floors, rooms, and activities",
+    "building_templates": {
+        "residential_small": {
+            "floors": 3,
+            "layout": {
+                "1": {
+                    "name": "Ground Floor",
+                    "rooms": [
+                        {
+                            "id": "lobby",
+                            "name": "Lobby",
+                            "type": "common",
+                            "capacity": 10,
+                            "activities": [
+                                "waiting",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "mailroom",
+                            "name": "Mailroom",
+                            "type": "utility",
+                            "capacity": 2,
+                            "activities": [
+                                "checking_mail"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Floor 2",
+                    "rooms": [
+                        {
+                            "id": "apt_201",
+                            "name": "Apt 201",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        },
+                        {
+                            "id": "apt_202",
+                            "name": "Apt 202",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        },
+                        {
+                            "id": "apt_203",
+                            "name": "Apt 203",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        }
+                    ]
+                },
+                "3": {
+                    "name": "Floor 3",
+                    "rooms": [
+                        {
+                            "id": "apt_301",
+                            "name": "Apt 301",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        },
+                        {
+                            "id": "apt_302",
+                            "name": "Apt 302",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        },
+                        {
+                            "id": "apt_303",
+                            "name": "Apt 303",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "residential_large": {
+            "floors": 10,
+            "layout": {
+                "1": {
+                    "name": "Ground Floor",
+                    "rooms": [
+                        {
+                            "id": "lobby",
+                            "name": "Main Lobby",
+                            "type": "common",
+                            "capacity": 20,
+                            "activities": [
+                                "waiting",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "gym",
+                            "name": "Fitness Center",
+                            "type": "recreation",
+                            "capacity": 15,
+                            "activities": [
+                                "exercising"
+                            ]
+                        },
+                        {
+                            "id": "lounge",
+                            "name": "Resident Lounge",
+                            "type": "common",
+                            "capacity": 12,
+                            "activities": [
+                                "socializing",
+                                "playing_cards",
+                                "watching_tv"
+                            ]
+                        }
+                    ]
+                },
+                "2-9": {
+                    "name": "Residential Floor",
+                    "rooms": [
+                        {
+                            "id": "apt_X01",
+                            "name": "Apt X01",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking",
+                                "reading"
+                            ]
+                        },
+                        {
+                            "id": "apt_X02",
+                            "name": "Apt X02",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking",
+                                "reading"
+                            ]
+                        },
+                        {
+                            "id": "apt_X03",
+                            "name": "Apt X03",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking",
+                                "reading"
+                            ]
+                        },
+                        {
+                            "id": "apt_X04",
+                            "name": "Apt X04",
+                            "type": "apartment",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "eating",
+                                "watching_tv",
+                                "cooking",
+                                "reading"
+                            ]
+                        }
+                    ]
+                },
+                "10": {
+                    "name": "Rooftop",
+                    "rooms": [
+                        {
+                            "id": "garden",
+                            "name": "Rooftop Garden",
+                            "type": "outdoor",
+                            "capacity": 20,
+                            "activities": [
+                                "relaxing",
+                                "socializing",
+                                "gardening"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "commercial_shop": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Shop Floor",
+                    "rooms": [
+                        {
+                            "id": "sales",
+                            "name": "Sales Floor",
+                            "type": "retail",
+                            "capacity": 30,
+                            "activities": [
+                                "shopping",
+                                "browsing",
+                                "selling"
+                            ]
+                        },
+                        {
+                            "id": "counter",
+                            "name": "Counter",
+                            "type": "service",
+                            "capacity": 4,
+                            "activities": [
+                                "working",
+                                "selling",
+                                "cashiering"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Storage",
+                    "rooms": [
+                        {
+                            "id": "stockroom",
+                            "name": "Stockroom",
+                            "type": "storage",
+                            "capacity": 5,
+                            "activities": [
+                                "working",
+                                "organizing"
+                            ]
+                        },
+                        {
+                            "id": "office",
+                            "name": "Manager Office",
+                            "type": "office",
+                            "capacity": 3,
+                            "activities": [
+                                "working",
+                                "meeting"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "entertainment_bar": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Main Floor",
+                    "rooms": [
+                        {
+                            "id": "bar",
+                            "name": "Bar Counter",
+                            "type": "service",
+                            "capacity": 10,
+                            "activities": [
+                                "drinking",
+                                "socializing",
+                                "bartending"
+                            ]
+                        },
+                        {
+                            "id": "tables",
+                            "name": "Seating Area",
+                            "type": "dining",
+                            "capacity": 40,
+                            "activities": [
+                                "drinking",
+                                "eating",
+                                "socializing",
+                                "playing_cards"
+                            ]
+                        },
+                        {
+                            "id": "stage",
+                            "name": "Stage",
+                            "type": "entertainment",
+                            "capacity": 5,
+                            "activities": [
+                                "performing",
+                                "watching_performance"
+                            ]
+                        },
+                        {
+                            "id": "backroom",
+                            "name": "Back Room",
+                            "type": "private",
+                            "capacity": 8,
+                            "activities": [
+                                "meeting",
+                                "scheming",
+                                "gambling"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "entertainment_club": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Main Floor",
+                    "rooms": [
+                        {
+                            "id": "entrance",
+                            "name": "Entrance",
+                            "type": "common",
+                            "capacity": 15,
+                            "activities": [
+                                "waiting",
+                                "security_check"
+                            ]
+                        },
+                        {
+                            "id": "dancefloor",
+                            "name": "Dance Floor",
+                            "type": "entertainment",
+                            "capacity": 100,
+                            "activities": [
+                                "dancing",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "bar",
+                            "name": "Main Bar",
+                            "type": "service",
+                            "capacity": 20,
+                            "activities": [
+                                "drinking",
+                                "bartending"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "VIP Level",
+                    "rooms": [
+                        {
+                            "id": "vip_lounge",
+                            "name": "VIP Lounge",
+                            "type": "private",
+                            "capacity": 20,
+                            "activities": [
+                                "drinking",
+                                "socializing",
+                                "dealing"
+                            ]
+                        },
+                        {
+                            "id": "booth_1",
+                            "name": "Private Booth 1",
+                            "type": "private",
+                            "capacity": 6,
+                            "activities": [
+                                "meeting",
+                                "scheming"
+                            ]
+                        },
+                        {
+                            "id": "booth_2",
+                            "name": "Private Booth 2",
+                            "type": "private",
+                            "capacity": 6,
+                            "activities": [
+                                "meeting",
+                                "scheming"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "government_office": {
+            "floors": 3,
+            "layout": {
+                "1": {
+                    "name": "Public Services",
+                    "rooms": [
+                        {
+                            "id": "waiting",
+                            "name": "Waiting Area",
+                            "type": "common",
+                            "capacity": 50,
+                            "activities": [
+                                "waiting"
+                            ]
+                        },
+                        {
+                            "id": "windows",
+                            "name": "Service Windows",
+                            "type": "service",
+                            "capacity": 10,
+                            "activities": [
+                                "working",
+                                "processing_documents"
+                            ]
+                        },
+                        {
+                            "id": "security",
+                            "name": "Security Station",
+                            "type": "security",
+                            "capacity": 4,
+                            "activities": [
+                                "guarding",
+                                "security_check"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Administration",
+                    "rooms": [
+                        {
+                            "id": "offices",
+                            "name": "Office Area",
+                            "type": "office",
+                            "capacity": 20,
+                            "activities": [
+                                "working",
+                                "filing"
+                            ]
+                        },
+                        {
+                            "id": "meeting",
+                            "name": "Meeting Room",
+                            "type": "meeting",
+                            "capacity": 12,
+                            "activities": [
+                                "meeting"
+                            ]
+                        },
+                        {
+                            "id": "records",
+                            "name": "Records Room",
+                            "type": "storage",
+                            "capacity": 3,
+                            "activities": [
+                                "researching",
+                                "filing"
+                            ]
+                        }
+                    ]
+                },
+                "3": {
+                    "name": "Executive",
+                    "rooms": [
+                        {
+                            "id": "director",
+                            "name": "Director's Office",
+                            "type": "office",
+                            "capacity": 4,
+                            "activities": [
+                                "working",
+                                "meeting"
+                            ]
+                        },
+                        {
+                            "id": "council",
+                            "name": "Council Chamber",
+                            "type": "meeting",
+                            "capacity": 20,
+                            "activities": [
+                                "meeting",
+                                "voting"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "temple": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Main Hall",
+                    "rooms": [
+                        {
+                            "id": "sanctuary",
+                            "name": "Sanctuary",
+                            "type": "worship",
+                            "capacity": 100,
+                            "activities": [
+                                "praying",
+                                "meditating",
+                                "attending_service"
+                            ]
+                        },
+                        {
+                            "id": "altar",
+                            "name": "Altar Area",
+                            "type": "sacred",
+                            "capacity": 5,
+                            "activities": [
+                                "performing_ritual",
+                                "praying"
+                            ]
+                        },
+                        {
+                            "id": "community",
+                            "name": "Community Room",
+                            "type": "common",
+                            "capacity": 30,
+                            "activities": [
+                                "socializing",
+                                "eating",
+                                "meeting"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Private Areas",
+                    "rooms": [
+                        {
+                            "id": "meditation",
+                            "name": "Meditation Chamber",
+                            "type": "sacred",
+                            "capacity": 10,
+                            "activities": [
+                                "meditating",
+                                "praying"
+                            ]
+                        },
+                        {
+                            "id": "library",
+                            "name": "Sacred Library",
+                            "type": "study",
+                            "capacity": 8,
+                            "activities": [
+                                "reading",
+                                "studying"
+                            ]
+                        },
+                        {
+                            "id": "quarters",
+                            "name": "Priest Quarters",
+                            "type": "residential",
+                            "capacity": 4,
+                            "activities": [
+                                "sleeping",
+                                "praying",
+                                "reading"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "industrial_factory": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Factory Floor",
+                    "rooms": [
+                        {
+                            "id": "production",
+                            "name": "Production Line",
+                            "type": "work",
+                            "capacity": 30,
+                            "activities": [
+                                "working",
+                                "manufacturing"
+                            ]
+                        },
+                        {
+                            "id": "warehouse",
+                            "name": "Warehouse",
+                            "type": "storage",
+                            "capacity": 10,
+                            "activities": [
+                                "working",
+                                "loading"
+                            ]
+                        },
+                        {
+                            "id": "breakroom",
+                            "name": "Break Room",
+                            "type": "common",
+                            "capacity": 15,
+                            "activities": [
+                                "eating",
+                                "resting",
+                                "socializing"
+                            ]
+                        },
+                        {
+                            "id": "foreman",
+                            "name": "Foreman Office",
+                            "type": "office",
+                            "capacity": 3,
+                            "activities": [
+                                "working",
+                                "meeting"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "recreation_park": {
+            "floors": 1,
+            "layout": {
+                "1": {
+                    "name": "Park Grounds",
+                    "rooms": [
+                        {
+                            "id": "lawn",
+                            "name": "Open Lawn",
+                            "type": "outdoor",
+                            "capacity": 100,
+                            "activities": [
+                                "relaxing",
+                                "exercising",
+                                "socializing",
+                                "picnicking"
+                            ]
+                        },
+                        {
+                            "id": "courts",
+                            "name": "Sports Courts",
+                            "type": "sports",
+                            "capacity": 20,
+                            "activities": [
+                                "playing_sports",
+                                "exercising"
+                            ]
+                        },
+                        {
+                            "id": "pond",
+                            "name": "Pond Area",
+                            "type": "outdoor",
+                            "capacity": 30,
+                            "activities": [
+                                "relaxing",
+                                "fishing",
+                                "feeding_birds"
+                            ]
+                        },
+                        {
+                            "id": "pavilion",
+                            "name": "Pavilion",
+                            "type": "common",
+                            "capacity": 40,
+                            "activities": [
+                                "gathering",
+                                "eating",
+                                "playing_cards"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "medical_clinic": {
+            "floors": 2,
+            "layout": {
+                "1": {
+                    "name": "Reception",
+                    "rooms": [
+                        {
+                            "id": "waiting",
+                            "name": "Waiting Room",
+                            "type": "common",
+                            "capacity": 20,
+                            "activities": [
+                                "waiting"
+                            ]
+                        },
+                        {
+                            "id": "reception",
+                            "name": "Reception Desk",
+                            "type": "service",
+                            "capacity": 3,
+                            "activities": [
+                                "working",
+                                "checking_in"
+                            ]
+                        },
+                        {
+                            "id": "exam_1",
+                            "name": "Exam Room 1",
+                            "type": "medical",
+                            "capacity": 3,
+                            "activities": [
+                                "receiving_treatment",
+                                "examining"
+                            ]
+                        },
+                        {
+                            "id": "exam_2",
+                            "name": "Exam Room 2",
+                            "type": "medical",
+                            "capacity": 3,
+                            "activities": [
+                                "receiving_treatment",
+                                "examining"
+                            ]
+                        }
+                    ]
+                },
+                "2": {
+                    "name": "Treatment",
+                    "rooms": [
+                        {
+                            "id": "treatment",
+                            "name": "Treatment Bay",
+                            "type": "medical",
+                            "capacity": 10,
+                            "activities": [
+                                "receiving_treatment",
+                                "treating"
+                            ]
+                        },
+                        {
+                            "id": "pharmacy",
+                            "name": "Pharmacy",
+                            "type": "service",
+                            "capacity": 4,
+                            "activities": [
+                                "working",
+                                "dispensing"
+                            ]
+                        },
+                        {
+                            "id": "staff",
+                            "name": "Staff Room",
+                            "type": "common",
+                            "capacity": 8,
+                            "activities": [
+                                "resting",
+                                "eating",
+                                "meeting"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "activities": {
+        "sleeping": {
+            "icon": "😴",
+            "energy_change": 20,
+            "time_periods": [
+                "deep_night",
+                "pre_dawn"
+            ]
+        },
+        "eating": {
+            "icon": "🍽️",
+            "energy_change": 10,
+            "time_periods": [
+                "morning_rush",
+                "midday",
+                "evening"
+            ]
+        },
+        "cooking": {
+            "icon": "🍳",
+            "energy_change": -2,
+            "time_periods": [
+                "morning_rush",
+                "midday",
+                "evening"
+            ]
+        },
+        "watching_tv": {
+            "icon": "📺",
+            "energy_change": 2,
+            "time_periods": [
+                "after_work",
+                "evening",
+                "deep_night"
+            ]
+        },
+        "reading": {
+            "icon": "📖",
+            "energy_change": 3,
+            "time_periods": [
+                "any"
+            ]
+        },
+        "playing_cards": {
+            "icon": "🃏",
+            "energy_change": 1,
+            "time_periods": [
+                "evening",
+                "after_work"
+            ]
+        },
+        "socializing": {
+            "icon": "💬",
+            "energy_change": 0,
+            "time_periods": [
+                "any"
+            ]
+        },
+        "working": {
+            "icon": "💼",
+            "energy_change": -5,
+            "time_periods": [
+                "work_hours",
+                "afternoon"
+            ]
+        },
+        "shopping": {
+            "icon": "🛒",
+            "energy_change": -3,
+            "time_periods": [
+                "midday",
+                "afternoon",
+                "after_work"
+            ]
+        },
+        "exercising": {
+            "icon": "🏃",
+            "energy_change": -8,
+            "time_periods": [
+                "morning_rush",
+                "after_work"
+            ]
+        },
+        "dancing": {
+            "icon": "💃",
+            "energy_change": -5,
+            "time_periods": [
+                "evening",
+                "deep_night"
+            ]
+        },
+        "drinking": {
+            "icon": "🍺",
+            "energy_change": -2,
+            "time_periods": [
+                "evening",
+                "deep_night"
+            ]
+        },
+        "gambling": {
+            "icon": "🎰",
+            "energy_change": -3,
+            "time_periods": [
+                "evening",
+                "deep_night"
+            ]
+        },
+        "praying": {
+            "icon": "🙏",
+            "energy_change": 5,
+            "time_periods": [
+                "any"
+            ]
+        },
+        "meditating": {
+            "icon": "🧘",
+            "energy_change": 8,
+            "time_periods": [
+                "morning_rush",
+                "pre_dawn"
+            ]
+        },
+        "scheming": {
+            "icon": "🤫",
+            "energy_change": -4,
+            "time_periods": [
+                "deep_night",
+                "evening"
+            ]
+        },
+        "guarding": {
+            "icon": "🛡️",
+            "energy_change": -3,
+            "time_periods": [
+                "any"
+            ]
+        },
+        "performing": {
+            "icon": "🎤",
+            "energy_change": -5,
+            "time_periods": [
+                "evening"
+            ]
+        },
+        "relaxing": {
+            "icon": "😌",
+            "energy_change": 5,
+            "time_periods": [
+                "any"
+            ]
+        },
+        "fishing": {
+            "icon": "🎣",
+            "energy_change": 3,
+            "time_periods": [
+                "morning_rush",
+                "afternoon"
+            ]
+        },
+        "gardening": {
+            "icon": "🌱",
+            "energy_change": -2,
+            "time_periods": [
+                "morning_rush",
+                "afternoon"
+            ]
+        },
+        "playing_sports": {
+            "icon": "⚽",
+            "energy_change": -8,
+            "time_periods": [
+                "afternoon",
+                "after_work"
+            ]
+        },
+        "waiting": {
+            "icon": "⏳",
+            "energy_change": -1,
+            "time_periods": [
+                "any"
+            ]
+        }
+    },
+    "npc_hobbies": {
+        "reading": {
+            "locations": [
+                "library",
+                "home",
+                "park"
+            ],
+            "frequency": "daily"
+        },
+        "exercising": {
+            "locations": [
+                "gym",
+                "park",
+                "sports_courts"
+            ],
+            "frequency": "3_per_week"
+        },
+        "gambling": {
+            "locations": [
+                "backroom",
+                "vip_lounge"
+            ],
+            "frequency": "weekly"
+        },
+        "playing_cards": {
+            "locations": [
+                "bar",
+                "park",
+                "home"
+            ],
+            "frequency": "weekly"
+        },
+        "gardening": {
+            "locations": [
+                "rooftop_garden",
+                "park"
+            ],
+            "frequency": "3_per_week"
+        },
+        "fishing": {
+            "locations": [
+                "pond",
+                "waterfront"
+            ],
+            "frequency": "weekly"
+        },
+        "meditating": {
+            "locations": [
+                "temple",
+                "home",
+                "park"
+            ],
+            "frequency": "daily"
+        },
+        "playing_sports": {
+            "locations": [
+                "courts",
+                "park"
+            ],
+            "frequency": "weekly"
+        },
+        "socializing": {
+            "locations": [
+                "bar",
+                "club",
+                "park",
+                "home"
+            ],
+            "frequency": "daily"
+        }
+    },
+    "building_assignments": {
+        "B001": {
+            "template": "residential_small",
+            "name": "Neon Towers East"
+        },
+        "B002": {
+            "template": "residential_large",
+            "name": "Jade Tower"
+        },
+        "B003": {
+            "template": "commercial_shop",
+            "name": "Chen's Electronics"
+        },
+        "B004": {
+            "template": "entertainment_bar",
+            "name": "Circuit Breakers"
+        },
+        "B005": {
+            "template": "temple",
+            "name": "Temple Credit Union"
+        },
+        "B006": {
+            "template": "industrial_factory",
+            "name": "NeoFab Works"
+        },
+        "B007": {
+            "template": "entertainment_club",
+            "name": "The Pulse"
+        },
+        "B008": {
+            "template": "government_office",
+            "name": "Citizen Processing"
+        },
+        "B009": {
+            "template": "medical_clinic",
+            "name": "Grid Medical"
+        },
+        "B010": {
+            "template": "residential_small",
+            "name": "Block C Residences"
+        },
+        "B011": {
+            "template": "commercial_shop",
+            "name": "Night Market Stall"
+        },
+        "B012": {
+            "template": "recreation_park",
+            "name": "Neon Gardens"
+        },
+        "B013": {
+            "template": "residential_large",
+            "name": "Skyline Apartments"
+        },
+        "B014": {
+            "template": "entertainment_bar",
+            "name": "Rust & Redemption"
+        },
+        "B015": {
+            "template": "industrial_factory",
+            "name": "Maintenance Hub"
+        },
+        "B016": {
+            "template": "government_office",
+            "name": "District Admin"
+        },
+        "B017": {
+            "template": "commercial_shop",
+            "name": "Synth Foods"
+        },
+        "B018": {
+            "template": "residential_small",
+            "name": "Worker Housing Block"
+        },
+        "B019": {
+            "template": "entertainment_club",
+            "name": "Neon Arcade"
+        }
+    }
+}
