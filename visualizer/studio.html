@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RE:ECHO Studio</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-input: #21262d;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-yellow: #d29922;
+            --accent-red: #f85149;
+            --accent-purple: #a371f7;
+            --accent-cyan: #00ffff;
+            --accent-magenta: #ff00ff;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #484f58;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Header */
+        .nav-header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1a1f2e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            height: 60px;
+            gap: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .brand-name {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .brand-name span {
+            color: var(--accent-cyan);
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab:hover {
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--bg-dark);
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        .tab-icon {
+            font-size: 1.1em;
+        }
+
+        /* Status */
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-input);
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-red);
+        }
+
+        .status-dot.connected {
+            background: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tab-panel {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .tab-panel.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Iframe container for tools */
+        .tool-frame {
+            flex: 1;
+            border: none;
+            background: var(--bg-dark);
+        }
+
+        /* Welcome Panel */
+        .welcome-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 3em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            max-width: 600px;
+        }
+
+        .tool-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+        }
+
+        .tool-card-icon {
+            font-size: 2.5em;
+            margin-bottom: 16px;
+        }
+
+        .tool-card-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tool-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .tool-card-status {
+            margin-top: 16px;
+            font-size: 0.8em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .tool-card-status.ready {
+            background: rgba(63, 185, 80, 0.2);
+            color: var(--accent-green);
+        }
+
+        .tool-card-status.coming {
+            background: rgba(210, 153, 34, 0.2);
+            color: var(--accent-yellow);
+        }
+
+        /* Embedded Chat */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark);
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 24px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        .chat-message.user {
+            background: var(--accent);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.assistant {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 1em;
+            resize: none;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .chat-send {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            border: none;
+            color: white;
+            padding: 14px 24px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .chat-send:hover {
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* =================================== */
+        /* CHAT LAYOUT - 3 Column Design      */
+        /* =================================== */
+        .chat-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 280px;
+            flex: 1;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        /* Left Controls Panel */
+        .chat-controls {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .control-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-section {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .control-select {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .control-select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .time-display {
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--accent-yellow);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .control-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--bg-input);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .tick-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7em;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .control-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        /* Toggle Switches */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.85em;
+        }
+
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-input);
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle input:checked+.toggle-slider {
+            background: var(--accent-cyan);
+        }
+
+        .toggle input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+            background: white;
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .control-btn.secondary {
+            color: var(--text-secondary);
+        }
+
+        /* NPC Status Card */
+        .npc-status {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+        }
+
+        .status-value {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        /* Center Chat Container Override */
+        .chat-layout .chat-container {
+            max-width: none;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-dark);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        /* Right Mini-Map Panel */
+        .chat-map {
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #mini-map {
+            width: 100%;
+            height: 140px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* Map Legend */
+        .map-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.8em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.civilian {
+            background: var(--accent-cyan);
+        }
+
+        .legend-dot.resistance {
+            background: var(--accent-magenta);
+        }
+
+        .legend-dot.temple {
+            background: var(--accent-yellow);
+        }
+
+        .legend-dot.criminal {
+            background: var(--accent-red);
+        }
+
+        /* Block Grid */
+        .block-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .block-cell {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .block-cell:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .block-name {
+            display: block;
+            font-weight: 600;
+            font-size: 1em;
+            color: var(--accent-cyan);
+        }
+
+        .block-count {
+            display: block;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+
+        /* Map Stats */
+        .map-stats {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .map-stats .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.85em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .map-stats .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .chat-layout {
+                grid-template-columns: 240px 1fr 240px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .chat-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-controls,
+            .chat-map {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav-header">
+        <div class="brand">
+            <div class="brand-logo">RE</div>
+            <div class="brand-name"><span>RE:</span>ECHO Studio</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="home">
+                <span class="tab-icon">🏠</span> Home
+            </button>
+            <button class="tab" data-tab="chat">
+                <span class="tab-icon">💬</span> NPC Chat
+            </button>
+            <button class="tab" data-tab="api-tester">
+                <span class="tab-icon">🔧</span> API Tester
+            </button>
+            <button class="tab" data-tab="visualizer">
+                <span class="tab-icon">🗺️</span> Visualizer
+            </button>
+            <button class="tab" data-tab="image-gen" disabled>
+                <span class="tab-icon">🎨</span> Image Gen
+            </button>
+        </div>
+
+        <div class="status-section">
+            <div class="api-status">
+                <div class="status-dot" id="sim-status"></div>
+                <span>Simulation API</span>
+            </div>
+            <div class="api-status">
+                <div class="status-dot" id="chat-status"></div>
+                <span>Chat API</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Home Tab -->
+        <div class="tab-panel active" id="panel-home">
+            <div class="welcome-panel">
+                <h1 class="welcome-title">RE:ECHO Studio</h1>
+                <p class="welcome-subtitle">
+                    Your unified development environment for the AO World Engine.
+                    Chat with NPCs, test APIs, visualize simulations, and generate assets.
+                </p>
+
+                <div class="tool-cards">
+                    <div class="tool-card" onclick="switchTab('chat')">
+                        <div class="tool-card-icon">💬</div>
+                        <div class="tool-card-title">NPC Chat</div>
+                        <div class="tool-card-desc">
+                            Interact with NPCs using their persistent memory, schedules, and personalities.
+                            Test conversation flows and memory systems.
+                        </div>
+                        <span class="tool-card-status ready">Ready</span>
+                    </div>
+
+                    <div class="tool-card" onclick="switchTab('api-tester')">
+                        <div class="tool-card-icon">🔧</div>
+                        <div class="tool-card-title">API Tester</div>
+                        <div class="tool-card-desc">
+                            Interactive endpoint testing with the full API dictionary.
+                            Run test scenarios, validate responses, export results.
+                        </div>
+                        <span class="tool-card-status ready">Ready</span>
+                    </div>
+
+                    <div class="tool-card" onclick="switchTab('visualizer')">
+                        <div class="tool-card-icon">🗺️</div>
+                        <div class="tool-card-title">Simulation Visualizer</div>
+                        <div class="tool-card-desc">
+                            Watch NPCs move through the district in real-time.
+                            Track activities, events, and building occupancy.
+                        </div>
+                        <span class="tool-card-status ready">Ready</span>
+                    </div>
+
+                    <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+                        <div class="tool-card-icon">🎨</div>
+                        <div class="tool-card-title">Image Generation</div>
+                        <div class="tool-card-desc">
+                            Generate scenes from reference images using Veo 3 and Imagen.
+                            Create consistent character art and environments.
+                        </div>
+                        <span class="tool-card-status coming">Coming Soon</span>
+                    </div>
+
+                    <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+                        <div class="tool-card-icon">🎬</div>
+                        <div class="tool-card-title">Animation Studio</div>
+                        <div class="tool-card-desc">
+                            Create animated scenes with NPC interactions.
+                            Export to video with lipsync and motion.
+                        </div>
+                        <span class="tool-card-status coming">Coming Soon</span>
+                    </div>
+
+                    <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+                        <div class="tool-card-icon">📦</div>
+                        <div class="tool-card-title">Plugin Manager</div>
+                        <div class="tool-card-desc">
+                            Install, create, and manage simulation plugins.
+                            Add new behaviors, events, and NPCs.
+                        </div>
+                        <span class="tool-card-status coming">Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div class="tab-panel" id="panel-chat">
+            <div class="chat-layout">
+                <!-- Left Controls Panel -->
+                <div class="chat-controls">
+                    <h3 class="control-title">🎮 Simulation Controls</h3>
+
+                    <div class="control-section">
+                        <label class="control-label">NPC Character</label>
+                        <select id="npc-select" class="control-select">
+                            <option value="NPC_00001">Charlie Stroll (Scout)</option>
+                            <option value="NPC_00002">Wire Park (Hacker)</option>
+                            <option value="NPC_00003">Viktor Khan (Vendor)</option>
+                            <option value="NPC_00004">Marcus Flux (Guard)</option>
+                            <option value="NPC_00005">Zara Steel (Resistance)</option>
+                            <option value="NPC_00010">Ghost Sato (Assassin)</option>
+                            <option value="NPC_00015">Ivy Chen (Medic)</option>
+                            <option value="NPC_00020">Felix Tanaka (Mechanic)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-section">
+                        <label class="control-label">Time Period</label>
+                        <div class="time-display" id="time-period">T01 - Deep Night</div>
+                        <input type="range" id="tick-slider" class="control-slider" min="0" max="240" value="0">
+                        <div class="tick-labels">
+                            <span>T01</span>
+                            <span>T03</span>
+                            <span>T05</span>
+                            <span>T07</span>
+                            <span>T09</span>
+                            <span>T10</span>
+                        </div>
+                    </div>
+
+                    <div class="control-section">
+                        <label class="control-label">Current Tick: <span id="current-tick">0</span></label>
+                    </div>
+
+                    <hr class="control-divider">
+
+                    <h3 class="control-title">⚙️ Chat Settings</h3>
+
+                    <div class="toggle-row">
+                        <span>Show NPC Mood</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-mood" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <span>Show Location</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-location" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <span>Show Activity</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-activity" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <span>Deterministic Mode</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-deterministic">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <hr class="control-divider">
+
+                    <div class="control-section">
+                        <button class="control-btn" onclick="refreshNPCState()">🔄 Refresh State</button>
+                        <button class="control-btn secondary" onclick="clearChat()">🗑️ Clear Chat</button>
+                    </div>
+
+                    <div class="npc-status" id="npc-status">
+                        <div class="status-item">
+                            <span class="status-label">Activity</span>
+                            <span class="status-value" id="status-activity">-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Location</span>
+                            <span class="status-value" id="status-location">-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Mood</span>
+                            <span class="status-value" id="status-mood">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Chat Area -->
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-message assistant">
+                            👋 Welcome to RE:ECHO City! I'm <strong id="npc-name-display">Charlie</strong>, your guide
+                            to Neon Heights.
+                            Use the controls on the left to change who you talk to and the time of day.
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <textarea class="chat-input" id="chat-input" placeholder="Talk to the NPC..."
+                            rows="1"></textarea>
+                        <button class="chat-send" onclick="sendChatMessage()">Send</button>
+                    </div>
+                </div>
+
+                <!-- Right Mini-Map -->
+                <div class="chat-map">
+                    <h3 class="control-title">🗺️ Neon Heights Map</h3>
+                    <canvas id="mini-map" width="240" height="160"></canvas>
+
+                    <div class="map-legend">
+                        <div class="legend-item"><span class="legend-dot civilian"></span> Civilian</div>
+                        <div class="legend-item"><span class="legend-dot resistance"></span> Resistance</div>
+                        <div class="legend-item"><span class="legend-dot temple"></span> Temple</div>
+                        <div class="legend-item"><span class="legend-dot criminal"></span> Criminal</div>
+                    </div>
+
+                    <div class="block-grid">
+                        <div class="block-cell" data-block="A">
+                            <span class="block-name">A</span>
+                            <span class="block-count" id="block-a-count">0</span>
+                        </div>
+                        <div class="block-cell" data-block="B">
+                            <span class="block-name">B</span>
+                            <span class="block-count" id="block-b-count">0</span>
+                        </div>
+                        <div class="block-cell" data-block="C">
+                            <span class="block-name">C</span>
+                            <span class="block-count" id="block-c-count">0</span>
+                        </div>
+                        <div class="block-cell" data-block="D">
+                            <span class="block-name">D</span>
+                            <span class="block-count" id="block-d-count">0</span>
+                        </div>
+                        <div class="block-cell" data-block="E">
+                            <span class="block-name">E</span>
+                            <span class="block-count" id="block-e-count">0</span>
+                        </div>
+                        <div class="block-cell" data-block="F">
+                            <span class="block-name">F</span>
+                            <span class="block-count" id="block-f-count">0</span>
+                        </div>
+                    </div>
+
+                    <div class="map-stats">
+                        <div class="stat-row">
+                            <span>Total NPCs Active</span>
+                            <span id="total-active">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Events This Tick</span>
+                            <span id="events-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Tester Tab (iframe) -->
+        <div class="tab-panel" id="panel-api-tester">
+            <iframe class="tool-frame" src="api_tester.html" id="api-tester-frame"></iframe>
+        </div>
+
+        <!-- Visualizer Tab (iframe) -->
+        <div class="tab-panel" id="panel-visualizer">
+            <iframe class="tool-frame" src="index.html" id="visualizer-frame"></iframe>
+        </div>
+
+        <!-- Image Gen Tab (placeholder) -->
+        <div class="tab-panel" id="panel-image-gen">
+            <div class="welcome-panel">
+                <h2>🎨 Image Generation</h2>
+                <p class="welcome-subtitle">Coming soon with Veo 3 and Imagen integration</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div>AO World Engine v1.0 • <a href="https://github.com/WandernGeo/ao-world-engine" target="_blank">GitHub</a>
+        </div>
+        <div>Built for the Arweave ecosystem</div>
+    </footer>
+
+    <script>
+        // Configuration
+        const SIMULATION_API = 'http://localhost:8081';
+        let currentNpcData = null;
+        let npcList = {};
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tabName);
+            });
+            document.querySelectorAll('.tab-panel').forEach(p => {
+                p.classList.toggle('active', p.id === `panel-${tabName}`);
+            });
+        }
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (!tab.disabled) {
+                    switchTab(tab.dataset.tab);
+                }
+            });
+        });
+
+        // Check API statuses and load NPC list
+        async function checkAPIs() {
+            try {
+                const res = await fetch(`${SIMULATION_API}/api/stats`);
+                if (res.ok) {
+                    document.getElementById('sim-status').classList.add('connected');
+                    await loadNPCList();
+                }
+            } catch (e) {
+                console.log('Simulation API not connected');
+            }
+
+            try {
+                const res = await fetch('http://localhost:8080/');
+                if (res.ok) {
+                    document.getElementById('chat-status').classList.add('connected');
+                }
+            } catch (e) { }
+        }
+
+        // Load NPC list for selector
+        async function loadNPCList() {
+            try {
+                const res = await fetch(`${SIMULATION_API}/api/npcs?limit=50`);
+                const data = await res.json();
+                const select = document.getElementById('npc-select');
+                select.innerHTML = '';
+
+                data.npcs.forEach(npc => {
+                    npcList[npc.id] = npc;
+                    const option = document.createElement('option');
+                    option.value = npc.id;
+                    option.textContent = `${npc.name} (${npc.archetype})`;
+                    select.appendChild(option);
+                });
+
+                // Load initial NPC state
+                refreshNPCState();
+            } catch (e) {
+                console.log('Failed to load NPC list:', e);
+            }
+        }
+
+        // Get current tick from slider
+        function getCurrentTick() {
+            return parseInt(document.getElementById('tick-slider').value) || 0;
+        }
+
+        // Get selected NPC ID
+        function getSelectedNPC() {
+            return document.getElementById('npc-select').value;
+        }
+
+        // Update time period display
+        function updateTimePeriod() {
+            const tick = getCurrentTick();
+            const period = Math.floor(tick / 24) + 1;
+            const periods = {
+                1: 'Deep Night', 2: 'Pre-Dawn', 3: 'Morning Rush',
+                4: 'Work Hours', 5: 'Midday', 6: 'Afternoon',
+                7: 'Evening Rush', 8: 'Night Life', 9: 'Late Night', 10: 'Midnight'
+            };
+            document.getElementById('time-period').textContent = `T${String(period).padStart(2, '0')} - ${periods[period] || 'Unknown'}`;
+            document.getElementById('current-tick').textContent = tick;
+        }
+
+        // Refresh NPC state from API  
+        async function refreshNPCState() {
+            const npcId = getSelectedNPC();
+            const tick = getCurrentTick();
+
+            if (!npcId) return;
+
+            try {
+                const res = await fetch(`${SIMULATION_API}/api/npcs/${npcId}/state?tick=${tick}`);
+                currentNpcData = await res.json();
+
+                // Update status display
+                document.getElementById('status-activity').textContent = currentNpcData.activity || '-';
+                document.getElementById('status-location').textContent = currentNpcData.location || '-';
+                document.getElementById('status-mood').textContent = currentNpcData.mood || '-';
+
+                // Update welcome message with NPC name
+                const npc = npcList[npcId];
+                if (npc) {
+                    document.getElementById('npc-name-display').textContent = npc.name.split(' ')[0];
+                }
+            } catch (e) {
+                console.log('Failed to get NPC state:', e);
+                document.getElementById('status-activity').textContent = 'API Error';
+            }
+        }
+
+        // Send chat message
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            const messages = document.getElementById('chat-messages');
+            messages.innerHTML += `<div class="chat-message user">${escapeHtml(message)}</div>`;
+            input.value = '';
+
+            const npcId = getSelectedNPC();
+            const tick = getCurrentTick();
+            const npc = npcList[npcId];
+
+            try {
+                // Get fresh NPC state
+                const stateRes = await fetch(`${SIMULATION_API}/api/npcs/${npcId}/state?tick=${tick}`);
+                const state = await stateRes.json();
+
+                const response = generateNPCResponse(message, state, npc);
+                messages.innerHTML += `<div class="chat-message assistant">${response}</div>`;
+            } catch (e) {
+                messages.innerHTML += `<div class="chat-message assistant">⚠️ Can't connect to API. Run: <code>python3 api/api_simulation.py</code></div>`;
+            }
+
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function generateNPCResponse(userMessage, state, npc) {
+            const msg = userMessage.toLowerCase();
+            const name = npc?.name?.split(' ')[0] || 'NPC';
+            const activity = state.activity || 'idle';
+            const location = state.location || 'somewhere';
+            const mood = state.mood || 'neutral';
+            const faction = npc?.faction || 'civilian';
+            const archetype = npc?.archetype || 'resident';
+
+            // Realistic self-descriptions by archetype (criminals don't admit to being criminals!)
+            const archetypeDesc = {
+                criminal: ['freelancer', 'independent contractor', 'fixer', 'entrepreneur'][Math.floor(Math.random() * 4)],
+                guard: 'security professional',
+                vendor: 'merchant',
+                worker: 'shift worker',
+                resident: 'local',
+                visitor: 'traveler',
+                service: 'service worker',
+                resistance: 'community organizer'
+            };
+            const selfDesc = archetypeDesc[archetype] || 'resident';
+
+            if (msg.includes('who') || msg.includes('name') || msg.includes('you')) {
+                const intros = {
+                    criminal: `Name's ${name}. I'm... a ${selfDesc}. I help people get things done. *glances around* What do you need?`,
+                    guard: `${name}, ${selfDesc} here at ${location}. Keep things orderly. What's your business?`,
+                    vendor: `Hey! I'm ${name}, best ${selfDesc} in the district. Looking to buy something?`,
+                    resistance: `${name}. I'm a ${selfDesc}, if you know what I mean. *lowers voice* What brings you here?`,
+                    default: `I'm ${name}, just a ${selfDesc} in Neon Heights. Currently ${activity}. What's up?`
+                };
+                return intros[archetype] || intros.default;
+            }
+            if (msg.includes('where') || msg.includes('location')) {
+                return `I'm at ${location}, ${activity}. Mood's ${mood} today. Why, you looking for me?`;
+            }
+            if (msg.includes('faction') || msg.includes('resistance') || msg.includes('group')) {
+                const factionInfo = {
+                    civilian: "Just a regular citizen trying to survive in Neon Heights.",
+                    resistance: "*looks around carefully* ...The Resistance fights for freedom. But you didn't hear that from me.",
+                    temple: "The Temple keepers preserve the old ways. Balance must be maintained.",
+                    criminal: "*smirks* I'm... self-employed. I don't answer to anyone. You?"
+                };
+                return factionInfo[faction] || `I mind my own business. You should too.`;
+            }
+            if (msg.includes('help') || msg.includes('quest') || msg.includes('job')) {
+                const jobs = {
+                    criminal: `*leans in* I might know someone who needs a job done... off the books. You interested?`,
+                    resistance: `There's always work for those who want to make a difference. But first, prove you can be trusted.`,
+                    default: `*${activity}* Help? Maybe... but trust is earned. Come back when you've proven yourself.`
+                };
+                return jobs[archetype] || jobs.default;
+            }
+            if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
+                return `*nods* Hey. I'm ${name}. ${mood === 'stressed' ? "Been a rough day." : "What brings you around?"}`;
+            }
+
+            return `*${activity}* ${mood === 'happy' ? 'Yeah?' : mood === 'stressed' ? '*sighs*' : 'Hmm?'} What's on your mind?`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function clearChat() {
+            const npc = npcList[getSelectedNPC()];
+            const name = npc?.name?.split(' ')[0] || 'NPC';
+            document.getElementById('chat-messages').innerHTML = `
+                <div class="chat-message assistant">
+                    👋 Chat cleared. Still talking to <strong>${name}</strong>. Use the controls to change NPC or time.
+                </div>`;
+        }
+
+        // Event listeners
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+
+        document.getElementById('tick-slider').addEventListener('input', () => {
+            updateTimePeriod();
+        });
+
+        document.getElementById('tick-slider').addEventListener('change', () => {
+            refreshNPCState();
+        });
+
+        document.getElementById('npc-select').addEventListener('change', () => {
+            refreshNPCState();
+        });
+
+        // Initialize
+        checkAPIs();
+        updateTimePeriod();
+    </script>
+</body>
+
+</html>
