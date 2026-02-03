@@ -758,13 +758,50 @@ def simulate_tick(world_state: dict, tick: int) -> dict:
     random_events = generate_random_events(tick, world_state.get("locations", []))
     result["events"].extend(random_events)
     
-    # 6. Calculate NPC interactions
+    # 6. Calculate NPC interactions AND PERSIST THEM
     npcs = world_state.get("npcs", [])
-    for i, npc1 in enumerate(npcs):
-        for npc2 in npcs[i+1:]:
-            interaction = calculate_interaction(npc1, npc2, tick)
-            if interaction:
-                result["interactions"].append(interaction)
+    
+    # Group NPCs by location for efficient interaction checks
+    npcs_by_location = {}
+    for npc in npcs:
+        loc = npc.get("location", "unknown")
+        if loc not in npcs_by_location:
+            npcs_by_location[loc] = []
+        npcs_by_location[loc].append(npc)
+    
+    # Only check interactions within same location
+    for location, location_npcs in npcs_by_location.items():
+        for i, npc1 in enumerate(location_npcs):
+            for npc2 in location_npcs[i+1:]:
+                interaction = calculate_interaction(npc1, npc2, tick)
+                if interaction:
+                    result["interactions"].append(interaction)
+                    
+                    # PERSIST: Store to NPC relationships system
+                    try:
+                        import sys
+                        import os
+                        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'data'))
+                        from npc_relationships import record_interaction
+                        record_interaction(
+                            npc1["id"], npc2["id"],
+                            interaction.get("interaction", "unknown"),
+                            tick,
+                            location=location
+                        )
+                    except ImportError:
+                        pass  # NPC relationships module not available
+    
+    # 7. Process world events (new buildings, migrations, etc.)
+    try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'data'))
+        from world_events import process_world_events
+        world_event_results = process_world_events(world_state, tick)
+        result["world_events"] = world_event_results
+    except ImportError:
+        pass  # World events module not available
     
     return result
 
