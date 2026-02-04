@@ -342,8 +342,8 @@ export default function KnowledgeGraphPage() {
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
     const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(1.0); // Start well zoomed in
-    const [pan, setPan] = useState({ x: -800, y: -600 }); // Center on the graph cluster
+    const [zoom, setZoom] = useState(2.0); // Start zoomed in large
+    const [pan, setPan] = useState({ x: -1400, y: -1100 }); // Center on the graph cluster
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isSimulating, setIsSimulating] = useState(true);
@@ -690,8 +690,8 @@ export default function KnowledgeGraphPage() {
             const now = Date.now();
             // Track velocity for bouncy throw
             const dt = Math.max(1, now - lastDragPos.current.time) / 1000;
-            const throwVx = (mx - lastDragPos.current.x) / dt * 0.02; // Scale down for nice throw
-            const throwVy = (my - lastDragPos.current.y) / dt * 0.02;
+            const throwVx = (mx - lastDragPos.current.x) / dt * 0.002; // Very gentle throw
+            const throwVy = (my - lastDragPos.current.y) / dt * 0.002;
             lastDragPos.current = { x: mx, y: my, time: now };
 
             setData(prev => ({
@@ -738,7 +738,7 @@ export default function KnowledgeGraphPage() {
             }
         }
         setHoveredEntity(null);
-        if (canvasRef.current) canvasRef.current.style.cursor = 'default';
+        if (canvasRef.current) canvasRef.current.style.cursor = 'grab'; // Grab cursor shows you can pan
     };
 
     const handleMouseUp = () => {
@@ -907,10 +907,10 @@ export default function KnowledgeGraphPage() {
                             {showFamilyOnly ? '👨‍👩‍👧 Family Only' : '👨‍👩‍👧 Show Family'}
                         </Button>
                         <div className="flex gap-1">
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(5, z + 0.1))}>+</Button>
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.1))}>−</Button>
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(15, z + 0.2))}>+</Button>
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.2))}>−</Button>
                         </div>
-                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: -800, y: -600 }); setZoom(1.0); setRotationX(0); setRotationY(0); }}>Reset</Button>
+                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: -1400, y: -1100 }); setZoom(2.0); setRotationX(0); setRotationY(0); }}>Reset</Button>
                         <Button
                             size="sm"
                             variant={autoRotate ? 'default' : 'outline'}
