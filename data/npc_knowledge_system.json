@@ -1,0 +1,338 @@
+{
+    "_desc": "NPC Knowledge System - What NPCs know about each other",
+    "_version": "1.0.0",
+    "knowledge_types": {
+        "public": {
+            "_desc": "Visible to anyone who meets them",
+            "fields": [
+                "name",
+                "occupation",
+                "faction",
+                "visible_cyberware",
+                "district",
+                "approximate_age"
+            ]
+        },
+        "surface": {
+            "_desc": "Learned through brief conversation or observation",
+            "fields": [
+                "personality_vibe",
+                "current_mood",
+                "frequents_location",
+                "general_reputation"
+            ]
+        },
+        "shared": {
+            "_desc": "NPC chooses to share this in conversation",
+            "fields": [
+                "backstory_summary",
+                "family_status",
+                "goals",
+                "opinions",
+                "fears"
+            ]
+        },
+        "private": {
+            "_desc": "Only revealed through trust or discovery",
+            "fields": [
+                "secrets",
+                "hidden_faction",
+                "true_name",
+                "debts",
+                "crimes"
+            ]
+        },
+        "witnessed": {
+            "_desc": "Observed directly, not told",
+            "fields": [
+                "actions_seen",
+                "places_spotted",
+                "companions_seen",
+                "skills_demonstrated"
+            ]
+        }
+    },
+    "example_npc_profile": {
+        "id": "charlie",
+        "name": "Charlie",
+        "public_knowledge": {
+            "_desc": "Anyone who meets Charlie knows this",
+            "name": "Charlie",
+            "occupation": "Courier / Information Broker",
+            "faction": "Neutral (publicly)",
+            "visible_cyberware": [
+                "holographic arm display",
+                "subtle eye augment"
+            ],
+            "district": "Usually seen in Undercity and Market",
+            "approximate_age": "Late 20s"
+        },
+        "surface_knowledge": {
+            "_desc": "Brief interaction reveals this",
+            "personality_vibe": "Cautious but helpful",
+            "reputation": "Reliable for deliveries, knows things",
+            "frequents": [
+                "Felix's Bar",
+                "Neon Market",
+                "Dead drop alley"
+            ],
+            "associates_with": "Various, seems well-connected"
+        },
+        "shared_knowledge": {
+            "_desc": "Charlie shares this if trust is built",
+            "lore_sections": [
+                "CHARLIE_ORIGIN",
+                "CHARLIE_GOALS",
+                "CHARLIE_FAMILY"
+            ],
+            "backstory_summary": "Lost family during The Silence, works to survive",
+            "goals": "Find truth about what happened to parents",
+            "opinions": {
+                "temple": "Distrusts them, thinks they're hiding things",
+                "resistance": "Sympathetic but cautious",
+                "echoes": "Believes they exist, has heard stories"
+            }
+        },
+        "private_knowledge": {
+            "_desc": "Secret - only closest allies or through discovery",
+            "lore_sections": [
+                "CHARLIE_SECRET",
+                "CHARLIE_TRUE_MISSION"
+            ],
+            "hidden_faction": "Secretly aids resistance",
+            "secrets": [
+                "Has a fragment of an Echo device",
+                "Parents were resistance leaders"
+            ],
+            "true_motivation": "Searching for Echo archive parents supposedly found"
+        }
+    },
+    "lore_sections": {
+        "_desc": "Discrete chunks of lore that can be passed between NPCs",
+        "CHARLIE_ORIGIN": {
+            "id": "LORE_CHARLIE_001",
+            "summary": "Charlie grew up in the Undercity after the Silence",
+            "full_text": "Charlie was orphaned during the chaos following The Silence. Raised by the streets and kind strangers, they learned to survive by being useful - running messages, finding things, knowing things others didn't want known.",
+            "can_share": true,
+            "trust_required": 0.4
+        },
+        "CHARLIE_GOALS": {
+            "id": "LORE_CHARLIE_002",
+            "summary": "Charlie wants to find the truth about their parents",
+            "full_text": "Charlie's parents disappeared when they were young. All Charlie has are fragments - a data chip they can't decode, whispers that their parents knew something important, and a feeling that the Temple was involved.",
+            "can_share": true,
+            "trust_required": 0.6
+        },
+        "CHARLIE_SECRET": {
+            "id": "LORE_CHARLIE_003",
+            "summary": "Charlie has a piece of Echo technology",
+            "full_text": "Hidden in a secret compartment in their holographic arm is a fragment of something their parents left behind. Charlie doesn't know what it is, but when they hold it, they sometimes hear... something. Like distant music.",
+            "can_share": false,
+            "trust_required": 0.9,
+            "share_conditions": [
+                "saved_life",
+                "proven_trustworthy",
+                "resistance_ally"
+            ]
+        }
+    },
+    "knowledge_transfer": {
+        "_desc": "How knowledge spreads between NPCs",
+        "transfer_triggers": {
+            "greeting": {
+                "shares": "public_knowledge",
+                "probability": 1.0
+            },
+            "small_talk": {
+                "shares": "surface_knowledge",
+                "probability": 0.5
+            },
+            "gossip": {
+                "shares": [
+                    "surface_knowledge",
+                    "shared_knowledge_fragments"
+                ],
+                "probability": 0.4,
+                "accuracy": 0.7
+            },
+            "deep_conversation": {
+                "shares": "shared_knowledge",
+                "probability": 0.3,
+                "requires_trust": 0.4
+            },
+            "confession": {
+                "shares": "private_knowledge",
+                "probability": 0.1,
+                "requires_trust": 0.8
+            }
+        },
+        "gossip_degradation": {
+            "_desc": "Information gets distorted as it spreads",
+            "1_hop": {
+                "accuracy": 0.95,
+                "detail_loss": 0.1
+            },
+            "2_hops": {
+                "accuracy": 0.80,
+                "detail_loss": 0.3
+            },
+            "3_hops": {
+                "accuracy": 0.60,
+                "detail_loss": 0.5
+            },
+            "4_plus_hops": {
+                "accuracy": 0.40,
+                "detail_loss": 0.7,
+                "may_be_wrong": true
+            }
+        }
+    },
+    "npc_knowledge_storage": {
+        "_desc": "What NPC_A knows about NPC_B",
+        "schema": {
+            "about_npc_id": "string",
+            "knowledge_level": "none | public | surface | shared | private",
+            "known_facts": [
+                "list of fact IDs"
+            ],
+            "known_lore": [
+                "list of lore section IDs"
+            ],
+            "impressions": [
+                "list of personal impressions"
+            ],
+            "last_interaction_tick": "int",
+            "trust_level": "float 0-1",
+            "gossip_heard": [
+                "facts heard from others, may be inaccurate"
+            ]
+        },
+        "example": {
+            "npc_id": "felix",
+            "knows_about": {
+                "charlie": {
+                    "knowledge_level": "shared",
+                    "known_facts": [
+                        "FACT_CHARLIE_COURIER",
+                        "FACT_CHARLIE_HOLO_ARM",
+                        "FACT_CHARLIE_ORPHAN"
+                    ],
+                    "known_lore": [
+                        "LORE_CHARLIE_001",
+                        "LORE_CHARLIE_002"
+                    ],
+                    "impressions": [
+                        "trustworthy",
+                        "keeps secrets",
+                        "looking for something"
+                    ],
+                    "trust_level": 0.75,
+                    "last_interaction_tick": 1200
+                },
+                "NPC_00234": {
+                    "knowledge_level": "public",
+                    "known_facts": [
+                        "FACT_00234_MERCHANT"
+                    ],
+                    "known_lore": [],
+                    "impressions": [
+                        "new face",
+                        "temple loyal maybe"
+                    ],
+                    "trust_level": 0.3,
+                    "gossip_heard": [
+                        {
+                            "fact": "Connected to Spire",
+                            "source": "dock_worker",
+                            "accuracy": 0.6
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "sharing_dialogue": {
+        "_desc": "How NPCs share information about others",
+        "sharing_about_self": [
+            "My name is {name}. I work as a {occupation}.",
+            "I've been around {district} for years.",
+            "*shows holographic arm* Got this after... well, it's a long story.",
+            "You want to know about me? Buy me a drink first.",
+            "I keep a low profile. It's safer that way."
+        ],
+        "sharing_about_others": [
+            "You're asking about {npc_name}? {known_fact}.",
+            "I know {npc_name}. {impression}.",
+            "{npc_name}? *considers* They're {reputation}.",
+            "Don't know much. {gossip_heard}.",
+            "We've talked a few times. They seem {personality_vibe}."
+        ],
+        "sharing_lore": [
+            "*leans in* Not many people know this, but {lore_summary}...",
+            "{npc_name} told me once that {lore_summary}.",
+            "I probably shouldn't say, but... {lore_summary}.",
+            "Between us? {lore_summary}. Don't spread it around."
+        ],
+        "refusing_to_share": [
+            "That's not my information to give.",
+            "Ask them yourself.",
+            "I don't gossip about friends.",
+            "Some things should stay private.",
+            "Why do you need to know?"
+        ],
+        "inaccurate_gossip": [
+            "I heard {npc_name} is {wrong_fact}. Can't confirm though.",
+            "Word is {npc_name} {exaggerated_fact}.",
+            "Someone told me {npc_name} {distorted_fact}. Take it with grain of salt.",
+            "Rumor has it {npc_name} {completely_wrong}. You know how people talk."
+        ]
+    },
+    "discovery_events": {
+        "_desc": "How NPCs learn private info without being told",
+        "witness_action": {
+            "example": "NPC sees Charlie meeting with resistance",
+            "learns": [
+                "FACT_CHARLIE_RESISTANCE_CONNECTION"
+            ],
+            "can_share": true,
+            "blackmail_potential": true
+        },
+        "find_evidence": {
+            "example": "NPC finds Charlie's hidden data chip",
+            "learns": [
+                "LORE_CHARLIE_SECRET"
+            ],
+            "can_share": true,
+            "relationship_impact": "major"
+        },
+        "overhear_conversation": {
+            "example": "NPC overhears Charlie talking to Felix",
+            "learns": "fragment of conversation topic",
+            "accuracy": 0.7,
+            "can_share": true
+        }
+    },
+    "system_vs_personal_knowledge": {
+        "_desc": "Some things are world facts, others are opinions",
+        "system_knowledge": {
+            "_desc": "Objective facts stored in world state",
+            "examples": [
+                "Charlie's real name is [REDACTED]",
+                "Charlie was born in Sector 7",
+                "Charlie's parents were resistance leaders",
+                "Charlie has Echo fragment in arm"
+            ],
+            "source": "world_state.npcs[id].true_facts"
+        },
+        "personal_knowledge": {
+            "_desc": "What an individual NPC believes (may be wrong)",
+            "examples": [
+                "I think Charlie is trustworthy",
+                "Charlie seems nervous around Temple guards",
+                "Someone told me Charlie has a hidden weapon"
+            ],
+            "source": "npc.memory.about_npcs[id]",
+            "can_be_wrong": true
+        }
+    }
+}
