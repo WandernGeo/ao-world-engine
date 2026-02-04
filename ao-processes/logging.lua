@@ -7,7 +7,8 @@
   Logs are emitted as AO messages and stored permanently on Arweave.
 ]]--
 
-local json = require("json")
+local json = json or require("json")
+
 
 -- =============================================================================
 -- LOG STORAGE

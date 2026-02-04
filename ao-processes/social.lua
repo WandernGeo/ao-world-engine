@@ -11,8 +11,8 @@
   Uses deterministic computation for verifiable state.
 ]]--
 
-local json = require("json")
-local crypto = require("crypto")
+local json = json or require("json")
+local crypto = crypto or require("crypto")
 
 -- =============================================================================
 -- GLOBAL STATE

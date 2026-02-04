@@ -5,7 +5,7 @@
   Deploy with: aos SignalNoir1 --load signalnoir_config.lua --cron 1-minute
 ]]--
 
-local json = require("json")
+local json = json or require("json")
 
 -- =============================================================================
 -- WORLD IDENTITY

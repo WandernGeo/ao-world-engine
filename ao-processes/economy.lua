@@ -14,8 +14,8 @@
   Designed for millions of NPCs across thousands of job types.
 ]]--
 
-local json = require("json")
-local crypto = require("crypto")
+local json = json or require("json")
+local crypto = crypto or require("crypto")
 
 -- =============================================================================
 -- GLOBAL STATE

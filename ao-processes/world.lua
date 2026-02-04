@@ -13,8 +13,8 @@
   SECURITY: No secrets. State is holographic (reconstructible from logs).
 ]]--
 
-local json = require("json")
-local crypto = require("crypto")
+local json = json or require("json")
+local crypto = crypto or require("crypto")
 
 -- =============================================================================
 -- GLOBAL STATE (Uppercase = persisted on Arweave)
