@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { TimeControls } from '@/components/TimeControls';
 import { SceneGenerator } from '@/components/SceneGenerator';
+import { TimelineBar } from '@/components/TimelineBar';
+import { BuildingBlueprint } from '@/components/BuildingBlueprint';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -124,6 +126,16 @@ export default function ExplorePage() {
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [npcs, setNpcs] = useState<NPC[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
+    const [showBlueprint, setShowBlueprint] = useState(false);
+
+    // Timeline events
+    const [timelineEvents, setTimelineEvents] = useState([
+        { tick: 10, timestamp: 'Day 1, 10:00', type: 'gossip', description: 'Rumors spreading in the Market', participants: ['Old Chen', 'Mika'] },
+        { tick: 35, timestamp: 'Day 2, 11:00', type: 'trade', description: 'Tech parts sold at Tech Shop', participants: ['Orion', 'Pixel'] },
+        { tick: 58, timestamp: 'Day 3, 10:00', type: 'conflict', description: 'Altercation at Neon Motel', participants: ['Kira', 'Ghost'] },
+        { tick: 72, timestamp: 'Day 4, 00:00', type: 'news', description: 'New regulation from Temple', participants: ['Inquisitor Vex'] },
+        { tick: 95, timestamp: 'Day 4, 23:00', type: 'friendly_chat', description: 'Patrons chatting at Felix\'s Bar', participants: ['Felix', 'Charlie', 'Mason'] },
+    ]);
 
     // Pan and zoom state
     const [zoom, setZoom] = useState(1);
@@ -384,7 +396,14 @@ export default function ExplorePage() {
                     {/* View Mode Buttons */}
                     <div className="absolute top-4 left-4 flex gap-2">
                         <Button variant="outline" size="sm" className="bg-black/70">District View</Button>
-                        <Button variant="ghost" size="sm" className="text-zinc-500">Blueprint</Button>
+                        <Button
+                            variant={showBlueprint ? "default" : "ghost"}
+                            size="sm"
+                            className={showBlueprint ? "bg-cyan-600" : "text-zinc-500"}
+                            onClick={() => setShowBlueprint(!showBlueprint)}
+                        >
+                            Blueprint
+                        </Button>
                         <Button variant="ghost" size="sm" className="text-zinc-500">3D</Button>
                     </div>
                 </div>
@@ -400,6 +419,30 @@ export default function ExplorePage() {
                         tickSpeed={tickSpeed}
                         onSpeedChange={setTickSpeed}
                     />
+
+                    {/* Timeline Visualizer */}
+                    <TimelineBar
+                        currentTick={currentTick}
+                        maxTick={200}
+                        events={timelineEvents}
+                        onTickChange={setCurrentTick}
+                        onEventClick={(event) => console.log('Event clicked:', event)}
+                    />
+
+                    {/* Building Blueprint (shown when building selected + blueprint mode) */}
+                    {selectedBuilding && showBlueprint && (
+                        <BuildingBlueprint
+                            building={{
+                                ...selectedBuilding,
+                                occupants: npcs.filter(n => n.location === selectedBuilding.id).map(n => n.name)
+                            }}
+                            onClose={() => setShowBlueprint(false)}
+                            onNpcClick={(npcId) => {
+                                const npc = npcs.find(n => n.name === npcId);
+                                if (npc) setSelectedNPC(npc);
+                            }}
+                        />
+                    )}
 
                     {/* Selected Building Info */}
                     {selectedBuilding && (
