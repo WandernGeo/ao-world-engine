@@ -551,8 +551,10 @@ def simulation_tick():
     """
     Run simulation for a specific tick.
     Returns all NPC states and events.
+    Add ?full=true to get all NPC states (slower).
     """
     tick = int(request.args.get("tick", 100))
+    full = request.args.get("full", "false").lower() == "true"
     npcs = get_npcs()
     
     # Calculate all NPC states
@@ -573,6 +575,14 @@ def simulation_tick():
     # Generate random events (deterministic)
     events = generate_events(tick, location_counts)
     
+    # Return full or truncated states based on param
+    if full:
+        npc_states = states
+        truncated = False
+    else:
+        npc_states = states[:100] if len(states) > 100 else states
+        truncated = len(states) > 100
+    
     return jsonify({
         "tick": tick,
         "time": get_time_info(tick),
@@ -580,9 +590,8 @@ def simulation_tick():
         "location_summary": location_counts,
         "activity_summary": activity_counts,
         "events": events,
-        # Only include first 100 states for performance
-        "npc_states": states[:100] if len(states) > 100 else states,
-        "npc_states_truncated": len(states) > 100,
+        "npc_states": npc_states,
+        "npc_states_truncated": truncated,
     })
 
 

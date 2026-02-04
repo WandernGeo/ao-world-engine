@@ -241,12 +241,13 @@ export default function ExplorePage() {
     useEffect(() => {
         if (!mounted) return;
 
-        // Only fetch every 5 ticks to avoid overwhelming the API
-        if (currentTick % 5 !== 0) return;
+        // Only fetch every 10 ticks to avoid overwhelming the API
+        if (currentTick % 10 !== 0) return;
 
         const fetchNPCStates = async () => {
             try {
-                const response = await fetch(`${API_BASE}/api/simulation/tick?tick=${currentTick}`);
+                // Request full=true to get ALL 800 NPC states
+                const response = await fetch(`${API_BASE}/api/simulation/tick?tick=${currentTick}&full=true`);
                 if (response.ok) {
                     const data = await response.json();
                     const npcStates = data.npc_states || [];
@@ -265,9 +266,11 @@ export default function ExplorePage() {
                             });
 
                             // Update existing NPCs with new states
-                            return prevNpcs.map(npc => {
+                            let updatedCount = 0;
+                            const updated = prevNpcs.map(npc => {
                                 const apiState = stateMap.get(npc.id);
                                 if (apiState) {
+                                    updatedCount++;
                                     return {
                                         ...npc,
                                         location: apiState.location,
@@ -277,8 +280,9 @@ export default function ExplorePage() {
                                 }
                                 return npc;
                             });
+                            console.log(`Tick ${currentTick}: Updated ${updatedCount}/${npcStates.length} NPC states`);
+                            return updated;
                         });
-                        console.log(`Tick ${currentTick}: Updated ${npcStates.length} NPC states from API`);
                     }
                 }
             } catch (error) {
