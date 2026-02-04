@@ -33,6 +33,9 @@ interface NPC {
     role?: string;
     traits?: string[];
     catchphrase?: string;
+    // Home/workplace for role calculation
+    home?: string;
+    workplace?: string;
 }
 
 interface District {
@@ -97,21 +100,38 @@ const LAST_NAMES = ['Black', 'Chen', 'Vance', 'Reyes', 'Park', 'Kim', 'Silva', '
 const ACTIVITIES = ['working', 'trading', 'walking', 'talking', 'resting', 'eating', 'drinking', 'watching', 'waiting', 'hiding', 'reading', 'sleeping', 'praying', 'shopping', 'gambling', 'hacking', 'crafting', 'patrolling'];
 const MOODS = ['friendly', 'cautious', 'nervous', 'calm', 'busy', 'tired', 'focused', 'cheerful', 'cold', 'secretive'];
 
-// Determine NPC role in a building
+// Determine NPC role in a building based on their home/workplace vs current location
 function getNPCRole(npc: NPC, buildingId: string, buildingType: string): string {
-    // Check if this is their workplace (employee/owner)
-    if (npc.location === buildingId) {
-        // Owner archetypes
+    // If they LIVE here - they're a resident
+    if (npc.home === buildingId) {
         if (npc.archetype?.includes('Bartender') || npc.archetype?.includes('Broker')) return 'Owner';
+        return 'Resident';
+    }
+
+    // If they WORK here - employee/owner type
+    if (npc.workplace === buildingId) {
         if (npc.archetype?.includes('vendor') || npc.archetype?.includes('Merchant')) return 'Vendor';
         if (npc.archetype?.includes('service')) return 'Staff';
         if (npc.archetype?.includes('guard')) return 'Security';
-        if (buildingType === 'entertainment' || buildingType === 'commercial') return 'Employee';
-        if (buildingType === 'residential') return 'Resident';
-        return 'Worker';
+        if (npc.archetype?.includes('worker')) return 'Worker';
+        if (buildingType === 'commercial' || buildingType === 'shop') return 'Clerk';
+        if (buildingType === 'entertainment' || buildingType === 'bar') return 'Staff';
+        if (buildingType === 'restaurant') return 'Server';
+        return 'Employee';
     }
-    // They're visiting
-    return 'Patron';
+
+    // They're visiting - determine visitor type based on activity and building type
+    const activity = npc.activity?.toLowerCase() || '';
+    if (activity === 'shopping') return 'Customer';
+    if (activity === 'drinking' || activity === 'socializing') return 'Patron';
+    if (activity === 'eating') return 'Diner';
+    if (activity === 'gambling') return 'Gambler';
+    if (activity === 'patrol') return 'Guard';
+    if (activity === 'mission' || activity === 'intel') return 'Agent';
+    if (buildingType === 'commercial') return 'Customer';
+    if (buildingType === 'entertainment' || buildingType === 'bar') return 'Patron';
+    if (buildingType === 'restaurant') return 'Diner';
+    return 'Visitor';
 }
 
 function generateNPCs(districts: District[], count: number): NPC[] {
@@ -178,7 +198,7 @@ export default function ExplorePage() {
                         const mappedNPCs: NPC[] = apiNPCs.map((n: Record<string, unknown>) => ({
                             id: n.id as string,
                             name: n.name as string,
-                            location: (n.workplace as string) || (n.home as string) || 'B001', // Use workplace if available
+                            location: (n.workplace as string) || (n.home as string) || 'B001', // Initial location
                             activity: ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)],
                             mood: MOODS[Math.floor(Math.random() * MOODS.length)],
                             archetype: n.archetype as string,
@@ -188,6 +208,9 @@ export default function ExplorePage() {
                             traits: Array.isArray((n.personality as { all_traits?: string[] })?.all_traits)
                                 ? (n.personality as { all_traits: string[] }).all_traits.slice(0, 5)
                                 : undefined,
+                            // Home/workplace for role calculation
+                            home: n.home as string,
+                            workplace: n.workplace as string,
                         }));
                         setNpcs(mappedNPCs);
                         console.log(`Loaded ${mappedNPCs.length} NPCs from API`);
@@ -213,6 +236,58 @@ export default function ExplorePage() {
 
         return () => clearInterval(interval);
     }, [isPlaying, tickSpeed, mounted]);
+
+    // Fetch NPC states when tick changes (throttled)
+    useEffect(() => {
+        if (!mounted) return;
+
+        // Only fetch every 5 ticks to avoid overwhelming the API
+        if (currentTick % 5 !== 0) return;
+
+        const fetchNPCStates = async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/simulation/tick?tick=${currentTick}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const npcStates = data.npc_states || [];
+
+                    if (Array.isArray(npcStates) && npcStates.length > 0) {
+                        // Update NPC locations and activities from API
+                        setNpcs(prevNpcs => {
+                            // Create a map of API states by ID
+                            const stateMap = new Map<string, { location: string; activity: string; mood: string }>();
+                            npcStates.forEach((s: { npc_id: string; location: string; activity: string; mood: string }) => {
+                                stateMap.set(s.npc_id, {
+                                    location: s.location,
+                                    activity: s.activity,
+                                    mood: s.mood
+                                });
+                            });
+
+                            // Update existing NPCs with new states
+                            return prevNpcs.map(npc => {
+                                const apiState = stateMap.get(npc.id);
+                                if (apiState) {
+                                    return {
+                                        ...npc,
+                                        location: apiState.location,
+                                        activity: apiState.activity,
+                                        mood: apiState.mood
+                                    };
+                                }
+                                return npc;
+                            });
+                        });
+                        console.log(`Tick ${currentTick}: Updated ${npcStates.length} NPC states from API`);
+                    }
+                }
+            } catch (error) {
+                console.log('Failed to fetch NPC states:', error);
+            }
+        };
+
+        fetchNPCStates();
+    }, [currentTick, mounted]);
 
     // Fetch NPCs - only fetch if API available, otherwise use mock data
     const fetchNPCs = useCallback(async () => {
@@ -565,10 +640,10 @@ export default function ExplorePage() {
                                                         }`} />
                                                     <span className="truncate flex-1">{npc.name}</span>
                                                     <span className={`text-[10px] px-1 py-0.5 rounded ${role === 'Owner' ? 'bg-amber-500/20 text-amber-400' :
-                                                            role === 'Staff' || role === 'Employee' ? 'bg-blue-500/20 text-blue-400' :
-                                                                role === 'Security' ? 'bg-red-500/20 text-red-400' :
-                                                                    role === 'Vendor' ? 'bg-green-500/20 text-green-400' :
-                                                                        'bg-zinc-700 text-zinc-400'
+                                                        role === 'Staff' || role === 'Employee' ? 'bg-blue-500/20 text-blue-400' :
+                                                            role === 'Security' ? 'bg-red-500/20 text-red-400' :
+                                                                role === 'Vendor' ? 'bg-green-500/20 text-green-400' :
+                                                                    'bg-zinc-700 text-zinc-400'
                                                         }`}>{role}</span>
                                                 </button>
                                             );
