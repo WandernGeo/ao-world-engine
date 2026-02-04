@@ -64,9 +64,9 @@ ao-processes/
 ### Current State
 - ✅ `family_trees` section exists in codec (3 founding families only)
 - ✅ `R06 = "family"` relationship type defined
-- ❌ No family data for 800 generated NPCs
-- ❌ No mother/father/sibling/spouse/children fields
-- ❌ No household groupings
+- ✅ **Family data generated for all 800 NPCs**
+- ✅ **spouse_id/parent_ids/sibling_ids/children_ids fields**
+- ✅ **479 household groupings**
 
 ### Schema Addition (NPC Records)
 
@@ -89,14 +89,14 @@ ao-processes/
 
 ### Implementation Tasks
 
-- [ ] Add `family` schema to NPC codec
-- [ ] Generate ~150-200 household groups
-- [ ] Assign ~60% of NPCs to family households
-- [ ] Create ~100 married couples
-- [ ] Generate parent-child relationships (1-3 children per family)
-- [ ] Generate sibling relationships
-- [ ] Single adults: ~25% of population
-- [ ] Link household members to same home building
+- [x] Add `family` schema to NPC codec
+- [x] Generate ~150-200 household groups → **479 generated**
+- [x] Assign ~60% of NPCs to family households
+- [x] Create ~100 married couples → **160 married couples**
+- [x] Generate parent-child relationships → **43 families with children**
+- [x] Generate sibling relationships → **30 sibling pairs**
+- [x] Single adults: ~25% of population → **310 single**
+- [x] Link household members to same home building
 
 ### generational Life Simulation (Future)
 
@@ -117,14 +117,14 @@ ao-processes/
 - [ ] Touch support for mobile
 
 ### Interaction Improvements
-- [ ] Increase click radius for all nodes (not just some)
+- [x] Increase click radius for all nodes → **30px radius**
 - [ ] Center-zoom on mouse position (not canvas center)
 - [ ] Fix filter bar z-index (always on top)
 - [ ] Node hover tooltips with NPC details
 
 ### Family Visualization
-- [ ] Add "family" edge type with distinct color
-- [ ] Show household clusters
+- [x] Add "family" edge type with distinct color → **pink=spouse, amber=sibling, cyan=parent**
+- [x] Show household clusters → **showFamilyOnly toggle**
 - [ ] Family tree view mode
 - [ ] Parent-child hierarchy layout
 
@@ -204,15 +204,19 @@ ao-processes/
 
 | Codec File | Size | Updates Needed |
 |------------|------|----------------|
-| `world_codec_01_npcs_with_personality.json` | 81KB | Add family data to 800 NPCs |
+| `world_codec_01_npcs_with_personality.json` | 81KB | ✅ Family data in npcs_generated.json |
 | `world_codec_16_buildings.json` | 12KB | Add household assignments |
-| New: `world_codec_17_families.json` | ~20KB | Family trees, households index |
+| ✅ `world_codec_17_family.json` | 4KB | **Created** - Family schema, simulation hooks |
 
 ### NPC Data Enrichment
-- [ ] Add `schedule_type` field to each NPC
-- [ ] Add `family` object to each NPC
-- [ ] Add `home_building_id` for household grouping
-- [ ] Add `workplace_id` for work location
+- [x] Add `schedule_type` field to each NPC
+- [x] Add `family` object to each NPC → **spouse, parents, siblings, children, household**
+- [x] Add `home_building_id` for household grouping
+- [x] Add `workplace_id` for work location
+- [x] Add `age` field (18-75)
+- [x] Add `appearance` object (skin, hair, eyes, height, build, notable)
+- [x] Add `mood` object (current, intensity, stability, triggers)
+- [x] Add needs system integration to API
 
 ---
 
@@ -222,8 +226,10 @@ ao-processes/
 - [x] API port fix
 - [x] NPC limit increase to 800
 - [x] Schedule diversity (15 schedule types)
-- [ ] Graph rotation
-- [ ] Family system generation
+- [ ] Graph rotation (3D sphere)
+- [x] **Family system generation** → **800 NPCs with family data**
+- [x] **Family graph visualization** → **pink/amber/cyan edges**
+- [x] **Needs system** → **calculate_needs() in API**
 - [ ] Stats readability
 
 ### Phase 2: AO Migration
