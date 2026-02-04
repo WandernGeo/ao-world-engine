@@ -331,8 +331,50 @@ export default function KnowledgeGraphPage() {
     const [autoRotate, setAutoRotate] = useState(false); // Auto-rotation toggle
     const [showFamilyOnly, setShowFamilyOnly] = useState(false); // Show only family relationships
 
+    // 3D rotation state
+    const [rotationX, setRotationX] = useState(0); // Rotation around X axis (tilt up/down)
+    const [rotationY, setRotationY] = useState(0); // Rotation around Y axis (spin left/right)
+    const [isRotating, setIsRotating] = useState(false); // Right-click drag to rotate
+    const [rotateStart, setRotateStart] = useState({ x: 0, y: 0 });
+
     const width = 1600; // Expanded from 800
     const height = 1400; // Expanded from 700
+
+    // 3D projection helper - project 3D point to 2D
+    const project3D = (x: number, y: number, z: number = 0) => {
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Translate to center
+        let px = x - centerX;
+        let py = y - centerY;
+        let pz = z;
+
+        // Rotate around Y axis
+        const cosY = Math.cos(rotationY);
+        const sinY = Math.sin(rotationY);
+        const rx = px * cosY - pz * sinY;
+        const rz = px * sinY + pz * cosY;
+        px = rx;
+        pz = rz;
+
+        // Rotate around X axis
+        const cosX = Math.cos(rotationX);
+        const sinX = Math.sin(rotationX);
+        const ry = py * cosX - pz * sinX;
+        pz = py * sinX + pz * cosX;
+        py = ry;
+
+        // Perspective projection (simple)
+        const perspective = 800;
+        const scale = perspective / (perspective + pz);
+
+        return {
+            x: centerX + px * scale,
+            y: centerY + py * scale,
+            scale: scale
+        };
+    };
 
     // Initialize data - try API first, fallback to generated
     useEffect(() => {
@@ -411,6 +453,17 @@ export default function KnowledgeGraphPage() {
         return () => clearInterval(interval);
     }, [isSimulating, data.entities.length]);
 
+    // Auto-rotation effect
+    useEffect(() => {
+        if (!autoRotate) return;
+
+        const interval = setInterval(() => {
+            setRotationY(prev => prev + 0.01); // Slow continuous rotation
+        }, 30);
+
+        return () => clearInterval(interval);
+    }, [autoRotate]);
+
     // Drawing
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -452,17 +505,21 @@ export default function KnowledgeGraphPage() {
             else if (r.type === 'sibling') edgeColor = isHighlighted ? '#f59e0b' : 'rgba(245, 158, 11, 0.4)'; // Amber
             else if (isHighlighted) edgeColor = '#22d3ee';
 
+            // Apply 3D projection
+            const srcProj = project3D(source.x, source.y);
+            const tgtProj = project3D(target.x, target.y);
+
             ctx.beginPath();
-            ctx.moveTo(source.x, source.y);
-            ctx.lineTo(target.x, target.y);
+            ctx.moveTo(srcProj.x, srcProj.y);
+            ctx.lineTo(tgtProj.x, tgtProj.y);
             ctx.strokeStyle = edgeColor;
             ctx.lineWidth = isHighlighted ? 2 : (isFamily ? 1 : 0.5);
             ctx.stroke();
 
             // Draw relationship label at midpoint if highlighted
             if (isHighlighted) {
-                const mx = (source.x + target.x) / 2;
-                const my = (source.y + target.y) / 2;
+                const mx = (srcProj.x + tgtProj.x) / 2;
+                const my = (srcProj.y + tgtProj.y) / 2;
                 ctx.font = '9px monospace';
                 ctx.fillStyle = '#67e8f9';
                 ctx.textAlign = 'center';
@@ -480,36 +537,51 @@ export default function KnowledgeGraphPage() {
             );
 
             const color = TYPE_COLORS[entity.type];
-            const size = isSelected ? 6 : isHovered ? 5 : 4;
+            const baseSize = isSelected ? 6 : isHovered ? 5 : 4;
+
+            // Apply 3D projection
+            const proj = project3D(entity.x, entity.y);
+            const size = baseSize * proj.scale; // Scale by depth
 
             // Glow for selected/connected
             if (isSelected || isConnected) {
                 ctx.beginPath();
-                ctx.arc(entity.x, entity.y, size + 4, 0, Math.PI * 2);
+                ctx.arc(proj.x, proj.y, size + 4, 0, Math.PI * 2);
                 ctx.fillStyle = isSelected ? 'rgba(34, 211, 238, 0.3)' : 'rgba(34, 211, 238, 0.15)';
                 ctx.fill();
             }
 
             // Node
             ctx.beginPath();
-            ctx.arc(entity.x, entity.y, size, 0, Math.PI * 2);
+            ctx.arc(proj.x, proj.y, size, 0, Math.PI * 2);
             ctx.fillStyle = color;
             ctx.fill();
 
-            // Label
-            ctx.font = '10px monospace';
-            ctx.fillStyle = isSelected ? '#fff' : isConnected ? '#a5f3fc' : '#94a3b8';
-            ctx.textAlign = 'center';
-            ctx.fillText(entity.name, entity.x, entity.y + size + 12);
+            // Label (only if large enough to see)
+            if (proj.scale > 0.5) {
+                ctx.font = `${Math.round(10 * proj.scale)}px monospace`;
+                ctx.fillStyle = isSelected ? '#fff' : isConnected ? '#a5f3fc' : '#94a3b8';
+                ctx.textAlign = 'center';
+                ctx.fillText(entity.name, proj.x, proj.y + size + 12);
+            }
         });
 
         ctx.restore();
-    }, [data, selectedEntity, hoveredEntity, filter, zoom, pan, showFamilyOnly]);
+    }, [data, selectedEntity, hoveredEntity, filter, zoom, pan, showFamilyOnly, rotationX, rotationY]);
 
-    // Mouse handlers - support node dragging
+    // Mouse handlers - support node dragging and rotation
     const handleMouseDown = (e: React.MouseEvent) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
+
+        // Right-click = start 3D rotation
+        if (e.button === 2) {
+            e.preventDefault();
+            setIsRotating(true);
+            setRotateStart({ x: e.clientX, y: e.clientY });
+            setAutoRotate(false); // Stop auto-rotate when manually rotating
+            return;
+        }
 
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
@@ -534,6 +606,16 @@ export default function KnowledgeGraphPage() {
     const handleMouseMove = (e: React.MouseEvent) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
+
+        // Handle 3D rotation with right-drag
+        if (isRotating) {
+            const dx = e.clientX - rotateStart.x;
+            const dy = e.clientY - rotateStart.y;
+            setRotationY(prev => prev + dx * 0.005);
+            setRotationX(prev => Math.max(-Math.PI / 3, Math.min(Math.PI / 3, prev + dy * 0.005)));
+            setRotateStart({ x: e.clientX, y: e.clientY });
+            return;
+        }
 
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
@@ -571,6 +653,11 @@ export default function KnowledgeGraphPage() {
     const handleMouseUp = () => {
         setIsDragging(false);
         setDraggedNode(null);
+        setIsRotating(false);
+    };
+
+    const handleContextMenu = (e: React.MouseEvent) => {
+        e.preventDefault(); // Prevent context menu on right-click
     };
 
     const handleWheel = (e: React.WheelEvent) => {
@@ -640,6 +727,7 @@ export default function KnowledgeGraphPage() {
                         onMouseUp={handleMouseUp}
                         onMouseLeave={handleMouseUp}
                         onWheel={handleWheel}
+                        onContextMenu={handleContextMenu}
                     />
 
                     {/* Filter buttons */}
@@ -689,11 +777,19 @@ export default function KnowledgeGraphPage() {
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(3, z + 0.2))}>+</Button>
                         <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.3, z - 0.2))}>−</Button>
-                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: 0, y: 0 }); setZoom(1); }}>Reset</Button>
+                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: 0, y: 0 }); setZoom(1); setRotationX(0); setRotationY(0); }}>Reset</Button>
+                        <Button
+                            size="sm"
+                            variant={autoRotate ? 'default' : 'outline'}
+                            onClick={() => setAutoRotate(!autoRotate)}
+                            className={autoRotate ? 'bg-purple-600' : ''}
+                        >
+                            {autoRotate ? '🔄 Stop Spin' : '🔄 Auto Spin'}
+                        </Button>
                     </div>
 
                     <div className="absolute bottom-4 right-80 text-xs text-zinc-500">
-                        Drag nodes to arrange • Scroll to zoom • Click nodes to inspect
+                        Drag nodes · Scroll=zoom · Right-drag=3D rotate · Click to inspect
                     </div>
                 </div>
 

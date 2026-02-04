@@ -48,18 +48,26 @@ export default function Home() {
       </div>
 
       {/* Stats */}
-      <div className="flex gap-8 text-center mb-12">
+      <div className="flex gap-8 text-center mb-12 flex-wrap justify-center">
         <div>
           <div className="text-3xl font-mono font-bold text-cyan-400">800</div>
-          <div className="text-xs text-zinc-500">Simulated NPCs</div>
+          <div className="text-xs text-zinc-500">AI NPCs</div>
         </div>
         <div>
-          <div className="text-3xl font-mono font-bold text-purple-400">19</div>
+          <div className="text-3xl font-mono font-bold text-purple-400">160</div>
+          <div className="text-xs text-zinc-500">Families</div>
+        </div>
+        <div>
+          <div className="text-3xl font-mono font-bold text-pink-400">19</div>
           <div className="text-xs text-zinc-500">Buildings</div>
         </div>
         <div>
-          <div className="text-3xl font-mono font-bold text-amber-400">∞</div>
-          <div className="text-xs text-zinc-500">Arweave Storage</div>
+          <div className="text-3xl font-mono font-bold text-amber-400">15</div>
+          <div className="text-xs text-zinc-500">Schedules</div>
+        </div>
+        <div>
+          <div className="text-3xl font-mono font-bold text-green-400">∞</div>
+          <div className="text-xs text-zinc-500">Arweave</div>
         </div>
       </div>
 
