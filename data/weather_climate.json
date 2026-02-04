@@ -1,0 +1,572 @@
+{
+    "_desc": "Weather & Climate System - Farmer's Almanac style with seasons, climate zones, and atmospheric events",
+    "_version": "1.0.0",
+    "calendar": {
+        "_desc": "RE:ECHO City uses a modified calendar since The Silence",
+        "year_length_ticks": 36500,
+        "ticks_per_day": 100,
+        "days_per_year": 365,
+        "months": [
+            {
+                "name": "Darkfall",
+                "days": 30,
+                "season": "winter"
+            },
+            {
+                "name": "Stillwinter",
+                "days": 31,
+                "season": "winter"
+            },
+            {
+                "name": "Thawmist",
+                "days": 28,
+                "season": "late_winter"
+            },
+            {
+                "name": "Awakening",
+                "days": 31,
+                "season": "spring"
+            },
+            {
+                "name": "Bloom",
+                "days": 30,
+                "season": "spring"
+            },
+            {
+                "name": "Sunclimb",
+                "days": 31,
+                "season": "early_summer"
+            },
+            {
+                "name": "Highsun",
+                "days": 31,
+                "season": "summer"
+            },
+            {
+                "name": "Harvestmoon",
+                "days": 31,
+                "season": "summer"
+            },
+            {
+                "name": "Fadelight",
+                "days": 30,
+                "season": "autumn"
+            },
+            {
+                "name": "Greyfall",
+                "days": 31,
+                "season": "autumn"
+            },
+            {
+                "name": "Dimtide",
+                "days": 30,
+                "season": "late_autumn"
+            },
+            {
+                "name": "Endyear",
+                "days": 31,
+                "season": "early_winter"
+            }
+        ]
+    },
+    "seasons": {
+        "winter": {
+            "temp_range_c": [
+                -5,
+                8
+            ],
+            "precipitation_chance": 0.35,
+            "fog_chance": 0.25,
+            "snow_chance": 0.40,
+            "daylight_hours": [
+                7,
+                17
+            ],
+            "mood": "bleak"
+        },
+        "late_winter": {
+            "temp_range_c": [
+                0,
+                12
+            ],
+            "precipitation_chance": 0.40,
+            "fog_chance": 0.30,
+            "snow_chance": 0.20,
+            "daylight_hours": [
+                6,
+                18
+            ],
+            "mood": "thawing"
+        },
+        "spring": {
+            "temp_range_c": [
+                8,
+                18
+            ],
+            "precipitation_chance": 0.45,
+            "fog_chance": 0.15,
+            "snow_chance": 0.02,
+            "daylight_hours": [
+                5,
+                19
+            ],
+            "mood": "hopeful"
+        },
+        "early_summer": {
+            "temp_range_c": [
+                15,
+                28
+            ],
+            "precipitation_chance": 0.25,
+            "fog_chance": 0.05,
+            "snow_chance": 0,
+            "daylight_hours": [
+                4,
+                21
+            ],
+            "mood": "warm"
+        },
+        "summer": {
+            "temp_range_c": [
+                20,
+                35
+            ],
+            "precipitation_chance": 0.15,
+            "fog_chance": 0.03,
+            "snow_chance": 0,
+            "storm_chance": 0.10,
+            "daylight_hours": [
+                4,
+                22
+            ],
+            "mood": "sweltering"
+        },
+        "autumn": {
+            "temp_range_c": [
+                10,
+                20
+            ],
+            "precipitation_chance": 0.35,
+            "fog_chance": 0.25,
+            "snow_chance": 0,
+            "daylight_hours": [
+                6,
+                18
+            ],
+            "mood": "melancholic"
+        },
+        "late_autumn": {
+            "temp_range_c": [
+                3,
+                12
+            ],
+            "precipitation_chance": 0.40,
+            "fog_chance": 0.35,
+            "snow_chance": 0.05,
+            "daylight_hours": [
+                7,
+                17
+            ],
+            "mood": "dreary"
+        },
+        "early_winter": {
+            "temp_range_c": [
+                -2,
+                8
+            ],
+            "precipitation_chance": 0.35,
+            "fog_chance": 0.20,
+            "snow_chance": 0.30,
+            "daylight_hours": [
+                8,
+                16
+            ],
+            "mood": "cold"
+        }
+    },
+    "weather_types": {
+        "clear": {
+            "description": "Clear skies, stars visible at night (if smog allows)",
+            "visibility": "high",
+            "npc_modifier": {
+                "outdoor_activity": 1.2,
+                "mood": 0.1
+            }
+        },
+        "overcast": {
+            "description": "Heavy grey clouds, diffused light",
+            "visibility": "medium",
+            "npc_modifier": {
+                "outdoor_activity": 1.0,
+                "mood": -0.05
+            }
+        },
+        "light_rain": {
+            "description": "Gentle rain, puddles forming",
+            "visibility": "medium",
+            "npc_modifier": {
+                "outdoor_activity": 0.7,
+                "mood": -0.1
+            }
+        },
+        "heavy_rain": {
+            "description": "Downpour, streets flooding slightly",
+            "visibility": "low",
+            "npc_modifier": {
+                "outdoor_activity": 0.3,
+                "mood": -0.2
+            }
+        },
+        "storm": {
+            "description": "Thunder, lightning, dangerous conditions",
+            "visibility": "very_low",
+            "npc_modifier": {
+                "outdoor_activity": 0.1,
+                "mood": -0.3,
+                "fear": 0.1
+            }
+        },
+        "fog": {
+            "description": "Thick fog, limited visibility, eerie",
+            "visibility": "very_low",
+            "npc_modifier": {
+                "outdoor_activity": 0.5,
+                "mood": -0.15,
+                "mystery": 0.2
+            }
+        },
+        "light_snow": {
+            "description": "Gentle snowfall, picturesque",
+            "visibility": "medium",
+            "npc_modifier": {
+                "outdoor_activity": 0.6,
+                "mood": 0.05
+            }
+        },
+        "heavy_snow": {
+            "description": "Blizzard conditions, dangerous",
+            "visibility": "low",
+            "npc_modifier": {
+                "outdoor_activity": 0.2,
+                "mood": -0.2
+            }
+        },
+        "smog": {
+            "description": "Industrial pollution, air quality warning",
+            "visibility": "low",
+            "npc_modifier": {
+                "outdoor_activity": 0.4,
+                "health": -0.1
+            }
+        },
+        "acid_rain": {
+            "description": "Corrosive precipitation - rare, dangerous",
+            "visibility": "medium",
+            "npc_modifier": {
+                "outdoor_activity": 0.1,
+                "health": -0.2,
+                "fear": 0.2
+            }
+        }
+    },
+    "microclimate_zones": {
+        "_desc": "Different districts have different weather tendencies",
+        "undercity": {
+            "temp_modifier": -2,
+            "humidity_modifier": 0.15,
+            "fog_bonus": 0.20,
+            "notes": "Underground sections stay damp and foggy"
+        },
+        "spire": {
+            "temp_modifier": -3,
+            "wind_exposed": true,
+            "fog_bonus": -0.10,
+            "notes": "High altitude, windier, clearer air"
+        },
+        "docks": {
+            "temp_modifier": 1,
+            "humidity_modifier": 0.10,
+            "fog_bonus": 0.15,
+            "notes": "Waterfront humidity, morning fog"
+        },
+        "market": {
+            "temp_modifier": 2,
+            "smog_bonus": 0.10,
+            "notes": "Crowded, warmer, more pollution"
+        },
+        "temple_district": {
+            "temp_modifier": 0,
+            "humidity_modifier": -0.05,
+            "notes": "Climate-controlled areas, neutral"
+        }
+    },
+    "almanac_predictions": {
+        "_desc": "Farmer's almanac style - predict weather patterns for planning",
+        "monthly_tendencies": {
+            "Darkfall": [
+                "cold",
+                "snow_likely",
+                "long_nights",
+                "festival_season"
+            ],
+            "Stillwinter": [
+                "coldest_month",
+                "heavy_snow_possible",
+                "indoor_focus"
+            ],
+            "Thawmist": [
+                "thaw_begins",
+                "flooding_risk",
+                "fog_heavy"
+            ],
+            "Awakening": [
+                "warming",
+                "rain_season_starts",
+                "planting_possible"
+            ],
+            "Bloom": [
+                "mild",
+                "rain_common",
+                "outdoor_markets_return"
+            ],
+            "Sunclimb": [
+                "warming_rapidly",
+                "storms_possible",
+                "long_days"
+            ],
+            "Highsun": [
+                "hottest_month",
+                "drought_risk",
+                "smog_heavy"
+            ],
+            "Harvestmoon": [
+                "hot_but_cooling",
+                "harvest_season",
+                "storms_late_month"
+            ],
+            "Fadelight": [
+                "cooling",
+                "beautiful_sunsets",
+                "festival_season"
+            ],
+            "Greyfall": [
+                "grey_skies",
+                "rain_returns",
+                "melancholic"
+            ],
+            "Dimtide": [
+                "cold_arriving",
+                "first_frost",
+                "fog_season"
+            ],
+            "Endyear": [
+                "winter_begins",
+                "snow_possible",
+                "year_end_festivals"
+            ]
+        },
+        "special_events": {
+            "spring_floods": {
+                "month": "Thawmist",
+                "probability": 0.3,
+                "duration_days": "3-7",
+                "effects": [
+                    "undercity_flooding",
+                    "market_disruption",
+                    "disease_risk"
+                ]
+            },
+            "summer_drought": {
+                "month": "Highsun",
+                "probability": 0.2,
+                "duration_days": "10-20",
+                "effects": [
+                    "water_rationing",
+                    "fire_risk",
+                    "heat_illness"
+                ]
+            },
+            "autumn_storms": {
+                "month": "Fadelight",
+                "probability": 0.4,
+                "duration_days": "1-3",
+                "effects": [
+                    "power_outages",
+                    "flooding",
+                    "dramatic_scenes"
+                ]
+            },
+            "winter_blizzard": {
+                "month": "Stillwinter",
+                "probability": 0.25,
+                "duration_days": "2-5",
+                "effects": [
+                    "city_shutdown",
+                    "heating_crisis",
+                    "community_bonding"
+                ]
+            }
+        }
+    },
+    "weather_generation": {
+        "_desc": "Deterministic weather from tick",
+        "algorithm": {
+            "1": "Get day from tick (tick / 100)",
+            "2": "Get month from day",
+            "3": "Get season from month",
+            "4": "Base probabilities from season",
+            "5": "Apply microclimate modifiers for district",
+            "6": "Deterministic random from tick seed",
+            "7": "Check for special events (almanac)",
+            "8": "Return weather state"
+        },
+        "persistence": {
+            "_desc": "Weather doesn't change every tick",
+            "min_duration_ticks": 10,
+            "max_duration_ticks": 50,
+            "transition_ticks": 5
+        }
+    },
+    "dialogue_by_weather": {
+        "clear": [
+            "Nice to see the sky for once.",
+            "Stars are out tonight. Rare sight.",
+            "Good weather for a walk.",
+            "Almost makes you forget the smog."
+        ],
+        "rain": [
+            "*shakes off water* Wet out there.",
+            "Rain again. At least it's not acid.",
+            "Streets are slick. Watch your step.",
+            "Classic weather for this city."
+        ],
+        "storm": [
+            "That thunder! Thought it was explosions.",
+            "Stay inside if you can. Dangerous out there.",
+            "*flinches at lightning* Too close.",
+            "Storm's fierce today. Temple's probably happy."
+        ],
+        "fog": [
+            "Can barely see your hand in front of your face.",
+            "Perfect weather for secrets.",
+            "*peers into fog* Could be anyone out there.",
+            "Fog's thick. Good for hiding."
+        ],
+        "snow": [
+            "Snow in the city. Almost beautiful.",
+            "*shivers* Freezing. Need to find warmth.",
+            "Snow covers the grime. Temporarily.",
+            "Kids used to play in this. Before."
+        ],
+        "smog": [
+            "*coughs* Bad air day. Stay inside.",
+            "Can taste the pollution.",
+            "Factories aren't helping.",
+            "Temple says it's 'atmospheric'. Right."
+        ],
+        "acid_rain": [
+            "Don't go out! That's acid rain!",
+            "*shows burned jacket* Got caught in it.",
+            "Another gift from the old factories.",
+            "Even the rain wants to kill us here."
+        ]
+    },
+    "weather_economy_effects": {
+        "_desc": "How weather affects commerce, traffic, and daily life",
+        "traffic_modifiers": {
+            "clear": {
+                "speed": 1.0,
+                "accidents": 0.01
+            },
+            "rain": {
+                "speed": 0.7,
+                "accidents": 0.03
+            },
+            "heavy_rain": {
+                "speed": 0.5,
+                "accidents": 0.08
+            },
+            "storm": {
+                "speed": 0.3,
+                "accidents": 0.15
+            },
+            "fog": {
+                "speed": 0.6,
+                "accidents": 0.05
+            },
+            "snow": {
+                "speed": 0.5,
+                "accidents": 0.10
+            },
+            "heavy_snow": {
+                "speed": 0.2,
+                "roads_closed": 0.3
+            }
+        },
+        "product_demand": {
+            "rain": {
+                "umbrellas": {
+                    "demand_multiplier": 3.0,
+                    "price_markup": 0.5
+                },
+                "raincoats": {
+                    "demand_multiplier": 2.0
+                },
+                "hot_drinks": {
+                    "demand_multiplier": 1.8
+                }
+            },
+            "cold": {
+                "heating_fuel": {
+                    "demand_multiplier": 2.5,
+                    "price_markup": 0.4
+                },
+                "warm_clothing": {
+                    "demand_multiplier": 2.0
+                }
+            },
+            "hot": {
+                "cold_drinks": {
+                    "demand_multiplier": 2.5
+                },
+                "fans": {
+                    "demand_multiplier": 2.0
+                }
+            },
+            "smog": {
+                "masks": {
+                    "demand_multiplier": 4.0,
+                    "price_markup": 0.8
+                }
+            }
+        },
+        "corner_store_behavior": {
+            "rain_start": {
+                "action": "display_umbrellas",
+                "dialogue": "Umbrellas! Don't get soaked!"
+            },
+            "cold_snap": {
+                "action": "hot_drinks_front",
+                "dialogue": "Hot cider! Warm your bones!"
+            },
+            "smog_day": {
+                "action": "masks_prominent",
+                "dialogue": "Masks! Breathe safe!"
+            }
+        },
+        "npc_behavior": {
+            "rain": {
+                "seek_shelter": 0.6,
+                "bar_attendance_up": 0.2
+            },
+            "storm": {
+                "stay_indoors": 0.8,
+                "cancel_meetings": 0.4
+            },
+            "beautiful": {
+                "outdoor_activity": 1.5,
+                "mood_bonus": 0.15
+            }
+        }
+    }
+}
