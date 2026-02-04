@@ -18,13 +18,13 @@ interface Message {
     timestamp: number;
 }
 
-const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const CLOUD_API = 'https://ao-npc-chat-zdku5kri5a-uc.a.run.app';
 const LOCAL_API = 'http://localhost:8081';
 
 // Try localhost first, fall back to Cloud
 async function getApiBase(): Promise<string> {
     try {
-        const res = await fetch(`${LOCAL_API}/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
+        const res = await fetch(`${LOCAL_API}/api/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
         if (res.ok) return LOCAL_API;
     } catch { /* ignore */ }
     return CLOUD_API;
@@ -144,18 +144,21 @@ export default function ChatPage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-b from-zinc-900 to-transparent z-50 flex items-center px-4 border-b border-cyan-500/20">
-                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
+                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
                     AO WORLD ENGINE
                 </Link>
                 <nav className="ml-8 flex gap-4">
-                    <Link href="/explore" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/explore" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Explore
                     </Link>
-                    <Link href="/chat" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/npcs" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        NPCs
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
                         Chat
                     </Link>
-                    <Link href="/graph" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Graph
                     </Link>
                 </nav>

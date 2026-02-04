@@ -14,7 +14,10 @@
 ]]--
 
 local json = json or require("json")
-local crypto = crypto or require("crypto")
+
+-- Crypto module optional (not available in all AOS environments)
+local crypto_available, crypto = pcall(require, "crypto")
+if not crypto_available then crypto = nil end
 
 -- =============================================================================
 -- GLOBAL STATE (Uppercase = persisted on Arweave)
@@ -36,6 +39,19 @@ TaxRate = TaxRate or 0.10           -- 10% income tax
 PopulationCount = PopulationCount or 0
 ActiveNpcCount = ActiveNpcCount or 0
 
+-- =============================================================================
+-- SIMULATION CONTROL (Kill Switch / Pause / Freeze)
+-- =============================================================================
+
+-- Status: "running" | "paused" | "frozen" | "terminated"
+SimulationStatus = SimulationStatus or "running"
+
+-- Owner address (set on first Initialize, can pause/stop)
+OwnerAddress = OwnerAddress or nil
+
+-- Kill switch passphrase (set via secure message)
+KillSwitchHash = KillSwitchHash or nil
+
 -- Configuration
 TICKS_PER_DAY = 240      -- 10 ticks/hour * 24 hours
 TICKS_PER_YEAR = 87600   -- 365 days
@@ -50,8 +66,18 @@ ProcessedEvents = ProcessedEvents or {}
 -- =============================================================================
 
 function hash_to_number(str, max)
-    local hash = crypto.digest.sha256(str)
-    return tonumber(hash:sub(1, 8), 16) % max
+    -- Use crypto.digest if available, otherwise use simple Lua hash
+    if crypto and crypto.digest then
+        local hash = crypto.digest.sha256(str)
+        return tonumber(hash:sub(1, 8), 16) % max
+    else
+        -- Fallback: simple deterministic hash
+        local hash = 0
+        for i = 1, #str do
+            hash = (hash * 31 + string.byte(str, i)) % 2147483647
+        end
+        return hash % max
+    end
 end
 
 function seeded_choice(items, seed)
@@ -296,6 +322,12 @@ end)
 -- =============================================================================
 
 Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg)
+    -- Skip if simulation is not running
+    if SimulationStatus ~= "running" then
+        -- Still respond but don't process
+        return
+    end
+    
     -- Advance world tick (with time compression if configured)
     local ticks_to_advance = TIME_COMPRESSION or 1
     for i = 1, ticks_to_advance do
@@ -442,6 +474,96 @@ Handlers.add("get-economy", Handlers.utils.hasMatchingTag("Action", "get-economy
     })
 end)
 
+-- Get current time info
+Handlers.add("get-time", Handlers.utils.hasMatchingTag("Action", "get-time"), function(msg)
+    local time = get_time_info(WorldTick)
+    ao.send({
+        Target = msg.From,
+        Action = "time-response",
+        Data = json.encode({
+            tick = WorldTick,
+            day = WorldDay,
+            year = WorldYear,
+            hour = time.hour,
+            period = time.period
+        })
+    })
+end)
+
+-- Get all NPCs
+Handlers.add("get-all-npcs", Handlers.utils.hasMatchingTag("Action", "get-all-npcs"), function(msg)
+    ao.send({
+        Target = msg.From,
+        Action = "npcs-response",
+        Data = json.encode(ALL_NPCS or {})
+    })
+end)
+
+-- Get specific NPC by ID
+Handlers.add("get-npc", Handlers.utils.hasMatchingTag("Action", "get-npc"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local npc_id = data.npc_id
+    local npc = ALL_NPCS and ALL_NPCS[npc_id] or nil
+    ao.send({
+        Target = msg.From,
+        Action = "npc-response",
+        Data = json.encode(npc or {error = "NPC not found"})
+    })
+end)
+
+-- Get NPCs by district
+Handlers.add("get-district-npcs", Handlers.utils.hasMatchingTag("Action", "get-district-npcs"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local district_id = data.district_id
+    local result = {}
+    
+    if ALL_NPCS then
+        for id, npc in pairs(ALL_NPCS) do
+            if npc.home == district_id or npc.workplace == district_id then
+                table.insert(result, npc)
+            end
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "district-npcs-response",
+        Data = json.encode(result)
+    })
+end)
+
+-- Get founding NPCs (the 12 canonical characters)
+Handlers.add("get-founding-npcs", Handlers.utils.hasMatchingTag("Action", "get-founding-npcs"), function(msg)
+    ao.send({
+        Target = msg.From,
+        Action = "founding-npcs-response",
+        Data = json.encode(FOUNDING_NPCS or {})
+    })
+end)
+
+-- Get all districts
+Handlers.add("get-districts", Handlers.utils.hasMatchingTag("Action", "get-districts"), function(msg)
+    ao.send({
+        Target = msg.From,
+        Action = "districts-response",
+        Data = json.encode(Districts or {})
+    })
+end)
+
+-- Get layer info (for multiverse)
+Handlers.add("get-layer-info", Handlers.utils.hasMatchingTag("Action", "get-layer-info"), function(msg)
+    ao.send({
+        Target = msg.From,
+        Action = "layer-info-response",
+        Data = json.encode({
+            layer_id = LAYER_ID or "layer_00_testnet",
+            name = LAYER_NAME or "RE:ECHO City Testnet",
+            population = PopulationCount,
+            status = "active"
+        })
+    })
+end)
+
 -- =============================================================================
 -- PERSISTENCE
 -- =============================================================================
@@ -465,6 +587,97 @@ function persist_state_snapshot()
 end
 
 -- =============================================================================
+-- SIMULATION CONTROL HANDLERS (Kill Switch / Pause / Freeze)
+-- =============================================================================
+
+-- Check if sender is owner
+function is_owner(sender)
+    return OwnerAddress == nil or sender == OwnerAddress
+end
+
+-- Pause simulation (can be resumed)
+Handlers.add("pause-simulation", Handlers.utils.hasMatchingTag("Action", "pause-simulation"), function(msg)
+    if not is_owner(msg.From) then
+        ao.send({ Target = msg.From, Action = "error", Data = "Unauthorized" })
+        return
+    end
+    SimulationStatus = "paused"
+    ao.send({
+        Target = msg.From,
+        Action = "simulation-paused",
+        Data = json.encode({ status = "paused", tick = WorldTick })
+    })
+    print("⏸️  Simulation PAUSED at tick " .. WorldTick)
+end)
+
+-- Resume simulation
+Handlers.add("resume-simulation", Handlers.utils.hasMatchingTag("Action", "resume-simulation"), function(msg)
+    if not is_owner(msg.From) then
+        ao.send({ Target = msg.From, Action = "error", Data = "Unauthorized" })
+        return
+    end
+    if SimulationStatus == "terminated" then
+        ao.send({ Target = msg.From, Action = "error", Data = "Cannot resume terminated simulation" })
+        return
+    end
+    SimulationStatus = "running"
+    ao.send({
+        Target = msg.From,
+        Action = "simulation-resumed",
+        Data = json.encode({ status = "running", tick = WorldTick })
+    })
+    print("▶️  Simulation RESUMED at tick " .. WorldTick)
+end)
+
+-- Freeze simulation (permanent pause, queries still work)
+Handlers.add("freeze-simulation", Handlers.utils.hasMatchingTag("Action", "freeze-simulation"), function(msg)
+    if not is_owner(msg.From) then
+        ao.send({ Target = msg.From, Action = "error", Data = "Unauthorized" })
+        return
+    end
+    SimulationStatus = "frozen"
+    ao.send({
+        Target = msg.From,
+        Action = "simulation-frozen",
+        Data = json.encode({ status = "frozen", tick = WorldTick })
+    })
+    print("❄️  Simulation FROZEN at tick " .. WorldTick)
+end)
+
+-- KILL SWITCH - Terminate simulation permanently
+Handlers.add("terminate-simulation", Handlers.utils.hasMatchingTag("Action", "terminate-simulation"), function(msg)
+    if not is_owner(msg.From) then
+        ao.send({ Target = msg.From, Action = "error", Data = "Unauthorized" })
+        return
+    end
+    SimulationStatus = "terminated"
+    ao.send({
+        Target = msg.From,
+        Action = "simulation-terminated",
+        Data = json.encode({ 
+            status = "terminated", 
+            final_tick = WorldTick,
+            message = "Simulation terminated. Layer archived."
+        })
+    })
+    print("☠️  Simulation TERMINATED at tick " .. WorldTick)
+end)
+
+-- Get simulation status
+Handlers.add("get-simulation-status", Handlers.utils.hasMatchingTag("Action", "get-simulation-status"), function(msg)
+    ao.send({
+        Target = msg.From,
+        Action = "simulation-status",
+        Data = json.encode({
+            status = SimulationStatus,
+            tick = WorldTick,
+            day = WorldDay,
+            population = PopulationCount
+        })
+    })
+end)
+
+-- =============================================================================
 -- HELPERS
 -- =============================================================================
 
@@ -483,5 +696,6 @@ return {
     check_world_events = check_world_events,
     collect_taxes = collect_taxes,
     hash_to_number = hash_to_number,
-    seeded_choice = seeded_choice
+    seeded_choice = seeded_choice,
+    is_owner = is_owner
 }

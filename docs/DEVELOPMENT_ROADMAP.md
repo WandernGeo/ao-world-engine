@@ -220,6 +220,28 @@ ao-processes/
 
 ---
 
+## 🎯 Priority 8: Real-World Coordinates / OSM Integration
+
+> See [REAL_WORLD_COORDINATES.md](./REAL_WORLD_COORDINATES.md) for full documentation.
+
+### Current Status
+- [x] `scripts/osm_to_codec.py` - OSM to World Codec converter
+- [x] Overpass API query support
+- [x] Building type classification (20+ types)
+- [x] Fictional district renaming ("Midtown" → "Central Spire")
+- [x] WGS84 and local coordinate systems
+- [ ] MapLibre/Deck.gl visualization integration
+- [ ] Example world: `worlds/neo-manhattan/`
+
+### Use Cases
+| Use Case | Description |
+|----------|-------------|
+| Ghost City | Overlay simulated NPCs on real city streets |
+| Historical Sims | Recreate 1920s building layouts |
+| Hybrid Fictional | Real layout, fictional names (legally distinct) |
+
+---
+
 ## 📊 Completion Tracking
 
 ### Phase 1: Core Fixes (Current)

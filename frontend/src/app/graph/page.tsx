@@ -13,8 +13,10 @@ interface Entity {
     type: EntityType;
     x: number;
     y: number;
+    z: number; // 3D depth coordinate
     vx: number;
     vy: number;
+    vz: number; // velocity in z
     properties?: Record<string, string>;
 }
 
@@ -109,40 +111,50 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
         });
         const factions = Array.from(factionSet);
 
-        // Create faction entities
+        // Create faction entities - on outer sphere shell
         factions.forEach((name, i) => {
+            const theta = (i * Math.PI * 2) / factions.length;
+            const phi = Math.PI / 3; // Upper hemisphere
             entities.push({
                 id: `faction_${name}`,
                 name: name.charAt(0).toUpperCase() + name.slice(1),
                 type: 'faction',
-                x: 400 + Math.cos(i * Math.PI * 2 / factions.length) * 250,
-                y: 350 + Math.sin(i * Math.PI * 2 / factions.length) * 250,
-                vx: 0, vy: 0,
+                x: 600 + Math.sin(phi) * Math.cos(theta) * 400,
+                y: 500 + Math.sin(phi) * Math.sin(theta) * 400,
+                z: Math.cos(phi) * 300,
+                vx: 0, vy: 0, vz: 0,
             });
         });
 
-        // Create building entities (first 15)
+        // Create building entities (first 15) - spread in sphere
         apiBuildings.slice(0, 15).forEach((b: APIBuilding, i) => {
+            const theta = (i * Math.PI * 2) / 15;
+            const phi = Math.PI / 2 + (Math.random() - 0.5) * 0.5;
             entities.push({
                 id: b.id,
                 name: b.name,
                 type: 'building',
-                x: 200 + Math.random() * 400,
-                y: 150 + Math.random() * 400,
-                vx: 0, vy: 0,
+                x: 600 + Math.sin(phi) * Math.cos(theta) * 350,
+                y: 500 + Math.sin(phi) * Math.sin(theta) * 350,
+                z: Math.cos(phi) * 250 + (Math.random() - 0.5) * 100,
+                vx: 0, vy: 0, vz: 0,
                 properties: { buildingType: b.type },
             });
         });
 
-        // Create NPC entities and relationships
+        // Create NPC entities and relationships - spread throughout sphere
         apiNPCs.forEach((n: APINPC, i) => {
+            const theta = (i * 0.618 * Math.PI * 2) % (Math.PI * 2); // Golden angle
+            const phi = Math.acos(1 - 2 * ((i % 100) / 100)); // Uniform sphere distribution
+            const radius = 200 + Math.random() * 150;
             entities.push({
                 id: n.id,
                 name: n.name,
                 type: 'npc',
-                x: 150 + Math.random() * 500,
-                y: 100 + Math.random() * 500,
-                vx: 0, vy: 0,
+                x: 600 + Math.sin(phi) * Math.cos(theta) * radius,
+                y: 500 + Math.sin(phi) * Math.sin(theta) * radius,
+                z: Math.cos(phi) * radius * 0.8,
+                vx: 0, vy: 0, vz: 0,
                 properties: { archetype: n.archetype, faction: n.faction },
             });
 
@@ -198,26 +210,30 @@ function generateKnowledgeGraph(): { entities: Entity[], relationships: Relation
     // Factions
     const factions = ['Resistance', 'Temple Authority', 'Civilian', 'Criminal Syndicate', 'Tech Guild'];
     factions.forEach((name, i) => {
+        const theta = (i * Math.PI * 2) / factions.length;
         entities.push({
             id: `faction_${i}`,
             name,
             type: 'faction',
-            x: 400 + Math.cos(i * Math.PI * 2 / factions.length) * 250,
-            y: 350 + Math.sin(i * Math.PI * 2 / factions.length) * 250,
-            vx: 0, vy: 0,
+            x: 600 + Math.cos(theta) * 400,
+            y: 500 + Math.sin(theta) * 400,
+            z: (Math.random() - 0.5) * 300,
+            vx: 0, vy: 0, vz: 0,
         });
     });
 
     // Locations/Districts
     const locations = ['Undercity', 'Market District', 'Temple District', 'Industrial Zone', 'Hab Blocks', 'Shadow Grid'];
     locations.forEach((name, i) => {
+        const theta = ((i + 0.5) * Math.PI * 2) / locations.length;
         entities.push({
             id: `location_${i}`,
             name,
             type: 'location',
-            x: 400 + Math.cos((i + 0.5) * Math.PI * 2 / locations.length) * 180,
-            y: 350 + Math.sin((i + 0.5) * Math.PI * 2 / locations.length) * 180,
-            vx: 0, vy: 0,
+            x: 600 + Math.cos(theta) * 280,
+            y: 500 + Math.sin(theta) * 280,
+            z: (Math.random() - 0.5) * 200,
+            vx: 0, vy: 0, vz: 0,
         });
     });
 
@@ -236,13 +252,15 @@ function generateKnowledgeGraph(): { entities: Entity[], relationships: Relation
     ];
     buildings.forEach((b, i) => {
         const id = `building_${i}`;
+        const theta = (i * Math.PI * 2) / buildings.length;
         entities.push({
             id,
             name: b.name,
             type: 'building',
-            x: 200 + Math.random() * 400,
-            y: 150 + Math.random() * 400,
-            vx: 0, vy: 0,
+            x: 600 + Math.cos(theta) * (200 + Math.random() * 150),
+            y: 500 + Math.sin(theta) * (200 + Math.random() * 150),
+            z: (Math.random() - 0.5) * 250,
+            vx: 0, vy: 0, vz: 0,
         });
         // Building is in location
         relationships.push({ source: id, target: `location_${b.loc}`, type: 'located_in' });
@@ -262,9 +280,10 @@ function generateKnowledgeGraph(): { entities: Entity[], relationships: Relation
             id,
             name: l.name,
             type: 'lore',
-            x: 100 + Math.random() * 600,
-            y: 100 + Math.random() * 500,
-            vx: 0, vy: 0,
+            x: 600 + (Math.random() - 0.5) * 500,
+            y: 500 + (Math.random() - 0.5) * 400,
+            z: (Math.random() - 0.5) * 300,
+            vx: 0, vy: 0, vz: 0,
         });
         l.related.forEach(r => {
             relationships.push({ source: id, target: r, type: 'references' });
@@ -289,13 +308,15 @@ function generateKnowledgeGraph(): { entities: Entity[], relationships: Relation
 
     npcNames.forEach((n, i) => {
         const id = `npc_${i}`;
+        const theta = (i * 0.618 * Math.PI * 2) % (Math.PI * 2); // Golden angle
         entities.push({
             id,
             name: n.name,
             type: 'npc',
-            x: 150 + Math.random() * 500,
-            y: 100 + Math.random() * 500,
-            vx: 0, vy: 0,
+            x: 600 + Math.cos(theta) * (150 + Math.random() * 200),
+            y: 500 + Math.sin(theta) * (150 + Math.random() * 200),
+            z: (Math.random() - 0.5) * 350,
+            vx: 0, vy: 0, vz: 0,
             properties: { archetype: n.archetype },
         });
         // Member of faction
@@ -321,7 +342,7 @@ export default function KnowledgeGraphPage() {
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
     const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(0.6); // Start zoomed out more
+    const [zoom, setZoom] = useState(0.3); // Start very zoomed out to see full sphere
     const [pan, setPan] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -336,9 +357,11 @@ export default function KnowledgeGraphPage() {
     const [rotationY, setRotationY] = useState(0); // Rotation around Y axis (spin left/right)
     const [isRotating, setIsRotating] = useState(false); // Right-click drag to rotate
     const [rotateStart, setRotateStart] = useState({ x: 0, y: 0 });
+    // Bouncy drag state - track mouse velocity for throw effect
+    const lastDragPos = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
 
-    const width = 1600; // Expanded from 800
-    const height = 1400; // Expanded from 700
+    const width = 2400; // Huge canvas for spread
+    const height = 2000; // More vertical space
 
     // 3D projection helper - project 3D point to 2D
     const project3D = (x: number, y: number, z: number = 0) => {
@@ -365,14 +388,15 @@ export default function KnowledgeGraphPage() {
         pz = py * sinX + pz * cosX;
         py = ry;
 
-        // Perspective projection (simple)
-        const perspective = 800;
-        const scale = perspective / (perspective + pz);
+        // Perspective projection with depth fade
+        const perspective = 1200; // Deeper perspective
+        const scale = Math.max(0.2, perspective / (perspective + pz));
 
         return {
             x: centerX + px * scale,
             y: centerY + py * scale,
-            scale: scale
+            scale: scale,
+            depth: pz // Keep track of depth for rendering order
         };
     };
 
@@ -401,49 +425,65 @@ export default function KnowledgeGraphPage() {
                 const entities = [...prev.entities];
                 const relationships = prev.relationships;
 
-                // Apply forces
+                // Apply forces - bouncy spring physics in 3D!
                 entities.forEach((e, i) => {
-                    // Repulsion from other entities
+                    // Initialize z if undefined
+                    if (e.z === undefined) e.z = (Math.random() - 0.5) * 600;
+                    if (e.vz === undefined) e.vz = 0;
+
+                    // Strong repulsion from other entities (3D)
                     entities.forEach((other, j) => {
                         if (i === j) return;
                         const dx = e.x - other.x;
                         const dy = e.y - other.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                        const force = 800 / (dist * dist);
-                        e.vx += (dx / dist) * force * 0.1;
-                        e.vy += (dy / dist) * force * 0.1;
+                        const dz = (e.z || 0) - (other.z || 0);
+                        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+                        const force = 2000 / (dist * dist); // Stronger repulsion
+                        e.vx += (dx / dist) * force * 0.15;
+                        e.vy += (dy / dist) * force * 0.15;
+                        e.vz += (dz / dist) * force * 0.15;
                     });
 
-                    // Attraction along relationships
+                    // Bouncy spring attraction along relationships
                     relationships.forEach(r => {
                         if (r.source === e.id || r.target === e.id) {
                             const other = entities.find(x => x.id === (r.source === e.id ? r.target : r.source));
                             if (other) {
                                 const dx = other.x - e.x;
                                 const dy = other.y - e.y;
-                                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                                const force = (dist - 100) * 0.005;
-                                e.vx += (dx / dist) * force;
-                                e.vy += (dy / dist) * force;
+                                const dz = (other.z || 0) - (e.z || 0);
+                                const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+                                const idealDist = 180; // Ideal spring length
+                                const springForce = (dist - idealDist) * 0.008; // Bouncy spring
+                                e.vx += (dx / dist) * springForce;
+                                e.vy += (dy / dist) * springForce;
+                                e.vz += (dz / dist) * springForce;
                             }
                         }
                     });
 
-                    // Center gravity
-                    e.vx += (width / 2 - e.x) * 0.0005;
-                    e.vy += (height / 2 - e.y) * 0.0005;
+                    // Gentle center gravity (keeps sphere centered)
+                    e.vx += (width / 2 - e.x) * 0.0003;
+                    e.vy += (height / 2 - e.y) * 0.0003;
+                    e.vz += (0 - (e.z || 0)) * 0.0001; // Gentle z centering
 
-                    // Damping
-                    e.vx *= 0.9;
-                    e.vy *= 0.9;
+                    // Bouncy damping (less friction = more bounce)
+                    e.vx *= 0.92;
+                    e.vy *= 0.92;
+                    e.vz *= 0.92;
 
                     // Update position
                     e.x += e.vx;
                     e.y += e.vy;
+                    e.z = (e.z || 0) + e.vz;
 
-                    // Bounds
-                    e.x = Math.max(50, Math.min(width - 50, e.x));
-                    e.y = Math.max(50, Math.min(height - 50, e.y));
+                    // Soft bounds (bounce at edges)
+                    if (e.x < 100) { e.x = 100; e.vx *= -0.5; }
+                    if (e.x > width - 100) { e.x = width - 100; e.vx *= -0.5; }
+                    if (e.y < 100) { e.y = 100; e.vy *= -0.5; }
+                    if (e.y > height - 100) { e.y = height - 100; e.vy *= -0.5; }
+                    if (e.z < -400) { e.z = -400; e.vz *= -0.5; }
+                    if (e.z > 400) { e.z = 400; e.vz *= -0.5; }
                 });
 
                 return { entities, relationships };
@@ -541,7 +581,7 @@ export default function KnowledgeGraphPage() {
 
             // Apply 3D projection
             const proj = project3D(entity.x, entity.y);
-            const size = baseSize * proj.scale; // Scale by depth
+            const size = Math.max(1, Math.abs(baseSize * proj.scale)); // Ensure positive radius
 
             // Glow for selected/connected
             if (isSelected || isConnected) {
@@ -583,13 +623,27 @@ export default function KnowledgeGraphPage() {
             return;
         }
 
-        const mx = (e.clientX - rect.left - pan.x) / zoom;
-        const my = (e.clientY - rect.top - pan.y) / zoom;
+        // Screen mouse position
+        const screenX = e.clientX - rect.left;
+        const screenY = e.clientY - rect.top;
 
-        // Check if clicking on a node - start dragging it (increased radius)
-        for (const entity of data.entities) {
-            const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
-            if (dist < 30) { // Increased from 20 to 30 for easier clicking
+        // Convert screen coords to world coords (reverse the canvas transform)
+        // Canvas uses: ctx.translate(pan.x, pan.y); ctx.scale(zoom, zoom);
+        // So: screenCoord = (worldCoord * zoom) + pan
+        // Therefore: worldCoord = (screenCoord - pan) / zoom
+        const worldMouseX = (screenX - pan.x) / zoom;
+        const worldMouseY = (screenY - pan.y) / zoom;
+
+        // Check if clicking on a node using PROJECTED coordinates (3D aware)
+        // Sort by depth - front-most nodes (smallest depth/largest scale) first!
+        const sortedEntities = [...data.entities]
+            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
+            .sort((a, b) => a.proj.depth - b.proj.depth); // Smaller depth = closer to viewer
+
+        for (const { entity, proj } of sortedEntities) {
+            const dist = Math.sqrt((proj.x - worldMouseX) ** 2 + (proj.y - worldMouseY) ** 2);
+            const hitRadius = Math.max(25, 40 * proj.scale); // BIGGER hit radius for easier clicking
+            if (dist < hitRadius) {
                 setDraggedNode(entity.id);
                 setSelectedEntity(entity);
                 setIsSimulating(false); // Pause simulation while dragging
@@ -622,11 +676,18 @@ export default function KnowledgeGraphPage() {
 
         // If dragging a node, update its position
         if (draggedNode) {
+            const now = Date.now();
+            // Track velocity for bouncy throw
+            const dt = Math.max(1, now - lastDragPos.current.time) / 1000;
+            const throwVx = (mx - lastDragPos.current.x) / dt * 0.02; // Scale down for nice throw
+            const throwVy = (my - lastDragPos.current.y) / dt * 0.02;
+            lastDragPos.current = { x: mx, y: my, time: now };
+
             setData(prev => ({
                 ...prev,
                 entities: prev.entities.map(e =>
                     e.id === draggedNode
-                        ? { ...e, x: mx, y: my, vx: 0, vy: 0 }
+                        ? { ...e, x: mx, y: my, vx: throwVx, vy: throwVy } // Keep velocity for bounce!
                         : e
                 )
             }));
@@ -639,18 +700,38 @@ export default function KnowledgeGraphPage() {
             return;
         }
 
-        // Hover detection (increased radius)
-        for (const entity of data.entities) {
-            const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
-            if (dist < 25) { // Increased from 15 to 25
+        // Hover detection using PROJECTED coordinates (3D aware)
+        // Convert screen coords to world coords (reverse canvas transform)
+        const hoverScreenX = e.clientX - rect.left;
+        const hoverScreenY = e.clientY - rect.top;
+        const hoverWorldX = (hoverScreenX - pan.x) / zoom;
+        const hoverWorldY = (hoverScreenY - pan.y) / zoom;
+
+        // Sort by depth - front-most nodes first (same as click detection)
+        const sortedForHover = [...data.entities]
+            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
+            .sort((a, b) => a.proj.depth - b.proj.depth);
+
+        for (const { entity, proj } of sortedForHover) {
+            const dist = Math.sqrt((proj.x - hoverWorldX) ** 2 + (proj.y - hoverWorldY) ** 2);
+            const hitRadius = Math.max(25, 40 * proj.scale); // Match click detection radius
+            if (dist < hitRadius) {
                 setHoveredEntity(entity);
+                // Change cursor to pointer when over a node
+                if (canvasRef.current) canvasRef.current.style.cursor = 'pointer';
                 return;
             }
         }
         setHoveredEntity(null);
+        // Reset cursor when not over a node
+        if (canvasRef.current) canvasRef.current.style.cursor = 'default';
     };
 
     const handleMouseUp = () => {
+        // Apply throw velocity when releasing a dragged node
+        if (draggedNode) {
+            setIsSimulating(true); // Resume simulation to let it bounce!
+        }
         setIsDragging(false);
         setDraggedNode(null);
         setIsRotating(false);
@@ -658,6 +739,36 @@ export default function KnowledgeGraphPage() {
 
     const handleContextMenu = (e: React.MouseEvent) => {
         e.preventDefault(); // Prevent context menu on right-click
+    };
+
+    // Double-click to navigate to NPC/building page
+    const handleDoubleClick = (e: React.MouseEvent) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (!rect) return;
+
+        const screenX = e.clientX - rect.left;
+        const screenY = e.clientY - rect.top;
+        const worldMouseX = (screenX - pan.x) / zoom;
+        const worldMouseY = (screenY - pan.y) / zoom;
+
+        // Find clicked entity using depth-sorted projection
+        const sortedEntities = [...data.entities]
+            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
+            .sort((a, b) => a.proj.depth - b.proj.depth);
+
+        for (const { entity, proj } of sortedEntities) {
+            const dist = Math.sqrt((proj.x - worldMouseX) ** 2 + (proj.y - worldMouseY) ** 2);
+            const hitRadius = Math.max(25, 40 * proj.scale);
+            if (dist < hitRadius) {
+                // Navigate based on entity type
+                if (entity.type === 'npc') {
+                    window.location.href = `/npcs?npc=${encodeURIComponent(entity.name)}`;
+                } else if (entity.type === 'building') {
+                    window.location.href = `/explore?building=${encodeURIComponent(entity.id)}`;
+                }
+                return;
+            }
+        }
     };
 
     const handleWheel = (e: React.WheelEvent) => {
@@ -697,18 +808,21 @@ export default function KnowledgeGraphPage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-b from-zinc-900/90 to-transparent backdrop-blur-sm z-50 flex items-center px-4 border-b border-cyan-500/20">
-                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
+                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
                     AO WORLD ENGINE
                 </Link>
                 <nav className="ml-8 flex gap-4">
-                    <Link href="/explore" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/explore" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Explore
                     </Link>
-                    <Link href="/chat" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/npcs" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        NPCs
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Chat
                     </Link>
-                    <Link href="/graph" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/graph" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
                         Graph
                     </Link>
                 </nav>
@@ -716,7 +830,7 @@ export default function KnowledgeGraphPage() {
 
             <div className="pt-14 flex h-screen">
                 {/* Canvas */}
-                <div className="flex-1 relative cursor-grab active:cursor-grabbing">
+                <div className={`flex-1 relative ${hoveredEntity ? 'cursor-pointer' : 'cursor-grab'} active:cursor-grabbing`}>
                     <canvas
                         ref={canvasRef}
                         width={width}
@@ -728,6 +842,7 @@ export default function KnowledgeGraphPage() {
                         onMouseLeave={handleMouseUp}
                         onWheel={handleWheel}
                         onContextMenu={handleContextMenu}
+                        onDoubleClick={handleDoubleClick}
                     />
 
                     {/* Filter buttons */}
@@ -757,15 +872,17 @@ export default function KnowledgeGraphPage() {
                         ))}
                     </div>
 
-                    {/* Controls */}
-                    <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
+                    {/* Controls - prominent play button */}
+                    <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap items-center bg-zinc-900/80 p-2 rounded-lg border border-zinc-700 backdrop-blur-sm">
                         <Button
-                            size="sm"
+                            size="lg"
                             variant={isSimulating ? 'default' : 'outline'}
                             onClick={() => setIsSimulating(!isSimulating)}
-                            className={isSimulating ? 'bg-cyan-600' : ''}
+                            className={`px-6 font-bold transition-all ${isSimulating
+                                ? 'bg-gradient-to-r from-cyan-500 to-purple-500 shadow-lg shadow-cyan-500/50 animate-pulse'
+                                : 'border-cyan-500 text-cyan-400 hover:bg-cyan-500/20'}`}
                         >
-                            {isSimulating ? '⏸ Freeze' : '▶ Simulate'}
+                            {isSimulating ? '⏸ PAUSE' : '▶ PLAY'}
                         </Button>
                         <Button
                             size="sm"
@@ -775,16 +892,18 @@ export default function KnowledgeGraphPage() {
                         >
                             {showFamilyOnly ? '👨‍👩‍👧 Family Only' : '👨‍👩‍👧 Show Family'}
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(3, z + 0.2))}>+</Button>
-                        <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.3, z - 0.2))}>−</Button>
-                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: 0, y: 0 }); setZoom(1); setRotationX(0); setRotationY(0); }}>Reset</Button>
+                        <div className="flex gap-1">
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(5, z + 0.1))}>+</Button>
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.1))}>−</Button>
+                        </div>
+                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: 0, y: 0 }); setZoom(0.3); setRotationX(0); setRotationY(0); }}>Reset</Button>
                         <Button
                             size="sm"
                             variant={autoRotate ? 'default' : 'outline'}
                             onClick={() => setAutoRotate(!autoRotate)}
-                            className={autoRotate ? 'bg-purple-600' : ''}
+                            className={autoRotate ? 'bg-purple-600 shadow-lg shadow-purple-500/30' : ''}
                         >
-                            {autoRotate ? '🔄 Stop Spin' : '🔄 Auto Spin'}
+                            {autoRotate ? '🔄 Spinning' : '🔄 Auto Spin'}
                         </Button>
                     </div>
 
@@ -848,6 +967,23 @@ export default function KnowledgeGraphPage() {
                                         ))}
                                     </div>
                                 )}
+                                {/* View Full Profile Button */}
+                                <Button
+                                    size="sm"
+                                    className="w-full mt-3 bg-cyan-600 hover:bg-cyan-500 text-white"
+                                    onClick={() => {
+                                        if (selectedEntity.type === 'npc') {
+                                            window.location.href = `/npcs?npc=${encodeURIComponent(selectedEntity.name)}`;
+                                        } else if (selectedEntity.type === 'building') {
+                                            window.location.href = `/explore?building=${encodeURIComponent(selectedEntity.id)}`;
+                                        } else {
+                                            window.location.href = `/explore`;
+                                        }
+                                    }}
+                                >
+                                    {selectedEntity.type === 'npc' ? '👤 View NPC Profile' :
+                                        selectedEntity.type === 'building' ? '🏢 View Building' : '🔍 Explore'}
+                                </Button>
                             </div>
 
                             {/* Relationships */}

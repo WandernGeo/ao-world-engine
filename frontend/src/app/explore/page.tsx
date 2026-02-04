@@ -451,18 +451,21 @@ export default function ExplorePage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-b from-zinc-900 to-transparent z-50 flex items-center px-4 border-b border-cyan-500/20">
-                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
+                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
                     AO WORLD ENGINE
                 </Link>
                 <nav className="ml-8 flex gap-4">
-                    <Link href="/explore" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/explore" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
                         Explore
                     </Link>
-                    <Link href="/chat" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/npcs" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        NPCs
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Chat
                     </Link>
-                    <Link href="/graph" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                    <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Graph
                     </Link>
                 </nav>
@@ -585,16 +588,16 @@ export default function ExplorePage() {
 
                     {/* View Mode Buttons */}
                     <div className="absolute top-4 left-4 flex gap-2">
-                        <Button variant="outline" size="sm" className="bg-black/70">District View</Button>
+                        <Button variant="outline" size="sm" className="bg-zinc-800 text-white border-zinc-600 hover:bg-zinc-700">District View</Button>
                         <Button
-                            variant={showBlueprint ? "default" : "ghost"}
+                            variant={showBlueprint ? "default" : "outline"}
                             size="sm"
-                            className={showBlueprint ? "bg-cyan-600" : "text-zinc-500"}
+                            className={showBlueprint ? "bg-cyan-600 text-white" : "bg-zinc-800 text-zinc-300 border-zinc-600 hover:bg-zinc-700 hover:text-white"}
                             onClick={() => setShowBlueprint(!showBlueprint)}
                         >
                             Blueprint
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-zinc-500">3D</Button>
+                        <Button variant="outline" size="sm" className="bg-zinc-800 text-zinc-300 border-zinc-600 hover:bg-zinc-700 hover:text-white">3D</Button>
                     </div>
                 </div>
 
@@ -683,10 +686,12 @@ export default function ExplorePage() {
                                                 <button
                                                     key={npc.id}
                                                     onClick={() => setSelectedNPC(npc)}
+                                                    onDoubleClick={() => window.location.href = `/npcs?npc=${encodeURIComponent(npc.name)}`}
                                                     className={`w-full text-left px-2 py-1 rounded text-xs flex items-center gap-2 ${selectedNPC?.id === npc.id
                                                         ? 'bg-cyan-600/30 border border-cyan-500/50'
                                                         : 'bg-zinc-800/50 hover:bg-zinc-700/50'
                                                         }`}
+                                                    title="Double-click to view full profile"
                                                 >
                                                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${npc.mood === 'friendly' ? 'bg-green-400' :
                                                         npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
@@ -797,9 +802,24 @@ export default function ExplorePage() {
                                     </div>
                                 )}
 
-                                <Button variant="default" size="sm" className="w-full mt-3 bg-cyan-600 hover:bg-cyan-500">
-                                    💬 Chat with {selectedNPC.name}
-                                </Button>
+                                <div className="flex gap-2 mt-3">
+                                    <Button
+                                        variant="default"
+                                        size="sm"
+                                        className="flex-1 bg-cyan-600 hover:bg-cyan-500"
+                                        onClick={() => window.location.href = `/npcs?npc=${encodeURIComponent(selectedNPC.name)}`}
+                                    >
+                                        👤 Full Profile
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1 border-cyan-500/50 text-cyan-400 hover:bg-cyan-600/20"
+                                        onClick={() => window.location.href = `/chat?npc=${encodeURIComponent(selectedNPC.id)}`}
+                                    >
+                                        💬 Chat
+                                    </Button>
+                                </div>
                             </CardContent>
                         </Card>
                     )}

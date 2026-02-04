@@ -1,0 +1,121 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "description": "Geo-claims registry for AO World Engine multiverse",
+        "created_at": "2026-02-04"
+    },
+    "claims": {
+        "nyc": {
+            "city_id": "nyc",
+            "display_name": "RE:ECHO City (New York)",
+            "claimed_by": "layer_00_testnet",
+            "claimed_at": "2026-02-04",
+            "status": "active",
+            "coordinates": {
+                "type": "BoundingBox",
+                "bbox": [
+                    -74.2591,
+                    40.4774,
+                    -73.7002,
+                    40.9176
+                ],
+                "center": {
+                    "lat": 40.7128,
+                    "lng": -74.0060
+                }
+            },
+            "district_mapping": {
+                "neon_district": {
+                    "real_world": "Times Square / Theater District",
+                    "lat": 40.7580,
+                    "lng": -73.9855
+                },
+                "temple_quarter": {
+                    "real_world": "Midtown Manhattan / St. Patrick's Cathedral",
+                    "lat": 40.7587,
+                    "lng": -73.9787
+                },
+                "industrial_ring": {
+                    "real_world": "Brooklyn Navy Yard",
+                    "lat": 40.6998,
+                    "lng": -73.9715
+                },
+                "residential_core": {
+                    "real_world": "Upper East Side",
+                    "lat": 40.7736,
+                    "lng": -73.9566
+                },
+                "undercity": {
+                    "real_world": "NYC Subway System (Underground)",
+                    "lat": 40.7506,
+                    "lng": -73.9936
+                }
+            },
+            "location_mapping": {
+                "neon_bar": {
+                    "lat": 40.7589,
+                    "lng": -73.9851,
+                    "real_world": "Times Square"
+                },
+                "resistance_hideout": {
+                    "lat": 40.7074,
+                    "lng": -73.9979,
+                    "real_world": "Brooklyn underground"
+                },
+                "temple_infirmary": {
+                    "lat": 40.7587,
+                    "lng": -73.9787,
+                    "real_world": "Midtown"
+                },
+                "tech_den": {
+                    "lat": 40.7081,
+                    "lng": -74.0089,
+                    "real_world": "DUMBO Brooklyn"
+                },
+                "mystic_sanctum": {
+                    "lat": 40.7794,
+                    "lng": -73.9632,
+                    "real_world": "Central Park edge"
+                },
+                "underground_kitchen": {
+                    "lat": 40.6892,
+                    "lng": -73.9937,
+                    "real_world": "Brooklyn Heights"
+                }
+            }
+        }
+    },
+    "available_cities": [
+        {
+            "city_id": "philadelphia",
+            "display_name": "Philadelphia",
+            "status": "available"
+        },
+        {
+            "city_id": "tokyo",
+            "display_name": "Tokyo",
+            "status": "available"
+        },
+        {
+            "city_id": "london",
+            "display_name": "London",
+            "status": "available"
+        },
+        {
+            "city_id": "sydney",
+            "display_name": "Sydney",
+            "status": "available"
+        },
+        {
+            "city_id": "toronto",
+            "display_name": "Toronto",
+            "status": "available"
+        }
+    ],
+    "claiming_rules": {
+        "min_population": 100,
+        "min_ar_stake": 0.01,
+        "requires_layer_registration": true,
+        "requires_echo_propagation": true
+    }
+}

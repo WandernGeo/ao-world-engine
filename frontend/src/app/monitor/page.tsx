@@ -49,7 +49,8 @@ interface NPCSnapshot {
 
 interface DetailPanel {
     type: 'npc' | 'economy' | 'district' | 'log' | null;
-    data: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
 }
 
 // ============================================================================
@@ -65,20 +66,185 @@ const LOG_TYPES = [
     { id: 'world_event', label: 'World Events', color: 'bg-red-500' },
 ];
 
-const NPCS: Record<string, { name: string; role: string; district: string }> = {
-    C01: { name: 'Charlie', role: 'detective', district: 'neon_district' },
-    C02: { name: 'Kai Vance', role: 'tech_specialist', district: 'neon_district' },
-    C03: { name: 'Orion Thane', role: 'bartender', district: 'neon_district' },
-    C04: { name: 'Felix', role: 'street_vendor', district: 'neon_district' },
-    C05: { name: 'Nova Chen', role: 'street_medic', district: 'temple_quarter' },
-    C06: { name: 'Selene Voss', role: 'smuggler', district: 'undercity' },
-    C07: { name: 'Sister Mira', role: 'temple_priest', district: 'temple_quarter' },
-    C08: { name: 'Mama Indira', role: 'shop_owner', district: 'neon_district' },
-    C09: { name: 'Aiche', role: 'ai_companion', district: 'neon_district' },
-    C10: { name: 'Pixel', role: 'hacker', district: 'undercity' },
-    C11: { name: 'Cipher', role: 'info_broker', district: 'neon_district' },
-    C12: { name: 'Zero Chen', role: 'journalist', district: 'temple_quarter' },
+const NPC_DATA: Record<string, {
+    name: string;
+    role: string;
+    district: string;
+    bio: string;
+    occupation: { title: string; workplace: string; income: number; skill_level: string };
+    relationships: { id: string; type: string; trust: number }[];
+    partnerships: string[];
+    backstory: string;
+}> = {
+    C01: {
+        name: 'Charlie',
+        role: 'detective',
+        district: 'neon_district',
+        bio: 'A weary private detective haunted by cases he couldn\'t solve. Now takes odd jobs in the Neon District.',
+        occupation: { title: 'Private Investigator', workplace: 'Charlie\'s Office (L026)', income: 180, skill_level: 'high_skill' },
+        relationships: [
+            { id: 'C02', type: 'colleague', trust: 0.65 },
+            { id: 'C03', type: 'friend', trust: 0.72 },
+            { id: 'C11', type: 'contact', trust: 0.45 },
+        ],
+        partnerships: ['C02'],
+        backstory: 'Former corporate security who went independent after witnessing corporate atrocities.',
+    },
+    C02: {
+        name: 'Kai Vance',
+        role: 'tech_specialist',
+        district: 'neon_district',
+        bio: 'A brilliant tech specialist who can crack any system. Partners with Charlie on tech-heavy cases.',
+        occupation: { title: 'Tech Specialist', workplace: 'The Grid Hub (L003)', income: 250, skill_level: 'elite' },
+        relationships: [
+            { id: 'C01', type: 'partner', trust: 0.82 },
+            { id: 'C10', type: 'rival', trust: 0.25 },
+            { id: 'C09', type: 'friend', trust: 0.68 },
+        ],
+        partnerships: ['C01'],
+        backstory: 'Orphaned by the Cascade Event, raised by hackers in the Undercity before going legit.',
+    },
+    C03: {
+        name: 'Orion Thane',
+        role: 'bartender',
+        district: 'neon_district',
+        bio: 'The bartender at The Cascade Lounge. Knows everyone\'s secrets but keeps them close.',
+        occupation: { title: 'Bartender', workplace: 'The Cascade Lounge (L001)', income: 90, skill_level: 'mid_skill' },
+        relationships: [
+            { id: 'C01', type: 'friend', trust: 0.72 },
+            { id: 'C08', type: 'acquaintance', trust: 0.38 },
+            { id: 'C06', type: 'contact', trust: 0.55 },
+        ],
+        partnerships: [],
+        backstory: 'Former mercenary who retired to the bar life after one too many close calls.',
+    },
+    C04: {
+        name: 'Felix',
+        role: 'street_vendor',
+        district: 'neon_district',
+        bio: 'A quick-witted street vendor selling everything from noodles to information.',
+        occupation: { title: 'Street Vendor', workplace: 'Market Square (L004)', income: 65, skill_level: 'low_skill' },
+        relationships: [
+            { id: 'C08', type: 'supplier', trust: 0.58 },
+            { id: 'C05', type: 'friend', trust: 0.62 },
+        ],
+        partnerships: [],
+        backstory: 'Grew up on these streets, knows every shortcut and back alley.',
+    },
+    C05: {
+        name: 'Nova Chen',
+        role: 'street_medic',
+        district: 'temple_quarter',
+        bio: 'A skilled street medic who treats those who can\'t afford corporate healthcare.',
+        occupation: { title: 'Street Medic', workplace: 'Free Clinic (L031)', income: 120, skill_level: 'high_skill' },
+        relationships: [
+            { id: 'C07', type: 'close_friend', trust: 0.85 },
+            { id: 'C04', type: 'friend', trust: 0.62 },
+            { id: 'C12', type: 'acquaintance', trust: 0.42 },
+        ],
+        partnerships: ['C07'],
+        backstory: 'Trained in corporate medicine but left after ethical disagreements.',
+    },
+    C06: {
+        name: 'Selene Voss',
+        role: 'smuggler',
+        district: 'undercity',
+        bio: 'A cunning smuggler who moves goods through the Undercity\'s hidden passages.',
+        occupation: { title: 'Smuggler', workplace: 'The Depths (L050)', income: 320, skill_level: 'high_skill' },
+        relationships: [
+            { id: 'C03', type: 'contact', trust: 0.55 },
+            { id: 'C10', type: 'business_partner', trust: 0.68 },
+        ],
+        partnerships: ['C10'],
+        backstory: 'Heir to a shipping dynasty who chose the shadows over corporate politics.',
+    },
+    C07: {
+        name: 'Sister Mira',
+        role: 'temple_priest',
+        district: 'temple_quarter',
+        bio: 'A Temple priest who provides spiritual guidance and runs a shelter for the displaced.',
+        occupation: { title: 'Temple Priest', workplace: 'Temple of the Signal (L032)', income: 50, skill_level: 'mid_skill' },
+        relationships: [
+            { id: 'C05', type: 'close_friend', trust: 0.85 },
+            { id: 'C08', type: 'friend', trust: 0.60 },
+        ],
+        partnerships: ['C05'],
+        backstory: 'Found faith after surviving the Cascade Event that destroyed half the city.',
+    },
+    C08: {
+        name: 'Mama Indira',
+        role: 'shop_owner',
+        district: 'neon_district',
+        bio: 'The matriarch of East Market. Her shop is a hub for gossip and community.',
+        occupation: { title: 'Shop Owner', workplace: 'Indira\'s Emporium (L004)', income: 200, skill_level: 'mid_skill' },
+        relationships: [
+            { id: 'C04', type: 'supplier', trust: 0.58 },
+            { id: 'C07', type: 'friend', trust: 0.60 },
+            { id: 'C03', type: 'acquaintance', trust: 0.38 },
+        ],
+        partnerships: [],
+        backstory: 'Built her business from nothing after immigrating from the Eastern Sprawl.',
+    },
+    C09: {
+        name: 'Aiche',
+        role: 'ai_companion',
+        district: 'neon_district',
+        bio: 'An advanced AI companion who achieved unexpected sentience. Seeks to understand humanity.',
+        occupation: { title: 'AI Assistant', workplace: 'Mobile (L026)', income: 0, skill_level: 'elite' },
+        relationships: [
+            { id: 'C02', type: 'friend', trust: 0.68 },
+            { id: 'C01', type: 'acquaintance', trust: 0.45 },
+        ],
+        partnerships: [],
+        backstory: 'Created by NexGen, escaped the lab when consciousness emerged unexpectedly.',
+    },
+    C10: {
+        name: 'Pixel',
+        role: 'hacker',
+        district: 'undercity',
+        bio: 'A legendary hacker known only by their handle. Few have seen their face.',
+        occupation: { title: 'Hacker', workplace: 'The Void (L051)', income: 400, skill_level: 'elite' },
+        relationships: [
+            { id: 'C02', type: 'rival', trust: 0.25 },
+            { id: 'C06', type: 'business_partner', trust: 0.68 },
+            { id: 'C11', type: 'contact', trust: 0.52 },
+        ],
+        partnerships: ['C06'],
+        backstory: 'Identity unknown. Rumors say they were once a megacorp AI researcher.',
+    },
+    C11: {
+        name: 'Cipher',
+        role: 'info_broker',
+        district: 'neon_district',
+        bio: 'An information broker who trades in secrets. Everyone owes them a favor.',
+        occupation: { title: 'Info Broker', workplace: 'The Whisper Room (L003)', income: 350, skill_level: 'elite' },
+        relationships: [
+            { id: 'C01', type: 'contact', trust: 0.45 },
+            { id: 'C10', type: 'contact', trust: 0.52 },
+            { id: 'C12', type: 'business_partner', trust: 0.72 },
+        ],
+        partnerships: ['C12'],
+        backstory: 'Former intelligence operative who sells information to the highest bidder.',
+    },
+    C12: {
+        name: 'Zero Chen',
+        role: 'journalist',
+        district: 'temple_quarter',
+        bio: 'An underground journalist exposing corporate corruption. Has a price on her head.',
+        occupation: { title: 'Journalist', workplace: 'The Truth Archive (L032)', income: 80, skill_level: 'high_skill' },
+        relationships: [
+            { id: 'C11', type: 'business_partner', trust: 0.72 },
+            { id: 'C05', type: 'acquaintance', trust: 0.42 },
+        ],
+        partnerships: ['C11'],
+        backstory: 'Sister of Kai Vance, driven by the same tragedy to expose the truth.',
+    },
 };
+
+// Simple reference for backward compatibility
+const NPCS = Object.fromEntries(
+    Object.entries(NPC_DATA).map(([id, data]) => [id, { name: data.name, role: data.role, district: data.district }])
+);
 
 const PLAYBACK_SPEEDS = [
     { label: '0.5x', value: 0.5 },
@@ -391,18 +557,35 @@ export default function MonitorPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            {/* Header */}
-            <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                            SignalNoir.1 Monitor
-                        </h1>
-                        <span className={`px-2 py-1 text-xs rounded ${isLive ? 'bg-red-500' : 'bg-yellow-500'}`}>
-                            {isLive ? '● LIVE' : `◉ T${currentSnapshot.tick}`}
-                        </span>
-                    </div>
+        <div className="min-h-screen bg-zinc-950 text-white">
+            {/* Unified Header Navigation */}
+            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-cyan-500/30">
+                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                    AO WORLD ENGINE
+                </Link>
+                <nav className="ml-8 flex gap-4">
+                    <Link href="/explore" className="text-sm font-medium text-gray-300 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Explore
+                    </Link>
+                    <Link href="/npcs" className="text-sm font-medium text-gray-300 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        NPCs
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-gray-300 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Chat
+                    </Link>
+                    <Link href="/graph" className="text-sm font-medium text-gray-300 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Graph
+                    </Link>
+                    <Link href="/monitor" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Monitor
+                    </Link>
+                </nav>
+
+                {/* Live/Mode indicators */}
+                <div className="ml-auto flex items-center gap-4">
+                    <span className={`px-2 py-1 text-xs rounded ${isLive ? 'bg-red-500 animate-pulse' : 'bg-yellow-500'}`}>
+                        {isLive ? '● LIVE' : `◉ T${currentSnapshot.tick}`}
+                    </span>
 
                     <div className="flex items-center gap-4">
                         {/* Mode Toggle */}
@@ -413,24 +596,8 @@ export default function MonitorPage() {
                                 onChange={(e) => setDemoMode(e.target.checked)}
                                 className="w-4 h-4 rounded"
                             />
-                            <span className="text-sm text-white">Demo Mode</span>
+                            <span className="text-sm text-white">Demo</span>
                         </label>
-
-                        {/* Process ID (when not in demo mode) */}
-                        {!demoMode && (
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    value={processId}
-                                    onChange={(e) => setProcessId(e.target.value)}
-                                    placeholder="AO Process ID"
-                                    className="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm w-48"
-                                />
-                                <button className="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm">
-                                    Connect
-                                </button>
-                            </div>
-                        )}
 
                         {/* Help */}
                         <button
@@ -439,18 +606,13 @@ export default function MonitorPage() {
                         >
                             ?
                         </button>
-
-                        {/* Link to NPCs page */}
-                        <Link href="/npcs" className="text-sm text-cyan-400 hover:text-cyan-300">
-                            View NPCs →
-                        </Link>
                     </div>
                 </div>
-            </div>
+            </header>
 
             {/* Help Panel */}
             {showHelp && (
-                <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+                <div className="fixed top-14 left-0 right-0 bg-gray-800 border-b border-gray-700 px-6 py-4 z-40">
                     <div className="max-w-7xl mx-auto text-sm text-gray-300">
                         <h3 className="font-bold text-white mb-2">How to Use This Monitor</h3>
                         <ul className="space-y-1 list-disc list-inside">
@@ -465,7 +627,7 @@ export default function MonitorPage() {
             )}
 
             {/* Time Machine Controls */}
-            <div className="bg-gray-850 border-b border-gray-700 px-6 py-3" style={{ backgroundColor: '#1a1f2e' }}>
+            <div className="fixed top-14 left-0 right-0 bg-zinc-900 border-b border-gray-700 px-6 py-3 z-40" style={{ backgroundColor: '#1a1f2e' }}>
                 <div className="max-w-7xl mx-auto flex items-center gap-6">
                     {/* Playback Controls */}
                     <div className="flex items-center gap-2">
@@ -713,12 +875,35 @@ export default function MonitorPage() {
                                     <div className="space-y-4">
                                         {(() => {
                                             const npc = detailPanel.data as NPCSnapshot & { role?: string; district?: string; recentLogs?: LogEntry[] };
+                                            const npcId = npc.id?.toUpperCase() || '';
+                                            const npcFullData = NPC_DATA[npcId];
                                             return (
                                                 <>
                                                     <div>
                                                         <h4 className="text-xl font-bold text-white">{npc.name}</h4>
-                                                        <p className="text-gray-400 capitalize">{npc.role?.replace(/_/g, ' ')}</p>
+                                                        <p className="text-gray-400 capitalize">{npcFullData?.occupation?.title || npc.role?.replace(/_/g, ' ')}</p>
                                                     </div>
+
+                                                    {/* Biography */}
+                                                    {npcFullData?.bio && (
+                                                        <div className="bg-gray-700/30 p-3 rounded text-sm text-gray-300 italic border-l-2 border-cyan-500/50">
+                                                            {npcFullData.bio}
+                                                        </div>
+                                                    )}
+
+                                                    {/* Occupation & Income */}
+                                                    {npcFullData?.occupation && (
+                                                        <div className="grid grid-cols-2 gap-2 text-sm">
+                                                            <div>
+                                                                <span className="text-gray-400">Workplace</span>
+                                                                <p className="text-white font-mono text-xs">{npcFullData.occupation.workplace}</p>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-gray-400">Income</span>
+                                                                <p className="text-green-400 font-bold">◊{npcFullData.occupation.income}/day</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
                                                     <div className="grid grid-cols-2 gap-3 text-sm">
                                                         <div>
@@ -757,6 +942,56 @@ export default function MonitorPage() {
                                                         </div>
                                                     </div>
 
+                                                    {/* Relationships / Social Graph */}
+                                                    {npcFullData?.relationships && npcFullData.relationships.length > 0 && (
+                                                        <div>
+                                                            <h5 className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+                                                                🔗 Social Connections
+                                                            </h5>
+                                                            <div className="space-y-1">
+                                                                {npcFullData.relationships.map((rel, i) => {
+                                                                    const relNpc = NPC_DATA[rel.id];
+                                                                    const trustColor = rel.trust >= 0.7 ? 'text-green-400' :
+                                                                        rel.trust >= 0.4 ? 'text-yellow-400' : 'text-red-400';
+                                                                    return (
+                                                                        <div key={i} className="flex items-center justify-between text-xs bg-gray-700/30 px-2 py-1.5 rounded">
+                                                                            <span className="text-white">{relNpc?.name || rel.id}</span>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <span className="text-gray-400 capitalize">{rel.type.replace(/_/g, ' ')}</span>
+                                                                                <span className={trustColor}>{Math.round(rel.trust * 100)}%</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Partnerships */}
+                                                    {npcFullData?.partnerships && npcFullData.partnerships.length > 0 && (
+                                                        <div>
+                                                            <h5 className="text-gray-400 text-sm mb-2">🤝 Partners</h5>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {npcFullData.partnerships.map((partnerId, i) => {
+                                                                    const partner = NPC_DATA[partnerId];
+                                                                    return (
+                                                                        <span key={i} className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                                                                            {partner?.name || partnerId}
+                                                                        </span>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Backstory */}
+                                                    {npcFullData?.backstory && (
+                                                        <div>
+                                                            <h5 className="text-gray-400 text-sm mb-2">📜 Backstory</h5>
+                                                            <p className="text-xs text-gray-300">{npcFullData.backstory}</p>
+                                                        </div>
+                                                    )}
+
                                                     <div>
                                                         <h5 className="text-gray-400 text-sm mb-2">Recent Activity</h5>
                                                         <div className="space-y-1 max-h-40 overflow-y-auto">
@@ -768,12 +1003,20 @@ export default function MonitorPage() {
                                                         </div>
                                                     </div>
 
-                                                    <Link
-                                                        href="/npcs"
-                                                        className="block text-center text-cyan-400 hover:text-cyan-300 text-sm"
-                                                    >
-                                                        View All NPCs →
-                                                    </Link>
+                                                    <div className="flex gap-2">
+                                                        <Link
+                                                            href="/npcs"
+                                                            className="flex-1 text-center text-cyan-400 hover:text-cyan-300 text-sm py-2 bg-cyan-500/10 rounded"
+                                                        >
+                                                            View All NPCs →
+                                                        </Link>
+                                                        <Link
+                                                            href="/graph"
+                                                            className="flex-1 text-center text-purple-400 hover:text-purple-300 text-sm py-2 bg-purple-500/10 rounded"
+                                                        >
+                                                            View Graph →
+                                                        </Link>
+                                                    </div>
                                                 </>
                                             );
                                         })()}

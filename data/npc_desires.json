@@ -1,0 +1,220 @@
+{
+    "_meta": {
+        "description": "Desire/goal templates for procedural NPC motivation generation",
+        "version": "1.0"
+    },
+    "short_term_goals": {
+        "_desc": "Immediate goals (1-24 hours in-game)",
+        "survival": [
+            "find_food",
+            "find_shelter",
+            "avoid_danger",
+            "rest",
+            "find_medicine"
+        ],
+        "economic": [
+            "earn_credits",
+            "complete_work_shift",
+            "find_buyer",
+            "collect_payment",
+            "bargain_deal"
+        ],
+        "social": [
+            "meet_friend",
+            "gossip",
+            "attend_event",
+            "visit_family",
+            "avoid_enemy"
+        ],
+        "information": [
+            "gather_intel",
+            "learn_news",
+            "find_contact",
+            "verify_rumor",
+            "scout_location"
+        ]
+    },
+    "long_term_goals": {
+        "_desc": "Medium-term goals (days to weeks)",
+        "stability": [
+            "save_for_apartment",
+            "get_stable_job",
+            "pay_off_debt",
+            "build_savings",
+            "secure_food_supply"
+        ],
+        "advancement": [
+            "get_promotion",
+            "learn_new_skill",
+            "start_business",
+            "gain_reputation",
+            "make_connections"
+        ],
+        "relationships": [
+            "find_partner",
+            "support_family",
+            "reconnect_with_sibling",
+            "reconcile_with_enemy",
+            "protect_loved_one"
+        ],
+        "faction": [
+            "join_resistance",
+            "climb_temple_ranks",
+            "earn_faction_trust",
+            "complete_faction_mission",
+            "prove_loyalty"
+        ],
+        "revenge": [
+            "find_betrayer",
+            "expose_corruption",
+            "settle_old_score",
+            "clear_name",
+            "avenge_family"
+        ]
+    },
+    "life_aspirations": {
+        "_desc": "Core life goals that shape personality",
+        "freedom": {
+            "description": "Escape oppression, live independently",
+            "compatible_factions": [
+                "resistance",
+                "neutral"
+            ],
+            "drives": [
+                "autonomy",
+                "escape",
+                "change"
+            ]
+        },
+        "power": {
+            "description": "Gain influence and control",
+            "compatible_factions": [
+                "temple",
+                "corps"
+            ],
+            "drives": [
+                "ambition",
+                "dominance",
+                "respect"
+            ]
+        },
+        "knowledge": {
+            "description": "Understand the world and its secrets",
+            "compatible_factions": [
+                "mystics",
+                "neutral"
+            ],
+            "drives": [
+                "curiosity",
+                "truth",
+                "discovery"
+            ]
+        },
+        "love": {
+            "description": "Find and protect loved ones",
+            "compatible_factions": [
+                "any"
+            ],
+            "drives": [
+                "connection",
+                "family",
+                "sacrifice"
+            ]
+        },
+        "survival": {
+            "description": "Stay alive at any cost",
+            "compatible_factions": [
+                "underground",
+                "neutral"
+            ],
+            "drives": [
+                "caution",
+                "pragmatism",
+                "self_preservation"
+            ]
+        },
+        "justice": {
+            "description": "Right the wrongs of the world",
+            "compatible_factions": [
+                "resistance",
+                "mystics"
+            ],
+            "drives": [
+                "righteousness",
+                "sacrifice",
+                "truth"
+            ]
+        },
+        "wealth": {
+            "description": "Accumulate resources and comfort",
+            "compatible_factions": [
+                "neutral",
+                "corps"
+            ],
+            "drives": [
+                "greed",
+                "security",
+                "status"
+            ]
+        },
+        "legacy": {
+            "description": "Leave a mark on the world",
+            "compatible_factions": [
+                "any"
+            ],
+            "drives": [
+                "ambition",
+                "creation",
+                "memory"
+            ]
+        }
+    },
+    "memory_types": {
+        "_desc": "Types of memories that shape NPC behavior",
+        "trauma": [
+            "witnessed_violence",
+            "lost_family_member",
+            "raid_survivor",
+            "betrayed_by_friend",
+            "imprisoned"
+        ],
+        "positive": [
+            "found_love",
+            "helped_stranger",
+            "achieved_goal",
+            "reunion",
+            "moment_of_hope"
+        ],
+        "formative": [
+            "first_job",
+            "joined_faction",
+            "left_home",
+            "learned_skill",
+            "met_mentor"
+        ],
+        "secret": [
+            "committed_crime",
+            "hidden_identity",
+            "forbidden_knowledge",
+            "betrayed_faction",
+            "witnessed_truth"
+        ]
+    },
+    "goal_selection_rules": {
+        "short_term": {
+            "weight_by_personality": true,
+            "max_active": 3,
+            "refresh_rate_ticks": 24
+        },
+        "long_term": {
+            "weight_by_personality": true,
+            "weight_by_life_aspiration": true,
+            "max_active": 2,
+            "refresh_rate_ticks": 240
+        },
+        "life_aspiration": {
+            "determined_at_creation": true,
+            "can_change_on_major_event": true
+        }
+    }
+}

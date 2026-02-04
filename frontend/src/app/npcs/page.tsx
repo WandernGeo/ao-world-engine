@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 interface NPC {
     id: string;
     name: string;
@@ -141,10 +142,25 @@ const getEnergyColor = (energy: number): string => {
     return "bg-red-500";
 };
 
-export default function NPCsPage() {
+function NPCsPageContent() {
+    const searchParams = useSearchParams();
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [filterDistrict, setFilterDistrict] = useState<string>("all");
     const [sortBy, setSortBy] = useState<"name" | "wealth" | "mood">("name");
+
+    // Handle deep linking via query parameter
+    useEffect(() => {
+        const npcName = searchParams.get('npc');
+        if (npcName) {
+            const npc = FOUNDING_NPCS.find(n =>
+                n.name.toLowerCase() === npcName.toLowerCase() ||
+                n.id.toLowerCase() === npcName.toLowerCase()
+            );
+            if (npc) {
+                setSelectedNPC(npc);
+            }
+        }
+    }, [searchParams]);
 
     const filteredNPCs = FOUNDING_NPCS
         .filter(npc => filterDistrict === "all" || npc.district === filterDistrict)
@@ -155,15 +171,39 @@ export default function NPCsPage() {
         });
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-6">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-zinc-950 text-white">
+            {/* Unified Header Navigation */}
+            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
+                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
+                    AO WORLD ENGINE
+                </Link>
+                <nav className="ml-8 flex gap-4">
+                    <Link href="/explore" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Explore
+                    </Link>
+                    <Link href="/npcs" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
+                        NPCs
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Chat
+                    </Link>
+                    <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Graph
+                    </Link>
+                    <Link href="/monitor" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Monitor
+                    </Link>
+                </nav>
+            </header>
+
+            <div className="pt-20 px-6 max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        <h1 className="text-3xl font-bold text-white">
                             SignalNoir.1 NPCs
                         </h1>
-                        <p className="text-gray-400 mt-1">12 Founding Citizens of RE:ECHO City</p>
+                        <p className="text-zinc-400 mt-1">12 Founding Citizens of RE:ECHO City</p>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -248,8 +288,8 @@ export default function NPCsPage() {
                                 {npc.faction && (
                                     <div className="mt-3 pt-2 border-t border-gray-700">
                                         <span className={`text-xs px-2 py-1 rounded ${npc.faction === "temple" ? "bg-amber-500/20 text-amber-400" :
-                                                npc.faction === "resistance" ? "bg-red-500/20 text-red-400" :
-                                                    "bg-gray-500/20 text-gray-400"
+                                            npc.faction === "resistance" ? "bg-red-500/20 text-red-400" :
+                                                "bg-gray-500/20 text-gray-400"
                                             }`}>
                                             {npc.faction.toUpperCase()}
                                         </span>
@@ -260,27 +300,29 @@ export default function NPCsPage() {
                     })}
                 </div>
 
-                {/* Selected NPC Detail Panel */}
-                {selectedNPC && (
-                    <div className="bg-gray-800 rounded-lg border border-cyan-500 p-6 shadow-lg shadow-cyan-500/20">
-                        <div className="flex items-start justify-between mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold">{selectedNPC.name}</h2>
-                                <p className="text-gray-400 capitalize">{selectedNPC.role.replace(/_/g, " ")} • {selectedNPC.id}</p>
+                {/* Right-Side Sliding Panel */}
+                <div
+                    className={`fixed top-14 right-0 h-[calc(100vh-56px)] w-96 bg-zinc-900 border-l border-cyan-500/50 shadow-2xl shadow-cyan-500/20 transform transition-transform duration-300 ease-out z-40 overflow-y-auto ${selectedNPC ? 'translate-x-0' : 'translate-x-full'
+                        }`}
+                >
+                    {selectedNPC && (
+                        <div className="p-6">
+                            <div className="flex items-start justify-between mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold">{selectedNPC.name}</h2>
+                                    <p className="text-gray-400 capitalize">{selectedNPC.role.replace(/_/g, " ")} • {selectedNPC.id}</p>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedNPC(null)}
+                                    className="text-gray-400 hover:text-white p-1 rounded hover:bg-gray-700"
+                                >
+                                    ✕
+                                </button>
                             </div>
-                            <button
-                                onClick={() => setSelectedNPC(null)}
-                                className="text-gray-400 hover:text-white"
-                            >
-                                ✕
-                            </button>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Stats */}
-                            <div className="space-y-4">
+                            {/* Stats Section */}
+                            <div className="space-y-4 mb-6">
                                 <h3 className="font-semibold text-cyan-400 border-b border-gray-700 pb-2">Stats</h3>
-
                                 <div className="space-y-3">
                                     <div>
                                         <div className="flex justify-between text-sm mb-1">
@@ -294,7 +336,6 @@ export default function NPCsPage() {
                                             />
                                         </div>
                                     </div>
-
                                     <div>
                                         <div className="flex justify-between text-sm mb-1">
                                             <span className="text-gray-400">Energy</span>
@@ -307,53 +348,35 @@ export default function NPCsPage() {
                                             />
                                         </div>
                                     </div>
-
                                     <div className="flex justify-between">
                                         <span className="text-gray-400">Wealth</span>
                                         <span className="text-yellow-400 font-medium">◊{selectedNPC.wealth}</span>
                                     </div>
-
                                     <div className="flex justify-between">
                                         <span className="text-gray-400">Job Code</span>
                                         <span className="font-mono text-sm">{selectedNPC.job_code || "N/A"}</span>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-400">Archetype</span>
-                                        <span className="font-mono text-sm">{selectedNPC.archetype}</span>
-                                    </div>
                                 </div>
                             </div>
 
-                            {/* Location */}
-                            <div className="space-y-4">
+                            {/* Location Section */}
+                            <div className="space-y-4 mb-6">
                                 <h3 className="font-semibold text-purple-400 border-b border-gray-700 pb-2">Location</h3>
-
-                                <div className="space-y-2">
+                                <div className="space-y-2 text-sm">
                                     <div className="flex justify-between">
                                         <span className="text-gray-400">District</span>
                                         <span>{DISTRICTS[selectedNPC.district].icon} {DISTRICTS[selectedNPC.district].name}</span>
                                     </div>
-
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between items-center">
                                         <span className="text-gray-400">Current</span>
-                                        <span className="font-mono">{selectedNPC.location}</span>
+                                        <button
+                                            onClick={() => window.location.href = `/explore?building=${encodeURIComponent(selectedNPC.location)}`}
+                                            className="font-mono text-cyan-400 hover:text-cyan-300 hover:underline"
+                                            title="Click to view on map"
+                                        >
+                                            {selectedNPC.location} →
+                                        </button>
                                     </div>
-
-                                    {selectedNPC.home && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Home</span>
-                                            <span className="font-mono">{selectedNPC.home}</span>
-                                        </div>
-                                    )}
-
-                                    {selectedNPC.workplace && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Workplace</span>
-                                            <span className="font-mono">{selectedNPC.workplace}</span>
-                                        </div>
-                                    )}
-
                                     <div className="flex justify-between">
                                         <span className="text-gray-400">State</span>
                                         <span className={`capitalize ${STATE_COLORS[selectedNPC.state]}`}>
@@ -361,12 +384,32 @@ export default function NPCsPage() {
                                         </span>
                                     </div>
                                 </div>
+                                {/* Quick Navigation Buttons */}
+                                <div className="flex gap-2 mt-3">
+                                    <button
+                                        onClick={() => window.location.href = `/explore?npc=${encodeURIComponent(selectedNPC.id)}`}
+                                        className="flex-1 px-3 py-2 text-xs bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-600 text-zinc-300 hover:text-white transition-colors"
+                                    >
+                                        🗺️ View on Map
+                                    </button>
+                                    <button
+                                        onClick={() => window.location.href = `/graph?entity=${encodeURIComponent(selectedNPC.id)}`}
+                                        className="flex-1 px-3 py-2 text-xs bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-600 text-zinc-300 hover:text-white transition-colors"
+                                    >
+                                        🕸️ View on Graph
+                                    </button>
+                                    <button
+                                        onClick={() => window.location.href = `/chat?npc=${encodeURIComponent(selectedNPC.id)}`}
+                                        className="flex-1 px-3 py-2 text-xs bg-zinc-800 hover:bg-zinc-700 rounded border border-zinc-600 text-zinc-300 hover:text-white transition-colors"
+                                    >
+                                        💬 Chat
+                                    </button>
+                                </div>
                             </div>
 
-                            {/* Trust Network */}
-                            <div className="space-y-4">
+                            {/* Trust Network Section */}
+                            <div className="space-y-4 mb-6">
                                 <h3 className="font-semibold text-green-400 border-b border-gray-700 pb-2">Trust Network</h3>
-
                                 {selectedNPC.trust_network && Object.keys(selectedNPC.trust_network).length > 0 ? (
                                     <div className="space-y-2">
                                         {Object.entries(selectedNPC.trust_network).map(([npcId, trust]) => {
@@ -379,14 +422,12 @@ export default function NPCsPage() {
                                                     >
                                                         <div
                                                             className={`h-full ${trust >= 0.7 ? "bg-green-500" :
-                                                                    trust >= 0.4 ? "bg-yellow-500" :
-                                                                        "bg-red-500"
-                                                                }`}
+                                                                trust >= 0.4 ? "bg-yellow-500" : "bg-red-500"}`}
                                                             style={{ width: `${trust * 100}%` }}
                                                         />
                                                     </div>
                                                     <span
-                                                        className="text-sm cursor-pointer hover:text-cyan-400"
+                                                        className="text-sm cursor-pointer hover:text-cyan-400 min-w-[80px]"
                                                         onClick={() => otherNPC && setSelectedNPC(otherNPC)}
                                                     >
                                                         {otherNPC?.name || npcId}
@@ -400,25 +441,25 @@ export default function NPCsPage() {
                                     <p className="text-gray-500 text-sm">No trust connections</p>
                                 )}
                             </div>
-                        </div>
 
-                        {/* Arweave Link */}
-                        <div className="mt-6 pt-4 border-t border-gray-700">
-                            <a
-                                href={`https://arweave.net/${selectedNPC.arweave_tx}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-2"
-                            >
-                                <span>View on Arweave</span>
-                                <span className="font-mono text-xs text-gray-500">{selectedNPC.arweave_tx.slice(0, 12)}...</span>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
+                            {/* Arweave Link */}
+                            <div className="pt-4 border-t border-gray-700">
+                                <a
+                                    href={`https://arweave.net/${selectedNPC.arweave_tx}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-2"
+                                >
+                                    <span>View on Arweave</span>
+                                    <span className="font-mono text-xs text-gray-500">{selectedNPC.arweave_tx.slice(0, 12)}...</span>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 {/* Footer */}
                 <div className="mt-8 text-center text-gray-500 text-sm">
@@ -426,5 +467,17 @@ export default function NPCsPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function NPCsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+                <div className="text-cyan-400">Loading NPCs...</div>
+            </div>
+        }>
+            <NPCsPageContent />
+        </Suspense>
     );
 }
