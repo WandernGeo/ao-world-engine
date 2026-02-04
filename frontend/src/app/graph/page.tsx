@@ -78,7 +78,7 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
         const API_BASE = await getApiBase();
         // Fetch NPCs and buildings from API
         const [npcRes, buildingRes] = await Promise.all([
-            fetch(`${API_BASE}/api/npcs?limit=200`),  // Increased from 30 to 200
+            fetch(`${API_BASE}/api/npcs?limit=800`),  // Increased to 800 to show all NPCs
             fetch(`${API_BASE}/api/buildings`),
         ]);
 

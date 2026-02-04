@@ -337,7 +337,7 @@ export default function ExplorePage() {
     const fetchNPCs = useCallback(async () => {
         if (!mounted) return; // Don't fetch until mounted
         try {
-            const response = await fetch(`${API_BASE}/api/npcs?tick=${currentTick}`);
+            const response = await fetch(`${API_BASE}/api/npcs?tick=${currentTick}&limit=800`);
             if (response.ok) {
                 const data = await response.json();
                 // Only set if we got a valid array
