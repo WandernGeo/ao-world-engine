@@ -296,15 +296,27 @@ end)
 -- =============================================================================
 
 Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg)
-    -- Advance world tick
-    WorldTick = WorldTick + 1
-    
-    -- Day/year advancement
-    if WorldTick % TICKS_PER_DAY == 0 then
-        WorldDay = WorldDay + 1
-    end
-    if WorldTick % TICKS_PER_YEAR == 0 then
-        WorldYear = WorldYear + 1
+    -- Advance world tick (with time compression if configured)
+    local ticks_to_advance = TIME_COMPRESSION or 1
+    for i = 1, ticks_to_advance do
+        WorldTick = WorldTick + 1
+        
+        -- Day/year advancement
+        if WorldTick % TICKS_PER_DAY == 0 then
+            WorldDay = WorldDay + 1
+            
+            -- Log day transition
+            if log_day_transition then
+                log_day_transition(WorldTick, WorldDay, WorldYear, {
+                    population = PopulationCount,
+                    budget = CityBudget,
+                    active_npcs = ActiveNpcCount
+                })
+            end
+        end
+        if WorldTick % TICKS_PER_YEAR == 0 then
+            WorldYear = WorldYear + 1
+        end
     end
     
     local time = get_time_info(WorldTick)
@@ -314,6 +326,11 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
     for _, event in ipairs(events) do
         broadcast_event(event)
         table.insert(ProcessedEvents, event)
+        
+        -- Log world events
+        if log_world_event then
+            log_world_event(WorldTick, event.type, event.type, {}, event)
+        end
     end
     
     -- 2. Broadcast tick to all districts
@@ -347,6 +364,13 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
         local tax_revenue = collect_taxes()
         local services_paid = pay_city_workers()
         
+        -- Log economy update
+        if log_budget_change then
+            log_budget_change(WorldTick, "daily_cycle", 
+                CityBudget - tax_revenue + 10000, CityBudget, 
+                "tax_collection_and_expenses")
+        end
+        
         -- Broadcast economy update
         broadcast_event({
             type = "economy_update",
@@ -358,8 +382,18 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
         })
     end
     
-    -- 5. Persist state snapshot every 100 ticks
-    if WorldTick % 100 == 0 then
+    -- 5. Log system tick
+    if log_tick then
+        log_tick(WorldTick, WorldDay, WorldYear, time.period, {
+            population = PopulationCount,
+            budget = CityBudget,
+            active_npcs = ActiveNpcCount,
+            pending_events = #events
+        })
+    end
+    
+    -- 6. Persist state snapshot every 60 ticks (1 hour in-game)
+    if WorldTick % 60 == 0 then
         persist_state_snapshot()
     end
     
