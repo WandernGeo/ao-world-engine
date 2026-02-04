@@ -2,3086 +2,2647 @@
   "_meta": {
     "chunk_id": "npc_chunk_063",
     "chunk_number": 63,
-    "total_chunks": 120,
-    "npc_count": 83,
-    "npc_id_range": "npc_05192 - npc_05274"
+    "total_chunks": 257,
+    "npc_count": 39,
+    "npc_id_range": "npc_02420 - npc_02458"
   },
   "npcs": [
     {
-      "id": "npc_05192",
-      "name": "Nori Hassan",
-      "age": 66,
-      "gender": "nonbinary",
-      "archetype": "Trader",
-      "faction": "Street Gang",
-      "home": "B001",
-      "workplace": "B020",
-      "location": "B001",
-      "activity": "shopping",
-      "mood": "curious",
+      "id": "npc_02420",
+      "name": "Hex Brooks",
+      "age": 37,
+      "gender": "male",
+      "archetype": "Bartender",
+      "faction": "Underground",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 101,
+        "build": "stocky",
+        "ethnicity": "South Asian",
+        "skin_tone": "olive",
+        "face": {
+          "shape": "square",
+          "hair_color": "holographic",
+          "hair_style": "mohawk",
+          "eye_color": "cybernetic blue",
+          "distinguishing_features": [
+            "synthetic jaw",
+            "ritual scarification"
+          ]
+        },
+        "cybernetics": "voice modulator",
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "synthetic fiber pants",
+          "footwear": "armored boots",
+          "accessories": [
+            "chrome rings"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful good",
+        "moral_code": "Protect the weak at all costs",
+        "corruption": 71,
+        "loyalty": 59
+      },
       "personality": {
-        "mbti": "ESTJ",
+        "mbti": "ESFP",
         "zodiac": "scorpio",
         "big_five": {
-          "openness": 34,
-          "conscientiousness": 46,
-          "extraversion": 34,
-          "agreeableness": 72,
-          "neuroticism": 44
+          "openness": 88,
+          "conscientiousness": 32,
+          "extraversion": 79,
+          "agreeableness": 43,
+          "neuroticism": 52
         },
         "traits": [
-          "imaginative",
-          "organized",
-          "outgoing",
-          "reserved"
+          "curious",
+          "ambitious",
+          "stable",
+          "artistic",
+          "anxious"
         ],
-        "primary_desire": "security",
-        "secondary_desire": "recognition"
+        "primary_desire": "family",
+        "secondary_desire": "freedom"
       },
-      "backstory": "Nori escaped from a corporate prison with nothing but the clothes on his back. Now he runs a small business.",
+      "home": "B043",
+      "workplace": "B045",
+      "location": "B043",
+      "activity": "relaxing",
+      "mood": "anxious",
+      "backstory": "The child of temple priests, Hex inherited both the skills and the enemies. he keeps a low profile.",
       "catchphrase": "\"Credits talk.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 51
+      "reputation": 97
     },
     {
-      "id": "npc_05193",
-      "name": "Santos Hassan",
-      "age": 58,
+      "id": "npc_02421",
+      "name": "Takeshi Kobayashi",
+      "age": 23,
       "gender": "male",
-      "archetype": "Dockworker",
-      "faction": "Street Gang",
-      "home": "B050",
-      "workplace": "B042",
-      "location": "B050",
-      "activity": "gambling",
-      "mood": "frustrated",
-      "personality": {
-        "mbti": "ESFJ",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 91,
-          "conscientiousness": 85,
-          "extraversion": 48,
-          "agreeableness": 75,
-          "neuroticism": 60
+      "archetype": "Chemist",
+      "faction": "Merchant Coalition",
+      "physical": {
+        "height_cm": 170,
+        "weight_kg": 96,
+        "build": "athletic",
+        "ethnicity": "Southeast Asian",
+        "skin_tone": "tan",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "purple",
+          "hair_style": "messy",
+          "eye_color": "gold",
+          "distinguishing_features": [
+            "burn marks"
+          ]
         },
-        "traits": [
-          "solitary",
-          "conventional",
-          "imaginative"
-        ],
-        "primary_desire": "justice",
-        "secondary_desire": "family"
+        "cybernetics": "cybernetic legs",
+        "clothing": {
+          "upper": "corporate blazer",
+          "lower": "cargo pants",
+          "footwear": "mag-boots",
+          "accessories": []
+        }
       },
-      "backstory": "Nobody knows where Santos came from. he appeared 8 years ago and quickly became known for discretion.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 51
-    },
-    {
-      "id": "npc_05194",
-      "name": "Paz Stone",
-      "age": 74,
-      "gender": "female",
-      "archetype": "Street Artist",
-      "faction": "Underground",
-      "home": "B020",
-      "workplace": "B007",
-      "location": "B020",
-      "activity": "drinking",
-      "mood": "alert",
+      "alignment": {
+        "alignment": "chaotic good",
+        "moral_code": "Never harm children",
+        "corruption": 61,
+        "loyalty": 23
+      },
       "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "sagittarius",
+        "mbti": "INTP",
+        "zodiac": "scorpio",
         "big_five": {
-          "openness": 24,
-          "conscientiousness": 57,
-          "extraversion": 52,
+          "openness": 78,
+          "conscientiousness": 36,
+          "extraversion": 50,
           "agreeableness": 27,
-          "neuroticism": 88
+          "neuroticism": 34
         },
         "traits": [
-          "quiet",
-          "cooperative",
-          "curious",
-          "creative"
-        ],
-        "primary_desire": "wealth",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "Paz's reputation was built on one legendary rescue. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 2
-    },
-    {
-      "id": "npc_05195",
-      "name": "Vida Volkov",
-      "age": 67,
-      "gender": "female",
-      "archetype": "Debt Collector",
-      "faction": "Underground",
-      "home": "B021",
-      "workplace": "B034",
-      "location": "B021",
-      "activity": "crafting",
-      "mood": "bored",
-      "personality": {
-        "mbti": "INTJ",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 82,
-          "conscientiousness": 44,
-          "extraversion": 56,
-          "agreeableness": 70,
-          "neuroticism": 74
-        },
-        "traits": [
+          "skeptical",
+          "confident",
           "disciplined",
-          "curious",
-          "reserved",
-          "stable",
-          "quiet"
+          "outgoing"
         ],
-        "primary_desire": "security",
-        "secondary_desire": "freedom"
-      },
-      "backstory": "A former factory hand, Vida left that life behind after a tragedy. Now she keeps to the shadows.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 41
-    },
-    {
-      "id": "npc_05196",
-      "name": "Oba Cruz",
-      "age": 36,
-      "gender": "male",
-      "archetype": "Driver",
-      "faction": "Corporate",
-      "home": "B036",
-      "workplace": "B016",
-      "location": "B036",
-      "activity": "relaxing",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ENFP",
-        "zodiac": "libra",
-        "big_five": {
-          "openness": 23,
-          "conscientiousness": 48,
-          "extraversion": 66,
-          "agreeableness": 80,
-          "neuroticism": 70
-        },
-        "traits": [
-          "quiet",
-          "talkative",
-          "imaginative"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "peace"
-      },
-      "backstory": "Raised in the Temple orphanage, Oba never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 61
-    },
-    {
-      "id": "npc_05197",
-      "name": "Alex Toure",
-      "age": 60,
-      "gender": "male",
-      "archetype": "Gambler",
-      "faction": "Tech Guild",
-      "home": "B005",
-      "workplace": "B011",
-      "location": "B005",
-      "activity": "shopping",
-      "mood": "calm",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 37,
-          "conscientiousness": 50,
-          "extraversion": 92,
-          "agreeableness": 57,
-          "neuroticism": 28
-        },
-        "traits": [
-          "reserved",
-          "creative",
-          "disciplined",
-          "cooperative",
-          "curious"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "Once a loyal Syndicate member, Alex had a change of heart after a moment of clarity. he walks a different path now.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 43
-    },
-    {
-      "id": "npc_05198",
-      "name": "Nova Aoki",
-      "age": 50,
-      "gender": "nonbinary",
-      "archetype": "Fixer",
-      "faction": "Resistance",
-      "home": "B037",
-      "workplace": "B010",
-      "location": "B037",
-      "activity": "dealing",
-      "mood": "excited",
-      "personality": {
-        "mbti": "ENFJ",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 86,
-          "conscientiousness": 57,
-          "extraversion": 65,
-          "agreeableness": 27,
-          "neuroticism": 51
-        },
-        "traits": [
-          "outgoing",
-          "conventional",
-          "imaginative",
-          "energetic"
-        ],
-        "primary_desire": "peace",
+        "primary_desire": "freedom",
         "secondary_desire": "wealth"
       },
-      "backstory": "Nova's reputation was built on one legendary betrayal. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 6
-    },
-    {
-      "id": "npc_05199",
-      "name": "Ion Brooks",
-      "age": 52,
-      "gender": "male",
-      "archetype": "Street Preacher",
-      "faction": "Merchant Coalition",
-      "home": "B038",
-      "workplace": "B039",
-      "location": "B038",
-      "activity": "exercising",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ISFP",
-        "zodiac": "cancer",
-        "big_five": {
-          "openness": 54,
-          "conscientiousness": 23,
-          "extraversion": 73,
-          "agreeableness": 74,
-          "neuroticism": 24
-        },
-        "traits": [
-          "imaginative",
-          "challenging",
-          "disciplined",
-          "creative"
-        ],
-        "primary_desire": "love",
-        "secondary_desire": "love"
-      },
-      "backstory": "Once a loyal Syndicate member, Ion had a change of heart after witnessing an atrocity. he walks a different path now.",
-      "catchphrase": "\"Stay frosty.\"",
+      "home": "B014",
+      "workplace": "B032",
+      "location": "B014",
+      "activity": "dealing",
+      "mood": "bored",
+      "backstory": "Raised in the Temple orphanage, Takeshi never knew his parents. he found family in the streets.",
+      "catchphrase": "\"The city remembers.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 85
     },
     {
-      "id": "npc_05200",
-      "name": "Kofi Raven",
-      "age": 44,
+      "id": "npc_02422",
+      "name": "Sora Martinez",
+      "age": 48,
       "gender": "nonbinary",
-      "archetype": "Solo",
+      "archetype": "Medic",
       "faction": "Temple Authority",
-      "home": "B022",
-      "workplace": "B026",
-      "location": "B022",
-      "activity": "gambling",
-      "mood": "anxious",
+      "physical": {
+        "height_cm": 178,
+        "weight_kg": 57,
+        "build": "average",
+        "ethnicity": "Middle Eastern",
+        "skin_tone": "pale",
+        "face": {
+          "shape": "angular",
+          "hair_color": "blonde",
+          "hair_style": "mohawk",
+          "eye_color": "hazel",
+          "distinguishing_features": [
+            "glowing circuit patterns"
+          ]
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "corporate blazer",
+          "lower": "leather pants",
+          "footwear": "running shoes",
+          "accessories": [
+            "chrome rings",
+            "armband computer"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful neutral",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 85,
+        "loyalty": 24
+      },
       "personality": {
-        "mbti": "ESTP",
+        "mbti": "ESFJ",
         "zodiac": "aquarius",
         "big_five": {
-          "openness": 32,
-          "conscientiousness": 73,
-          "extraversion": 23,
-          "agreeableness": 29,
-          "neuroticism": 83
-        },
-        "traits": [
-          "curious",
-          "energetic",
-          "quiet",
-          "anxious",
-          "artistic"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "wealth"
-      },
-      "backstory": "Born in the lower levels, Kofi learned early that survival meant adapting. he worked working through Citizen ranks.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 51
-    },
-    {
-      "id": "npc_05201",
-      "name": "Wei Reyes",
-      "age": 50,
-      "gender": "male",
-      "archetype": "Street Artist",
-      "faction": "Citizen",
-      "home": "B040",
-      "workplace": "B002",
-      "location": "B040",
-      "activity": "patrolling",
-      "mood": "anxious",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "pisces",
-        "big_five": {
-          "openness": 60,
-          "conscientiousness": 73,
-          "extraversion": 75,
-          "agreeableness": 55,
-          "neuroticism": 79
+          "openness": 63,
+          "conscientiousness": 29,
+          "extraversion": 72,
+          "agreeableness": 73,
+          "neuroticism": 41
         },
         "traits": [
           "moody",
-          "careless",
-          "challenging",
-          "cooperative",
-          "outgoing"
+          "calm",
+          "compassionate",
+          "friendly"
         ],
-        "primary_desire": "freedom",
-        "secondary_desire": "family"
+        "primary_desire": "justice",
+        "secondary_desire": "security"
       },
-      "backstory": "Born in the lower levels, Wei learned early that survival meant adapting. he worked scheming through Citizen ranks.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 88
-    },
-    {
-      "id": "npc_05202",
-      "name": "Hiro Khan",
-      "age": 49,
-      "gender": "male",
-      "archetype": "Street Vendor",
-      "faction": "Street Gang",
-      "home": "B043",
-      "workplace": "B026",
-      "location": "B043",
+      "home": "B023",
+      "workplace": "B024",
+      "location": "B023",
       "activity": "crafting",
       "mood": "cold",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 87,
-          "conscientiousness": 50,
-          "extraversion": 55,
-          "agreeableness": 33,
-          "neuroticism": 52
-        },
-        "traits": [
-          "friendly",
-          "practical",
-          "quiet",
-          "confident"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "A former soldier, Hiro left that life behind after a tragedy. Now he tries to forget.",
-      "catchphrase": "\"Credits talk.\"",
+      "backstory": "Born in the lower levels, Sora learned early that survival meant adapting. they worked fighting through Citizen ranks.",
+      "catchphrase": "\"Trust no one.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 47
+      "reputation": 65
     },
     {
-      "id": "npc_05203",
-      "name": "Cameron Suzuki",
-      "age": 63,
+      "id": "npc_02423",
+      "name": "Ghost Vega",
+      "age": 57,
       "gender": "male",
-      "archetype": "Psychic Reader",
+      "archetype": "Tech Dealer",
       "faction": "Citizen",
-      "home": "B028",
-      "workplace": "B049",
-      "location": "B028",
-      "activity": "exercising",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 92,
-          "conscientiousness": 77,
-          "extraversion": 75,
-          "agreeableness": 83,
-          "neuroticism": 45
+      "physical": {
+        "height_cm": 188,
+        "weight_kg": 93,
+        "build": "average",
+        "ethnicity": "Sub-Saharan African",
+        "skin_tone": "bronze",
+        "face": {
+          "shape": "diamond",
+          "hair_color": "auburn",
+          "hair_style": "slicked back",
+          "eye_color": "green",
+          "distinguishing_features": [
+            "vitiligo patches",
+            "pierced eyebrow"
+          ]
         },
-        "traits": [
-          "artistic",
-          "competitive",
-          "outgoing",
-          "conventional",
-          "skeptical"
-        ],
-        "primary_desire": "recognition",
-        "secondary_desire": "love"
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "worn leather jacket",
+          "lower": "shorts",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "necklace with pendant"
+          ]
+        }
       },
-      "backstory": "A former factory hand, Cameron left that life behind after seeing too much. Now he keeps to the shadows.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 14
-    },
-    {
-      "id": "npc_05204",
-      "name": "Ming Santos",
-      "age": 18,
-      "gender": "male",
-      "archetype": "Dream Weaver",
-      "faction": "Citizen",
-      "home": "B023",
-      "workplace": "B038",
-      "location": "B023",
-      "activity": "repairing",
-      "mood": "bored",
+      "alignment": {
+        "alignment": "chaotic neutral",
+        "moral_code": "Honor among thieves",
+        "corruption": 48,
+        "loyalty": 43
+      },
       "personality": {
-        "mbti": "ISTP",
-        "zodiac": "leo",
+        "mbti": "ISTJ",
+        "zodiac": "cancer",
         "big_five": {
-          "openness": 93,
-          "conscientiousness": 45,
-          "extraversion": 25,
-          "agreeableness": 51,
-          "neuroticism": 42
+          "openness": 41,
+          "conscientiousness": 35,
+          "extraversion": 30,
+          "agreeableness": 92,
+          "neuroticism": 79
         },
         "traits": [
           "cooperative",
-          "skeptical",
-          "reserved"
+          "stable",
+          "anxious",
+          "ambitious"
         ],
         "primary_desire": "family",
         "secondary_desire": "security"
       },
-      "backstory": "Ming escaped from a corporate prison with nothing but the clothes on his back. Now he runs a small business.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 32
-    },
-    {
-      "id": "npc_05205",
-      "name": "Shadow Drake",
-      "age": 66,
-      "gender": "nonbinary",
-      "archetype": "Chemist",
-      "faction": "Tech Guild",
-      "home": "B013",
-      "workplace": "B010",
-      "location": "B013",
-      "activity": "working",
-      "mood": "friendly",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "aquarius",
-        "big_five": {
-          "openness": 24,
-          "conscientiousness": 88,
-          "extraversion": 55,
-          "agreeableness": 53,
-          "neuroticism": 21
-        },
-        "traits": [
-          "quiet",
-          "cooperative",
-          "calm",
-          "challenging"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "knowledge"
-      },
-      "backstory": "The child of merchants, Shadow inherited both the skills and the enemies. he keeps a low profile.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 71
-    },
-    {
-      "id": "npc_05206",
-      "name": "Morgan Grant",
-      "age": 53,
-      "gender": "male",
-      "archetype": "Chemist",
-      "faction": "Street Gang",
-      "home": "B015",
-      "workplace": "B019",
-      "location": "B015",
-      "activity": "patrolling",
-      "mood": "friendly",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 47,
-          "conscientiousness": 38,
-          "extraversion": 31,
-          "agreeableness": 33,
-          "neuroticism": 37
-        },
-        "traits": [
-          "conventional",
-          "careless",
-          "ambitious",
-          "imaginative",
-          "practical"
-        ],
-        "primary_desire": "power",
-        "secondary_desire": "power"
-      },
-      "backstory": "Raised in the Temple orphanage, Morgan never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 19
-    },
-    {
-      "id": "npc_05207",
-      "name": "Yuki Okafor",
-      "age": 41,
-      "gender": "male",
-      "archetype": "Debt Collector",
-      "faction": "Citizen",
-      "home": "B045",
-      "workplace": "B036",
-      "location": "B045",
-      "activity": "working",
-      "mood": "curious",
-      "personality": {
-        "mbti": "ENFP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 75,
-          "conscientiousness": 42,
-          "extraversion": 61,
-          "agreeableness": 77,
-          "neuroticism": 59
-        },
-        "traits": [
-          "conventional",
-          "disciplined",
-          "creative"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "justice"
-      },
-      "backstory": "The child of temple priests, Yuki inherited both the skills and the enemies. he keeps a low profile.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 32
-    },
-    {
-      "id": "npc_05208",
-      "name": "Ren Stone",
-      "age": 58,
-      "gender": "female",
-      "archetype": "Food Vendor",
-      "faction": "Tech Guild",
-      "home": "B034",
-      "workplace": "B019",
-      "location": "B034",
-      "activity": "patrolling",
-      "mood": "calm",
-      "personality": {
-        "mbti": "INTJ",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 82,
-          "conscientiousness": 35,
-          "extraversion": 70,
-          "agreeableness": 90,
-          "neuroticism": 95
-        },
-        "traits": [
-          "disciplined",
-          "impulsive",
-          "artistic",
-          "compassionate"
-        ],
-        "primary_desire": "power",
-        "secondary_desire": "knowledge"
-      },
-      "backstory": "The child of merchants, Ren inherited both the skills and the enemies. she keeps a low profile.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 50
-    },
-    {
-      "id": "npc_05209",
-      "name": "Blake Novak",
-      "age": 39,
-      "gender": "nonbinary",
-      "archetype": "Data Thief",
-      "faction": "Tech Guild",
-      "home": "B049",
-      "workplace": "B048",
-      "location": "B049",
-      "activity": "gambling",
-      "mood": "curious",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "taurus",
-        "big_five": {
-          "openness": 92,
-          "conscientiousness": 40,
-          "extraversion": 40,
-          "agreeableness": 80,
-          "neuroticism": 62
-        },
-        "traits": [
-          "outgoing",
-          "talkative",
-          "impulsive",
-          "confident"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Raised in the Temple orphanage, Blake never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 87
-    },
-    {
-      "id": "npc_05210",
-      "name": "Skyler Aoki",
-      "age": 70,
-      "gender": "male",
-      "archetype": "Mechanic",
-      "faction": "Temple Authority",
-      "home": "B032",
-      "workplace": "B026",
-      "location": "B032",
-      "activity": "shopping",
-      "mood": "happy",
-      "personality": {
-        "mbti": "INTP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 87,
-          "conscientiousness": 45,
-          "extraversion": 72,
-          "agreeableness": 30,
-          "neuroticism": 39
-        },
-        "traits": [
-          "organized",
-          "stable",
-          "quiet",
-          "outgoing",
-          "calm"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "knowledge"
-      },
-      "backstory": "Born in the lower levels, Skyler learned early that survival meant adapting. he worked scheming through Citizen ranks.",
+      "home": "B016",
+      "workplace": "B030",
+      "location": "B016",
+      "activity": "trading",
+      "mood": "cold",
+      "backstory": "A former corporate worker, Ghost left that life behind after seeing too much. Now he runs a small operation.",
       "catchphrase": "\"Keep moving.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 79
+      "reputation": 70
     },
     {
-      "id": "npc_05211",
-      "name": "Pulse Pierce",
+      "id": "npc_02424",
+      "name": "Chen Amari",
       "age": 28,
-      "gender": "male",
-      "archetype": "Mechanic",
-      "faction": "Nomad",
-      "home": "B001",
-      "workplace": "B014",
-      "location": "B001",
-      "activity": "gambling",
-      "mood": "tired",
+      "gender": "female",
+      "archetype": "Tattoo Artist",
+      "faction": "Underground",
+      "physical": {
+        "height_cm": 166,
+        "weight_kg": 75,
+        "build": "muscular",
+        "ethnicity": "Latin American",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "heart",
+          "hair_color": "blue",
+          "hair_style": "messy",
+          "eye_color": "dark brown",
+          "distinguishing_features": []
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "formal shirt",
+          "lower": "worker overalls",
+          "footwear": "running shoes",
+          "accessories": [
+            "sunglasses"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful good",
+        "moral_code": "Protect the weak at all costs",
+        "corruption": 64,
+        "loyalty": 94
+      },
       "personality": {
-        "mbti": "ESTP",
-        "zodiac": "cancer",
+        "mbti": "INTJ",
+        "zodiac": "scorpio",
         "big_five": {
-          "openness": 49,
-          "conscientiousness": 62,
-          "extraversion": 75,
-          "agreeableness": 62,
-          "neuroticism": 90
+          "openness": 60,
+          "conscientiousness": 51,
+          "extraversion": 93,
+          "agreeableness": 67,
+          "neuroticism": 20
         },
         "traits": [
-          "artistic",
-          "quiet",
-          "conventional",
-          "careless"
+          "compassionate",
+          "organized",
+          "creative",
+          "friendly"
+        ],
+        "primary_desire": "justice",
+        "secondary_desire": "justice"
+      },
+      "home": "B029",
+      "workplace": "B005",
+      "location": "B029",
+      "activity": "crafting",
+      "mood": "cold",
+      "backstory": "Nobody knows where Chen came from. she appeared 12 years ago and quickly became known for reliability.",
+      "catchphrase": "\"Trust no one.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 85
+    },
+    {
+      "id": "npc_02425",
+      "name": "Idris Wong",
+      "age": 38,
+      "gender": "male",
+      "archetype": "Guard",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 179,
+        "weight_kg": 66,
+        "build": "athletic",
+        "ethnicity": "Southeast Asian",
+        "skin_tone": "tan",
+        "face": {
+          "shape": "oval",
+          "hair_color": "dark brown",
+          "hair_style": "dreadlocks",
+          "eye_color": "cybernetic blue",
+          "distinguishing_features": []
+        },
+        "cybernetics": "voice modulator",
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "synthetic fiber pants",
+          "footwear": "bare feet",
+          "accessories": [
+            "chrome rings",
+            "holo-watch"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "neutral good",
+        "moral_code": "Money is the only truth",
+        "corruption": 25,
+        "loyalty": 33
+      },
+      "personality": {
+        "mbti": "INTJ",
+        "zodiac": "scorpio",
+        "big_five": {
+          "openness": 37,
+          "conscientiousness": 75,
+          "extraversion": 50,
+          "agreeableness": 31,
+          "neuroticism": 71
+        },
+        "traits": [
+          "anxious",
+          "disciplined",
+          "curious",
+          "organized"
+        ],
+        "primary_desire": "power",
+        "secondary_desire": "love"
+      },
+      "home": "B002",
+      "workplace": "B044",
+      "location": "B002",
+      "activity": "exercising",
+      "mood": "calm",
+      "backstory": "Idris's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, he doesn't correct them.",
+      "catchphrase": "\"Keep moving.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 92
+    },
+    {
+      "id": "npc_02426",
+      "name": "Avery Tanaka",
+      "age": 75,
+      "gender": "female",
+      "archetype": "Psychic Reader",
+      "faction": "Street Gang",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 47,
+        "build": "wiry",
+        "ethnicity": "Mixed",
+        "skin_tone": "ebony",
+        "face": {
+          "shape": "oval",
+          "hair_color": "gray",
+          "hair_style": "short cropped",
+          "eye_color": "red",
+          "distinguishing_features": []
+        },
+        "cybernetics": "neural interface implant",
+        "clothing": {
+          "upper": "thermal coat",
+          "lower": "tactical pants",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "earpiece comm",
+            "necklace with pendant"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "true neutral",
+        "moral_code": "The end justifies the means",
+        "corruption": 56,
+        "loyalty": 50
+      },
+      "personality": {
+        "mbti": "ENTJ",
+        "zodiac": "gemini",
+        "big_five": {
+          "openness": 84,
+          "conscientiousness": 43,
+          "extraversion": 50,
+          "agreeableness": 69,
+          "neuroticism": 61
+        },
+        "traits": [
+          "moody",
+          "skeptical",
+          "confident",
+          "stable",
+          "creative"
+        ],
+        "primary_desire": "revenge",
+        "secondary_desire": "knowledge"
+      },
+      "home": "B046",
+      "workplace": "B039",
+      "location": "B046",
+      "activity": "dealing",
+      "mood": "cold",
+      "backstory": "Avery's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, she doesn't correct them.",
+      "catchphrase": "\"Keep moving.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 34
+    },
+    {
+      "id": "npc_02427",
+      "name": "Ghost Pierce",
+      "age": 67,
+      "gender": "male",
+      "archetype": "Dream Weaver",
+      "faction": "Tech Guild",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 93,
+        "build": "athletic",
+        "ethnicity": "European",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "diamond",
+          "hair_color": "black",
+          "hair_style": "dreadlocks",
+          "eye_color": "gray",
+          "distinguishing_features": []
+        },
+        "cybernetics": "voice modulator",
+        "clothing": {
+          "upper": "synthetic fiber coat",
+          "lower": "tailored slacks",
+          "footwear": "combat boots",
+          "accessories": [
+            "holo-watch"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful evil",
+        "moral_code": "Honor among thieves",
+        "corruption": 78,
+        "loyalty": 43
+      },
+      "personality": {
+        "mbti": "INFJ",
+        "zodiac": "cancer",
+        "big_five": {
+          "openness": 44,
+          "conscientiousness": 49,
+          "extraversion": 71,
+          "agreeableness": 56,
+          "neuroticism": 32
+        },
+        "traits": [
+          "compassionate",
+          "ambitious",
+          "disciplined",
+          "organized"
+        ],
+        "primary_desire": "revenge",
+        "secondary_desire": "adventure"
+      },
+      "home": "B008",
+      "workplace": "B023",
+      "location": "B008",
+      "activity": "praying",
+      "mood": "anxious",
+      "backstory": "Ghost's reputation was built on one legendary betrayal. Whether the stories are true or not, he doesn't correct them.",
+      "catchphrase": "\"Eyes open.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 75
+    },
+    {
+      "id": "npc_02428",
+      "name": "Neon Yamamoto",
+      "age": 18,
+      "gender": "male",
+      "archetype": "Blogger",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 195,
+        "weight_kg": 51,
+        "build": "wiry",
+        "ethnicity": "Sub-Saharan African",
+        "skin_tone": "ebony",
+        "face": {
+          "shape": "angular",
+          "hair_color": "auburn",
+          "hair_style": "long straight",
+          "eye_color": "brown",
+          "distinguishing_features": [
+            "datajack port visible"
+          ]
+        },
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "worn leather jacket",
+          "lower": "tactical pants",
+          "footwear": "sandals",
+          "accessories": [
+            "fingerless gloves",
+            "wrist tattoos"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "true neutral",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 90,
+        "loyalty": 80
+      },
+      "personality": {
+        "mbti": "ISTJ",
+        "zodiac": "leo",
+        "big_five": {
+          "openness": 39,
+          "conscientiousness": 73,
+          "extraversion": 64,
+          "agreeableness": 67,
+          "neuroticism": 20
+        },
+        "traits": [
+          "calm",
+          "compassionate",
+          "outgoing",
+          "disciplined",
+          "skeptical"
         ],
         "primary_desire": "knowledge",
-        "secondary_desire": "power"
+        "secondary_desire": "revenge"
       },
-      "backstory": "The child of merchants, Pulse inherited both the skills and the enemies. he keeps a low profile.",
+      "home": "B045",
+      "workplace": "B014",
+      "location": "B045",
+      "activity": "working",
+      "mood": "frustrated",
+      "backstory": "Once a loyal Syndicate member, Neon had a change of heart after losing someone close. he walks a different path now.",
       "catchphrase": "\"Stay frosty.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 15
+      "reputation": 20
     },
     {
-      "id": "npc_05212",
-      "name": "Max Volkov",
-      "age": 65,
-      "gender": "nonbinary",
-      "archetype": "Pilot",
-      "faction": "Temple Authority",
-      "home": "B001",
-      "workplace": "B012",
-      "location": "B001",
-      "activity": "repairing",
-      "mood": "cold",
+      "id": "npc_02429",
+      "name": "Chrome Santos",
+      "age": 33,
+      "gender": "male",
+      "archetype": "Influencer",
+      "faction": "Nomad",
+      "physical": {
+        "height_cm": 193,
+        "weight_kg": 82,
+        "build": "wiry",
+        "ethnicity": "Sub-Saharan African",
+        "skin_tone": "ebony",
+        "face": {
+          "shape": "round",
+          "hair_color": "red",
+          "hair_style": "slicked back",
+          "eye_color": "gold",
+          "distinguishing_features": [
+            "freckles",
+            "chrome plating on forehead"
+          ]
+        },
+        "cybernetics": "neural interface implant",
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "worker overalls",
+          "footwear": "combat boots",
+          "accessories": [
+            "fingerless gloves"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic neutral",
+        "moral_code": "The end justifies the means",
+        "corruption": 80,
+        "loyalty": 95
+      },
       "personality": {
-        "mbti": "ENFP",
-        "zodiac": "taurus",
+        "mbti": "ESFJ",
+        "zodiac": "leo",
         "big_five": {
-          "openness": 42,
-          "conscientiousness": 28,
-          "extraversion": 95,
-          "agreeableness": 83,
-          "neuroticism": 22
+          "openness": 20,
+          "conscientiousness": 93,
+          "extraversion": 52,
+          "agreeableness": 68,
+          "neuroticism": 34
         },
         "traits": [
-          "disciplined",
-          "imaginative",
-          "moody",
-          "ambitious"
+          "skeptical",
+          "cooperative",
+          "outgoing",
+          "creative",
+          "friendly"
         ],
-        "primary_desire": "adventure",
-        "secondary_desire": "revenge"
+        "primary_desire": "revenge",
+        "secondary_desire": "wealth"
       },
-      "backstory": "Born in the lower levels, Max learned early that survival meant adapting. he worked networking through Underground ranks.",
+      "home": "B002",
+      "workplace": "B014",
+      "location": "B002",
+      "activity": "patrolling",
+      "mood": "tired",
+      "backstory": "Once a loyal Temple member, Chrome had a change of heart after witnessing an atrocity. he walks a different path now.",
       "catchphrase": "\"Credits talk.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 100
     },
     {
-      "id": "npc_05213",
-      "name": "Shadow Santos",
-      "age": 54,
+      "id": "npc_02430",
+      "name": "Sage Morales",
+      "age": 19,
       "gender": "female",
-      "archetype": "Hacker",
-      "faction": "Corporate",
-      "home": "B005",
-      "workplace": "B027",
-      "location": "B005",
-      "activity": "resting",
-      "mood": "friendly",
-      "personality": {
-        "mbti": "INTP",
-        "zodiac": "taurus",
-        "big_five": {
-          "openness": 34,
-          "conscientiousness": 47,
-          "extraversion": 68,
-          "agreeableness": 29,
-          "neuroticism": 55
+      "archetype": "Mechanic",
+      "faction": "Underground",
+      "physical": {
+        "height_cm": 177,
+        "weight_kg": 64,
+        "build": "wiry",
+        "ethnicity": "Synthetic",
+        "skin_tone": "synthetic matte",
+        "face": {
+          "shape": "oval",
+          "hair_color": "black",
+          "hair_style": "slicked back",
+          "eye_color": "brown",
+          "distinguishing_features": []
         },
-        "traits": [
-          "reserved",
-          "creative",
-          "confident"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "freedom"
+        "cybernetics": "cybernetic arm (right)",
+        "clothing": {
+          "upper": "formal shirt",
+          "lower": "synthetic fiber pants",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "bandana",
+            "armband computer"
+          ]
+        }
       },
-      "backstory": "Shadow's reputation was built on one legendary heist. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 7
-    },
-    {
-      "id": "npc_05214",
-      "name": "Mei Kobayashi",
-      "age": 68,
-      "gender": "nonbinary",
-      "archetype": "Tailor",
-      "faction": "Citizen",
-      "home": "B015",
-      "workplace": "B026",
-      "location": "B015",
-      "activity": "dealing",
-      "mood": "curious",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "leo",
-        "big_five": {
-          "openness": 89,
-          "conscientiousness": 54,
-          "extraversion": 29,
-          "agreeableness": 20,
-          "neuroticism": 39
-        },
-        "traits": [
-          "competitive",
-          "sensitive",
-          "impulsive",
-          "careless"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "power"
+      "alignment": {
+        "alignment": "lawful good",
+        "moral_code": "Power must be earned",
+        "corruption": 22,
+        "loyalty": 61
       },
-      "backstory": "Mei's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 16
-    },
-    {
-      "id": "npc_05215",
-      "name": "Sage Rodriguez",
-      "age": 28,
-      "gender": "nonbinary",
-      "archetype": "Netrunner",
-      "faction": "Citizen",
-      "home": "B013",
-      "workplace": "B048",
-      "location": "B013",
-      "activity": "drinking",
-      "mood": "curious",
       "personality": {
-        "mbti": "ENFP",
+        "mbti": "ENFJ",
         "zodiac": "aquarius",
         "big_five": {
-          "openness": 33,
-          "conscientiousness": 52,
-          "extraversion": 28,
-          "agreeableness": 70,
-          "neuroticism": 66
+          "openness": 39,
+          "conscientiousness": 69,
+          "extraversion": 77,
+          "agreeableness": 33,
+          "neuroticism": 36
         },
         "traits": [
-          "conventional",
-          "cooperative",
-          "solitary",
-          "reserved",
-          "moody"
+          "calm",
+          "moody",
+          "creative",
+          "skeptical",
+          "friendly"
         ],
-        "primary_desire": "peace",
-        "secondary_desire": "adventure"
+        "primary_desire": "justice",
+        "secondary_desire": "justice"
       },
-      "backstory": "A former corporate worker, Sage left that life behind after a betrayal. Now he runs a small operation.",
+      "home": "B006",
+      "workplace": "B034",
+      "location": "B006",
+      "activity": "reading",
+      "mood": "calm",
+      "backstory": "Sage's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, she doesn't correct them.",
       "catchphrase": "\"Trust no one.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 46
+      "reputation": 26
     },
     {
-      "id": "npc_05216",
-      "name": "Blade Chen",
-      "age": 28,
-      "gender": "female",
-      "archetype": "Trader",
-      "faction": "Nomad",
-      "home": "B050",
-      "workplace": "B031",
-      "location": "B050",
-      "activity": "exercising",
-      "mood": "tired",
+      "id": "npc_02431",
+      "name": "Hiro Pierce",
+      "age": 70,
+      "gender": "male",
+      "archetype": "Courier",
+      "faction": "Merchant Coalition",
+      "physical": {
+        "height_cm": 188,
+        "weight_kg": 100,
+        "build": "stocky",
+        "ethnicity": "Southeast Asian",
+        "skin_tone": "pale",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "auburn",
+          "hair_style": "messy",
+          "eye_color": "hazel",
+          "distinguishing_features": []
+        },
+        "cybernetics": "voice modulator",
+        "clothing": {
+          "upper": "corporate blazer",
+          "lower": "shorts",
+          "footwear": "combat boots",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "neutral evil",
+        "moral_code": "Power must be earned",
+        "corruption": 82,
+        "loyalty": 66
+      },
       "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "scorpio",
+        "mbti": "ISTJ",
+        "zodiac": "aries",
         "big_five": {
-          "openness": 43,
-          "conscientiousness": 21,
-          "extraversion": 84,
-          "agreeableness": 78,
-          "neuroticism": 58
+          "openness": 89,
+          "conscientiousness": 54,
+          "extraversion": 60,
+          "agreeableness": 49,
+          "neuroticism": 20
         },
         "traits": [
-          "imaginative",
-          "anxious",
-          "conventional",
-          "skeptical",
-          "organized"
+          "confident",
+          "ambitious",
+          "curious",
+          "disciplined"
+        ],
+        "primary_desire": "freedom",
+        "secondary_desire": "justice"
+      },
+      "home": "B010",
+      "workplace": "B023",
+      "location": "B010",
+      "activity": "hustling",
+      "mood": "friendly",
+      "backstory": "Hiro's reputation was built on one legendary betrayal. Whether the stories are true or not, he doesn't correct them.",
+      "catchphrase": "\"Everyone has a price.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 32
+    },
+    {
+      "id": "npc_02432",
+      "name": "Spark Grey",
+      "age": 52,
+      "gender": "nonbinary",
+      "archetype": "Executive Assistant",
+      "faction": "Temple Authority",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 76,
+        "build": "athletic",
+        "ethnicity": "Synthetic",
+        "skin_tone": "pale",
+        "face": {
+          "shape": "diamond",
+          "hair_color": "gray",
+          "hair_style": "ponytail",
+          "eye_color": "blue",
+          "distinguishing_features": [
+            "beauty mark",
+            "pierced eyebrow"
+          ]
+        },
+        "cybernetics": "reflex boosters",
+        "clothing": {
+          "upper": "worn leather jacket",
+          "lower": "cargo pants",
+          "footwear": "running shoes",
+          "accessories": [
+            "wrist tattoos"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic evil",
+        "moral_code": "Power must be earned",
+        "corruption": 2,
+        "loyalty": 29
+      },
+      "personality": {
+        "mbti": "ENFJ",
+        "zodiac": "leo",
+        "big_five": {
+          "openness": 93,
+          "conscientiousness": 50,
+          "extraversion": 53,
+          "agreeableness": 62,
+          "neuroticism": 38
+        },
+        "traits": [
+          "friendly",
+          "ambitious",
+          "calm",
+          "cooperative",
+          "outgoing"
+        ],
+        "primary_desire": "recognition",
+        "secondary_desire": "peace"
+      },
+      "home": "B009",
+      "workplace": "B005",
+      "location": "B009",
+      "activity": "sleeping",
+      "mood": "tired",
+      "backstory": "Once a loyal Temple member, Spark had a change of heart after witnessing an atrocity. they walks a different path now.",
+      "catchphrase": "\"Eyes open.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 41
+    },
+    {
+      "id": "npc_02433",
+      "name": "Jordan Raven",
+      "age": 63,
+      "gender": "female",
+      "archetype": "Tailor",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 103,
+        "build": "heavyset",
+        "ethnicity": "Synthetic",
+        "skin_tone": "pale",
+        "face": {
+          "shape": "oval",
+          "hair_color": "silver",
+          "hair_style": "dreadlocks",
+          "eye_color": "dark brown",
+          "distinguishing_features": []
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "tactical pants",
+          "footwear": "bare feet",
+          "accessories": [
+            "utility belt",
+            "chrome rings"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic good",
+        "moral_code": "The end justifies the means",
+        "corruption": 64,
+        "loyalty": 30
+      },
+      "personality": {
+        "mbti": "INTP",
+        "zodiac": "virgo",
+        "big_five": {
+          "openness": 95,
+          "conscientiousness": 71,
+          "extraversion": 80,
+          "agreeableness": 30,
+          "neuroticism": 57
+        },
+        "traits": [
+          "energetic",
+          "organized",
+          "stable",
+          "moody"
+        ],
+        "primary_desire": "love",
+        "secondary_desire": "love"
+      },
+      "home": "B029",
+      "workplace": "B014",
+      "location": "B029",
+      "activity": "resting",
+      "mood": "curious",
+      "backstory": "Jordan's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, she doesn't correct them.",
+      "catchphrase": "\"Keep moving.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 42
+    },
+    {
+      "id": "npc_02434",
+      "name": "Nia Ali",
+      "age": 28,
+      "gender": "nonbinary",
+      "archetype": "Underground Doctor",
+      "faction": "Temple Authority",
+      "physical": {
+        "height_cm": 182,
+        "weight_kg": 92,
+        "build": "heavyset",
+        "ethnicity": "Southeast Asian",
+        "skin_tone": "synthetic chrome",
+        "face": {
+          "shape": "oval",
+          "hair_color": "white",
+          "hair_style": "bald",
+          "eye_color": "cybernetic green",
+          "distinguishing_features": [
+            "freckles"
+          ]
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "corporate blazer",
+          "lower": "synthetic fiber pants",
+          "footwear": "mag-boots",
+          "accessories": [
+            "wrist tattoos"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful good",
+        "moral_code": "Money is the only truth",
+        "corruption": 12,
+        "loyalty": 44
+      },
+      "personality": {
+        "mbti": "INTJ",
+        "zodiac": "gemini",
+        "big_five": {
+          "openness": 51,
+          "conscientiousness": 28,
+          "extraversion": 34,
+          "agreeableness": 87,
+          "neuroticism": 33
+        },
+        "traits": [
+          "cooperative",
+          "compassionate",
+          "creative",
+          "reserved"
         ],
         "primary_desire": "family",
-        "secondary_desire": "security"
+        "secondary_desire": "love"
       },
-      "backstory": "The child of smugglers, Blade inherited both the skills and the enemies. she keeps a low profile.",
-      "catchphrase": "\"Keep moving.\"",
+      "home": "B006",
+      "workplace": "B017",
+      "location": "B006",
+      "activity": "trading",
+      "mood": "tired",
+      "backstory": "Nobody knows where Nia came from. they appeared 6 years ago and quickly became known for reliability.",
+      "catchphrase": "\"The city remembers.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 28
     },
     {
-      "id": "npc_05217",
-      "name": "Zero Toure",
-      "age": 36,
+      "id": "npc_02435",
+      "name": "Kenji Volkov",
+      "age": 56,
       "gender": "nonbinary",
-      "archetype": "Pilot",
-      "faction": "Merchant Coalition",
-      "home": "B013",
-      "workplace": "B032",
-      "location": "B013",
-      "activity": "sleeping",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 92,
-          "conscientiousness": 46,
-          "extraversion": 92,
-          "agreeableness": 52,
-          "neuroticism": 34
+      "archetype": "Tailor",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 184,
+        "weight_kg": 72,
+        "build": "lean",
+        "ethnicity": "Mixed",
+        "skin_tone": "bronze",
+        "face": {
+          "shape": "angular",
+          "hair_color": "blonde",
+          "hair_style": "messy",
+          "eye_color": "blue",
+          "distinguishing_features": [
+            "ritual scarification",
+            "vitiligo patches"
+          ]
         },
-        "traits": [
-          "cooperative",
-          "talkative",
-          "careless",
-          "solitary",
-          "challenging"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "peace"
+        "cybernetics": "thermal vision implant",
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "worker overalls",
+          "footwear": "armored boots",
+          "accessories": [
+            "wrist tattoos"
+          ]
+        }
       },
-      "backstory": "Once a loyal Syndicate member, Zero had a change of heart after witnessing an atrocity. he walks a different path now.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 100
-    },
-    {
-      "id": "npc_05218",
-      "name": "Kai Frost",
-      "age": 29,
-      "gender": "male",
-      "archetype": "Temple Clerk",
-      "faction": "Underground",
-      "home": "B043",
-      "workplace": "B047",
-      "location": "B043",
-      "activity": "drinking",
-      "mood": "friendly",
+      "alignment": {
+        "alignment": "chaotic evil",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 1,
+        "loyalty": 26
+      },
       "personality": {
-        "mbti": "ISFP",
-        "zodiac": "scorpio",
+        "mbti": "INTJ",
+        "zodiac": "cancer",
         "big_five": {
-          "openness": 61,
-          "conscientiousness": 49,
-          "extraversion": 34,
-          "agreeableness": 54,
-          "neuroticism": 37
+          "openness": 70,
+          "conscientiousness": 20,
+          "extraversion": 31,
+          "agreeableness": 24,
+          "neuroticism": 62
         },
         "traits": [
-          "skeptical",
-          "artistic",
-          "sensitive",
-          "outgoing",
-          "impulsive"
+          "compassionate",
+          "curious",
+          "calm",
+          "friendly"
         ],
-        "primary_desire": "revenge",
+        "primary_desire": "wealth",
         "secondary_desire": "power"
       },
-      "backstory": "Kai's reputation was built on one legendary rescue. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Eyes open.\"",
+      "home": "B045",
+      "workplace": "B005",
+      "location": "B045",
+      "activity": "praying",
+      "mood": "bored",
+      "backstory": "Born in the lower levels, Kenji learned early that survival meant adapting. they worked working through Street Gang ranks.",
+      "catchphrase": "\"Stay frosty.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 40
+      "reputation": 70
     },
     {
-      "id": "npc_05219",
-      "name": "Idris Rodriguez",
-      "age": 40,
-      "gender": "female",
-      "archetype": "Chemist",
-      "faction": "Citizen",
-      "home": "B008",
-      "workplace": "B025",
-      "location": "B008",
-      "activity": "drinking",
-      "mood": "calm",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "pisces",
-        "big_five": {
-          "openness": 64,
-          "conscientiousness": 36,
-          "extraversion": 94,
-          "agreeableness": 30,
-          "neuroticism": 36
-        },
-        "traits": [
-          "compassionate",
-          "curious",
-          "moody",
-          "skeptical",
-          "sensitive"
-        ],
-        "primary_desire": "recognition",
-        "secondary_desire": "security"
-      },
-      "backstory": "Idris's reputation was built on one legendary betrayal. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 24
-    },
-    {
-      "id": "npc_05220",
-      "name": "Jin Nakamura",
-      "age": 43,
-      "gender": "female",
-      "archetype": "Hacker",
-      "faction": "Citizen",
-      "home": "B026",
-      "workplace": "B023",
-      "location": "B026",
-      "activity": "crafting",
-      "mood": "frustrated",
-      "personality": {
-        "mbti": "ESTP",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 54,
-          "conscientiousness": 46,
-          "extraversion": 64,
-          "agreeableness": 79,
-          "neuroticism": 78
-        },
-        "traits": [
-          "anxious",
-          "calm",
-          "cooperative",
-          "compassionate",
-          "quiet"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "The child of temple priests, Jin inherited both the skills and the enemies. she keeps a low profile.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 21
-    },
-    {
-      "id": "npc_05221",
-      "name": "Aiko Black",
-      "age": 65,
+      "id": "npc_02436",
+      "name": "Kira Hunt",
+      "age": 52,
       "gender": "nonbinary",
-      "archetype": "Guard",
-      "faction": "Tech Guild",
-      "home": "B013",
-      "workplace": "B003",
-      "location": "B013",
-      "activity": "relaxing",
-      "mood": "calm",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "aquarius",
-        "big_five": {
-          "openness": 89,
-          "conscientiousness": 73,
-          "extraversion": 51,
-          "agreeableness": 88,
-          "neuroticism": 24
+      "archetype": "Tech Dealer",
+      "faction": "Street Gang",
+      "physical": {
+        "height_cm": 168,
+        "weight_kg": 79,
+        "build": "average",
+        "ethnicity": "Southeast Asian",
+        "skin_tone": "olive",
+        "face": {
+          "shape": "oval",
+          "hair_color": "holographic",
+          "hair_style": "dreadlocks",
+          "eye_color": "green",
+          "distinguishing_features": [
+            "ritual scarification",
+            "missing ear"
+          ]
         },
-        "traits": [
-          "sensitive",
-          "curious",
-          "calm"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "security"
+        "cybernetics": null,
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "worker overalls",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "breathing mask"
+          ]
+        }
       },
-      "backstory": "The child of merchants, Aiko inherited both the skills and the enemies. he keeps a low profile.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 7
-    },
-    {
-      "id": "npc_05222",
-      "name": "River Zhang",
-      "age": 37,
-      "gender": "nonbinary",
-      "archetype": "Journalist",
-      "faction": "Temple Authority",
-      "home": "B048",
-      "workplace": "B044",
-      "location": "B048",
-      "activity": "patrolling",
-      "mood": "curious",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 81,
-          "conscientiousness": 54,
-          "extraversion": 43,
-          "agreeableness": 60,
-          "neuroticism": 41
-        },
-        "traits": [
-          "practical",
-          "energetic",
-          "quiet",
-          "calm",
-          "disciplined"
-        ],
-        "primary_desire": "love",
-        "secondary_desire": "security"
+      "alignment": {
+        "alignment": "neutral good",
+        "moral_code": "The end justifies the means",
+        "corruption": 38,
+        "loyalty": 79
       },
-      "backstory": "River's reputation was built on one legendary betrayal. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 4
-    },
-    {
-      "id": "npc_05223",
-      "name": "Nia Fox",
-      "age": 67,
-      "gender": "male",
-      "archetype": "Tailor",
-      "faction": "Criminal Syndicate",
-      "home": "B046",
-      "workplace": "B037",
-      "location": "B046",
-      "activity": "drinking",
-      "mood": "anxious",
       "personality": {
         "mbti": "ESTJ",
         "zodiac": "leo",
         "big_five": {
-          "openness": 22,
-          "conscientiousness": 78,
-          "extraversion": 68,
-          "agreeableness": 53,
-          "neuroticism": 30
+          "openness": 62,
+          "conscientiousness": 75,
+          "extraversion": 30,
+          "agreeableness": 73,
+          "neuroticism": 63
         },
         "traits": [
-          "solitary",
-          "quiet",
-          "confident",
-          "sensitive"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Nia's reputation was built on one legendary betrayal. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 90
-    },
-    {
-      "id": "npc_05224",
-      "name": "Rio Cruz",
-      "age": 69,
-      "gender": "female",
-      "archetype": "Debt Collector",
-      "faction": "Street Gang",
-      "home": "B014",
-      "workplace": "B024",
-      "location": "B014",
-      "activity": "crafting",
-      "mood": "frustrated",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 39,
-          "conscientiousness": 74,
-          "extraversion": 38,
-          "agreeableness": 39,
-          "neuroticism": 31
-        },
-        "traits": [
-          "practical",
-          "outgoing",
-          "talkative",
-          "organized"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "Rio's reputation was built on one legendary rescue. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 90
-    },
-    {
-      "id": "npc_05225",
-      "name": "Kenji Nguyen",
-      "age": 25,
-      "gender": "female",
-      "archetype": "Pilot",
-      "faction": "Tech Guild",
-      "home": "B034",
-      "workplace": "B030",
-      "location": "B034",
-      "activity": "dealing",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ENFP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 24,
-          "conscientiousness": 62,
-          "extraversion": 83,
-          "agreeableness": 54,
-          "neuroticism": 50
-        },
-        "traits": [
-          "conventional",
+          "artistic",
           "reserved",
-          "sensitive"
-        ],
-        "primary_desire": "adventure",
-        "secondary_desire": "love"
-      },
-      "backstory": "Kenji's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 64
-    },
-    {
-      "id": "npc_05226",
-      "name": "Kira Reyes",
-      "age": 68,
-      "gender": "nonbinary",
-      "archetype": "Journalist",
-      "faction": "Independent",
-      "home": "B048",
-      "workplace": "B011",
-      "location": "B048",
-      "activity": "eating",
-      "mood": "excited",
-      "personality": {
-        "mbti": "ISTJ",
-        "zodiac": "cancer",
-        "big_five": {
-          "openness": 78,
-          "conscientiousness": 83,
-          "extraversion": 67,
-          "agreeableness": 20,
-          "neuroticism": 83
-        },
-        "traits": [
-          "solitary",
-          "curious",
-          "skeptical"
-        ],
-        "primary_desire": "wealth",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Kira's reputation was built on one legendary rescue. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 89
-    },
-    {
-      "id": "npc_05227",
-      "name": "Hex Petrov",
-      "age": 48,
-      "gender": "female",
-      "archetype": "Dockworker",
-      "faction": "Underground",
-      "home": "B012",
-      "workplace": "B038",
-      "location": "B012",
-      "activity": "sleeping",
-      "mood": "alert",
-      "personality": {
-        "mbti": "INFJ",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 61,
-          "conscientiousness": 41,
-          "extraversion": 42,
-          "agreeableness": 52,
-          "neuroticism": 47
-        },
-        "traits": [
-          "practical",
-          "solitary",
-          "anxious",
-          "flexible",
-          "ambitious"
-        ],
-        "primary_desire": "justice",
-        "secondary_desire": "security"
-      },
-      "backstory": "Nobody knows where Hex came from. she appeared 13 years ago and quickly became known for ruthlessness.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 91
-    },
-    {
-      "id": "npc_05228",
-      "name": "Reese Mensah",
-      "age": 52,
-      "gender": "nonbinary",
-      "archetype": "Scavenger",
-      "faction": "Temple Authority",
-      "home": "B035",
-      "workplace": "B046",
-      "location": "B035",
-      "activity": "eating",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 76,
-          "conscientiousness": 23,
-          "extraversion": 43,
-          "agreeableness": 70,
-          "neuroticism": 34
-        },
-        "traits": [
-          "confident",
-          "careless",
-          "compassionate"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "love"
-      },
-      "backstory": "Reese's reputation was built on one legendary heist. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 25
-    },
-    {
-      "id": "npc_05229",
-      "name": "Pulse Shaw",
-      "age": 62,
-      "gender": "nonbinary",
-      "archetype": "Mechanic",
-      "faction": "Temple Authority",
-      "home": "B001",
-      "workplace": "B038",
-      "location": "B001",
-      "activity": "gambling",
-      "mood": "happy",
-      "personality": {
-        "mbti": "INTP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 84,
-          "conscientiousness": 33,
-          "extraversion": 32,
-          "agreeableness": 85,
-          "neuroticism": 62
-        },
-        "traits": [
-          "anxious",
-          "friendly",
-          "reserved",
-          "skeptical",
-          "ambitious"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "love"
-      },
-      "backstory": "Born in the lower levels, Pulse learned early that survival meant adapting. he worked scheming through Street Gang ranks.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 56
-    },
-    {
-      "id": "npc_05230",
-      "name": "Ghost Cross",
-      "age": 27,
-      "gender": "male",
-      "archetype": "Hacker",
-      "faction": "Criminal Syndicate",
-      "home": "B037",
-      "workplace": "B041",
-      "location": "B037",
-      "activity": "dealing",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "ISFP",
-        "zodiac": "cancer",
-        "big_five": {
-          "openness": 56,
-          "conscientiousness": 84,
-          "extraversion": 76,
-          "agreeableness": 62,
-          "neuroticism": 37
-        },
-        "traits": [
-          "talkative",
-          "cooperative",
-          "friendly",
-          "quiet"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "Nobody knows where Ghost came from. he appeared 9 years ago and quickly became known for reliability.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 90
-    },
-    {
-      "id": "npc_05231",
-      "name": "Nova Zhang",
-      "age": 41,
-      "gender": "male",
-      "archetype": "Netrunner",
-      "faction": "Citizen",
-      "home": "B041",
-      "workplace": "B003",
-      "location": "B041",
-      "activity": "drinking",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 76,
-          "conscientiousness": 29,
-          "extraversion": 80,
-          "agreeableness": 85,
-          "neuroticism": 20
-        },
-        "traits": [
-          "disciplined",
-          "ambitious",
-          "organized",
-          "creative",
-          "skeptical"
-        ],
-        "primary_desire": "recognition",
-        "secondary_desire": "wealth"
-      },
-      "backstory": "Nova's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 89
-    },
-    {
-      "id": "npc_05232",
-      "name": "Phoenix Hart",
-      "age": 31,
-      "gender": "nonbinary",
-      "archetype": "Middle Manager",
-      "faction": "Citizen",
-      "home": "B043",
-      "workplace": "B023",
-      "location": "B043",
-      "activity": "resting",
-      "mood": "bored",
-      "personality": {
-        "mbti": "ISTP",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 85,
-          "conscientiousness": 56,
-          "extraversion": 39,
-          "agreeableness": 26,
-          "neuroticism": 69
-        },
-        "traits": [
-          "calm",
-          "impulsive",
-          "compassionate"
-        ],
-        "primary_desire": "wealth",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "A former corporate worker, Phoenix left that life behind after a betrayal. Now he keeps to the shadows.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 8
-    },
-    {
-      "id": "npc_05233",
-      "name": "Ryu Grey",
-      "age": 40,
-      "gender": "female",
-      "archetype": "Bartender",
-      "faction": "Citizen",
-      "home": "B039",
-      "workplace": "B019",
-      "location": "B039",
-      "activity": "patrolling",
-      "mood": "bored",
-      "personality": {
-        "mbti": "INTP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 29,
-          "conscientiousness": 24,
-          "extraversion": 86,
-          "agreeableness": 75,
-          "neuroticism": 42
-        },
-        "traits": [
-          "impulsive",
-          "competitive",
-          "talkative"
+          "curious"
         ],
         "primary_desire": "revenge",
-        "secondary_desire": "peace"
+        "secondary_desire": "power"
       },
-      "backstory": "A former corporate worker, Ryu left that life behind after a betrayal. Now she keeps to the shadows.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 84
-    },
-    {
-      "id": "npc_05234",
-      "name": "Ion Stone",
-      "age": 68,
-      "gender": "nonbinary",
-      "archetype": "Gambler",
-      "faction": "Citizen",
-      "home": "B038",
-      "workplace": "B033",
-      "location": "B038",
-      "activity": "sleeping",
-      "mood": "bored",
-      "personality": {
-        "mbti": "INFJ",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 52,
-          "conscientiousness": 86,
-          "extraversion": 80,
-          "agreeableness": 68,
-          "neuroticism": 43
-        },
-        "traits": [
-          "reserved",
-          "competitive",
-          "friendly"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "Once a loyal Temple member, Ion had a change of heart after a moment of clarity. he walks a different path now.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 1
-    },
-    {
-      "id": "npc_05235",
-      "name": "Nori Martinez",
-      "age": 69,
-      "gender": "male",
-      "archetype": "Bodyguard",
-      "faction": "Street Gang",
-      "home": "B006",
-      "workplace": "B024",
-      "location": "B006",
-      "activity": "socializing",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ESFP",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 86,
-          "conscientiousness": 51,
-          "extraversion": 48,
-          "agreeableness": 90,
-          "neuroticism": 32
-        },
-        "traits": [
-          "imaginative",
-          "solitary",
-          "competitive"
-        ],
-        "primary_desire": "adventure",
-        "secondary_desire": "love"
-      },
-      "backstory": "Raised in the Temple orphanage, Nori never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 39
-    },
-    {
-      "id": "npc_05236",
-      "name": "Cameron Ali",
-      "age": 34,
-      "gender": "male",
-      "archetype": "Medic",
-      "faction": "Nomad",
-      "home": "B017",
-      "workplace": "B041",
-      "location": "B017",
-      "activity": "trading",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 69,
-          "conscientiousness": 85,
-          "extraversion": 27,
-          "agreeableness": 36,
-          "neuroticism": 70
-        },
-        "traits": [
-          "ambitious",
-          "moody",
-          "organized",
-          "creative"
-        ],
-        "primary_desire": "power",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "Born in the lower levels, Cameron learned early that survival meant adapting. he worked fighting through Merchant Coalition ranks.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 99
-    },
-    {
-      "id": "npc_05237",
-      "name": "Jamal Steel",
-      "age": 23,
-      "gender": "male",
-      "archetype": "Corporate Drone",
-      "faction": "Resistance",
-      "home": "B040",
-      "workplace": "B024",
-      "location": "B040",
-      "activity": "trading",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "INFJ",
-        "zodiac": "cancer",
-        "big_five": {
-          "openness": 74,
-          "conscientiousness": 81,
-          "extraversion": 66,
-          "agreeableness": 40,
-          "neuroticism": 23
-        },
-        "traits": [
-          "competitive",
-          "practical",
-          "impulsive",
-          "careless",
-          "creative"
-        ],
-        "primary_desire": "adventure",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "Born in the lower levels, Jamal learned early that survival meant adapting. he worked scheming through Citizen ranks.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 10
-    },
-    {
-      "id": "npc_05238",
-      "name": "Akira Sato",
-      "age": 31,
-      "gender": "nonbinary",
-      "archetype": "Hustler",
-      "faction": "Street Gang",
-      "home": "B036",
-      "workplace": "B033",
-      "location": "B036",
+      "home": "B030",
+      "workplace": "B049",
+      "location": "B030",
       "activity": "hustling",
-      "mood": "calm",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 46,
-          "conscientiousness": 79,
-          "extraversion": 54,
-          "agreeableness": 40,
-          "neuroticism": 68
-        },
-        "traits": [
-          "quiet",
-          "curious",
-          "organized",
-          "competitive",
-          "confident"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Akira's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 14
-    },
-    {
-      "id": "npc_05239",
-      "name": "Casey Petrov",
-      "age": 74,
-      "gender": "nonbinary",
-      "archetype": "Influencer",
-      "faction": "Resistance",
-      "home": "B048",
-      "workplace": "B015",
-      "location": "B048",
-      "activity": "crafting",
-      "mood": "curious",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 81,
-          "conscientiousness": 38,
-          "extraversion": 41,
-          "agreeableness": 33,
-          "neuroticism": 33
-        },
-        "traits": [
-          "moody",
-          "practical",
-          "creative"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Once a loyal Syndicate member, Casey had a change of heart after a moment of clarity. he walks a different path now.",
-      "catchphrase": "\"Eyes open.\"",
+      "mood": "cold",
+      "backstory": "Nobody knows where Kira came from. they appeared 15 years ago and quickly became known for reliability.",
+      "catchphrase": "\"Credits talk.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 46
     },
     {
-      "id": "npc_05240",
-      "name": "Neon Nakamura",
-      "age": 21,
-      "gender": "male",
-      "archetype": "Tattoo Artist",
-      "faction": "Street Gang",
-      "home": "B037",
-      "workplace": "B020",
-      "location": "B037",
-      "activity": "dealing",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "libra",
-        "big_five": {
-          "openness": 44,
-          "conscientiousness": 94,
-          "extraversion": 90,
-          "agreeableness": 87,
-          "neuroticism": 52
-        },
-        "traits": [
-          "ambitious",
-          "solitary",
-          "curious"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "peace"
-      },
-      "backstory": "Born in the lower levels, Neon learned early that survival meant adapting. he worked scheming through Corporate ranks.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 100
-    },
-    {
-      "id": "npc_05241",
-      "name": "Yuki Watanabe",
-      "age": 21,
+      "id": "npc_02437",
+      "name": "Shadow Hart",
+      "age": 39,
       "gender": "female",
-      "archetype": "Temple Clerk",
-      "faction": "Resistance",
-      "home": "B003",
-      "workplace": "B001",
-      "location": "B003",
-      "activity": "trading",
-      "mood": "happy",
-      "personality": {
-        "mbti": "ESTP",
-        "zodiac": "leo",
-        "big_five": {
-          "openness": 66,
-          "conscientiousness": 88,
-          "extraversion": 75,
-          "agreeableness": 73,
-          "neuroticism": 47
+      "archetype": "Hustler",
+      "faction": "Tech Guild",
+      "physical": {
+        "height_cm": 158,
+        "weight_kg": 67,
+        "build": "wiry",
+        "ethnicity": "South Asian",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "heart",
+          "hair_color": "white",
+          "hair_style": "shoulder length",
+          "eye_color": "hazel",
+          "distinguishing_features": [
+            "nose ring"
+          ]
         },
-        "traits": [
-          "compassionate",
-          "curious",
-          "imaginative"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "family"
+        "cybernetics": "reflex boosters",
+        "clothing": {
+          "upper": "worn leather jacket",
+          "lower": "tailored slacks",
+          "footwear": "platform boots",
+          "accessories": [
+            "utility belt"
+          ]
+        }
       },
-      "backstory": "Born in the lower levels, Yuki learned early that survival meant adapting. she worked fighting through Citizen ranks.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 82
-    },
-    {
-      "id": "npc_05242",
-      "name": "Amir Adu",
-      "age": 41,
-      "gender": "male",
-      "archetype": "Gambler",
-      "faction": "Underground",
-      "home": "B047",
-      "workplace": "B026",
-      "location": "B047",
-      "activity": "trading",
-      "mood": "suspicious",
-      "personality": {
-        "mbti": "ESTP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 22,
-          "conscientiousness": 89,
-          "extraversion": 53,
-          "agreeableness": 58,
-          "neuroticism": 25
-        },
-        "traits": [
-          "disciplined",
-          "ambitious",
-          "organized",
-          "quiet",
-          "skeptical"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "freedom"
+      "alignment": {
+        "alignment": "neutral good",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 24,
+        "loyalty": 47
       },
-      "backstory": "Nobody knows where Amir came from. he appeared 14 years ago and quickly became known for discretion.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 31
-    },
-    {
-      "id": "npc_05243",
-      "name": "Sora Black",
-      "age": 18,
-      "gender": "female",
-      "archetype": "Debt Collector",
-      "faction": "Nomad",
-      "home": "B043",
-      "workplace": "B013",
-      "location": "B043",
-      "activity": "drinking",
-      "mood": "bored",
       "personality": {
         "mbti": "ESFJ",
         "zodiac": "aquarius",
         "big_five": {
-          "openness": 54,
-          "conscientiousness": 88,
-          "extraversion": 81,
-          "agreeableness": 55,
-          "neuroticism": 84
-        },
-        "traits": [
-          "talkative",
-          "moody",
-          "flexible"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Nobody knows where Sora came from. she appeared 15 years ago and quickly became known for connections.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 33
-    },
-    {
-      "id": "npc_05244",
-      "name": "Ghost Diallo",
-      "age": 45,
-      "gender": "male",
-      "archetype": "Psychic Reader",
-      "faction": "Merchant Coalition",
-      "home": "B029",
-      "workplace": "B017",
-      "location": "B029",
-      "activity": "sleeping",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 87,
-          "conscientiousness": 72,
-          "extraversion": 24,
-          "agreeableness": 76,
-          "neuroticism": 57
-        },
-        "traits": [
-          "skeptical",
-          "outgoing",
-          "flexible",
-          "friendly",
-          "organized"
-        ],
-        "primary_desire": "recognition",
-        "secondary_desire": "freedom"
-      },
-      "backstory": "Once a loyal Corporate member, Ghost had a change of heart after losing someone close. he walks a different path now.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 18
-    },
-    {
-      "id": "npc_05245",
-      "name": "Alex Hassan",
-      "age": 61,
-      "gender": "male",
-      "archetype": "Bodyguard",
-      "faction": "Criminal Syndicate",
-      "home": "B006",
-      "workplace": "B018",
-      "location": "B006",
-      "activity": "sleeping",
-      "mood": "happy",
-      "personality": {
-        "mbti": "ENTP",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 46,
-          "conscientiousness": 26,
-          "extraversion": 51,
-          "agreeableness": 29,
-          "neuroticism": 95
-        },
-        "traits": [
-          "reserved",
-          "artistic",
-          "competitive",
-          "stable"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "Nobody knows where Alex came from. he appeared 15 years ago and quickly became known for discretion.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 87
-    },
-    {
-      "id": "npc_05246",
-      "name": "Jamal Drake",
-      "age": 52,
-      "gender": "male",
-      "archetype": "Fixer",
-      "faction": "Citizen",
-      "home": "B038",
-      "workplace": "B009",
-      "location": "B038",
-      "activity": "patrolling",
-      "mood": "anxious",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 26,
-          "conscientiousness": 66,
-          "extraversion": 75,
-          "agreeableness": 80,
-          "neuroticism": 39
-        },
-        "traits": [
-          "impulsive",
-          "stable",
-          "friendly",
-          "confident"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "power"
-      },
-      "backstory": "Jamal escaped from a corporate prison with nothing but the clothes on his back. Now he runs a small business.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 5
-    },
-    {
-      "id": "npc_05247",
-      "name": "Ghost Tanaka",
-      "age": 50,
-      "gender": "female",
-      "archetype": "Info Broker",
-      "faction": "Temple Authority",
-      "home": "B001",
-      "workplace": "B016",
-      "location": "B001",
-      "activity": "shopping",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "gemini",
-        "big_five": {
-          "openness": 87,
-          "conscientiousness": 48,
-          "extraversion": 51,
-          "agreeableness": 79,
-          "neuroticism": 46
-        },
-        "traits": [
-          "cooperative",
-          "practical",
-          "impulsive",
-          "moody",
-          "quiet"
-        ],
-        "primary_desire": "wealth",
-        "secondary_desire": "security"
-      },
-      "backstory": "Born in the lower levels, Ghost learned early that survival meant adapting. she worked fighting through Nomad ranks.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 31
-    },
-    {
-      "id": "npc_05248",
-      "name": "Hana Sato",
-      "age": 52,
-      "gender": "nonbinary",
-      "archetype": "Musician",
-      "faction": "Temple Authority",
-      "home": "B026",
-      "workplace": "B007",
-      "location": "B026",
-      "activity": "drinking",
-      "mood": "calm",
-      "personality": {
-        "mbti": "INTJ",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 50,
-          "conscientiousness": 68,
-          "extraversion": 92,
-          "agreeableness": 82,
-          "neuroticism": 69
-        },
-        "traits": [
-          "organized",
-          "quiet",
-          "sensitive"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "freedom"
-      },
-      "backstory": "Hana escaped from the upper levels with nothing but the clothes on his back. Now he keeps moving.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 44
-    },
-    {
-      "id": "npc_05249",
-      "name": "Wire Adu",
-      "age": 25,
-      "gender": "female",
-      "archetype": "Arms Dealer",
-      "faction": "Citizen",
-      "home": "B034",
-      "workplace": "B041",
-      "location": "B034",
-      "activity": "praying",
-      "mood": "happy",
-      "personality": {
-        "mbti": "INTJ",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 50,
-          "conscientiousness": 30,
-          "extraversion": 92,
-          "agreeableness": 95,
-          "neuroticism": 56
-        },
-        "traits": [
-          "organized",
-          "creative",
-          "anxious"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "power"
-      },
-      "backstory": "Born in the lower levels, Wire learned early that survival meant adapting. she worked working through Street Gang ranks.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 27
-    },
-    {
-      "id": "npc_05250",
-      "name": "Hiro Lane",
-      "age": 32,
-      "gender": "nonbinary",
-      "archetype": "Executive Assistant",
-      "faction": "Tech Guild",
-      "home": "B047",
-      "workplace": "B039",
-      "location": "B047",
-      "activity": "sleeping",
-      "mood": "bored",
-      "personality": {
-        "mbti": "INFJ",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 74,
-          "conscientiousness": 88,
-          "extraversion": 74,
-          "agreeableness": 67,
-          "neuroticism": 36
-        },
-        "traits": [
-          "creative",
-          "curious",
-          "careless"
-        ],
-        "primary_desire": "wealth",
-        "secondary_desire": "peace"
-      },
-      "backstory": "A former corporate worker, Hiro left that life behind after a tragedy. Now he runs a small operation.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 36
-    },
-    {
-      "id": "npc_05251",
-      "name": "Kenji Volkov",
-      "age": 36,
-      "gender": "female",
-      "archetype": "Medic",
-      "faction": "Citizen",
-      "home": "B018",
-      "workplace": "B008",
-      "location": "B018",
-      "activity": "shopping",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ESFP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 29,
-          "conscientiousness": 62,
-          "extraversion": 76,
-          "agreeableness": 90,
-          "neuroticism": 27
-        },
-        "traits": [
-          "organized",
-          "compassionate",
-          "confident"
-        ],
-        "primary_desire": "adventure",
-        "secondary_desire": "revenge"
-      },
-      "backstory": "Kenji's reputation was built on one legendary stand against impossible odds. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 84
-    },
-    {
-      "id": "npc_05252",
-      "name": "Rico Hayashi",
-      "age": 64,
-      "gender": "nonbinary",
-      "archetype": "Street Vendor",
-      "faction": "Citizen",
-      "home": "B025",
-      "workplace": "B025",
-      "location": "B025",
-      "activity": "dealing",
-      "mood": "calm",
-      "personality": {
-        "mbti": "ENTP",
-        "zodiac": "leo",
-        "big_five": {
-          "openness": 26,
-          "conscientiousness": 30,
-          "extraversion": 50,
-          "agreeableness": 28,
-          "neuroticism": 32
-        },
-        "traits": [
-          "organized",
-          "anxious",
-          "compassionate",
-          "creative"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "justice"
-      },
-      "backstory": "Once a loyal Syndicate member, Rico had a change of heart after losing someone close. he walks a different path now.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 0
-    },
-    {
-      "id": "npc_05253",
-      "name": "Vega Morales",
-      "age": 74,
-      "gender": "female",
-      "archetype": "Executive Assistant",
-      "faction": "Citizen",
-      "home": "B005",
-      "workplace": "B039",
-      "location": "B005",
-      "activity": "patrolling",
-      "mood": "alert",
-      "personality": {
-        "mbti": "ESTP",
-        "zodiac": "scorpio",
-        "big_five": {
-          "openness": 28,
-          "conscientiousness": 95,
-          "extraversion": 51,
-          "agreeableness": 82,
-          "neuroticism": 54
-        },
-        "traits": [
-          "skeptical",
-          "cooperative",
-          "anxious",
-          "talkative"
-        ],
-        "primary_desire": "justice",
-        "secondary_desire": "security"
-      },
-      "backstory": "Raised in the Temple orphanage, Vega never knew her parents. she found family in the streets.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 38
-    },
-    {
-      "id": "npc_05254",
-      "name": "Ming Tanaka",
-      "age": 32,
-      "gender": "nonbinary",
-      "archetype": "Netrunner",
-      "faction": "Citizen",
-      "home": "B019",
-      "workplace": "B009",
-      "location": "B019",
-      "activity": "hustling",
-      "mood": "bored",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "aquarius",
-        "big_five": {
-          "openness": 95,
-          "conscientiousness": 54,
-          "extraversion": 77,
-          "agreeableness": 71,
-          "neuroticism": 55
+          "openness": 22,
+          "conscientiousness": 22,
+          "extraversion": 40,
+          "agreeableness": 56,
+          "neuroticism": 74
         },
         "traits": [
           "calm",
-          "skeptical",
-          "ambitious",
-          "careless",
-          "solitary"
+          "cooperative",
+          "compassionate"
         ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "adventure"
+        "primary_desire": "family",
+        "secondary_desire": "revenge"
       },
-      "backstory": "The child of merchants, Ming inherited both the skills and the enemies. he keeps a low profile.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 33
-    },
-    {
-      "id": "npc_05255",
-      "name": "Chrome Silva",
-      "age": 64,
-      "gender": "male",
-      "archetype": "Bartender",
-      "faction": "Underground",
       "home": "B016",
-      "workplace": "B033",
+      "workplace": "B008",
       "location": "B016",
-      "activity": "praying",
-      "mood": "excited",
-      "personality": {
-        "mbti": "ENFP",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 81,
-          "conscientiousness": 42,
-          "extraversion": 40,
-          "agreeableness": 46,
-          "neuroticism": 41
-        },
-        "traits": [
-          "flexible",
-          "competitive",
-          "disciplined",
-          "artistic"
-        ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "The child of merchants, Chrome inherited both the skills and the enemies. he keeps a low profile.",
+      "activity": "sleeping",
+      "mood": "suspicious",
+      "backstory": "Once a loyal Corporate member, Shadow had a change of heart after losing someone close. she walks a different path now.",
       "catchphrase": "\"Eyes open.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 62
+      "reputation": 12
     },
     {
-      "id": "npc_05256",
-      "name": "Amir Pierce",
-      "age": 49,
-      "gender": "female",
-      "archetype": "Executive Assistant",
-      "faction": "Citizen",
-      "home": "B044",
-      "workplace": "B012",
-      "location": "B044",
-      "activity": "repairing",
-      "mood": "excited",
+      "id": "npc_02438",
+      "name": "Oba Brooks",
+      "age": 46,
+      "gender": "nonbinary",
+      "archetype": "Solo",
+      "faction": "Tech Guild",
+      "physical": {
+        "height_cm": 186,
+        "weight_kg": 51,
+        "build": "lean",
+        "ethnicity": "North African",
+        "skin_tone": "tan",
+        "face": {
+          "shape": "round",
+          "hair_color": "red",
+          "hair_style": "undercut",
+          "eye_color": "cybernetic blue",
+          "distinguishing_features": [
+            "lip scar"
+          ]
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "synthetic fiber pants",
+          "footwear": "running shoes",
+          "accessories": [
+            "utility belt",
+            "earpiece comm"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "neutral evil",
+        "moral_code": "Honor among thieves",
+        "corruption": 57,
+        "loyalty": 79
+      },
       "personality": {
-        "mbti": "ENFJ",
-        "zodiac": "aquarius",
+        "mbti": "INTJ",
+        "zodiac": "leo",
         "big_five": {
-          "openness": 38,
-          "conscientiousness": 91,
-          "extraversion": 93,
-          "agreeableness": 95,
-          "neuroticism": 80
+          "openness": 34,
+          "conscientiousness": 83,
+          "extraversion": 62,
+          "agreeableness": 86,
+          "neuroticism": 35
         },
         "traits": [
-          "friendly",
-          "creative",
+          "organized",
+          "calm",
           "compassionate",
           "disciplined",
-          "impulsive"
+          "curious"
         ],
-        "primary_desire": "security",
-        "secondary_desire": "family"
+        "primary_desire": "family",
+        "secondary_desire": "knowledge"
       },
-      "backstory": "A former corporate worker, Amir left that life behind after seeing too much. Now she keeps to the shadows.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 66
-    },
-    {
-      "id": "npc_05257",
-      "name": "Riley Drake",
-      "age": 49,
-      "gender": "male",
-      "archetype": "Executive Assistant",
-      "faction": "Underground",
-      "home": "B017",
-      "workplace": "B016",
-      "location": "B017",
-      "activity": "gambling",
-      "mood": "cold",
-      "personality": {
-        "mbti": "ENTP",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 67,
-          "conscientiousness": 35,
-          "extraversion": 74,
-          "agreeableness": 58,
-          "neuroticism": 29
-        },
-        "traits": [
-          "conventional",
-          "anxious",
-          "creative",
-          "outgoing"
-        ],
-        "primary_desire": "peace",
-        "secondary_desire": "love"
-      },
-      "backstory": "The child of smugglers, Riley inherited both the skills and the enemies. he keeps a low profile.",
-      "catchphrase": "\"Eyes open.\"",
+      "home": "B039",
+      "workplace": "B006",
+      "location": "B039",
+      "activity": "drinking",
+      "mood": "curious",
+      "backstory": "The child of merchants, Oba inherited both the skills and the enemies. they keeps a low profile.",
+      "catchphrase": "\"Nothing personal.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 32
     },
     {
-      "id": "npc_05258",
-      "name": "Vida Chen",
-      "age": 52,
-      "gender": "male",
-      "archetype": "Smuggler",
+      "id": "npc_02439",
+      "name": "Jin Sato",
+      "age": 67,
+      "gender": "female",
+      "archetype": "Bodyguard",
       "faction": "Nomad",
-      "home": "B003",
-      "workplace": "B031",
-      "location": "B003",
-      "activity": "repairing",
-      "mood": "friendly",
+      "physical": {
+        "height_cm": 168,
+        "weight_kg": 53,
+        "build": "average",
+        "ethnicity": "European",
+        "skin_tone": "olive",
+        "face": {
+          "shape": "square",
+          "hair_color": "gray",
+          "hair_style": "ponytail",
+          "eye_color": "brown",
+          "distinguishing_features": []
+        },
+        "cybernetics": "neural interface implant",
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "cargo pants",
+          "footwear": "dress shoes",
+          "accessories": [
+            "wrist tattoos"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic evil",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 98,
+        "loyalty": 60
+      },
       "personality": {
-        "mbti": "ENFP",
-        "zodiac": "sagittarius",
+        "mbti": "INFP",
+        "zodiac": "virgo",
         "big_five": {
-          "openness": 66,
-          "conscientiousness": 82,
-          "extraversion": 53,
-          "agreeableness": 53,
-          "neuroticism": 33
+          "openness": 51,
+          "conscientiousness": 70,
+          "extraversion": 86,
+          "agreeableness": 69,
+          "neuroticism": 64
         },
         "traits": [
           "calm",
-          "ambitious",
-          "impulsive"
+          "skeptical",
+          "stable",
+          "confident"
         ],
-        "primary_desire": "power",
-        "secondary_desire": "freedom"
+        "primary_desire": "family",
+        "secondary_desire": "recognition"
       },
-      "backstory": "A former factory hand, Vida left that life behind after a betrayal. Now he tries to forget.",
+      "home": "B028",
+      "workplace": "B022",
+      "location": "B028",
+      "activity": "shopping",
+      "mood": "alert",
+      "backstory": "Once a loyal Syndicate member, Jin had a change of heart after witnessing an atrocity. she walks a different path now.",
       "catchphrase": "\"Eyes open.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 31
+      "reputation": 92
     },
     {
-      "id": "npc_05259",
-      "name": "Jamie Yamamoto",
-      "age": 30,
+      "id": "npc_02440",
+      "name": "Ion Yamamoto",
+      "age": 26,
       "gender": "female",
-      "archetype": "Street Preacher",
+      "archetype": "Escort",
       "faction": "Citizen",
-      "home": "B023",
-      "workplace": "B004",
-      "location": "B023",
-      "activity": "crafting",
-      "mood": "tired",
+      "physical": {
+        "height_cm": 174,
+        "weight_kg": 82,
+        "build": "muscular",
+        "ethnicity": "Sub-Saharan African",
+        "skin_tone": "synthetic matte",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "brown",
+          "hair_style": "mohawk",
+          "eye_color": "green",
+          "distinguishing_features": [
+            "glowing circuit patterns",
+            "synthetic jaw"
+          ]
+        },
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "formal shirt",
+          "lower": "torn jeans",
+          "footwear": "running shoes",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "lawful neutral",
+        "moral_code": "Money is the only truth",
+        "corruption": 13,
+        "loyalty": 100
+      },
       "personality": {
-        "mbti": "ENTP",
-        "zodiac": "virgo",
+        "mbti": "INFP",
+        "zodiac": "sagittarius",
         "big_five": {
-          "openness": 62,
-          "conscientiousness": 47,
-          "extraversion": 63,
-          "agreeableness": 24,
-          "neuroticism": 48
+          "openness": 67,
+          "conscientiousness": 46,
+          "extraversion": 85,
+          "agreeableness": 44,
+          "neuroticism": 85
         },
         "traits": [
-          "challenging",
-          "skeptical",
-          "outgoing",
-          "cooperative",
-          "creative"
+          "reserved",
+          "compassionate",
+          "curious",
+          "moody",
+          "cooperative"
         ],
-        "primary_desire": "power",
-        "secondary_desire": "recognition"
+        "primary_desire": "freedom",
+        "secondary_desire": "peace"
       },
-      "backstory": "Once a loyal Syndicate member, Jamie had a change of heart after a moment of clarity. she walks a different path now.",
+      "home": "B012",
+      "workplace": "B006",
+      "location": "B012",
+      "activity": "resting",
+      "mood": "anxious",
+      "backstory": "Nobody knows where Ion came from. she appeared 11 years ago and quickly became known for ruthlessness.",
+      "catchphrase": "\"The city remembers.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 58
+    },
+    {
+      "id": "npc_02441",
+      "name": "Rico Storm",
+      "age": 61,
+      "gender": "male",
+      "archetype": "Street Preacher",
+      "faction": "Street Gang",
+      "physical": {
+        "height_cm": 165,
+        "weight_kg": 60,
+        "build": "athletic",
+        "ethnicity": "Middle Eastern",
+        "skin_tone": "synthetic chrome",
+        "face": {
+          "shape": "angular",
+          "hair_color": "gray",
+          "hair_style": "dreadlocks",
+          "eye_color": "gold",
+          "distinguishing_features": []
+        },
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "worn leather jacket",
+          "lower": "leather pants",
+          "footwear": "sandals",
+          "accessories": [
+            "earpiece comm",
+            "bandana"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful good",
+        "moral_code": "The end justifies the means",
+        "corruption": 85,
+        "loyalty": 87
+      },
+      "personality": {
+        "mbti": "INTP",
+        "zodiac": "aries",
+        "big_five": {
+          "openness": 69,
+          "conscientiousness": 93,
+          "extraversion": 42,
+          "agreeableness": 82,
+          "neuroticism": 69
+        },
+        "traits": [
+          "disciplined",
+          "energetic",
+          "curious",
+          "ambitious"
+        ],
+        "primary_desire": "revenge",
+        "secondary_desire": "wealth"
+      },
+      "home": "B022",
+      "workplace": "B038",
+      "location": "B022",
+      "activity": "working",
+      "mood": "alert",
+      "backstory": "A former soldier, Rico left that life behind after losing everything. Now he tries to forget.",
       "catchphrase": "\"Credits talk.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 25
+      "reputation": 59
     },
     {
-      "id": "npc_05260",
-      "name": "Hex Rodriguez",
-      "age": 66,
-      "gender": "male",
-      "archetype": "Chemist",
-      "faction": "Criminal Syndicate",
-      "home": "B019",
-      "workplace": "B020",
-      "location": "B019",
-      "activity": "drinking",
-      "mood": "frustrated",
+      "id": "npc_02442",
+      "name": "Luna Hayashi",
+      "age": 18,
+      "gender": "female",
+      "archetype": "Underground Doctor",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 163,
+        "weight_kg": 55,
+        "build": "athletic",
+        "ethnicity": "European",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "oval",
+          "hair_color": "gray",
+          "hair_style": "shaved",
+          "eye_color": "cybernetic green",
+          "distinguishing_features": [
+            "chrome plating on forehead",
+            "cybernetic eye implant"
+          ]
+        },
+        "cybernetics": "cybernetic arm (right)",
+        "clothing": {
+          "upper": "armored jacket",
+          "lower": "leather pants",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "armband computer"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic good",
+        "moral_code": "The end justifies the means",
+        "corruption": 5,
+        "loyalty": 38
+      },
       "personality": {
-        "mbti": "INFP",
+        "mbti": "ISFJ",
+        "zodiac": "taurus",
+        "big_five": {
+          "openness": 52,
+          "conscientiousness": 71,
+          "extraversion": 81,
+          "agreeableness": 36,
+          "neuroticism": 83
+        },
+        "traits": [
+          "moody",
+          "friendly",
+          "calm",
+          "stable"
+        ],
+        "primary_desire": "wealth",
+        "secondary_desire": "security"
+      },
+      "home": "B004",
+      "workplace": "B009",
+      "location": "B004",
+      "activity": "drinking",
+      "mood": "alert",
+      "backstory": "The child of merchants, Luna inherited both the skills and the enemies. she keeps a low profile.",
+      "catchphrase": "\"The city remembers.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 62
+    },
+    {
+      "id": "npc_02443",
+      "name": "Sam Hayes",
+      "age": 55,
+      "gender": "female",
+      "archetype": "Underground Doctor",
+      "faction": "Street Gang",
+      "physical": {
+        "height_cm": 180,
+        "weight_kg": 63,
+        "build": "wiry",
+        "ethnicity": "Synthetic",
+        "skin_tone": "synthetic chrome",
+        "face": {
+          "shape": "angular",
+          "hair_color": "blonde",
+          "hair_style": "shoulder length",
+          "eye_color": "amber",
+          "distinguishing_features": [
+            "pierced eyebrow"
+          ]
+        },
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "worker overalls",
+          "footwear": "mag-boots",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "lawful evil",
+        "moral_code": "Power must be earned",
+        "corruption": 4,
+        "loyalty": 60
+      },
+      "personality": {
+        "mbti": "INTP",
         "zodiac": "pisces",
         "big_five": {
-          "openness": 58,
-          "conscientiousness": 30,
-          "extraversion": 49,
-          "agreeableness": 44,
-          "neuroticism": 70
+          "openness": 52,
+          "conscientiousness": 80,
+          "extraversion": 47,
+          "agreeableness": 87,
+          "neuroticism": 33
+        },
+        "traits": [
+          "stable",
+          "calm",
+          "organized",
+          "moody"
+        ],
+        "primary_desire": "knowledge",
+        "secondary_desire": "justice"
+      },
+      "home": "B020",
+      "workplace": "B013",
+      "location": "B020",
+      "activity": "trading",
+      "mood": "friendly",
+      "backstory": "The child of smugglers, Sam inherited both the skills and the enemies. she keeps a low profile.",
+      "catchphrase": "\"The city remembers.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 44
+    },
+    {
+      "id": "npc_02444",
+      "name": "Nori Toure",
+      "age": 34,
+      "gender": "female",
+      "archetype": "Data Thief",
+      "faction": "Corporate",
+      "physical": {
+        "height_cm": 178,
+        "weight_kg": 67,
+        "build": "heavyset",
+        "ethnicity": "East Asian",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "red",
+          "hair_style": "short cropped",
+          "eye_color": "red",
+          "distinguishing_features": [
+            "ritual scarification",
+            "burn marks"
+          ]
+        },
+        "cybernetics": "cybernetic eyes",
+        "clothing": {
+          "upper": "synthetic fiber coat",
+          "lower": "tailored slacks",
+          "footwear": "armored boots",
+          "accessories": [
+            "breathing mask",
+            "datajack visor"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "true neutral",
+        "moral_code": "Power must be earned",
+        "corruption": 16,
+        "loyalty": 100
+      },
+      "personality": {
+        "mbti": "INTP",
+        "zodiac": "leo",
+        "big_five": {
+          "openness": 60,
+          "conscientiousness": 80,
+          "extraversion": 89,
+          "agreeableness": 33,
+          "neuroticism": 87
+        },
+        "traits": [
+          "cooperative",
+          "reserved",
+          "stable",
+          "moody",
+          "friendly"
+        ],
+        "primary_desire": "adventure",
+        "secondary_desire": "recognition"
+      },
+      "home": "B048",
+      "workplace": "B018",
+      "location": "B048",
+      "activity": "working",
+      "mood": "excited",
+      "backstory": "Born in the lower levels, Nori learned early that survival meant adapting. she worked working through Street Gang ranks.",
+      "catchphrase": "\"Eyes open.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 16
+    },
+    {
+      "id": "npc_02445",
+      "name": "Sakura Fox",
+      "age": 26,
+      "gender": "female",
+      "archetype": "Dancer",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 162,
+        "weight_kg": 50,
+        "build": "average",
+        "ethnicity": "North African",
+        "skin_tone": "synthetic matte",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "red",
+          "hair_style": "short cropped",
+          "eye_color": "dark brown",
+          "distinguishing_features": []
+        },
+        "cybernetics": "subdermal armor",
+        "clothing": {
+          "upper": "thermal coat",
+          "lower": "shorts",
+          "footwear": "bare feet",
+          "accessories": [
+            "holo-watch"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "true neutral",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 94,
+        "loyalty": 74
+      },
+      "personality": {
+        "mbti": "ISTJ",
+        "zodiac": "pisces",
+        "big_five": {
+          "openness": 51,
+          "conscientiousness": 64,
+          "extraversion": 56,
+          "agreeableness": 52,
+          "neuroticism": 91
+        },
+        "traits": [
+          "reserved",
+          "moody",
+          "calm",
+          "stable",
+          "compassionate"
+        ],
+        "primary_desire": "security",
+        "secondary_desire": "revenge"
+      },
+      "home": "B019",
+      "workplace": "B048",
+      "location": "B019",
+      "activity": "dealing",
+      "mood": "anxious",
+      "backstory": "The child of criminals, Sakura inherited both the skills and the enemies. she keeps a low profile.",
+      "catchphrase": "\"Stay frosty.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 14
+    },
+    {
+      "id": "npc_02446",
+      "name": "Volt Cole",
+      "age": 75,
+      "gender": "male",
+      "archetype": "Info Broker",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 182,
+        "weight_kg": 82,
+        "build": "heavyset",
+        "ethnicity": "North African",
+        "skin_tone": "bronze",
+        "face": {
+          "shape": "diamond",
+          "hair_color": "gray",
+          "hair_style": "shaved",
+          "eye_color": "cybernetic green",
+          "distinguishing_features": [
+            "synthetic jaw"
+          ]
+        },
+        "cybernetics": "cybernetic arm (left)",
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "shorts",
+          "footwear": "mag-boots",
+          "accessories": [
+            "chrome rings",
+            "earpiece comm"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful evil",
+        "moral_code": "Money is the only truth",
+        "corruption": 6,
+        "loyalty": 89
+      },
+      "personality": {
+        "mbti": "ENTJ",
+        "zodiac": "cancer",
+        "big_five": {
+          "openness": 24,
+          "conscientiousness": 81,
+          "extraversion": 38,
+          "agreeableness": 88,
+          "neuroticism": 22
+        },
+        "traits": [
+          "confident",
+          "creative",
+          "compassionate",
+          "cooperative"
+        ],
+        "primary_desire": "adventure",
+        "secondary_desire": "knowledge"
+      },
+      "home": "B035",
+      "workplace": "B025",
+      "location": "B035",
+      "activity": "shopping",
+      "mood": "frustrated",
+      "backstory": "A former soldier, Volt left that life behind after a betrayal. Now he keeps to the shadows.",
+      "catchphrase": "\"The city remembers.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 60
+    },
+    {
+      "id": "npc_02447",
+      "name": "Pulse Hayes",
+      "age": 63,
+      "gender": "female",
+      "archetype": "Pilot",
+      "faction": "Underground",
+      "physical": {
+        "height_cm": 173,
+        "weight_kg": 87,
+        "build": "heavyset",
+        "ethnicity": "North African",
+        "skin_tone": "fair",
+        "face": {
+          "shape": "angular",
+          "hair_color": "dark brown",
+          "hair_style": "shoulder length",
+          "eye_color": "cybernetic green",
+          "distinguishing_features": [
+            "datajack port visible",
+            "ritual scarification"
+          ]
+        },
+        "cybernetics": "reflex boosters",
+        "clothing": {
+          "upper": "armored jacket",
+          "lower": "shorts",
+          "footwear": "dress shoes",
+          "accessories": [
+            "earpiece comm",
+            "utility belt"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful neutral",
+        "moral_code": "Money is the only truth",
+        "corruption": 22,
+        "loyalty": 69
+      },
+      "personality": {
+        "mbti": "INTP",
+        "zodiac": "cancer",
+        "big_five": {
+          "openness": 49,
+          "conscientiousness": 80,
+          "extraversion": 77,
+          "agreeableness": 20,
+          "neuroticism": 94
         },
         "traits": [
           "disciplined",
           "artistic",
-          "anxious",
-          "sensitive"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "peace"
-      },
-      "backstory": "A former factory hand, Hex left that life behind after a betrayal. Now he runs a small operation.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 6
-    },
-    {
-      "id": "npc_05261",
-      "name": "River Sato",
-      "age": 59,
-      "gender": "male",
-      "archetype": "Bouncer",
-      "faction": "Tech Guild",
-      "home": "B040",
-      "workplace": "B007",
-      "location": "B040",
-      "activity": "patrolling",
-      "mood": "anxious",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "pisces",
-        "big_five": {
-          "openness": 82,
-          "conscientiousness": 42,
-          "extraversion": 56,
-          "agreeableness": 72,
-          "neuroticism": 49
-        },
-        "traits": [
-          "curious",
-          "skeptical",
-          "creative",
-          "conventional",
-          "artistic"
-        ],
-        "primary_desire": "justice",
-        "secondary_desire": "recognition"
-      },
-      "backstory": "River's reputation was built on one legendary rescue. Whether the stories are true or not, he doesn't correct them.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 89
-    },
-    {
-      "id": "npc_05262",
-      "name": "Yuki Ali",
-      "age": 63,
-      "gender": "female",
-      "archetype": "Street Vendor",
-      "faction": "Temple Authority",
-      "home": "B048",
-      "workplace": "B021",
-      "location": "B048",
-      "activity": "hustling",
-      "mood": "calm",
-      "personality": {
-        "mbti": "ESFJ",
-        "zodiac": "taurus",
-        "big_five": {
-          "openness": 89,
-          "conscientiousness": 91,
-          "extraversion": 57,
-          "agreeableness": 31,
-          "neuroticism": 74
-        },
-        "traits": [
-          "disciplined",
-          "ambitious",
-          "talkative",
-          "impulsive"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "justice"
-      },
-      "backstory": "Yuki escaped from a corporate prison with nothing but the clothes on her back. Now she works for local fixers.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 51
-    },
-    {
-      "id": "npc_05263",
-      "name": "Yuki Hernandez",
-      "age": 49,
-      "gender": "nonbinary",
-      "archetype": "Hacker",
-      "faction": "Temple Authority",
-      "home": "B036",
-      "workplace": "B004",
-      "location": "B036",
-      "activity": "reading",
-      "mood": "alert",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "capricorn",
-        "big_five": {
-          "openness": 69,
-          "conscientiousness": 79,
-          "extraversion": 37,
-          "agreeableness": 22,
-          "neuroticism": 80
-        },
-        "traits": [
-          "sensitive",
-          "anxious",
-          "solitary"
-        ],
-        "primary_desire": "family",
-        "secondary_desire": "love"
-      },
-      "backstory": "Born in the lower levels, Yuki learned early that survival meant adapting. he worked networking through Citizen ranks.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 9
-    },
-    {
-      "id": "npc_05264",
-      "name": "Cipher Brooks",
-      "age": 74,
-      "gender": "male",
-      "archetype": "Tattoo Artist",
-      "faction": "Citizen",
-      "home": "B004",
-      "workplace": "B047",
-      "location": "B004",
-      "activity": "dealing",
-      "mood": "happy",
-      "personality": {
-        "mbti": "ENTP",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 43,
-          "conscientiousness": 23,
-          "extraversion": 42,
-          "agreeableness": 69,
-          "neuroticism": 47
-        },
-        "traits": [
-          "solitary",
-          "compassionate",
-          "ambitious"
+          "calm"
         ],
         "primary_desire": "adventure",
-        "secondary_desire": "justice"
+        "secondary_desire": "knowledge"
       },
-      "backstory": "Raised in the Temple orphanage, Cipher never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Credits talk.\"",
+      "home": "B042",
+      "workplace": "B030",
+      "location": "B042",
+      "activity": "repairing",
+      "mood": "excited",
+      "backstory": "Nobody knows where Pulse came from. she appeared 11 years ago and quickly became known for discretion.",
+      "catchphrase": "\"Eyes open.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 52
+      "reputation": 54
     },
     {
-      "id": "npc_05265",
-      "name": "Frost Steel",
-      "age": 31,
-      "gender": "nonbinary",
-      "archetype": "Hustler",
-      "faction": "Temple Authority",
-      "home": "B007",
-      "workplace": "B035",
-      "location": "B007",
-      "activity": "patrolling",
-      "mood": "anxious",
+      "id": "npc_02448",
+      "name": "River Steel",
+      "age": 60,
+      "gender": "male",
+      "archetype": "Fence",
+      "faction": "Corporate",
+      "physical": {
+        "height_cm": 178,
+        "weight_kg": 77,
+        "build": "average",
+        "ethnicity": "South Asian",
+        "skin_tone": "synthetic matte",
+        "face": {
+          "shape": "round",
+          "hair_color": "silver",
+          "hair_style": "shaved",
+          "eye_color": "red",
+          "distinguishing_features": [
+            "freckles"
+          ]
+        },
+        "cybernetics": "subdermal armor",
+        "clothing": {
+          "upper": "military surplus jacket",
+          "lower": "shorts",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "armband computer"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic good",
+        "moral_code": "Survival first, morals second",
+        "corruption": 84,
+        "loyalty": 83
+      },
       "personality": {
         "mbti": "INFP",
         "zodiac": "libra",
         "big_five": {
-          "openness": 32,
-          "conscientiousness": 73,
-          "extraversion": 49,
-          "agreeableness": 34,
-          "neuroticism": 51
-        },
-        "traits": [
-          "practical",
-          "quiet",
-          "creative",
-          "challenging",
-          "moody"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "peace"
-      },
-      "backstory": "Raised in the Temple orphanage, Frost never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Credits talk.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 67
-    },
-    {
-      "id": "npc_05266",
-      "name": "Nori Cross",
-      "age": 30,
-      "gender": "female",
-      "archetype": "Memory Dealer",
-      "faction": "Independent",
-      "home": "B008",
-      "workplace": "B044",
-      "location": "B008",
-      "activity": "hustling",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ENTJ",
-        "zodiac": "pisces",
-        "big_five": {
-          "openness": 81,
-          "conscientiousness": 51,
-          "extraversion": 58,
-          "agreeableness": 49,
-          "neuroticism": 76
-        },
-        "traits": [
-          "confident",
-          "sensitive",
-          "challenging",
-          "careless"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "love"
-      },
-      "backstory": "The child of smugglers, Nori inherited both the skills and the enemies. she keeps a low profile.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 61
-    },
-    {
-      "id": "npc_05267",
-      "name": "Nori Toure",
-      "age": 69,
-      "gender": "nonbinary",
-      "archetype": "Courier",
-      "faction": "Criminal Syndicate",
-      "home": "B046",
-      "workplace": "B013",
-      "location": "B046",
-      "activity": "trading",
-      "mood": "curious",
-      "personality": {
-        "mbti": "ESTJ",
-        "zodiac": "sagittarius",
-        "big_five": {
-          "openness": 53,
-          "conscientiousness": 22,
-          "extraversion": 36,
-          "agreeableness": 65,
-          "neuroticism": 47
-        },
-        "traits": [
-          "challenging",
-          "compassionate",
-          "solitary",
-          "quiet",
-          "talkative"
-        ],
-        "primary_desire": "security",
-        "secondary_desire": "power"
-      },
-      "backstory": "Nori escaped from a corporate prison with nothing but the clothes on his back. Now he keeps moving.",
-      "catchphrase": "\"Trust no one.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 25
-    },
-    {
-      "id": "npc_05268",
-      "name": "Zero Diallo",
-      "age": 38,
-      "gender": "female",
-      "archetype": "Tattoo Artist",
-      "faction": "Citizen",
-      "home": "B050",
-      "workplace": "B039",
-      "location": "B050",
-      "activity": "shopping",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ESFJ",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 35,
-          "conscientiousness": 89,
-          "extraversion": 93,
-          "agreeableness": 91,
-          "neuroticism": 84
-        },
-        "traits": [
-          "anxious",
-          "solitary",
-          "stable"
-        ],
-        "primary_desire": "freedom",
-        "secondary_desire": "adventure"
-      },
-      "backstory": "Zero's reputation was built on one legendary rescue. Whether the stories are true or not, she doesn't correct them.",
-      "catchphrase": "\"Keep moving.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 90
-    },
-    {
-      "id": "npc_05269",
-      "name": "Sol Adu",
-      "age": 43,
-      "gender": "male",
-      "archetype": "Tailor",
-      "faction": "Street Gang",
-      "home": "B020",
-      "workplace": "B020",
-      "location": "B020",
-      "activity": "gambling",
-      "mood": "calm",
-      "personality": {
-        "mbti": "INFP",
-        "zodiac": "virgo",
-        "big_five": {
-          "openness": 80,
-          "conscientiousness": 33,
-          "extraversion": 27,
+          "openness": 65,
+          "conscientiousness": 37,
+          "extraversion": 83,
           "agreeableness": 81,
-          "neuroticism": 28
-        },
-        "traits": [
-          "conventional",
-          "imaginative",
-          "energetic",
-          "friendly",
-          "stable"
-        ],
-        "primary_desire": "power",
-        "secondary_desire": "family"
-      },
-      "backstory": "Born in the lower levels, Sol learned early that survival meant adapting. he worked fighting through Citizen ranks.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 61
-    },
-    {
-      "id": "npc_05270",
-      "name": "Kira Hayashi",
-      "age": 35,
-      "gender": "female",
-      "archetype": "Pilot",
-      "faction": "Street Gang",
-      "home": "B014",
-      "workplace": "B048",
-      "location": "B014",
-      "activity": "gambling",
-      "mood": "tired",
-      "personality": {
-        "mbti": "ESFP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 23,
-          "conscientiousness": 40,
-          "extraversion": 47,
-          "agreeableness": 70,
-          "neuroticism": 77
-        },
-        "traits": [
-          "competitive",
-          "ambitious",
-          "skeptical",
-          "practical",
-          "careless"
-        ],
-        "primary_desire": "revenge",
-        "secondary_desire": "justice"
-      },
-      "backstory": "Nobody knows where Kira came from. she appeared 2 years ago and quickly became known for connections.",
-      "catchphrase": "\"Stay frosty.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 82
-    },
-    {
-      "id": "npc_05271",
-      "name": "Ming Kofi",
-      "age": 47,
-      "gender": "male",
-      "archetype": "Tailor",
-      "faction": "Citizen",
-      "home": "B009",
-      "workplace": "B042",
-      "location": "B009",
-      "activity": "dealing",
-      "mood": "anxious",
-      "personality": {
-        "mbti": "ENTP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 73,
-          "conscientiousness": 79,
-          "extraversion": 32,
-          "agreeableness": 25,
           "neuroticism": 42
         },
         "traits": [
-          "quiet",
-          "stable",
-          "confident",
-          "careless",
-          "impulsive"
+          "energetic",
+          "cooperative",
+          "moody"
         ],
-        "primary_desire": "family",
+        "primary_desire": "wealth",
         "secondary_desire": "power"
       },
-      "backstory": "A former soldier, Ming left that life behind after a tragedy. Now he tries to forget.",
-      "catchphrase": "\"Eyes open.\"",
-      "relationships": {},
-      "knowledge": [],
-      "reputation": 93
-    },
-    {
-      "id": "npc_05272",
-      "name": "Sam Park",
-      "age": 72,
-      "gender": "nonbinary",
-      "archetype": "Debt Collector",
-      "faction": "Resistance",
-      "home": "B041",
-      "workplace": "B028",
-      "location": "B041",
-      "activity": "gambling",
-      "mood": "bored",
-      "personality": {
-        "mbti": "ISTP",
-        "zodiac": "aries",
-        "big_five": {
-          "openness": 63,
-          "conscientiousness": 58,
-          "extraversion": 67,
-          "agreeableness": 28,
-          "neuroticism": 38
-        },
-        "traits": [
-          "compassionate",
-          "flexible",
-          "quiet",
-          "artistic"
-        ],
-        "primary_desire": "power",
-        "secondary_desire": "family"
-      },
-      "backstory": "Born in the lower levels, Sam learned early that survival meant adapting. he worked scheming through Criminal Syndicate ranks.",
+      "home": "B050",
+      "workplace": "B047",
+      "location": "B050",
+      "activity": "reading",
+      "mood": "alert",
+      "backstory": "Born in the lower levels, River learned early that survival meant adapting. he worked fighting through Criminal Syndicate ranks.",
       "catchphrase": "\"Trust no one.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 15
+      "reputation": 1
     },
     {
-      "id": "npc_05273",
-      "name": "Zara Hassan",
-      "age": 69,
+      "id": "npc_02449",
+      "name": "Nori Morales",
+      "age": 51,
       "gender": "nonbinary",
-      "archetype": "Street Preacher",
+      "archetype": "Tattoo Artist",
       "faction": "Temple Authority",
-      "home": "B030",
-      "workplace": "B025",
-      "location": "B030",
-      "activity": "drinking",
-      "mood": "suspicious",
+      "physical": {
+        "height_cm": 173,
+        "weight_kg": 52,
+        "build": "slim",
+        "ethnicity": "Mixed",
+        "skin_tone": "tan",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "brown",
+          "hair_style": "slicked back",
+          "eye_color": "gray",
+          "distinguishing_features": [
+            "pierced eyebrow",
+            "chrome plating on forehead"
+          ]
+        },
+        "cybernetics": "memory chip slot",
+        "clothing": {
+          "upper": "corporate blazer",
+          "lower": "torn jeans",
+          "footwear": "bare feet",
+          "accessories": [
+            "datajack visor",
+            "breathing mask"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic evil",
+        "moral_code": "Survival first, morals second",
+        "corruption": 11,
+        "loyalty": 52
+      },
       "personality": {
-        "mbti": "ISFJ",
-        "zodiac": "pisces",
+        "mbti": "ENTJ",
+        "zodiac": "virgo",
         "big_five": {
-          "openness": 30,
-          "conscientiousness": 23,
-          "extraversion": 57,
-          "agreeableness": 42,
-          "neuroticism": 87
+          "openness": 25,
+          "conscientiousness": 53,
+          "extraversion": 61,
+          "agreeableness": 40,
+          "neuroticism": 70
         },
         "traits": [
-          "outgoing",
-          "disciplined",
-          "stable"
+          "curious",
+          "energetic",
+          "calm",
+          "organized",
+          "confident"
         ],
-        "primary_desire": "knowledge",
-        "secondary_desire": "knowledge"
+        "primary_desire": "power",
+        "secondary_desire": "justice"
       },
-      "backstory": "Raised in the Temple orphanage, Zara never knew his parents. he found family in the streets.",
-      "catchphrase": "\"Eyes open.\"",
+      "home": "B037",
+      "workplace": "B025",
+      "location": "B037",
+      "activity": "hustling",
+      "mood": "happy",
+      "backstory": "Nori's reputation was built on one legendary betrayal. Whether the stories are true or not, they doesn't correct them.",
+      "catchphrase": "\"Nothing personal.\"",
       "relationships": {},
       "knowledge": [],
       "reputation": 87
     },
     {
-      "id": "npc_05274",
-      "name": "Paz Hassan",
-      "age": 28,
-      "gender": "female",
-      "archetype": "Cyber-Augmentor",
-      "faction": "Merchant Coalition",
-      "home": "B017",
-      "workplace": "B030",
-      "location": "B017",
-      "activity": "praying",
-      "mood": "happy",
+      "id": "npc_02450",
+      "name": "Blake Lee",
+      "age": 41,
+      "gender": "nonbinary",
+      "archetype": "Maintenance Tech",
+      "faction": "Tech Guild",
+      "physical": {
+        "height_cm": 168,
+        "weight_kg": 100,
+        "build": "heavyset",
+        "ethnicity": "South Asian",
+        "skin_tone": "brown",
+        "face": {
+          "shape": "oval",
+          "hair_color": "purple",
+          "hair_style": "long straight",
+          "eye_color": "cybernetic green",
+          "distinguishing_features": []
+        },
+        "cybernetics": "cybernetic legs",
+        "clothing": {
+          "upper": "neon-lit jacket",
+          "lower": "worker overalls",
+          "footwear": "bare feet",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "neutral evil",
+        "moral_code": "The end justifies the means",
+        "corruption": 56,
+        "loyalty": 85
+      },
       "personality": {
-        "mbti": "INTP",
+        "mbti": "ESFJ",
+        "zodiac": "sagittarius",
+        "big_five": {
+          "openness": 71,
+          "conscientiousness": 27,
+          "extraversion": 61,
+          "agreeableness": 56,
+          "neuroticism": 62
+        },
+        "traits": [
+          "reserved",
+          "outgoing",
+          "curious",
+          "skeptical",
+          "friendly"
+        ],
+        "primary_desire": "security",
+        "secondary_desire": "freedom"
+      },
+      "home": "B005",
+      "workplace": "B014",
+      "location": "B005",
+      "activity": "trading",
+      "mood": "suspicious",
+      "backstory": "A former temple acolyte, Blake left that life behind after a betrayal. Now they tries to forget.",
+      "catchphrase": "\"Trust no one.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 58
+    },
+    {
+      "id": "npc_02451",
+      "name": "Sora Park",
+      "age": 56,
+      "gender": "male",
+      "archetype": "Maintenance Tech",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 167,
+        "weight_kg": 63,
+        "build": "athletic",
+        "ethnicity": "East Asian",
+        "skin_tone": "tan",
+        "face": {
+          "shape": "round",
+          "hair_color": "silver",
+          "hair_style": "dreadlocks",
+          "eye_color": "brown",
+          "distinguishing_features": [
+            "cybernetic eye implant"
+          ]
+        },
+        "cybernetics": "cybernetic arm (right)",
+        "clothing": {
+          "upper": "torn t-shirt",
+          "lower": "tactical pants",
+          "footwear": "platform boots",
+          "accessories": [
+            "earpiece comm"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic good",
+        "moral_code": "Honor among thieves",
+        "corruption": 55,
+        "loyalty": 30
+      },
+      "personality": {
+        "mbti": "ISTP",
+        "zodiac": "libra",
+        "big_five": {
+          "openness": 38,
+          "conscientiousness": 42,
+          "extraversion": 43,
+          "agreeableness": 73,
+          "neuroticism": 43
+        },
+        "traits": [
+          "reserved",
+          "moody",
+          "compassionate",
+          "organized",
+          "stable"
+        ],
+        "primary_desire": "peace",
+        "secondary_desire": "freedom"
+      },
+      "home": "B028",
+      "workplace": "B047",
+      "location": "B028",
+      "activity": "resting",
+      "mood": "calm",
+      "backstory": "Born in the lower levels, Sora learned early that survival meant adapting. he worked fighting through Corporate ranks.",
+      "catchphrase": "\"Trust no one.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 83
+    },
+    {
+      "id": "npc_02452",
+      "name": "Sam Zhang",
+      "age": 68,
+      "gender": "nonbinary",
+      "archetype": "Memory Dealer",
+      "faction": "Underground",
+      "physical": {
+        "height_cm": 188,
+        "weight_kg": 98,
+        "build": "muscular",
+        "ethnicity": "Synthetic",
+        "skin_tone": "pale",
+        "face": {
+          "shape": "square",
+          "hair_color": "dark brown",
+          "hair_style": "dreadlocks",
+          "eye_color": "gray",
+          "distinguishing_features": [
+            "nose ring"
+          ]
+        },
+        "cybernetics": "toxin filters",
+        "clothing": {
+          "upper": "military surplus jacket",
+          "lower": "shorts",
+          "footwear": "running shoes",
+          "accessories": [
+            "wrist tattoos",
+            "datajack visor"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "lawful neutral",
+        "moral_code": "Trust no one completely",
+        "corruption": 98,
+        "loyalty": 81
+      },
+      "personality": {
+        "mbti": "ISFJ",
         "zodiac": "pisces",
         "big_five": {
-          "openness": 56,
-          "conscientiousness": 56,
-          "extraversion": 21,
-          "agreeableness": 27,
-          "neuroticism": 47
+          "openness": 81,
+          "conscientiousness": 65,
+          "extraversion": 78,
+          "agreeableness": 89,
+          "neuroticism": 51
+        },
+        "traits": [
+          "creative",
+          "reserved",
+          "moody"
+        ],
+        "primary_desire": "peace",
+        "secondary_desire": "love"
+      },
+      "home": "B044",
+      "workplace": "B050",
+      "location": "B044",
+      "activity": "exercising",
+      "mood": "calm",
+      "backstory": "Born in the lower levels, Sam learned early that survival meant adapting. they worked working through Temple Authority ranks.",
+      "catchphrase": "\"Eyes open.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 71
+    },
+    {
+      "id": "npc_02453",
+      "name": "Paz Adu",
+      "age": 37,
+      "gender": "male",
+      "archetype": "Medic",
+      "faction": "Nomad",
+      "physical": {
+        "height_cm": 171,
+        "weight_kg": 68,
+        "build": "athletic",
+        "ethnicity": "Mixed",
+        "skin_tone": "olive",
+        "face": {
+          "shape": "angular",
+          "hair_color": "holographic",
+          "hair_style": "undercut",
+          "eye_color": "gold",
+          "distinguishing_features": []
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "torn t-shirt",
+          "lower": "cargo pants",
+          "footwear": "running shoes",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic evil",
+        "moral_code": "Money is the only truth",
+        "corruption": 44,
+        "loyalty": 49
+      },
+      "personality": {
+        "mbti": "INTJ",
+        "zodiac": "virgo",
+        "big_five": {
+          "openness": 39,
+          "conscientiousness": 81,
+          "extraversion": 86,
+          "agreeableness": 85,
+          "neuroticism": 77
+        },
+        "traits": [
+          "cooperative",
+          "skeptical",
+          "creative"
+        ],
+        "primary_desire": "freedom",
+        "secondary_desire": "freedom"
+      },
+      "home": "B001",
+      "workplace": "B038",
+      "location": "B001",
+      "activity": "patrolling",
+      "mood": "friendly",
+      "backstory": "Paz's reputation was built on one legendary heist. Whether the stories are true or not, he doesn't correct them.",
+      "catchphrase": "\"The city remembers.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 46
+    },
+    {
+      "id": "npc_02454",
+      "name": "Avery Reyes",
+      "age": 60,
+      "gender": "nonbinary",
+      "archetype": "Fence",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 172,
+        "weight_kg": 95,
+        "build": "stocky",
+        "ethnicity": "North African",
+        "skin_tone": "synthetic chrome",
+        "face": {
+          "shape": "rectangular",
+          "hair_color": "silver",
+          "hair_style": "messy",
+          "eye_color": "cybernetic blue",
+          "distinguishing_features": [
+            "pierced eyebrow"
+          ]
+        },
+        "cybernetics": "enhanced hearing",
+        "clothing": {
+          "upper": "sleeveless vest",
+          "lower": "shorts",
+          "footwear": "worn sneakers",
+          "accessories": [
+            "breathing mask"
+          ]
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic neutral",
+        "moral_code": "Survival first, morals second",
+        "corruption": 97,
+        "loyalty": 34
+      },
+      "personality": {
+        "mbti": "ISFP",
+        "zodiac": "aquarius",
+        "big_five": {
+          "openness": 68,
+          "conscientiousness": 57,
+          "extraversion": 69,
+          "agreeableness": 56,
+          "neuroticism": 38
+        },
+        "traits": [
+          "curious",
+          "compassionate",
+          "ambitious",
+          "moody"
+        ],
+        "primary_desire": "knowledge",
+        "secondary_desire": "security"
+      },
+      "home": "B002",
+      "workplace": "B008",
+      "location": "B002",
+      "activity": "trading",
+      "mood": "calm",
+      "backstory": "Nobody knows where Avery came from. they appeared 15 years ago and quickly became known for discretion.",
+      "catchphrase": "\"Keep moving.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 77
+    },
+    {
+      "id": "npc_02455",
+      "name": "Yuki Storm",
+      "age": 21,
+      "gender": "female",
+      "archetype": "Dancer",
+      "faction": "Merchant Coalition",
+      "physical": {
+        "height_cm": 164,
+        "weight_kg": 71,
+        "build": "lean",
+        "ethnicity": "South Asian",
+        "skin_tone": "ebony",
+        "face": {
+          "shape": "heart",
+          "hair_color": "gray",
+          "hair_style": "slicked back",
+          "eye_color": "blue",
+          "distinguishing_features": []
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "military surplus jacket",
+          "lower": "worker overalls",
+          "footwear": "combat boots",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "lawful evil",
+        "moral_code": "Survival first, morals second",
+        "corruption": 26,
+        "loyalty": 38
+      },
+      "personality": {
+        "mbti": "ESTJ",
+        "zodiac": "aries",
+        "big_five": {
+          "openness": 48,
+          "conscientiousness": 91,
+          "extraversion": 42,
+          "agreeableness": 51,
+          "neuroticism": 52
+        },
+        "traits": [
+          "reserved",
+          "ambitious",
+          "creative"
+        ],
+        "primary_desire": "family",
+        "secondary_desire": "wealth"
+      },
+      "home": "B004",
+      "workplace": "B026",
+      "location": "B004",
+      "activity": "reading",
+      "mood": "alert",
+      "backstory": "Born in the lower levels, Yuki learned early that survival meant adapting. she worked networking through Independent ranks.",
+      "catchphrase": "\"Nothing personal.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 8
+    },
+    {
+      "id": "npc_02456",
+      "name": "Storm Ali",
+      "age": 69,
+      "gender": "nonbinary",
+      "archetype": "Corporate Drone",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 188,
+        "weight_kg": 96,
+        "build": "heavyset",
+        "ethnicity": "European",
+        "skin_tone": "synthetic chrome",
+        "face": {
+          "shape": "round",
+          "hair_color": "gray",
+          "hair_style": "undercut",
+          "eye_color": "green",
+          "distinguishing_features": [
+            "missing ear",
+            "old scar across cheek"
+          ]
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "synthetic fiber coat",
+          "lower": "tactical pants",
+          "footwear": "worn sneakers",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic neutral",
+        "moral_code": "Loyalty to family above all",
+        "corruption": 4,
+        "loyalty": 83
+      },
+      "personality": {
+        "mbti": "INFP",
+        "zodiac": "taurus",
+        "big_five": {
+          "openness": 87,
+          "conscientiousness": 38,
+          "extraversion": 89,
+          "agreeableness": 72,
+          "neuroticism": 42
+        },
+        "traits": [
+          "stable",
+          "compassionate",
+          "energetic",
+          "cooperative",
+          "skeptical"
+        ],
+        "primary_desire": "recognition",
+        "secondary_desire": "security"
+      },
+      "home": "B001",
+      "workplace": "B023",
+      "location": "B001",
+      "activity": "patrolling",
+      "mood": "friendly",
+      "backstory": "Storm's reputation was built on one legendary betrayal. Whether the stories are true or not, they doesn't correct them.",
+      "catchphrase": "\"Everyone has a price.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 26
+    },
+    {
+      "id": "npc_02457",
+      "name": "Chrome Hayes",
+      "age": 66,
+      "gender": "male",
+      "archetype": "Data Thief",
+      "faction": "Corporate",
+      "physical": {
+        "height_cm": 172,
+        "weight_kg": 77,
+        "build": "muscular",
+        "ethnicity": "Sub-Saharan African",
+        "skin_tone": "ebony",
+        "face": {
+          "shape": "round",
+          "hair_color": "white",
+          "hair_style": "ponytail",
+          "eye_color": "blue",
+          "distinguishing_features": [
+            "synthetic jaw"
+          ]
+        },
+        "cybernetics": null,
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "tactical pants",
+          "footwear": "mag-boots",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "lawful evil",
+        "moral_code": "Protect the weak at all costs",
+        "corruption": 46,
+        "loyalty": 98
+      },
+      "personality": {
+        "mbti": "ISTJ",
+        "zodiac": "capricorn",
+        "big_five": {
+          "openness": 65,
+          "conscientiousness": 54,
+          "extraversion": 24,
+          "agreeableness": 61,
+          "neuroticism": 50
+        },
+        "traits": [
+          "confident",
+          "moody",
+          "anxious",
+          "organized"
+        ],
+        "primary_desire": "peace",
+        "secondary_desire": "knowledge"
+      },
+      "home": "B013",
+      "workplace": "B028",
+      "location": "B013",
+      "activity": "repairing",
+      "mood": "anxious",
+      "backstory": "Nobody knows where Chrome came from. he appeared 13 years ago and quickly became known for ruthlessness.",
+      "catchphrase": "\"Everyone has a price.\"",
+      "relationships": {},
+      "knowledge": [],
+      "reputation": 17
+    },
+    {
+      "id": "npc_02458",
+      "name": "Sakura Mensah",
+      "age": 65,
+      "gender": "nonbinary",
+      "archetype": "Hustler",
+      "faction": "Citizen",
+      "physical": {
+        "height_cm": 182,
+        "weight_kg": 74,
+        "build": "average",
+        "ethnicity": "European",
+        "skin_tone": "synthetic matte",
+        "face": {
+          "shape": "round",
+          "hair_color": "white",
+          "hair_style": "mohawk",
+          "eye_color": "red",
+          "distinguishing_features": [
+            "ritual scarification"
+          ]
+        },
+        "cybernetics": "cybernetic arm (right)",
+        "clothing": {
+          "upper": "tech mesh top",
+          "lower": "tactical pants",
+          "footwear": "combat boots",
+          "accessories": []
+        }
+      },
+      "alignment": {
+        "alignment": "chaotic neutral",
+        "moral_code": "An eye for an eye",
+        "corruption": 63,
+        "loyalty": 75
+      },
+      "personality": {
+        "mbti": "ESFP",
+        "zodiac": "capricorn",
+        "big_five": {
+          "openness": 86,
+          "conscientiousness": 41,
+          "extraversion": 48,
+          "agreeableness": 29,
+          "neuroticism": 61
         },
         "traits": [
           "compassionate",
-          "moody",
-          "quiet",
-          "impulsive"
+          "outgoing",
+          "curious"
         ],
-        "primary_desire": "freedom",
-        "secondary_desire": "power"
+        "primary_desire": "justice",
+        "secondary_desire": "freedom"
       },
-      "backstory": "Nobody knows where Paz came from. she appeared 3 years ago and quickly became known for connections.",
+      "home": "B011",
+      "workplace": "B016",
+      "location": "B011",
+      "activity": "repairing",
+      "mood": "frustrated",
+      "backstory": "Raised in the Temple orphanage, Sakura never knew their parents. they found family in the streets.",
       "catchphrase": "\"Credits talk.\"",
       "relationships": {},
       "knowledge": [],
-      "reputation": 12
+      "reputation": 26
     }
   ]
 }
