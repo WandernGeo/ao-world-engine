@@ -995,6 +995,112 @@ def get_arweave_data(tx_id):
 
 
 # =============================================================================
+# STUDIORAM SCENE GENERATION
+# =============================================================================
+
+# Lazy import to avoid loading Vertex AI unless needed
+_scene_generator = None
+
+def get_scene_generator():
+    """Lazy-load the scene generator."""
+    global _scene_generator
+    if _scene_generator is None:
+        try:
+            from studioram.scene_generator import SceneGenerator
+            _scene_generator = SceneGenerator(world_id="signal-noir")
+        except ImportError as e:
+            print(f"StudioRam not available: {e}")
+            return None
+    return _scene_generator
+
+
+@app.route("/api/generate/portrait/<npc_id>", methods=["POST"])
+def generate_portrait(npc_id):
+    """
+    Generate a portrait for an NPC.
+    
+    POST /api/generate/portrait/NPC_00001
+    
+    Returns: { "image_url": "path/to/image.png", "prompt": "..." }
+    """
+    gen = get_scene_generator()
+    if not gen:
+        return jsonify({"error": "Scene generator not available"}), 503
+    
+    # Find NPC
+    npcs = get_npcs()
+    npc = next((n for n in npcs if n["id"] == npc_id), None)
+    if not npc:
+        return jsonify({"error": f"NPC {npc_id} not found"}), 404
+    
+    try:
+        result = gen.generate_portrait(npc, save=True)
+        return jsonify({
+            "npc_id": npc_id,
+            "npc_name": npc["name"],
+            "image_path": result,
+            "status": "generated"
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/generate/scene", methods=["POST"])
+def generate_scene():
+    """
+    Generate a scene with NPCs.
+    
+    POST /api/generate/scene
+    Body: {
+        "npc_ids": ["NPC_00001", "NPC_00002"],
+        "location": "Neon bar in undercity",
+        "action": "tense negotiation",
+        "time_of_day": "night",
+        "weather": "rain"
+    }
+    
+    Returns: { "image_url": "path/to/scene.png", "prompt": "..." }
+    """
+    gen = get_scene_generator()
+    if not gen:
+        return jsonify({"error": "Scene generator not available"}), 503
+    
+    data = request.get_json() or {}
+    npc_ids = data.get("npc_ids", [])
+    location = data.get("location", "Street in the undercity")
+    action = data.get("action", "meeting")
+    time_of_day = data.get("time_of_day", "night")
+    weather = data.get("weather", "rain")
+    
+    # Find NPCs
+    all_npcs = get_npcs()
+    npcs = [n for n in all_npcs if n["id"] in npc_ids]
+    
+    if not npcs:
+        return jsonify({"error": "No valid NPCs found"}), 400
+    
+    try:
+        result = gen.generate_scene(
+            npcs=npcs,
+            location=location,
+            action=action,
+            time_of_day=time_of_day,
+            weather=weather,
+            save=True
+        )
+        return jsonify({
+            "npc_ids": [n["id"] for n in npcs],
+            "npc_names": [n["name"] for n in npcs],
+            "location": location,
+            "action": action,
+            "image_path": result,
+            "status": "generated"
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 

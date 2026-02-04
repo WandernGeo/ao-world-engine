@@ -111,9 +111,9 @@ ao-processes/
 ## 🎯 Priority 3: Graph Improvements
 
 ### 3D Sphere Rotation
-- [ ] Enable mouse drag to rotate the sphere
-- [ ] Add smooth rotation animation
-- [ ] Camera orbit controls (Three.js OrbitControls)
+- [x] Enable mouse drag to rotate the sphere → **Right-click drag**
+- [x] Add smooth rotation animation → **Auto-spin toggle**
+- [x] Camera orbit controls → **3D perspective projection**
 - [ ] Touch support for mobile
 
 ### Interaction Improvements
