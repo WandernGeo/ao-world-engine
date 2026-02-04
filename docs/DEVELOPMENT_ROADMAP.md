@@ -98,7 +98,7 @@ ao-processes/
 - [ ] Single adults: ~25% of population
 - [ ] Link household members to same home building
 
-### Bannerlord-Style Life Simulation (Future)
+### generational Life Simulation (Future)
 
 - [ ] Aging system (NPCs age over simulation time)
 - [ ] Marriage events (eligible singles meet, court, marry)

@@ -6,9 +6,9 @@
 
 ## 🎮 Inspirations from Great Game AI
 
-### 1. Dwarf Fortress - Deep Needs System
+### 1. emergent AI - Deep Needs System
 ```
-Each dwarf has 500+ interlocking needs, skills, and memories.
+Each NPC has 500+ interlocking needs, skills, and memories.
 A preference for a certain drink can escalate into a tavern brawl.
 ```
 
@@ -18,7 +18,7 @@ A preference for a certain drink can escalate into a tavern brawl.
 - 🆕 ADD: Preference chains (likes → seeks → conflicts)
 - 🆕 ADD: Emotional states that compound over time
 
-### 2. RimWorld - AI Storyteller
+### 2. utility AI - AI Storyteller
 ```
 A centralized "storyteller" picks from event types to create drama.
 Cassandra = steady difficulty, Randy = chaotic, Phoebe = relaxed.
@@ -42,7 +42,7 @@ AI dynasties make autonomous decisions: marry, assassinate, ally.
 - 🆕 ADD: Dynasty/lineage tracking
 - 🆕 ADD: Political schemes that unfold over time
 
-### 4. The Sims - Social Networks
+### 4. needs-based AI - Social Networks
 ```
 Relationships have multiple dimensions: friendship, romance, rivalry.
 Social actions have visible effects on mood and behavior.
@@ -150,7 +150,7 @@ When user connects:
 
 ## 🆕 Enhanced Features to Add
 
-### 1. RimWorld-Style Storyteller
+### 1. utility AI-Style Storyteller
 
 ```python
 class StorytellerAI:
@@ -180,7 +180,7 @@ class StorytellerAI:
         return deterministic_choice(events, self.seed)
 ```
 
-### 2. Dwarf Fortress-Style Personality Quirks
+### 2. emergent AI-Style Personality Quirks
 
 ```python
 PERSONALITY_QUIRKS = {
@@ -354,7 +354,7 @@ python scripts/npc_personality_generator.py --npc charlie
 
 All systems are in `scripts/advanced_ai_systems.py`:
 
-### 1. Utility System (RimWorld)
+### 1. Utility System (utility AI)
 ```python
 utility_system = UtilitySystem()
 action, score = utility_system.evaluate_actions(npc_state, available_actions)
@@ -372,13 +372,13 @@ alife = ALifeSystem(world)
 migrations = alife.simulate_migrations(tick)
 ```
 
-### 4. Personality Quirks (Dwarf Fortress)
+### 4. Personality Quirks (emergent AI)
 ```python
 quirks = QuirkSystem()
 effects = quirks.process_quirks(npc, situation)
 ```
 
-### 5. Storyteller AI (RimWorld)
+### 5. Storyteller AI (utility AI)
 ```python
 storyteller = StorytellerAI(mode="dramatic")
 event = storyteller.pick_next_event(world_state, tick)
@@ -389,13 +389,13 @@ event = storyteller.pick_next_event(world_state, tick)
 ## Next Steps
 
 ### ✅ Completed
-1. ✅ **Utility System** - RimWorld-style action scoring
+1. ✅ **Utility System** - utility-based action scoring
 2. ✅ **GOAP Planning** - Goal-Oriented Action Planning
 3. ✅ **A-Life Migration** - STALKER-style zone roaming
-4. ✅ **AI Storyteller** - RimWorld-style event curation
-5. ✅ **Personality Quirks** - Dwarf Fortress emergent behavior
+4. ✅ **AI Storyteller** - utility-based event curation
+5. ✅ **Personality Quirks** - emergent AI emergent behavior
 6. ✅ **Apophenia Support** - Pattern generation for player speculation
-7. ✅ **Social Groups** - The Sims: cliques, clubs, gangs, families
+7. ✅ **Social Groups** - needs-based AI: cliques, clubs, gangs, families
 8. ✅ **Long-term Schemes** - Crusader Kings: assassination, seduction, usurpation
 9. ✅ **Dynasty System** - Crusader Kings: inheritance, family traits, succession
 10. ✅ **Personality System** - Full RE:ECHO + MBTI + Zodiacs with family/faction influence

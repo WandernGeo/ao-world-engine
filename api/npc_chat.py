@@ -417,7 +417,7 @@ def get_npc_state(npc_id: str, tick: int) -> dict:
     profile = FOUNDING_NPCS[npc_id].copy()
     tick_state = get_tick_state(tick)
     
-    # Use schedule-based location (Skyrim-style)
+    # Use schedule-based location (routine-based)
     current_loc, current_activity = get_scheduled_location(npc_id, tick)
     time_period = get_time_period(tick)
     

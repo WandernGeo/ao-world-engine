@@ -3,7 +3,7 @@
 RE:ECHO City Founding Population - Enhanced with Full Morphology
 =================================================================
 
-12 Founding NPCs with Skyrim-style character morphology data.
+12 Founding NPCs with routine-based character morphology data.
 Each profile includes detailed face/body dimensions for AI consistency.
 
 Target: ~8KB per character (staying well under 100KB free tier)
@@ -14,7 +14,7 @@ import os
 from datetime import datetime
 
 # ============================================================
-# MORPHOLOGY SCHEMA - Skyrim-style sliders (0.0 to 1.0)
+# MORPHOLOGY SCHEMA - routine-based sliders (0.0 to 1.0)
 # ============================================================
 
 def create_morphology(

@@ -5,8 +5,8 @@
 ## Overview
 
 The AO World Engine uses a **deterministic tick-based simulation** inspired by:
-- **The Sims** - NPC needs system
-- **Skyrim** - Schedule-based NPC routines  
+- **needs-based AI** - NPC needs system
+- **routine-based AI** - Schedule-based NPC routines  
 - **SimCity/Cities:Skylines** - City economics and districts
 
 ```
@@ -16,7 +16,7 @@ The AO World Engine uses a **deterministic tick-based simulation** inspired by:
 │                                                                  │
 │   ┌─────────────┐     ┌─────────────┐     ┌─────────────┐       │
 │   │  NPC NEEDS  │     │  SCHEDULES  │     │   EVENTS    │       │
-│   │  (Sims)     │     │  (Skyrim)   │     │  (Random)   │       │
+│   │  (Needs)     │     │  (routine-based AI)   │     │  (Random)   │       │
 │   └──────┬──────┘     └──────┬──────┘     └──────┬──────┘       │
 │          │                   │                   │               │
 │          └───────────────────┼───────────────────┘               │
@@ -89,7 +89,7 @@ def get_time_period(tick: int) -> str:
 
 ---
 
-## NPC Needs System (Sims-style)
+## NPC Needs System (needs-based)
 
 ### 8 Core Needs
 
@@ -137,7 +137,7 @@ if npc.needs["hunger"] < 0.2:  # Critical!
 
 ---
 
-## Schedule System (Skyrim-style)
+## Schedule System (routine-based)
 
 ### 4 NPC Archetypes
 

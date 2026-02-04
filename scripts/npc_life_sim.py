@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NPC LIFE SIMULATION - Mount & Blade Bannerlord Style
+NPC LIFE SIMULATION - generational Generational Simulation
 =====================================================
 
 NPCs have:
@@ -744,7 +744,7 @@ def create_sample_npcs() -> Dict[str, NPCState]:
 
 if __name__ == "__main__":
     print("="*60)
-    print("  NPC LIFE SIMULATION - Bannerlord Style")
+    print("  NPC LIFE SIMULATION - Generational Simulation")
     print("="*60)
     
     npcs = create_sample_npcs()

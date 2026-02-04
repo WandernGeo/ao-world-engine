@@ -1,7 +1,7 @@
 """
-GTA5-Style NPC Systems for AO World Engine
+reaction-based NPC Systems for AO World Engine
 
-Advanced NPC behaviors inspired by GTA5:
+Advanced NPC behaviors inspired by reaction-based AI:
 - Vehicle usage and traffic
 - Wanted/Alert levels
 - Ambient activities
@@ -16,7 +16,7 @@ import hashlib
 from typing import Optional
 
 # =============================================================================
-# VEHICLE SYSTEM (GTA5 style)
+# VEHICLE SYSTEM (reaction-based AI style)
 # =============================================================================
 
 VEHICLES = {
@@ -70,11 +70,11 @@ def get_npc_vehicle(npc: dict, tick: int) -> Optional[dict]:
 
 
 # =============================================================================
-# WANTED LEVEL SYSTEM (GTA5 style - Stars)
+# WANTED LEVEL SYSTEM (reaction-based AI style - Stars)
 # =============================================================================
 
 """
-Temple Alert Levels (like GTA stars):
+Temple Alert Levels (like alert levels):
 0 - Clear: No alert
 1 - Suspicious: Guards watching
 2 - Alert: Active investigation
@@ -171,7 +171,7 @@ def calculate_alert_level(actions: list[dict]) -> int:
 def update_alert_level(current_level: int, player_visible: bool, tick: int) -> int:
     """
     Update alert level based on visibility and time.
-    Like GTA - hiding reduces stars over time.
+    Hiding reduces stars over time.
     """
     config = ALERT_LEVELS[current_level]
     
@@ -206,7 +206,7 @@ def get_guard_response(alert_level: int, location: str) -> dict:
 
 
 # =============================================================================
-# AMBIENT ACTIVITIES (GTA5 style)
+# AMBIENT ACTIVITIES (reaction-based AI style)
 # =============================================================================
 
 AMBIENT_ACTIVITIES = {
@@ -286,7 +286,7 @@ def get_ambient_activity(npc: dict, location_type: str, tick: int) -> str:
 
 
 # =============================================================================
-# NPC REACTIONS (GTA5 style)
+# NPC REACTIONS (reaction-based AI style)
 # =============================================================================
 
 REACTION_TYPES = {
@@ -391,13 +391,13 @@ def get_npc_reaction(npc: dict, event_type: str, tick: int) -> dict:
 
 
 # =============================================================================
-# WITNESS SYSTEM (GTA5 style)
+# WITNESS SYSTEM (reaction-based AI style)
 # =============================================================================
 
 def find_witnesses(location: str, radius: int, npcs: list[dict], tick: int) -> list[dict]:
     """
     Find NPCs who witnessed an event.
-    In GTA, witnesses call cops if they see crimes.
+    Witnesses call cops if they see crimes.
     """
     witnesses = []
     
@@ -567,7 +567,7 @@ def get_time_period(tick: int) -> str:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("GTA5-STYLE NPC SYSTEMS TEST")
+    print("reaction-based AI-STYLE NPC SYSTEMS TEST")
     print("=" * 60)
     
     # Test NPC
@@ -624,4 +624,4 @@ if __name__ == "__main__":
         period = get_time_period(tick)
         print(f"  Tick {tick} ({period}): {density:.2f}")
     
-    print("\n✅ All GTA5-style systems working!")
+    print("\n✅ All reaction-based systems working!")

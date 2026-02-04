@@ -177,7 +177,7 @@ GET /api/npc/{id}/memory    → NPC's memories of events/people
 1. **Utility AI**: NPCs choose best action based on needs/situation
 2. **GOAP**: NPCs plan action sequences to achieve goals
 3. **A-Life**: NPCs migrate between zones autonomously
-4. **Needs**: Sims-style decay and satisfaction
+4. **Needs**: needs-based decay and satisfaction
 5. **Scheduling**: NPCs have daily routines
 6. **Interactions**: NPCs meet, chat, fight, trade
 7. **Relationships**: Trust scores persist

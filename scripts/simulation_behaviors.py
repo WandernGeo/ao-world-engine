@@ -61,7 +61,7 @@ def get_time_period(tick: int) -> str:
 
 
 # =============================================================================
-# NPC NEEDS SYSTEM (Sims-style)
+# NPC NEEDS SYSTEM (needs-based)
 # =============================================================================
 
 NEEDS = {
@@ -127,7 +127,7 @@ def satisfy_need(npc: dict, need: str, amount: float) -> dict:
 
 
 # =============================================================================
-# SCHEDULE SYSTEM (Skyrim-style)
+# SCHEDULE SYSTEM (routine-based)
 # =============================================================================
 
 SCHEDULES = {

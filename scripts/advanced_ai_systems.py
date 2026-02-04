@@ -4,8 +4,8 @@ ADVANCED AI SYSTEMS
 ====================
 
 Implementation of game AI concepts from:
-- Dwarf Fortress: Interlocking needs, personality quirks
-- RimWorld: AI Storyteller, Utility System
+- emergent AI: Interlocking needs, personality quirks
+- utility AI: AI Storyteller, Utility System
 - STALKER: A-Life autonomous roaming
 - Crusader Kings: Hidden schemes, ambitions
 - General: GOAP (Goal-Oriented Action Planning)
@@ -39,7 +39,7 @@ def deterministic_range(min_v: int, max_v: int, seed: str) -> int:
 
 
 # =============================================================================
-# 1. UTILITY SYSTEM (RimWorld-style)
+# 1. UTILITY SYSTEM (utility-based)
 # =============================================================================
 # The Utility System scores all possible actions and picks the best one.
 # Each action has a "utility" score based on current state.
@@ -67,7 +67,7 @@ def calculate_utility(action: UtilityAction, npc: dict, world: dict, tick: int) 
     Calculate the utility score for an action.
     Higher score = more likely to be chosen.
     
-    Inspired by RimWorld's colonist AI.
+    Inspired by utility AI's colonist AI.
     """
     needs = npc.get("needs", {})
     personality = npc.get("personality", {})
@@ -403,7 +403,7 @@ def process_alife_tick(npcs: List[dict], tick: int) -> List[dict]:
 
 
 # =============================================================================
-# 4. AI STORYTELLER (RimWorld-style)
+# 4. AI STORYTELLER (utility-based)
 # =============================================================================
 # A meta-AI that controls pacing and drama, not just random events.
 
@@ -543,7 +543,7 @@ def process_storyteller_tick(state: StorytellerState, world: dict, tick: int) ->
 
 
 # =============================================================================
-# 5. PERSONALITY QUIRKS (Dwarf Fortress-style)
+# 5. PERSONALITY QUIRKS (emergent)
 # =============================================================================
 # Each NPC has quirks that create emergent behavior.
 
@@ -849,7 +849,7 @@ if __name__ == "__main__":
 
 
 # =============================================================================
-# 7. SOCIAL GROUPS (The Sims-style)
+# 7. SOCIAL GROUPS (The needs-based)
 # =============================================================================
 # NPCs form and join social groups: cliques, clubs, gangs, families.
 # Groups influence behavior and create emergent social dynamics.

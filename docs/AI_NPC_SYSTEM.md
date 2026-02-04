@@ -216,7 +216,7 @@ end
       "Same face, same place. Coincidence?"
     ],
     "layer_musings": [
-      "We're echoes, sims in some Watcher's game.",
+      "We're echoes, echoes in some Watcher's game.",
       "Layer 0's the 'real' one—whatever that means.",
       "What if this city's just one layer in a stack?"
     ],

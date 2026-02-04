@@ -3,7 +3,7 @@
 CASCADING EVENTS SYSTEM
 ========================
 
-Dwarf Fortress-style chain reactions where one event triggers others.
+emergent chain reactions where one event triggers others.
 
 Examples:
 - Robbery → Witnesses → Temple investigation → Curfew

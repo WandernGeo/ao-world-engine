@@ -367,16 +367,16 @@ def test_plugins():
 
 
 # =============================================================================
-# GTA SYSTEMS TESTS (20 tests)
+# REACTION SYSTEMS TESTS (20 tests)
 # =============================================================================
 
-def test_gta_systems():
+def test_reaction_systems():
     log("=" * 60)
-    log("GTA-STYLE SYSTEMS TESTS")
+    log("NPC REACTION SYSTEMS TESTS")
     log("=" * 60)
     
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from scripts.gta_style_systems import (
+    from scripts.npc_reaction_systems import (
         get_npc_vehicle, calculate_alert_level, update_alert_level,
         get_ambient_activity, get_npc_reaction, get_traffic_density,
         ALERT_LEVELS, VEHICLES, AMBIENT_ACTIVITIES
@@ -482,7 +482,7 @@ def run_all_tests():
     test_activities()
     test_buildings_extensive()
     test_plugins()
-    test_gta_systems()
+    test_reaction_systems()
     test_data_integrity()
     
     # Summary

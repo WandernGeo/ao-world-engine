@@ -131,8 +131,8 @@ curl -s http://localhost:8081/api/transport | jq '.special_transit | keys'
 # Test 41-45: Simulation behaviors
 python3 scripts/simulation_behaviors.py
 
-# Test 46-50: GTA-style systems
-python3 scripts/gta_style_systems.py
+# Test 46-50: reaction-based systems
+python3 scripts/npc_reaction_systems.py
 
 # Test 51-60: Plugin system
 python3 scripts/plugin_system.py
@@ -170,7 +170,7 @@ python3 scripts/test_comprehensive.py
 | Events | 10 | Random event generation |
 | Determinism | 10 | Reproducibility |
 | Plugins | 10 | Addon system |
-| GTA Systems | 10 | Vehicles, wanted, reactions |
+| NPC Reaction Systems | 10 | Vehicles, wanted, reactions |
 | Memory | 5 | Conversation persistence |
 
 **Total: 135 tests**
