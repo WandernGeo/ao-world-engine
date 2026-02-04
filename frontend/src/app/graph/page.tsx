@@ -37,6 +37,15 @@ interface APINPC {
     faction: string;
     home?: string;
     workplace?: string;
+    family?: {
+        spouse_id?: string | null;
+        parent_ids?: string[];
+        sibling_ids?: string[];
+        children_ids?: string[];
+        household_id?: string;
+        marital_status?: string;
+    };
+    age?: number;
 }
 
 const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
@@ -148,6 +157,28 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
             }
             if (n.home && apiBuildings.find(b => b.id === n.home)) {
                 relationships.push({ source: n.id, target: n.home, type: 'lives_at' });
+            }
+
+            // Family relationships
+            if (n.family) {
+                // Spouse relationship
+                if (n.family.spouse_id && n.id < n.family.spouse_id) {  // Avoid duplicates
+                    relationships.push({ source: n.id, target: n.family.spouse_id, type: 'spouse' });
+                }
+                // Parent-child relationships
+                if (n.family.children_ids) {
+                    n.family.children_ids.forEach(childId => {
+                        relationships.push({ source: n.id, target: childId, type: 'parent_of' });
+                    });
+                }
+                // Sibling relationships (only add if this NPC's ID is less to avoid duplicates)
+                if (n.family.sibling_ids) {
+                    n.family.sibling_ids.forEach(sibId => {
+                        if (n.id < sibId) {
+                            relationships.push({ source: n.id, target: sibId, type: 'sibling' });
+                        }
+                    });
+                }
             }
         });
 
@@ -297,6 +328,8 @@ export default function KnowledgeGraphPage() {
     const [isSimulating, setIsSimulating] = useState(true);
     const [stats, setStats] = useState({ entities: 0, relationships: 0, npcs: 0 });
     const [draggedNode, setDraggedNode] = useState<string | null>(null); // NEW: track dragged node
+    const [autoRotate, setAutoRotate] = useState(false); // Auto-rotation toggle
+    const [showFamilyOnly, setShowFamilyOnly] = useState(false); // Show only family relationships
 
     const width = 1600; // Expanded from 800
     const height = 1400; // Expanded from 700
@@ -397,7 +430,11 @@ export default function KnowledgeGraphPage() {
         const entityIds = new Set(entities.map(e => e.id));
 
         // Draw relationships first
+        const familyTypes = ['spouse', 'parent_of', 'sibling'];
         data.relationships.forEach(r => {
+            // Filter by showFamilyOnly
+            if (showFamilyOnly && !familyTypes.includes(r.type)) return;
+
             if (!entityIds.has(r.source) && filter !== 'all') return;
             if (!entityIds.has(r.target) && filter !== 'all') return;
 
@@ -406,12 +443,20 @@ export default function KnowledgeGraphPage() {
             if (!source || !target) return;
 
             const isHighlighted = selectedEntity && (r.source === selectedEntity.id || r.target === selectedEntity.id);
+            const isFamily = familyTypes.includes(r.type);
+
+            // Color by relationship type
+            let edgeColor = 'rgba(34, 211, 238, 0.15)'; // Default cyan
+            if (r.type === 'spouse') edgeColor = isHighlighted ? '#ec4899' : 'rgba(236, 72, 153, 0.4)'; // Pink
+            else if (r.type === 'parent_of') edgeColor = isHighlighted ? '#22d3ee' : 'rgba(34, 211, 238, 0.4)'; // Cyan
+            else if (r.type === 'sibling') edgeColor = isHighlighted ? '#f59e0b' : 'rgba(245, 158, 11, 0.4)'; // Amber
+            else if (isHighlighted) edgeColor = '#22d3ee';
 
             ctx.beginPath();
             ctx.moveTo(source.x, source.y);
             ctx.lineTo(target.x, target.y);
-            ctx.strokeStyle = isHighlighted ? '#22d3ee' : 'rgba(34, 211, 238, 0.15)';
-            ctx.lineWidth = isHighlighted ? 1.5 : 0.5;
+            ctx.strokeStyle = edgeColor;
+            ctx.lineWidth = isHighlighted ? 2 : (isFamily ? 1 : 0.5);
             ctx.stroke();
 
             // Draw relationship label at midpoint if highlighted
@@ -459,7 +504,7 @@ export default function KnowledgeGraphPage() {
         });
 
         ctx.restore();
-    }, [data, selectedEntity, hoveredEntity, filter, zoom, pan]);
+    }, [data, selectedEntity, hoveredEntity, filter, zoom, pan, showFamilyOnly]);
 
     // Mouse handlers - support node dragging
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -625,7 +670,7 @@ export default function KnowledgeGraphPage() {
                     </div>
 
                     {/* Controls */}
-                    <div className="absolute bottom-4 left-4 flex gap-2">
+                    <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
                         <Button
                             size="sm"
                             variant={isSimulating ? 'default' : 'outline'}
@@ -633,6 +678,14 @@ export default function KnowledgeGraphPage() {
                             className={isSimulating ? 'bg-cyan-600' : ''}
                         >
                             {isSimulating ? '⏸ Freeze' : '▶ Simulate'}
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant={showFamilyOnly ? 'default' : 'outline'}
+                            onClick={() => setShowFamilyOnly(!showFamilyOnly)}
+                            className={showFamilyOnly ? 'bg-pink-600' : ''}
+                        >
+                            {showFamilyOnly ? '👨‍👩‍👧 Family Only' : '👨‍👩‍👧 Show Family'}
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(3, z + 0.2))}>+</Button>
                         <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.3, z - 0.2))}>−</Button>

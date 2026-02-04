@@ -1,0 +1,114 @@
+{
+    "_chunk": {
+        "id": "17",
+        "name": "family_system",
+        "category": "social",
+        "version": "1.0.0",
+        "description": "Family relationship system schema and household data",
+        "dependencies": [
+            "01_npcs"
+        ]
+    },
+    "_family_schema": {
+        "_desc": "Schema for NPC family relationships - applied to all 800 NPCs in npcs_generated.json",
+        "spouse_id": "NPC ID of spouse, or null if unmarried",
+        "parent_ids": "Array of NPC IDs for parents (0-2 entries)",
+        "sibling_ids": "Array of NPC IDs for siblings",
+        "children_ids": "Array of NPC IDs for children",
+        "household_id": "Household identifier (HXX format) - NPCs sharing same home",
+        "marital_status": "married | single | widowed | divorced"
+    },
+    "_generation_stats": {
+        "_desc": "Statistics from family generation (February 2026)",
+        "total_npcs": 800,
+        "married_couples": 160,
+        "total_married": 320,
+        "families_with_children": 43,
+        "total_children": 101,
+        "single_parents": 9,
+        "sibling_pairs": 30,
+        "total_households": 479,
+        "single_adults": 310
+    },
+    "household_types": {
+        "HT01": {
+            "name": "Married Couple",
+            "description": "Two adults sharing a home, married",
+            "average_size": 2
+        },
+        "HT02": {
+            "name": "Nuclear Family",
+            "description": "Married couple with children",
+            "average_size": 4
+        },
+        "HT03": {
+            "name": "Single Parent",
+            "description": "One parent with children",
+            "average_size": 2.5
+        },
+        "HT04": {
+            "name": "Siblings",
+            "description": "Adult siblings sharing a home",
+            "average_size": 2
+        },
+        "HT05": {
+            "name": "Single Adult",
+            "description": "One person living alone",
+            "average_size": 1
+        }
+    },
+    "relationship_codes_extended": {
+        "_desc": "Extended relationship codes for family system",
+        "R06": "family (general)",
+        "R06a": "spouse",
+        "R06b": "parent",
+        "R06c": "child",
+        "R06d": "sibling",
+        "R06e": "grandparent",
+        "R06f": "grandchild",
+        "R06g": "aunt_uncle",
+        "R06h": "niece_nephew",
+        "R06i": "cousin",
+        "R06j": "in_law",
+        "R06k": "step_family"
+    },
+    "marital_status_codes": {
+        "MS01": "single",
+        "MS02": "married",
+        "MS03": "widowed",
+        "MS04": "divorced",
+        "MS05": "engaged",
+        "MS06": "separated"
+    },
+    "_behavior_integration": {
+        "_desc": "How family relationships affect NPC behavior",
+        "spouse_proximity": "Spouses tend to have synchronized schedules and share meals",
+        "parent_child_care": "Parents' schedules adapt to care for young children",
+        "sibling_support": "Siblings may assist each other during crises",
+        "household_shared_resources": "NPCs in same household share income and expenses",
+        "grief_events": "Death of family member triggers extended sad mood",
+        "celebration_events": "Weddings, births trigger happy mood across family"
+    },
+    "_simulation_hooks": {
+        "family_meal_time": {
+            "trigger": "T08 (dinner time)",
+            "behavior": "Family members at same household gather for dinner",
+            "location": "home or nearby restaurant"
+        },
+        "family_crisis_response": {
+            "trigger": "NPC in danger or arrested",
+            "behavior": "Family members receive notification, may respond",
+            "trust_change": "+0.2 for helper, -0.3 toward aggressor"
+        },
+        "inheritance": {
+            "trigger": "NPC death",
+            "behavior": "Assets transfer to spouse, then children",
+            "priority": [
+                "spouse",
+                "children",
+                "siblings",
+                "parents"
+            ]
+        }
+    }
+}

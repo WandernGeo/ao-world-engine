@@ -168,6 +168,73 @@ def should_do_today(activity: str, frequency: str, npc_id: str, day: int) -> boo
     return r < 0.5
 
 # =============================================================================
+# NEEDS SYSTEM (Sims-style)
+# =============================================================================
+# NPCs have needs that decay over time and get satisfied by activities
+
+NEEDS = {
+    "hunger":  {"decay_rate": 0.02,  "critical": 0.2},
+    "sleep":   {"decay_rate": 0.015, "critical": 0.15},
+    "social":  {"decay_rate": 0.01,  "critical": 0.25},
+    "hygiene": {"decay_rate": 0.008, "critical": 0.3},
+    "safety":  {"decay_rate": 0.005, "critical": 0.1},
+    "income":  {"decay_rate": 0.01,  "critical": 0.2},
+}
+
+# Activities that satisfy needs
+ACTIVITY_SATISFIES = {
+    "eating": {"hunger": 0.8},
+    "sleeping": {"sleep": 0.1, "hygiene": -0.02},  # Sleep restores slowly
+    "waking": {"sleep": 0.05},
+    "socializing": {"social": 0.3},
+    "dancing": {"social": 0.2},
+    "drinking": {"social": 0.15},
+    "working": {"income": 0.1, "social": 0.05},
+    "patrol": {"income": 0.1, "safety": 0.1},
+    "bathing": {"hygiene": 0.6},
+    "leisure": {"social": 0.1},
+}
+
+def calculate_needs(npc: dict, tick: int) -> dict:
+    """
+    Calculate NPC needs at a given tick.
+    Deterministic based on NPC ID, tick, and their schedule.
+    """
+    # Start from base values or NPC's stored needs
+    base_needs = npc.get("needs_state", {
+        "hunger": 0.8,
+        "sleep": 0.8,
+        "social": 0.7,
+        "hygiene": 0.9,
+        "safety": 0.7,
+        "income": 0.5,
+    })
+    
+    # Calculate decay based on time elapsed (tick)
+    # Each tick represents ~6 minutes, so 240 ticks = 1 day
+    day_tick = tick % 240
+    
+    needs = {}
+    for need, config in NEEDS.items():
+        base = base_needs.get(need, 0.7)
+        
+        # Decay based on how far into the day we are
+        decay = config["decay_rate"] * day_tick * 0.1  # Scaled decay
+        
+        # Add variation based on NPC personality
+        personality = npc.get("personality", {})
+        if need == "social" and personality.get("sociability", 0.5) < 0.4:
+            decay *= 0.5  # Introverts need less social
+        elif need == "income" and personality.get("greed", 0.5) > 0.7:
+            decay *= 1.5  # Greedy NPCs worry more about money
+        
+        # Clamp to 0-1
+        value = max(0.0, min(1.0, base - decay))
+        needs[need] = round(value, 2)
+    
+    return needs
+
+# =============================================================================
 # HOBBY GENERATION (Based on Personality)
 # =============================================================================
 # NPCs don't have hobbies in the JSON, but we can DERIVE hobbies from personality
@@ -610,6 +677,9 @@ def get_npc_state(npc: dict, tick: int) -> dict:
     }
     mood = mood_map.get(activity, "neutral")
     
+    # Calculate needs state (deterministic decay based on tick)
+    needs_state = calculate_needs(npc, tick)
+    
     return {
         "npc_id": npc["id"],
         "name": npc["name"],
@@ -621,6 +691,11 @@ def get_npc_state(npc: dict, tick: int) -> dict:
         "mood": mood,
         "faction": npc.get("faction", "civilian"),
         "archetype": npc.get("archetype", "resident"),
+        # New enriched data
+        "age": npc.get("age"),
+        "family": npc.get("family"),
+        "appearance": npc.get("appearance"),
+        "needs": needs_state,
     }
 
 
