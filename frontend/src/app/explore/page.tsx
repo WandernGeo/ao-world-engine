@@ -430,6 +430,14 @@ export default function ExplorePage() {
                     />
 
                     {/* Building Blueprint (shown when building selected + blueprint mode) */}
+                    {showBlueprint && !selectedBuilding && (
+                        <Card className="bg-zinc-900/90 border-cyan-500/30">
+                            <CardContent className="p-4 text-center text-zinc-400">
+                                <div className="text-3xl mb-2">🏗️</div>
+                                <div className="text-sm">Click a building to view its blueprint</div>
+                            </CardContent>
+                        </Card>
+                    )}
                     {selectedBuilding && showBlueprint && (
                         <BuildingBlueprint
                             building={{
