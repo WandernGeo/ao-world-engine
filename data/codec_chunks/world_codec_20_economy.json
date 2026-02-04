@@ -1,312 +1,1026 @@
 {
     "_chunk": {
         "id": "chunk_20_economy",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "type": "world_codec_chunk",
         "category": "economy",
         "prev_chunk": "chunk_19_social",
-        "next_chunk": null
+        "next_chunk": null,
+        "_inspiration": "Cities: Skylines + Cyberpunk 2077 + RE:ECHO lore"
     },
     "currency": {
-        "_desc": "GEP (Global Exchange Points) - unified currency",
-        "code": "GEP",
-        "symbol": "◊",
-        "denominations": {
-            "micro": 0.01,
-            "standard": 1,
-            "kilo": 1000,
-            "mega": 1000000
+        "_desc": "Multiple currency systems in RE:ECHO City",
+        "primary": {
+            "code": "GEP",
+            "name": "Global Exchange Points",
+            "symbol": "◊",
+            "denominations": {
+                "micro": 0.01,
+                "standard": 1,
+                "kilo": 1000,
+                "mega": 1000000
+            },
+            "inflation_rate": 0.02,
+            "_note": "Temple-backed digital currency"
+        },
+        "secondary": {
+            "data_chips": {
+                "code": "DCH",
+                "name": "Data Chips",
+                "_desc": "Physical encrypted storage, untraceable",
+                "exchange_rate_gep": 1.2,
+                "preferred_by": [
+                    "smugglers",
+                    "resistance",
+                    "hackers"
+                ]
+            },
+            "temple_credits": {
+                "code": "TPC",
+                "name": "Temple Credits",
+                "_desc": "Temple-issued, only valid in Temple zones",
+                "exchange_rate_gep": 1.0,
+                "restrictions": [
+                    "temple_quarter",
+                    "temple_services"
+                ]
+            },
+            "corp_scrip": {
+                "code": "CSC",
+                "name": "Corporate Scrip",
+                "_desc": "Megacorp-issued, locked to their ecosystem",
+                "exchange_rate_gep": 0.8,
+                "issuing_corps": [
+                    "NexGen",
+                    "Omnicorp",
+                    "Synthetica"
+                ]
+            },
+            "barter": {
+                "code": "BTR",
+                "_desc": "Direct goods exchange in Undercity",
+                "common_items": [
+                    "food_rations",
+                    "med_supplies",
+                    "ammo",
+                    "tech_parts"
+                ]
+            }
         }
     },
-    "income_by_archetype": {
-        "_desc": "Base daily income in GEP per archetype",
-        "_encoding": "INC### where ### is archetype code",
-        "ARCH001_shopkeeper": {
-            "code": "INC001",
-            "base_daily": 120,
-            "variance": 0.3,
-            "_note": "Varies by sales"
-        },
-        "ARCH002_bartender": {
-            "code": "INC002",
-            "base_daily": 80,
-            "variance": 0.4,
-            "tip_potential": 0.2
-        },
-        "ARCH003_guard": {
-            "code": "INC003",
-            "base_daily": 100,
-            "variance": 0.1,
-            "_note": "Steady temple pay"
-        },
-        "ARCH004_street_vendor": {
-            "code": "INC004",
-            "base_daily": 50,
-            "variance": 0.6,
-            "_note": "Highly variable"
-        },
-        "ARCH005_medic": {
-            "code": "INC005",
-            "base_daily": 150,
-            "variance": 0.2
-        },
-        "ARCH006_civilian": {
-            "code": "INC006",
-            "base_daily": 75,
-            "variance": 0.3
-        },
-        "ARCH007_technician": {
-            "code": "INC007",
-            "base_daily": 130,
-            "variance": 0.2
-        },
-        "ARCH008_laborer": {
-            "code": "INC008",
-            "base_daily": 60,
-            "variance": 0.2
-        },
-        "ARCH009_smuggler": {
-            "code": "INC009",
-            "base_daily": 200,
-            "variance": 0.8,
-            "risk_modifier": 0.1
-        },
-        "ARCH010_priest": {
-            "code": "INC010",
-            "base_daily": 90,
-            "variance": 0.1,
-            "_note": "Temple stipend"
-        }
-    },
-    "expenses": {
-        "_desc": "Daily expense categories",
-        "_encoding": "EXP### where ### is expense type",
-        "basic_needs": {
-            "EXP001_food": {
-                "min_daily": 10,
-                "comfortable": 25,
-                "luxury": 50
+    "zoning": {
+        "_desc": "District zoning types - Cities: Skylines style",
+        "_encoding": "ZONE###",
+        "residential": {
+            "ZONE_R1": {
+                "name": "Low-Density Hab",
+                "max_density": 50,
+                "land_value_base": 100,
+                "noise_tolerance": 0.3,
+                "pollution_tolerance": 0.2
             },
-            "EXP002_housing": {
-                "slum": 5,
-                "basic": 15,
-                "comfortable": 40,
-                "luxury": 100
+            "ZONE_R2": {
+                "name": "Medium-Density Hab",
+                "max_density": 200,
+                "land_value_base": 150,
+                "noise_tolerance": 0.5,
+                "pollution_tolerance": 0.3
             },
-            "EXP003_transport": {
-                "walking": 0,
-                "public": 5,
-                "private": 20
+            "ZONE_R3": {
+                "name": "High-Density Megablock",
+                "max_density": 1000,
+                "land_value_base": 80,
+                "noise_tolerance": 0.7,
+                "pollution_tolerance": 0.5,
+                "_note": "Crowded hab-blocks, lower quality of life"
             },
-            "EXP004_healthcare": {
-                "none": 0,
-                "basic_clinic": 10,
-                "private": 50
+            "ZONE_R4": {
+                "name": "Luxury Arcology",
+                "max_density": 100,
+                "land_value_base": 500,
+                "noise_tolerance": 0.1,
+                "pollution_tolerance": 0.05
             }
         },
-        "optional": {
-            "EXP010_entertainment": 15,
-            "EXP011_substances": 20,
-            "EXP012_savings": "varies"
+        "commercial": {
+            "ZONE_C1": {
+                "name": "Street-Level Commerce",
+                "types": [
+                    "shops",
+                    "vendors",
+                    "street_food"
+                ],
+                "job_density": 30,
+                "noise_output": 0.3
+            },
+            "ZONE_C2": {
+                "name": "Commercial District",
+                "types": [
+                    "offices",
+                    "retail_chains",
+                    "services"
+                ],
+                "job_density": 100,
+                "noise_output": 0.4
+            },
+            "ZONE_C3": {
+                "name": "Corporate Plaza",
+                "types": [
+                    "megacorp_offices",
+                    "luxury_retail",
+                    "exec_services"
+                ],
+                "job_density": 200,
+                "noise_output": 0.2,
+                "land_value_multiplier": 3.0
+            },
+            "ZONE_CM": {
+                "name": "Black Market Zone",
+                "types": [
+                    "fencing",
+                    "smuggling",
+                    "illegal_services"
+                ],
+                "job_density": 50,
+                "legal": false,
+                "temple_control": 0.0
+            }
+        },
+        "industrial": {
+            "ZONE_I1": {
+                "name": "Light Industry",
+                "types": [
+                    "fabrication",
+                    "assembly",
+                    "recycling"
+                ],
+                "pollution_output": 0.3,
+                "job_density": 50,
+                "automation_level": 0.4
+            },
+            "ZONE_I2": {
+                "name": "Heavy Industry",
+                "types": [
+                    "manufacturing",
+                    "refining",
+                    "power_generation"
+                ],
+                "pollution_output": 0.7,
+                "job_density": 30,
+                "automation_level": 0.6,
+                "_note": "Fewer jobs due to automation"
+            },
+            "ZONE_I3": {
+                "name": "Hazardous Processing",
+                "types": [
+                    "chemical",
+                    "nuclear",
+                    "biotech"
+                ],
+                "pollution_output": 0.9,
+                "job_density": 10,
+                "automation_level": 0.9,
+                "requires": [
+                    "hazmat_cert",
+                    "temple_permit"
+                ]
+            },
+            "ZONE_IT": {
+                "name": "Tech Park",
+                "types": [
+                    "r_and_d",
+                    "data_centers",
+                    "ai_farms"
+                ],
+                "pollution_output": 0.1,
+                "job_density": 150,
+                "education_required": 0.7
+            }
+        },
+        "special": {
+            "ZONE_T": {
+                "name": "Temple District",
+                "owner": "temple",
+                "tax_exempt": true,
+                "special_rules": [
+                    "mandatory_tithe",
+                    "restricted_commerce"
+                ]
+            },
+            "ZONE_M": {
+                "name": "Megacorp Enclave",
+                "owner": "corporation",
+                "extraterritorial": true,
+                "_note": "City laws don't apply inside"
+            },
+            "ZONE_U": {
+                "name": "Undercity",
+                "legal_status": "unzoned",
+                "temple_control": 0.1,
+                "informal_economy": true
+            }
+        }
+    },
+    "production_chains": {
+        "_desc": "Industrial production dependencies - like Cities: Skylines Industries DLC",
+        "raw_materials": {
+            "PROD_RM01": {
+                "name": "Scrap Metal",
+                "source": [
+                    "recycling_centers",
+                    "old_town_scavenging"
+                ],
+                "transport_weight": 10
+            },
+            "PROD_RM02": {
+                "name": "Petrochemicals",
+                "source": [
+                    "refinery",
+                    "import"
+                ],
+                "transport_weight": 15,
+                "hazardous": true
+            },
+            "PROD_RM03": {
+                "name": "Rare Earth Elements",
+                "source": [
+                    "mining_outpost",
+                    "import"
+                ],
+                "transport_weight": 5,
+                "value_density": "high"
+            },
+            "PROD_RM04": {
+                "name": "Organic Matter",
+                "source": [
+                    "hydroponic_farms",
+                    "protein_vats"
+                ],
+                "transport_weight": 8
+            },
+            "PROD_RM05": {
+                "name": "Water (Purified)",
+                "source": [
+                    "aquifer",
+                    "atmospheric_collectors"
+                ],
+                "transport_weight": 20,
+                "essential": true
+            }
+        },
+        "processed_goods": {
+            "PROD_PG01": {
+                "name": "Alloy Sheets",
+                "inputs": [
+                    "PROD_RM01"
+                ],
+                "output_ratio": 0.7,
+                "processing_zone": "ZONE_I2"
+            },
+            "PROD_PG02": {
+                "name": "Synthetic Polymers",
+                "inputs": [
+                    "PROD_RM02"
+                ],
+                "output_ratio": 0.6,
+                "processing_zone": "ZONE_I3"
+            },
+            "PROD_PG03": {
+                "name": "Electronics Components",
+                "inputs": [
+                    "PROD_RM03",
+                    "PROD_PG01"
+                ],
+                "output_ratio": 0.5,
+                "processing_zone": "ZONE_IT"
+            },
+            "PROD_PG04": {
+                "name": "Nutrient Paste",
+                "inputs": [
+                    "PROD_RM04",
+                    "PROD_RM05"
+                ],
+                "output_ratio": 0.8,
+                "processing_zone": "ZONE_I1"
+            }
+        },
+        "finished_goods": {
+            "PROD_FG01": {
+                "name": "Consumer Electronics",
+                "inputs": [
+                    "PROD_PG03"
+                ],
+                "demand_zones": [
+                    "ZONE_C2",
+                    "ZONE_C3"
+                ],
+                "profit_margin": 0.3
+            },
+            "PROD_FG02": {
+                "name": "Cybernetic Implants",
+                "inputs": [
+                    "PROD_PG03",
+                    "PROD_PG02"
+                ],
+                "demand_zones": [
+                    "ZONE_C3",
+                    "ZONE_T"
+                ],
+                "profit_margin": 0.6,
+                "requires_license": true
+            },
+            "PROD_FG03": {
+                "name": "Weapons Systems",
+                "inputs": [
+                    "PROD_PG01",
+                    "PROD_PG03"
+                ],
+                "demand_zones": [
+                    "ZONE_T",
+                    "ZONE_CM"
+                ],
+                "profit_margin": 0.5,
+                "restricted": true
+            },
+            "PROD_FG04": {
+                "name": "Medical Supplies",
+                "inputs": [
+                    "PROD_PG02",
+                    "PROD_PG04"
+                ],
+                "demand_zones": [
+                    "ZONE_R1",
+                    "ZONE_R2",
+                    "ZONE_R3"
+                ],
+                "profit_margin": 0.25,
+                "essential": true
+            }
+        }
+    },
+    "megacorporations": {
+        "_desc": "Cyberpunk megacorps controlling sectors",
+        "CORP_01": {
+            "name": "NexGen Industries",
+            "sector": "cybernetics",
+            "market_share": 0.4,
+            "employees": 15000,
+            "zones_controlled": [
+                "industrial_ring_sector_a",
+                "corp_plaza_north"
+            ],
+            "rival": "CORP_03",
+            "income_modifier": 1.3,
+            "culture": "ruthless_efficiency"
+        },
+        "CORP_02": {
+            "name": "Omnicorp",
+            "sector": "infrastructure",
+            "market_share": 0.6,
+            "employees": 25000,
+            "zones_controlled": [
+                "power_grid",
+                "water_treatment",
+                "transit"
+            ],
+            "rival": null,
+            "income_modifier": 1.1,
+            "culture": "monopolistic",
+            "_note": "Controls essential services - too big to fail"
+        },
+        "CORP_03": {
+            "name": "Synthetica",
+            "sector": "biotech",
+            "market_share": 0.35,
+            "employees": 8000,
+            "zones_controlled": [
+                "industrial_ring_sector_b",
+                "research_campus"
+            ],
+            "rival": "CORP_01",
+            "income_modifier": 1.4,
+            "culture": "secretive",
+            "products": [
+                "synthetic_organs",
+                "genetic_mods",
+                "bioweapons"
+            ]
+        },
+        "CORP_04": {
+            "name": "DataVault Securities",
+            "sector": "information",
+            "market_share": 0.5,
+            "employees": 5000,
+            "zones_controlled": [
+                "server_farms",
+                "comm_relays"
+            ],
+            "rival": "shadow_grid_hackers",
+            "income_modifier": 1.5,
+            "culture": "paranoid",
+            "_note": "Sells data, surveillance services to Temple"
         }
     },
     "taxation": {
-        "_desc": "City tax system",
-        "income_tax": {
-            "rate": 0.10,
-            "collected_by": "city_treasury",
-            "collection_frequency": "daily"
+        "_desc": "Multi-layered tax system",
+        "city_taxes": {
+            "income_tax": {
+                "brackets": [
+                    {
+                        "min": 0,
+                        "max": 500,
+                        "rate": 0.0
+                    },
+                    {
+                        "min": 500,
+                        "max": 2000,
+                        "rate": 0.05
+                    },
+                    {
+                        "min": 2000,
+                        "max": 10000,
+                        "rate": 0.10
+                    },
+                    {
+                        "min": 10000,
+                        "max": 50000,
+                        "rate": 0.15
+                    },
+                    {
+                        "min": 50000,
+                        "max": null,
+                        "rate": 0.20
+                    }
+                ],
+                "_note": "Progressive taxation - poor pay less"
+            },
+            "property_tax": {
+                "rate": 0.02,
+                "assessed_on": "land_value",
+                "exemptions": [
+                    "temple_property",
+                    "corp_enclave"
+                ]
+            },
+            "sales_tax": {
+                "rate": 0.05,
+                "exemptions": [
+                    "food_basic",
+                    "medicine_essential",
+                    "water"
+                ]
+            },
+            "corporate_tax": {
+                "rate": 0.12,
+                "loopholes": [
+                    "offshore_arweave",
+                    "temple_partnership",
+                    "r_and_d_credits"
+                ],
+                "effective_rate_megacorp": 0.03
+            }
         },
-        "sales_tax": {
-            "rate": 0.05,
-            "applies_to": [
-                "trade",
-                "purchase"
-            ],
-            "exemptions": [
-                "food_basic",
-                "medicine_basic"
-            ]
+        "temple_levies": {
+            "mandatory_tithe": {
+                "rate": 0.05,
+                "applies_to": "all_registered_citizens",
+                "penalty_for_evasion": "temple_blacklist"
+            },
+            "blessing_fees": {
+                "birth_registration": 50,
+                "marriage_ceremony": 200,
+                "death_processing": 100,
+                "business_license": 500
+            },
+            "sin_taxes": {
+                "alcohol": 0.15,
+                "recreational_drugs": 0.25,
+                "gambling": 0.20,
+                "cybernetic_vanity": 0.10
+            }
         },
-        "temple_tithe": {
-            "rate": 0.05,
-            "voluntary": false,
-            "faction": "temple",
-            "_note": "Mandatory for true believers"
+        "black_market": {
+            "tax_rate": 0.0,
+            "protection_fee": 0.15,
+            "paid_to": "undercity_bosses"
+        }
+    },
+    "land_value": {
+        "_desc": "Property value calculation - Cities: Skylines style",
+        "base_factors": {
+            "zone_type_multiplier": {
+                "ZONE_R4": 5.0,
+                "ZONE_C3": 4.0,
+                "ZONE_IT": 3.0,
+                "ZONE_R1": 2.0,
+                "ZONE_C2": 1.5,
+                "ZONE_R2": 1.0,
+                "ZONE_C1": 0.8,
+                "ZONE_I1": 0.6,
+                "ZONE_R3": 0.5,
+                "ZONE_I2": 0.3,
+                "ZONE_I3": 0.1
+            }
+        },
+        "modifiers": {
+            "proximity_to_transit": {
+                "metro_station": 0.3,
+                "bus_stop": 0.1,
+                "highway_access": 0.15
+            },
+            "proximity_to_services": {
+                "healthcare": 0.1,
+                "education": 0.15,
+                "entertainment": 0.05,
+                "green_space": 0.2
+            },
+            "negative_factors": {
+                "pollution": -0.3,
+                "noise": -0.2,
+                "crime": -0.4,
+                "industrial_proximity": -0.15
+            }
+        },
+        "calculation": "base * zone_multiplier * (1 + sum(positive_modifiers)) * (1 + sum(negative_modifiers))"
+    },
+    "employment": {
+        "_desc": "Labor market dynamics",
+        "job_types": {
+            "automated": {
+                "_desc": "AI/robot handled - no human jobs",
+                "sectors": [
+                    "manufacturing_basic",
+                    "data_processing",
+                    "transport_cargo"
+                ],
+                "displacement_rate": 0.02
+            },
+            "low_skill": {
+                "examples": [
+                    "street_vendor",
+                    "laborer",
+                    "cleaner"
+                ],
+                "wage_range": [
+                    40,
+                    80
+                ],
+                "unemployment_rate": 0.15,
+                "automation_risk": 0.3
+            },
+            "mid_skill": {
+                "examples": [
+                    "technician",
+                    "shopkeeper",
+                    "guard"
+                ],
+                "wage_range": [
+                    80,
+                    150
+                ],
+                "unemployment_rate": 0.08,
+                "automation_risk": 0.15
+            },
+            "high_skill": {
+                "examples": [
+                    "engineer",
+                    "medic",
+                    "hacker"
+                ],
+                "wage_range": [
+                    150,
+                    300
+                ],
+                "unemployment_rate": 0.03,
+                "automation_risk": 0.05
+            },
+            "elite": {
+                "examples": [
+                    "corporate_exec",
+                    "temple_priest",
+                    "specialized_surgeon"
+                ],
+                "wage_range": [
+                    300,
+                    1000
+                ],
+                "unemployment_rate": 0.01,
+                "automation_risk": 0.0
+            }
+        },
+        "unemployment_effects": {
+            "crime_increase": 0.05,
+            "social_unrest": 0.1,
+            "black_market_participation": 0.15
+        },
+        "universal_basic_income": {
+            "enabled": true,
+            "amount": 30,
+            "funded_by": "city_budget",
+            "eligibility": "registered_unemployed",
+            "_lore": "Temple's 'charitable' minimum, keeps population docile"
         }
     },
     "city_budget": {
-        "_desc": "City services funded by taxes",
-        "services": {
-            "SVC001_police": {
-                "cost_per_officer": 80,
-                "officers_per_1000_pop": 5,
-                "effect_on_crime": -0.15
+        "_desc": "Budget allocation per service",
+        "revenue_sources": {
+            "taxes": 0.65,
+            "corp_fees": 0.20,
+            "temple_contribution": 0.10,
+            "fines_penalties": 0.05
+        },
+        "expenditure_categories": {
+            "law_enforcement": {
+                "allocation": 0.25,
+                "effect_per_gep": {
+                    "crime_reduction": 0.0001,
+                    "response_time": -0.001
+                },
+                "sub_categories": {
+                    "street_patrol": 0.4,
+                    "detectives": 0.2,
+                    "riot_control": 0.2,
+                    "cyber_crime_unit": 0.2
+                }
             },
-            "SVC002_sanitation": {
-                "cost_per_worker": 40,
-                "workers_per_1000_pop": 3,
-                "effect_on_disease": -0.2
+            "infrastructure": {
+                "allocation": 0.20,
+                "effect_per_gep": {
+                    "road_quality": 0.0001,
+                    "power_stability": 0.0002,
+                    "water_quality": 0.0002
+                },
+                "decay_rate_without_funding": 0.01
             },
-            "SVC003_infrastructure": {
-                "cost_per_day": 3000,
-                "decay_without_funding": 0.01
+            "healthcare": {
+                "allocation": 0.15,
+                "effect_per_gep": {
+                    "life_expectancy": 0.00005,
+                    "disease_resistance": 0.0001
+                },
+                "sub_categories": {
+                    "public_clinics": 0.5,
+                    "emergency_response": 0.3,
+                    "disease_control": 0.2
+                }
             },
-            "SVC004_healthcare": {
-                "cost_per_bed": 100,
-                "beds_per_1000_pop": 10
+            "sanitation": {
+                "allocation": 0.10,
+                "effect_per_gep": {
+                    "disease_risk": -0.0002,
+                    "pollution": -0.0001
+                }
             },
-            "SVC005_emergency": {
-                "cost_per_unit": 150,
-                "units_per_1000_pop": 2
+            "education": {
+                "allocation": 0.10,
+                "effect_per_gep": {
+                    "workforce_skill": 0.0001,
+                    "innovation": 0.00005
+                },
+                "_lore": "Temple controls curriculum"
+            },
+            "social_services": {
+                "allocation": 0.10,
+                "includes": [
+                    "ubi_payments",
+                    "housing_assistance",
+                    "job_training"
+                ]
+            },
+            "administration": {
+                "allocation": 0.05,
+                "corruption_overhead": 0.15,
+                "_note": "15% lost to corruption/inefficiency"
+            },
+            "emergency_fund": {
+                "allocation": 0.05,
+                "target_reserve": 100000
             }
         },
         "crisis_thresholds": {
-            "warning": 10000,
-            "critical": 5000,
-            "collapse": 1000
+            "healthy": {
+                "min_reserve": 50000
+            },
+            "strained": {
+                "min_reserve": 20000,
+                "service_cuts": 0.1
+            },
+            "crisis": {
+                "min_reserve": 5000,
+                "service_cuts": 0.3
+            },
+            "collapse": {
+                "min_reserve": 0,
+                "martial_law": true
+            }
         }
     },
-    "trade_actions": {
-        "_desc": "Economic actions mapped to action codes",
-        "A071_buy": {
-            "verb": "V071",
-            "requires_gep": true,
-            "creates_transaction": true
+    "economic_indicators": {
+        "_desc": "City-wide economic health metrics",
+        "gdp": {
+            "calculation": "sum(all_economic_activity)",
+            "growth_target": 0.03
         },
-        "A072_sell": {
-            "verb": "V072",
-            "generates_gep": true,
-            "creates_transaction": true
+        "gini_coefficient": {
+            "_desc": "Wealth inequality (0=equal, 1=unequal)",
+            "current": 0.72,
+            "historical_trend": "increasing",
+            "_lore": "RE:ECHO is highly unequal"
         },
-        "A073_trade": {
-            "verb": "V073",
-            "bilateral": true
+        "inflation": {
+            "current": 0.02,
+            "causes": [
+                "money_supply",
+                "import_costs",
+                "corp_pricing"
+            ],
+            "effects": {
+                "savings_erosion": 0.02,
+                "wage_lag": 0.01
+            }
         },
-        "A075_haggle": {
-            "verb": "V276",
-            "modifies_price": true,
-            "skill_check": "S32_bargaining"
+        "unemployment_rate": {
+            "current": 0.12,
+            "natural_rate": 0.05,
+            "structural": 0.07
         },
-        "A081_steal": {
-            "verb": "V082",
-            "generates_gep": true,
-            "illegal": true,
-            "crime_code": "CRIME001_theft"
+        "housing_affordability": {
+            "rent_to_income_ratio": 0.45,
+            "_note": "Average person spends 45% of income on housing"
         },
-        "A058_bribe": {
-            "verb": "V058",
-            "reduces_gep": true,
-            "social_modifier": true
+        "black_market_size": {
+            "percentage_of_gdp": 0.25,
+            "sectors": [
+                "drugs",
+                "weapons",
+                "stolen_goods",
+                "data",
+                "services"
+            ]
         }
     },
     "economic_events": {
-        "_desc": "Events that affect economy",
-        "EVT_E001_market_crash": {
-            "effect": {
-                "all_prices": -0.3,
-                "job_loss_chance": 0.1
+        "_desc": "Random and triggered economic events",
+        "market_events": {
+            "EVT_E001_recession": {
+                "trigger": {
+                    "gdp_growth": "<-0.02",
+                    "duration_days": 30
+                },
+                "effects": {
+                    "unemployment": 0.05,
+                    "wages": -0.1,
+                    "crime": 0.1
+                },
+                "duration_days": 90
             },
-            "duration_days": 30,
-            "probability": 0.0001
+            "EVT_E002_boom": {
+                "trigger": {
+                    "gdp_growth": ">0.05",
+                    "duration_days": 30
+                },
+                "effects": {
+                    "wages": 0.1,
+                    "land_value": 0.15,
+                    "inflation": 0.02
+                },
+                "duration_days": 60
+            },
+            "EVT_E003_corp_merger": {
+                "probability": 0.0005,
+                "effects": {
+                    "job_loss": 2000,
+                    "market_concentration": 0.05
+                }
+            },
+            "EVT_E004_automation_wave": {
+                "trigger": {
+                    "tech_investment": ">threshold"
+                },
+                "effects": {
+                    "low_skill_jobs": -0.1,
+                    "productivity": 0.15
+                }
+            }
         },
-        "EVT_E002_price_surge": {
-            "effect": {
-                "category_prices": 0.5
+        "crisis_events": {
+            "EVT_E010_supply_shortage": {
+                "affects": [
+                    "food",
+                    "medicine",
+                    "fuel"
+                ],
+                "causes": {
+                    "prices": 0.5,
+                    "unrest": 0.2
+                }
             },
-            "duration_days": 7,
-            "probability": 0.001
+            "EVT_E011_bank_run": {
+                "trigger": {
+                    "confidence": "<0.3"
+                },
+                "effects": {
+                    "credit_freeze": true,
+                    "business_closures": 0.1
+                }
+            },
+            "EVT_E012_infrastructure_failure": {
+                "probability": 0.001,
+                "affected_systems": [
+                    "power",
+                    "water",
+                    "transit"
+                ],
+                "duration_ticks": 48,
+                "effects": {
+                    "productivity": -0.3,
+                    "unrest": 0.15
+                }
+            }
         },
-        "EVT_E003_tax_increase": {
-            "effect": {
-                "income_tax": 0.05
+        "policy_events": {
+            "EVT_E020_tax_reform": {
+                "options": [
+                    "cut",
+                    "increase",
+                    "restructure"
+                ],
+                "effects_vary": true
             },
-            "probability": 0.0005,
-            "triggers": [
-                "budget_crisis"
-            ]
-        },
-        "EVT_E004_black_market_bust": {
-            "effect": {
-                "illegal_prices": 0.4
+            "EVT_E021_minimum_wage_change": {
+                "effects": {
+                    "low_skill_wages": "varies",
+                    "unemployment": "varies"
+                }
             },
-            "probability": 0.002
+            "EVT_E022_ubi_adjustment": {
+                "effects": {
+                    "poverty_rate": "varies",
+                    "budget_impact": "varies"
+                }
+            }
         }
     },
-    "wealth_levels": {
-        "_desc": "NPC wealth classification",
-        "destitute": {
-            "gep_range": [
-                0,
-                100
-            ],
-            "behaviors": [
-                "BHV_BEG",
-                "BHV_STEAL"
-            ],
-            "housing": "none_or_slum"
-        },
-        "poor": {
-            "gep_range": [
-                100,
-                500
-            ],
-            "behaviors": [
-                "BHV_SAVE",
-                "BHV_EXTRA_WORK"
-            ],
-            "housing": "slum"
-        },
-        "working": {
-            "gep_range": [
-                500,
-                2000
-            ],
-            "behaviors": [
-                "BHV_NORMAL"
-            ],
-            "housing": "basic"
-        },
-        "comfortable": {
-            "gep_range": [
-                2000,
-                10000
-            ],
-            "behaviors": [
-                "BHV_LEISURE",
-                "BHV_SAVE"
-            ],
-            "housing": "comfortable"
-        },
-        "wealthy": {
-            "gep_range": [
-                10000,
-                100000
-            ],
-            "behaviors": [
-                "BHV_INVEST",
-                "BHV_LUXURY"
-            ],
-            "housing": "luxury"
-        },
-        "elite": {
-            "gep_range": [
-                100000,
-                null
-            ],
-            "behaviors": [
-                "BHV_INFLUENCE",
-                "BHV_POWER"
-            ],
-            "housing": "exclusive"
+    "wealth_distribution": {
+        "_desc": "Population by wealth class",
+        "classes": {
+            "destitute": {
+                "gep_range": [
+                    0,
+                    100
+                ],
+                "population_share": 0.15,
+                "districts": [
+                    "undercity",
+                    "industrial_ring"
+                ],
+                "behaviors": [
+                    "beg",
+                    "steal",
+                    "scavenge"
+                ],
+                "housing": "none_or_shelter"
+            },
+            "poor": {
+                "gep_range": [
+                    100,
+                    500
+                ],
+                "population_share": 0.30,
+                "districts": [
+                    "residential_core_slums",
+                    "industrial_ring"
+                ],
+                "behaviors": [
+                    "extra_work",
+                    "side_hustle",
+                    "rationing"
+                ],
+                "housing": "shared_room"
+            },
+            "working": {
+                "gep_range": [
+                    500,
+                    2000
+                ],
+                "population_share": 0.35,
+                "districts": [
+                    "residential_core",
+                    "neon_district"
+                ],
+                "behaviors": [
+                    "normal_routine",
+                    "moderate_saving"
+                ],
+                "housing": "small_apartment"
+            },
+            "comfortable": {
+                "gep_range": [
+                    2000,
+                    10000
+                ],
+                "population_share": 0.12,
+                "districts": [
+                    "neon_district_upper",
+                    "temple_quarter"
+                ],
+                "behaviors": [
+                    "leisure",
+                    "investing",
+                    "consumption"
+                ],
+                "housing": "apartment"
+            },
+            "wealthy": {
+                "gep_range": [
+                    10000,
+                    100000
+                ],
+                "population_share": 0.06,
+                "districts": [
+                    "corp_plaza",
+                    "temple_quarter"
+                ],
+                "behaviors": [
+                    "investment",
+                    "influence",
+                    "luxury"
+                ],
+                "housing": "penthouse"
+            },
+            "elite": {
+                "gep_range": [
+                    100000,
+                    null
+                ],
+                "population_share": 0.02,
+                "districts": [
+                    "arcology",
+                    "private_island"
+                ],
+                "behaviors": [
+                    "power_play",
+                    "philanthropy_facade",
+                    "corp_politics"
+                ],
+                "housing": "private_arcology",
+                "_note": "Megacorp execs, Temple hierarchy"
+            }
         }
     },
-    "inheritance": {
-        "_desc": "Wealth transfer on death",
-        "spouse_share": 0.5,
-        "children_share": 0.4,
-        "other_family_share": 0.1,
-        "no_heir_goes_to": "city_treasury",
-        "temple_tax_on_inheritance": 0.1
+    "trade_and_import": {
+        "_desc": "External trade with other cities/outzone",
+        "import_categories": {
+            "food": {
+                "local_production": 0.4,
+                "import_dependency": 0.6,
+                "price_volatility": 0.2
+            },
+            "raw_materials": {
+                "local_production": 0.2,
+                "import_dependency": 0.8,
+                "price_volatility": 0.3
+            },
+            "luxury_goods": {
+                "local_production": 0.1,
+                "import_dependency": 0.9,
+                "price_volatility": 0.4,
+                "tariff": 0.25
+            },
+            "tech_components": {
+                "local_production": 0.5,
+                "import_dependency": 0.5,
+                "strategic_importance": "high"
+            }
+        },
+        "export_categories": {
+            "cybernetics": {
+                "volume": "high",
+                "margin": 0.4
+            },
+            "data_services": {
+                "volume": "medium",
+                "margin": 0.6
+            },
+            "recycled_materials": {
+                "volume": "high",
+                "margin": 0.1
+            }
+        },
+        "trade_routes": {
+            "coastal_shipping": {
+                "capacity": 10000,
+                "risk": 0.1
+            },
+            "overland_convoy": {
+                "capacity": 2000,
+                "risk": 0.3
+            },
+            "aerial_drone": {
+                "capacity": 500,
+                "risk": 0.05,
+                "cost": "high"
+            }
+        }
     }
 }

@@ -1,0 +1,1583 @@
+{
+    "_chunk": {
+        "id": "chunk_21_occupations",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "occupations",
+        "prev_chunk": "chunk_20_economy",
+        "next_chunk": null,
+        "_scale": "Designed for millions of NPCs, thousands of job types",
+        "_encoding_note": "JOB#### allows 10,000 unique jobs"
+    },
+    "occupation_categories": {
+        "_desc": "Major job categories - each contains 50-200 specific jobs",
+        "_encoding": "JOBCAT##",
+        "JOBCAT01_transport": {
+            "name": "Transportation & Logistics",
+            "subcategories": [
+                "aerial",
+                "ground",
+                "cargo",
+                "passenger",
+                "dispatch"
+            ],
+            "total_jobs": 150,
+            "automation_trend": 0.6
+        },
+        "JOBCAT02_manufacturing": {
+            "name": "Manufacturing & Production",
+            "subcategories": [
+                "assembly",
+                "fabrication",
+                "quality",
+                "maintenance",
+                "supervision"
+            ],
+            "total_jobs": 200,
+            "automation_trend": 0.8
+        },
+        "JOBCAT03_healthcare": {
+            "name": "Healthcare & Medical",
+            "subcategories": [
+                "clinical",
+                "surgical",
+                "mental",
+                "emergency",
+                "admin"
+            ],
+            "total_jobs": 180,
+            "automation_trend": 0.2
+        },
+        "JOBCAT04_security": {
+            "name": "Security & Law Enforcement",
+            "subcategories": [
+                "patrol",
+                "investigation",
+                "private",
+                "cyber",
+                "military"
+            ],
+            "total_jobs": 120,
+            "automation_trend": 0.4
+        },
+        "JOBCAT05_technology": {
+            "name": "Technology & Engineering",
+            "subcategories": [
+                "software",
+                "hardware",
+                "network",
+                "ai",
+                "robotics"
+            ],
+            "total_jobs": 250,
+            "automation_trend": 0.1
+        },
+        "JOBCAT06_service": {
+            "name": "Service Industry",
+            "subcategories": [
+                "hospitality",
+                "food",
+                "retail",
+                "personal",
+                "cleaning"
+            ],
+            "total_jobs": 180,
+            "automation_trend": 0.5
+        },
+        "JOBCAT07_creative": {
+            "name": "Creative & Media",
+            "subcategories": [
+                "visual",
+                "audio",
+                "writing",
+                "performance",
+                "design"
+            ],
+            "total_jobs": 140,
+            "automation_trend": 0.3
+        },
+        "JOBCAT08_administrative": {
+            "name": "Administration & Management",
+            "subcategories": [
+                "executive",
+                "hr",
+                "finance",
+                "legal",
+                "operations"
+            ],
+            "total_jobs": 160,
+            "automation_trend": 0.4
+        },
+        "JOBCAT09_construction": {
+            "name": "Construction & Infrastructure",
+            "subcategories": [
+                "building",
+                "electrical",
+                "plumbing",
+                "demolition",
+                "planning"
+            ],
+            "total_jobs": 130,
+            "automation_trend": 0.5
+        },
+        "JOBCAT10_science": {
+            "name": "Science & Research",
+            "subcategories": [
+                "biology",
+                "chemistry",
+                "physics",
+                "social",
+                "data"
+            ],
+            "total_jobs": 120,
+            "automation_trend": 0.2
+        },
+        "JOBCAT11_education": {
+            "name": "Education & Training",
+            "subcategories": [
+                "academic",
+                "vocational",
+                "corporate",
+                "childcare",
+                "special"
+            ],
+            "total_jobs": 100,
+            "automation_trend": 0.3
+        },
+        "JOBCAT12_temple": {
+            "name": "Temple & Religious",
+            "subcategories": [
+                "clergy",
+                "administration",
+                "enforcement",
+                "charity",
+                "ritual"
+            ],
+            "total_jobs": 80,
+            "automation_trend": 0.0,
+            "_lore": "Temple-exclusive positions"
+        },
+        "JOBCAT13_underground": {
+            "name": "Underground Economy",
+            "subcategories": [
+                "smuggling",
+                "hacking",
+                "fencing",
+                "muscle",
+                "info"
+            ],
+            "total_jobs": 90,
+            "legal": false,
+            "automation_trend": 0.1
+        },
+        "JOBCAT14_entertainment": {
+            "name": "Entertainment & Recreation",
+            "subcategories": [
+                "gaming",
+                "nightlife",
+                "sports",
+                "tourism",
+                "vr"
+            ],
+            "total_jobs": 110,
+            "automation_trend": 0.4
+        },
+        "JOBCAT15_agriculture": {
+            "name": "Agriculture & Food Production",
+            "subcategories": [
+                "hydroponics",
+                "protein",
+                "processing",
+                "distribution",
+                "quality"
+            ],
+            "total_jobs": 80,
+            "automation_trend": 0.7
+        }
+    },
+    "jobs": {
+        "_desc": "Specific job definitions - JOB#### encoding allows 10,000 unique jobs",
+        "_encoding": "JOB#### where #### is 0001-9999",
+        "transport_aerial": {
+            "JOB0001": {
+                "title": "Air Taxi Pilot",
+                "category": "JOBCAT01",
+                "subcategory": "aerial",
+                "skills_required": [
+                    "S_PILOT_VTOL",
+                    "S_NAV_URBAN",
+                    "S_CUSTOMER_SVC"
+                ],
+                "licenses": [
+                    "LIC_PILOT_COMMERCIAL",
+                    "LIC_URBAN_AIR"
+                ],
+                "cybernetics_optional": [
+                    "CYB_NEURAL_NAV",
+                    "CYB_REFLEX_BOOST"
+                ],
+                "salary_range": [
+                    180,
+                    280
+                ],
+                "workplaces": [
+                    "WP_SKYPORT",
+                    "WP_CORP_HELIPAD"
+                ],
+                "shifts": [
+                    "morning",
+                    "evening",
+                    "night"
+                ],
+                "automation_risk": 0.7,
+                "demand_level": "high",
+                "status": "licensed_professional"
+            },
+            "JOB0002": {
+                "title": "Cargo Drone Operator",
+                "category": "JOBCAT01",
+                "subcategory": "aerial",
+                "skills_required": [
+                    "S_DRONE_CTRL",
+                    "S_LOGISTICS"
+                ],
+                "licenses": [
+                    "LIC_DRONE_COMMERCIAL"
+                ],
+                "salary_range": [
+                    100,
+                    150
+                ],
+                "workplaces": [
+                    "WP_DISTRIBUTION_HUB",
+                    "WP_WAREHOUSE"
+                ],
+                "automation_risk": 0.9,
+                "demand_level": "declining"
+            },
+            "JOB0003": {
+                "title": "VTOL Mechanic",
+                "category": "JOBCAT01",
+                "subcategory": "aerial",
+                "skills_required": [
+                    "S_MECH_VTOL",
+                    "S_ELECTRONICS",
+                    "S_DIAGNOSTICS"
+                ],
+                "licenses": [
+                    "LIC_AIRCRAFT_MAINT"
+                ],
+                "salary_range": [
+                    140,
+                    200
+                ],
+                "workplaces": [
+                    "WP_SKYPORT",
+                    "WP_HANGAR"
+                ],
+                "automation_risk": 0.3
+            },
+            "JOB0004": {
+                "title": "Flight Control Operator",
+                "category": "JOBCAT01",
+                "subcategory": "aerial",
+                "skills_required": [
+                    "S_AIR_TRAFFIC",
+                    "S_RADAR",
+                    "S_STRESS_MGMT"
+                ],
+                "licenses": [
+                    "LIC_ATC"
+                ],
+                "cybernetics_recommended": [
+                    "CYB_MULTI_FOCUS",
+                    "CYB_ENHANCED_VISION"
+                ],
+                "salary_range": [
+                    200,
+                    350
+                ],
+                "workplaces": [
+                    "WP_CONTROL_TOWER"
+                ],
+                "automation_risk": 0.5
+            },
+            "JOB0005": {
+                "title": "Aerial Courier",
+                "category": "JOBCAT01",
+                "subcategory": "aerial",
+                "skills_required": [
+                    "S_PILOT_LIGHT",
+                    "S_NAVIGATION"
+                ],
+                "licenses": [
+                    "LIC_PILOT_PRIVATE"
+                ],
+                "salary_range": [
+                    120,
+                    180
+                ],
+                "workplaces": [
+                    "WP_COURIER_STATION"
+                ],
+                "automation_risk": 0.8
+            }
+        },
+        "transport_ground": {
+            "JOB0010": {
+                "title": "Mag-Train Operator",
+                "category": "JOBCAT01",
+                "subcategory": "ground",
+                "skills_required": [
+                    "S_RAIL_OPS",
+                    "S_SAFETY_PROTOCOL"
+                ],
+                "licenses": [
+                    "LIC_RAIL_OPERATOR"
+                ],
+                "salary_range": [
+                    130,
+                    180
+                ],
+                "workplaces": [
+                    "WP_TRANSIT_STATION"
+                ],
+                "automation_risk": 0.85,
+                "_note": "Mostly automated, operators for emergencies"
+            },
+            "JOB0011": {
+                "title": "Transport Pod Driver",
+                "category": "JOBCAT01",
+                "subcategory": "ground",
+                "skills_required": [
+                    "S_DRIVING",
+                    "S_CUSTOMER_SVC"
+                ],
+                "licenses": [
+                    "LIC_COMMERCIAL_DRIVER"
+                ],
+                "salary_range": [
+                    70,
+                    110
+                ],
+                "workplaces": [
+                    "WP_TAXI_STAND",
+                    "WP_DEPOT"
+                ],
+                "automation_risk": 0.9,
+                "status": "declining",
+                "_note": "Being replaced by autonomous pods"
+            },
+            "JOB0012": {
+                "title": "Freight Hauler",
+                "category": "JOBCAT01",
+                "subcategory": "ground",
+                "skills_required": [
+                    "S_HEAVY_VEHICLE",
+                    "S_LOGISTICS"
+                ],
+                "licenses": [
+                    "LIC_HEAVY_FREIGHT"
+                ],
+                "salary_range": [
+                    90,
+                    140
+                ],
+                "workplaces": [
+                    "WP_FREIGHT_YARD"
+                ],
+                "automation_risk": 0.7
+            },
+            "JOB0013": {
+                "title": "Transit Security Officer",
+                "category": "JOBCAT01",
+                "subcategory": "ground",
+                "skills_required": [
+                    "S_SECURITY",
+                    "S_FIRST_AID",
+                    "S_CONFLICT_RESOLUTION"
+                ],
+                "licenses": [
+                    "LIC_SECURITY_TRANSIT"
+                ],
+                "salary_range": [
+                    85,
+                    120
+                ],
+                "workplaces": [
+                    "WP_TRANSIT_STATION"
+                ],
+                "automation_risk": 0.4
+            }
+        },
+        "transport_dispatch": {
+            "JOB0020": {
+                "title": "Logistics Coordinator",
+                "category": "JOBCAT01",
+                "subcategory": "dispatch",
+                "skills_required": [
+                    "S_LOGISTICS",
+                    "S_DATA_ANALYSIS",
+                    "S_COMMUNICATION"
+                ],
+                "salary_range": [
+                    110,
+                    170
+                ],
+                "workplaces": [
+                    "WP_LOGISTICS_CENTER"
+                ],
+                "automation_risk": 0.6
+            },
+            "JOB0021": {
+                "title": "Emergency Dispatch Operator",
+                "category": "JOBCAT01",
+                "subcategory": "dispatch",
+                "skills_required": [
+                    "S_DISPATCH",
+                    "S_STRESS_MGMT",
+                    "S_MULTI_TASKING"
+                ],
+                "cybernetics_recommended": [
+                    "CYB_NEURAL_INTERFACE"
+                ],
+                "salary_range": [
+                    100,
+                    150
+                ],
+                "workplaces": [
+                    "WP_EMERGENCY_CENTER"
+                ],
+                "automation_risk": 0.3
+            }
+        },
+        "healthcare_clinical": {
+            "JOB0100": {
+                "title": "General Practitioner",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_MEDICINE",
+                    "S_DIAGNOSIS",
+                    "S_PATIENT_CARE"
+                ],
+                "licenses": [
+                    "LIC_MEDICAL_PRACTICE"
+                ],
+                "education_years": 8,
+                "salary_range": [
+                    250,
+                    400
+                ],
+                "workplaces": [
+                    "WP_CLINIC",
+                    "WP_HOSPITAL"
+                ],
+                "automation_risk": 0.15
+            },
+            "JOB0101": {
+                "title": "Cybernetic Surgeon",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_SURGERY",
+                    "S_CYBERNETICS",
+                    "S_NEURAL_INTERFACE"
+                ],
+                "licenses": [
+                    "LIC_SURGERY",
+                    "LIC_CYBERNETIC_IMPLANT"
+                ],
+                "cybernetics_required": [
+                    "CYB_PRECISION_HANDS",
+                    "CYB_MAGNIFICATION"
+                ],
+                "education_years": 12,
+                "salary_range": [
+                    500,
+                    900
+                ],
+                "workplaces": [
+                    "WP_HOSPITAL",
+                    "WP_CYBERNETIC_CLINIC"
+                ],
+                "automation_risk": 0.1,
+                "status": "elite"
+            },
+            "JOB0102": {
+                "title": "Street Medic",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_FIRST_AID",
+                    "S_FIELD_MEDICINE",
+                    "S_TRAUMA"
+                ],
+                "licenses": [
+                    "LIC_PARAMEDIC"
+                ],
+                "salary_range": [
+                    80,
+                    130
+                ],
+                "workplaces": [
+                    "WP_AMBULANCE",
+                    "WP_CLINIC_FREE"
+                ],
+                "automation_risk": 0.2,
+                "_lore": "Works the dangerous districts"
+            },
+            "JOB0103": {
+                "title": "Biotech Nurse",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_NURSING",
+                    "S_BIOTECH",
+                    "S_PATIENT_MONITORING"
+                ],
+                "licenses": [
+                    "LIC_NURSING"
+                ],
+                "salary_range": [
+                    100,
+                    160
+                ],
+                "workplaces": [
+                    "WP_HOSPITAL",
+                    "WP_CLINIC"
+                ],
+                "automation_risk": 0.25
+            },
+            "JOB0104": {
+                "title": "Neural Technician",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_NEURAL_TECH",
+                    "S_DIAGNOSTICS",
+                    "S_CALIBRATION"
+                ],
+                "licenses": [
+                    "LIC_NEURAL_TECH"
+                ],
+                "cybernetics_required": [
+                    "CYB_NEURAL_INTERFACE"
+                ],
+                "salary_range": [
+                    180,
+                    280
+                ],
+                "workplaces": [
+                    "WP_NEURAL_CLINIC"
+                ],
+                "automation_risk": 0.2
+            },
+            "JOB0105": {
+                "title": "Ripperdoc",
+                "category": "JOBCAT03",
+                "subcategory": "clinical",
+                "skills_required": [
+                    "S_SURGERY",
+                    "S_CYBERNETICS",
+                    "S_BLACK_MARKET"
+                ],
+                "licenses": null,
+                "legal": false,
+                "salary_range": [
+                    200,
+                    500
+                ],
+                "workplaces": [
+                    "WP_UNDERCITY_CLINIC"
+                ],
+                "automation_risk": 0.05,
+                "_lore": "Unlicensed cybernetic surgeon"
+            }
+        },
+        "security_patrol": {
+            "JOB0200": {
+                "title": "Temple Guard",
+                "category": "JOBCAT04",
+                "subcategory": "patrol",
+                "skills_required": [
+                    "S_COMBAT",
+                    "S_VIGILANCE",
+                    "S_LAW_KNOWLEDGE"
+                ],
+                "licenses": [
+                    "LIC_TEMPLE_GUARD"
+                ],
+                "faction": "temple",
+                "salary_range": [
+                    100,
+                    150
+                ],
+                "workplaces": [
+                    "WP_TEMPLE_GROUNDS",
+                    "WP_CHECKPOINTS"
+                ],
+                "automation_risk": 0.3
+            },
+            "JOB0201": {
+                "title": "Corporate Security Officer",
+                "category": "JOBCAT04",
+                "subcategory": "patrol",
+                "skills_required": [
+                    "S_SECURITY",
+                    "S_COMBAT",
+                    "S_SURVEILLANCE"
+                ],
+                "licenses": [
+                    "LIC_PRIVATE_SECURITY"
+                ],
+                "cybernetics_optional": [
+                    "CYB_THREAT_DETECT",
+                    "CYB_REFLEX_BOOST"
+                ],
+                "salary_range": [
+                    110,
+                    180
+                ],
+                "workplaces": [
+                    "WP_CORP_BUILDING"
+                ],
+                "automation_risk": 0.4
+            },
+            "JOB0202": {
+                "title": "Street Patrol Officer",
+                "category": "JOBCAT04",
+                "subcategory": "patrol",
+                "skills_required": [
+                    "S_LAW_ENFORCEMENT",
+                    "S_COMBAT",
+                    "S_COMMUNITY"
+                ],
+                "licenses": [
+                    "LIC_POLICE_BADGE"
+                ],
+                "salary_range": [
+                    90,
+                    140
+                ],
+                "workplaces": [
+                    "WP_PRECINCT",
+                    "WP_PATROL_ROUTE"
+                ],
+                "automation_risk": 0.35
+            },
+            "JOB0203": {
+                "title": "Riot Control Specialist",
+                "category": "JOBCAT04",
+                "subcategory": "patrol",
+                "skills_required": [
+                    "S_TACTICAL",
+                    "S_CROWD_CONTROL",
+                    "S_HEAVY_WEAPONS"
+                ],
+                "licenses": [
+                    "LIC_TACTICAL_UNIT"
+                ],
+                "cybernetics_recommended": [
+                    "CYB_ARMOR_SKIN",
+                    "CYB_STRENGTH_AUG"
+                ],
+                "salary_range": [
+                    130,
+                    200
+                ],
+                "workplaces": [
+                    "WP_TACTICAL_HQ"
+                ],
+                "automation_risk": 0.2
+            }
+        },
+        "security_cyber": {
+            "JOB0220": {
+                "title": "Network Security Analyst",
+                "category": "JOBCAT04",
+                "subcategory": "cyber",
+                "skills_required": [
+                    "S_CYBERSEC",
+                    "S_NETWORK",
+                    "S_ANALYSIS"
+                ],
+                "licenses": [
+                    "LIC_CYBERSEC_CERT"
+                ],
+                "cybernetics_optional": [
+                    "CYB_NEURAL_INTERFACE"
+                ],
+                "salary_range": [
+                    150,
+                    250
+                ],
+                "workplaces": [
+                    "WP_SECURITY_OPS_CENTER"
+                ],
+                "automation_risk": 0.3
+            },
+            "JOB0221": {
+                "title": "Intrusion Countermeasure Specialist",
+                "category": "JOBCAT04",
+                "subcategory": "cyber",
+                "skills_required": [
+                    "S_HACKING",
+                    "S_ICE_PROGRAMMING",
+                    "S_THREAT_ANALYSIS"
+                ],
+                "licenses": [
+                    "LIC_ICE_SPECIALIST"
+                ],
+                "cybernetics_required": [
+                    "CYB_NEURAL_INTERFACE",
+                    "CYB_QUICKHACK_DECK"
+                ],
+                "salary_range": [
+                    250,
+                    450
+                ],
+                "workplaces": [
+                    "WP_CORP_SECURITY",
+                    "WP_DATAVAULT"
+                ],
+                "automation_risk": 0.15,
+                "status": "elite"
+            },
+            "JOB0222": {
+                "title": "Digital Forensics Investigator",
+                "category": "JOBCAT04",
+                "subcategory": "cyber",
+                "skills_required": [
+                    "S_FORENSICS",
+                    "S_DATA_RECOVERY",
+                    "S_LEGAL"
+                ],
+                "licenses": [
+                    "LIC_FORENSICS"
+                ],
+                "salary_range": [
+                    140,
+                    220
+                ],
+                "workplaces": [
+                    "WP_PRECINCT",
+                    "WP_CORP_LEGAL"
+                ],
+                "automation_risk": 0.25
+            }
+        },
+        "technology_software": {
+            "JOB0300": {
+                "title": "AI Systems Developer",
+                "category": "JOBCAT05",
+                "subcategory": "software",
+                "skills_required": [
+                    "S_AI_PROGRAMMING",
+                    "S_NEURAL_NETWORKS",
+                    "S_ETHICS"
+                ],
+                "licenses": [
+                    "LIC_AI_DEV"
+                ],
+                "education_years": 6,
+                "salary_range": [
+                    300,
+                    550
+                ],
+                "workplaces": [
+                    "WP_TECH_CAMPUS",
+                    "WP_AI_LAB"
+                ],
+                "automation_risk": 0.05,
+                "status": "elite"
+            },
+            "JOB0301": {
+                "title": "Netrunner (Corporate)",
+                "category": "JOBCAT05",
+                "subcategory": "software",
+                "skills_required": [
+                    "S_HACKING",
+                    "S_NETWORK_INTRUSION",
+                    "S_STEALTH_DIGITAL"
+                ],
+                "licenses": [
+                    "LIC_CORP_NETRUNNER"
+                ],
+                "cybernetics_required": [
+                    "CYB_NEURAL_INTERFACE",
+                    "CYB_QUICKHACK_DECK"
+                ],
+                "salary_range": [
+                    250,
+                    500
+                ],
+                "workplaces": [
+                    "WP_CORP_SECURITY"
+                ],
+                "automation_risk": 0.1,
+                "_lore": "Legal hackers working for corps"
+            },
+            "JOB0302": {
+                "title": "VR Environment Designer",
+                "category": "JOBCAT05",
+                "subcategory": "software",
+                "skills_required": [
+                    "S_VR_DESIGN",
+                    "S_3D_MODELING",
+                    "S_UX"
+                ],
+                "salary_range": [
+                    140,
+                    230
+                ],
+                "workplaces": [
+                    "WP_GAME_STUDIO",
+                    "WP_SIMULATIONS_LAB"
+                ],
+                "automation_risk": 0.35
+            },
+            "JOB0303": {
+                "title": "Blockchain Engineer",
+                "category": "JOBCAT05",
+                "subcategory": "software",
+                "skills_required": [
+                    "S_DISTRIBUTED_SYSTEMS",
+                    "S_CRYPTOGRAPHY"
+                ],
+                "salary_range": [
+                    200,
+                    350
+                ],
+                "workplaces": [
+                    "WP_FINTECH",
+                    "WP_DATAVAULT"
+                ],
+                "automation_risk": 0.2
+            }
+        },
+        "technology_robotics": {
+            "JOB0320": {
+                "title": "Robotics Engineer",
+                "category": "JOBCAT05",
+                "subcategory": "robotics",
+                "skills_required": [
+                    "S_ROBOTICS",
+                    "S_MECHATRONICS",
+                    "S_PROGRAMMING"
+                ],
+                "licenses": [
+                    "LIC_ROBOTICS_ENG"
+                ],
+                "education_years": 5,
+                "salary_range": [
+                    180,
+                    300
+                ],
+                "workplaces": [
+                    "WP_FACTORY",
+                    "WP_RND_LAB"
+                ],
+                "automation_risk": 0.1
+            },
+            "JOB0321": {
+                "title": "Drone Swarm Coordinator",
+                "category": "JOBCAT05",
+                "subcategory": "robotics",
+                "skills_required": [
+                    "S_DRONE_SYSTEMS",
+                    "S_SWARM_LOGIC",
+                    "S_MONITORING"
+                ],
+                "cybernetics_recommended": [
+                    "CYB_MULTI_FOCUS"
+                ],
+                "salary_range": [
+                    130,
+                    200
+                ],
+                "workplaces": [
+                    "WP_DRONE_HUB",
+                    "WP_SECURITY_OPS"
+                ],
+                "automation_risk": 0.5
+            },
+            "JOB0322": {
+                "title": "Android Technician",
+                "category": "JOBCAT05",
+                "subcategory": "robotics",
+                "skills_required": [
+                    "S_ANDROID_REPAIR",
+                    "S_DIAGNOSTICS",
+                    "S_AI_BASIC"
+                ],
+                "licenses": [
+                    "LIC_ANDROID_TECH"
+                ],
+                "salary_range": [
+                    120,
+                    190
+                ],
+                "workplaces": [
+                    "WP_ROBOT_REPAIR_SHOP"
+                ],
+                "automation_risk": 0.25
+            }
+        },
+        "service_hospitality": {
+            "JOB0400": {
+                "title": "Bartender",
+                "category": "JOBCAT06",
+                "subcategory": "hospitality",
+                "skills_required": [
+                    "S_MIXOLOGY",
+                    "S_CUSTOMER_SVC",
+                    "S_LISTENING"
+                ],
+                "salary_range": [
+                    60,
+                    100
+                ],
+                "workplaces": [
+                    "WP_BAR",
+                    "WP_NIGHTCLUB"
+                ],
+                "tip_potential": 0.4,
+                "automation_risk": 0.4
+            },
+            "JOB0401": {
+                "title": "Hotel Concierge",
+                "category": "JOBCAT06",
+                "subcategory": "hospitality",
+                "skills_required": [
+                    "S_CUSTOMER_SVC",
+                    "S_LOCAL_KNOWLEDGE",
+                    "S_LANGUAGES"
+                ],
+                "salary_range": [
+                    70,
+                    120
+                ],
+                "workplaces": [
+                    "WP_HOTEL"
+                ],
+                "automation_risk": 0.5
+            },
+            "JOB0402": {
+                "title": "Capsule Hotel Attendant",
+                "category": "JOBCAT06",
+                "subcategory": "hospitality",
+                "skills_required": [
+                    "S_CUSTOMER_SVC",
+                    "S_CLEANING"
+                ],
+                "salary_range": [
+                    50,
+                    75
+                ],
+                "workplaces": [
+                    "WP_CAPSULE_HOTEL"
+                ],
+                "automation_risk": 0.7
+            },
+            "JOB0403": {
+                "title": "VIP Lounge Host",
+                "category": "JOBCAT06",
+                "subcategory": "hospitality",
+                "skills_required": [
+                    "S_CUSTOMER_SVC",
+                    "S_DISCRETION",
+                    "S_ETIQUETTE"
+                ],
+                "salary_range": [
+                    100,
+                    180
+                ],
+                "workplaces": [
+                    "WP_CORP_LOUNGE",
+                    "WP_SKYPORT_VIP"
+                ],
+                "automation_risk": 0.2
+            }
+        },
+        "service_food": {
+            "JOB0410": {
+                "title": "Synth-Chef",
+                "category": "JOBCAT06",
+                "subcategory": "food",
+                "skills_required": [
+                    "S_COOKING",
+                    "S_SYNTH_FOOD",
+                    "S_NUTRITION"
+                ],
+                "salary_range": [
+                    80,
+                    140
+                ],
+                "workplaces": [
+                    "WP_RESTAURANT",
+                    "WP_CAFETERIA"
+                ],
+                "automation_risk": 0.6
+            },
+            "JOB0411": {
+                "title": "Traditional Chef",
+                "category": "JOBCAT06",
+                "subcategory": "food",
+                "skills_required": [
+                    "S_COOKING",
+                    "S_REAL_INGREDIENTS",
+                    "S_CREATIVITY"
+                ],
+                "salary_range": [
+                    150,
+                    300
+                ],
+                "workplaces": [
+                    "WP_RESTAURANT_UPSCALE"
+                ],
+                "automation_risk": 0.1,
+                "status": "luxury",
+                "_note": "Real food is rare and expensive"
+            },
+            "JOB0412": {
+                "title": "Street Food Vendor",
+                "category": "JOBCAT06",
+                "subcategory": "food",
+                "skills_required": [
+                    "S_COOKING_BASIC",
+                    "S_SALES"
+                ],
+                "licenses": [
+                    "LIC_STREET_VENDOR"
+                ],
+                "salary_range": [
+                    40,
+                    80
+                ],
+                "workplaces": [
+                    "WP_STREET_CORNER"
+                ],
+                "automation_risk": 0.3,
+                "tip_potential": 0.1
+            },
+            "JOB0413": {
+                "title": "Protein Vat Technician",
+                "category": "JOBCAT06",
+                "subcategory": "food",
+                "skills_required": [
+                    "S_BIOTECH",
+                    "S_QUALITY_CONTROL"
+                ],
+                "salary_range": [
+                    90,
+                    130
+                ],
+                "workplaces": [
+                    "WP_FOOD_FACTORY"
+                ],
+                "automation_risk": 0.5
+            }
+        },
+        "underground_smuggling": {
+            "JOB0500": {
+                "title": "Smuggler",
+                "category": "JOBCAT13",
+                "subcategory": "smuggling",
+                "skills_required": [
+                    "S_STEALTH",
+                    "S_NAVIGATION",
+                    "S_NEGOTIATION"
+                ],
+                "licenses": null,
+                "legal": false,
+                "salary_range": [
+                    150,
+                    400
+                ],
+                "workplaces": [
+                    "WP_UNDERCITY",
+                    "WP_DOCKS"
+                ],
+                "automation_risk": 0.05,
+                "risk_level": "high"
+            },
+            "JOB0501": {
+                "title": "Gun Runner",
+                "category": "JOBCAT13",
+                "subcategory": "smuggling",
+                "skills_required": [
+                    "S_WEAPONS_KNOWLEDGE",
+                    "S_CONTACTS",
+                    "S_STEALTH"
+                ],
+                "licenses": null,
+                "legal": false,
+                "salary_range": [
+                    200,
+                    500
+                ],
+                "workplaces": [
+                    "WP_UNDERCITY",
+                    "WP_WAREHOUSE_HIDDEN"
+                ],
+                "automation_risk": 0.0,
+                "risk_level": "extreme"
+            },
+            "JOB0502": {
+                "title": "Data Courier",
+                "category": "JOBCAT13",
+                "subcategory": "smuggling",
+                "skills_required": [
+                    "S_DISCRETION",
+                    "S_MEMORY",
+                    "S_TRADECRAFT"
+                ],
+                "cybernetics_required": [
+                    "CYB_ENCRYPTED_MEMORY"
+                ],
+                "legal": "gray_area",
+                "salary_range": [
+                    180,
+                    350
+                ],
+                "workplaces": [
+                    "WP_ANYWHERE"
+                ],
+                "automation_risk": 0.0,
+                "_lore": "Carries data in implanted memory"
+            }
+        },
+        "underground_hacking": {
+            "JOB0510": {
+                "title": "Netrunner (Freelance)",
+                "category": "JOBCAT13",
+                "subcategory": "hacking",
+                "skills_required": [
+                    "S_HACKING",
+                    "S_NETWORK_INTRUSION",
+                    "S_PARANOIA"
+                ],
+                "licenses": null,
+                "legal": false,
+                "cybernetics_required": [
+                    "CYB_NEURAL_INTERFACE",
+                    "CYB_QUICKHACK_DECK"
+                ],
+                "salary_range": [
+                    200,
+                    800
+                ],
+                "workplaces": [
+                    "WP_HACKER_DEN",
+                    "WP_ANYWHERE_NET"
+                ],
+                "automation_risk": 0.0,
+                "risk_level": "extreme",
+                "status": "legendary"
+            },
+            "JOB0511": {
+                "title": "ICE Breaker",
+                "category": "JOBCAT13",
+                "subcategory": "hacking",
+                "skills_required": [
+                    "S_ICE_CRACKING",
+                    "S_CODING",
+                    "S_PATIENCE"
+                ],
+                "cybernetics_required": [
+                    "CYB_NEURAL_INTERFACE"
+                ],
+                "legal": false,
+                "salary_range": [
+                    300,
+                    600
+                ],
+                "workplaces": [
+                    "WP_HACKER_DEN"
+                ],
+                "automation_risk": 0.0,
+                "_lore": "Specializes in breaking security"
+            },
+            "JOB0512": {
+                "title": "Identity Forger",
+                "category": "JOBCAT13",
+                "subcategory": "hacking",
+                "skills_required": [
+                    "S_FORGERY_DIGITAL",
+                    "S_BIOMETRICS",
+                    "S_DISCRETION"
+                ],
+                "legal": false,
+                "salary_range": [
+                    200,
+                    400
+                ],
+                "workplaces": [
+                    "WP_UNDERCITY"
+                ],
+                "automation_risk": 0.1,
+                "_lore": "Creates fake identities, chips"
+            }
+        },
+        "temple_clergy": {
+            "JOB0600": {
+                "title": "Temple Priest",
+                "category": "JOBCAT12",
+                "subcategory": "clergy",
+                "skills_required": [
+                    "S_THEOLOGY",
+                    "S_ORATORY",
+                    "S_RITUAL"
+                ],
+                "faction": "temple",
+                "licenses": [
+                    "LIC_TEMPLE_ORDINATION"
+                ],
+                "salary_range": [
+                    80,
+                    150
+                ],
+                "workplaces": [
+                    "WP_TEMPLE"
+                ],
+                "automation_risk": 0.0,
+                "housing_provided": true
+            },
+            "JOB0601": {
+                "title": "High Inquisitor",
+                "category": "JOBCAT12",
+                "subcategory": "clergy",
+                "skills_required": [
+                    "S_INTERROGATION",
+                    "S_THEOLOGY",
+                    "S_INVESTIGATION"
+                ],
+                "faction": "temple",
+                "licenses": [
+                    "LIC_TEMPLE_INQUISITION"
+                ],
+                "cybernetics_optional": [
+                    "CYB_LIE_DETECT"
+                ],
+                "salary_range": [
+                    200,
+                    350
+                ],
+                "workplaces": [
+                    "WP_TEMPLE_INQUISITION"
+                ],
+                "automation_risk": 0.0,
+                "status": "elite",
+                "_lore": "Hunts heretics and dissidents"
+            },
+            "JOB0602": {
+                "title": "Temple Archivist",
+                "category": "JOBCAT12",
+                "subcategory": "clergy",
+                "skills_required": [
+                    "S_RESEARCH",
+                    "S_HISTORY",
+                    "S_DATA_MANAGEMENT"
+                ],
+                "faction": "temple",
+                "salary_range": [
+                    70,
+                    110
+                ],
+                "workplaces": [
+                    "WP_TEMPLE_ARCHIVES"
+                ],
+                "automation_risk": 0.3
+            }
+        },
+        "creative_media": {
+            "JOB0700": {
+                "title": "Braindance Editor",
+                "category": "JOBCAT07",
+                "subcategory": "visual",
+                "skills_required": [
+                    "S_BD_EDITING",
+                    "S_NEURAL_EDITING",
+                    "S_CREATIVITY"
+                ],
+                "cybernetics_required": [
+                    "CYB_BD_EDITOR_SUITE"
+                ],
+                "salary_range": [
+                    150,
+                    280
+                ],
+                "workplaces": [
+                    "WP_MEDIA_STUDIO"
+                ],
+                "automation_risk": 0.2,
+                "_lore": "Edits recorded experiences"
+            },
+            "JOB0701": {
+                "title": "Holographic Artist",
+                "category": "JOBCAT07",
+                "subcategory": "visual",
+                "skills_required": [
+                    "S_HOLO_DESIGN",
+                    "S_3D_MODELING",
+                    "S_CREATIVITY"
+                ],
+                "salary_range": [
+                    120,
+                    220
+                ],
+                "workplaces": [
+                    "WP_ART_STUDIO",
+                    "WP_ADVERTISING_AGENCY"
+                ],
+                "automation_risk": 0.3
+            },
+            "JOB0702": {
+                "title": "News Anchor (AI-Assisted)",
+                "category": "JOBCAT07",
+                "subcategory": "media",
+                "skills_required": [
+                    "S_PRESENTATION",
+                    "S_CURRENT_EVENTS",
+                    "S_CHARISMA"
+                ],
+                "cybernetics_optional": [
+                    "CYB_TELEPROMPTER"
+                ],
+                "salary_range": [
+                    100,
+                    200
+                ],
+                "workplaces": [
+                    "WP_NEWS_STUDIO"
+                ],
+                "automation_risk": 0.7,
+                "_note": "Many are AI-generated avatars"
+            },
+            "JOB0703": {
+                "title": "Underground Journalist",
+                "category": "JOBCAT07",
+                "subcategory": "writing",
+                "skills_required": [
+                    "S_WRITING",
+                    "S_INVESTIGATION",
+                    "S_STEALTH"
+                ],
+                "legal": "gray_area",
+                "salary_range": [
+                    50,
+                    150
+                ],
+                "workplaces": [
+                    "WP_ANYWHERE"
+                ],
+                "automation_risk": 0.1,
+                "risk_level": "high",
+                "_lore": "Reports truth Temple doesn't like"
+            }
+        },
+        "entertainment_nightlife": {
+            "JOB0800": {
+                "title": "Nightclub DJ",
+                "category": "JOBCAT14",
+                "subcategory": "nightlife",
+                "skills_required": [
+                    "S_MUSIC",
+                    "S_AUDIO_MIXING",
+                    "S_CROWD_READING"
+                ],
+                "cybernetics_optional": [
+                    "CYB_AUDIO_INTERFACE"
+                ],
+                "salary_range": [
+                    80,
+                    250
+                ],
+                "workplaces": [
+                    "WP_NIGHTCLUB"
+                ],
+                "automation_risk": 0.4
+            },
+            "JOB0801": {
+                "title": "Joytoy",
+                "category": "JOBCAT14",
+                "subcategory": "nightlife",
+                "skills_required": [
+                    "S_SOCIAL",
+                    "S_APPEARANCE",
+                    "S_DISCRETION"
+                ],
+                "legal": true,
+                "salary_range": [
+                    100,
+                    400
+                ],
+                "workplaces": [
+                    "WP_DOLL_HOUSE",
+                    "WP_FREELANCE"
+                ],
+                "automation_risk": 0.3,
+                "_lore": "Licensed in Temple precincts"
+            },
+            "JOB0802": {
+                "title": "Casino Dealer",
+                "category": "JOBCAT14",
+                "subcategory": "nightlife",
+                "skills_required": [
+                    "S_CARD_HANDLING",
+                    "S_MATH_QUICK",
+                    "S_COMPOSURE"
+                ],
+                "licenses": [
+                    "LIC_GAMING"
+                ],
+                "salary_range": [
+                    70,
+                    120
+                ],
+                "workplaces": [
+                    "WP_CASINO"
+                ],
+                "automation_risk": 0.5
+            },
+            "JOB0803": {
+                "title": "VR Experience Host",
+                "category": "JOBCAT14",
+                "subcategory": "nightlife",
+                "skills_required": [
+                    "S_VR_OPERATION",
+                    "S_CUSTOMER_SVC",
+                    "S_TECH_TROUBLESHOOT"
+                ],
+                "salary_range": [
+                    60,
+                    100
+                ],
+                "workplaces": [
+                    "WP_VR_ARCADE"
+                ],
+                "automation_risk": 0.6
+            }
+        }
+    },
+    "skills": {
+        "_desc": "Skills that jobs require - S_### encoding",
+        "_encoding": "S_[CATEGORY]_[NAME] or S_[NAME]",
+        "_note": "Full skill list in world_codec_skills.json - sample here",
+        "sample_skills": {
+            "S_PILOT_VTOL": {
+                "category": "transport",
+                "training_weeks": 24
+            },
+            "S_HACKING": {
+                "category": "technology",
+                "training_weeks": 16
+            },
+            "S_MEDICINE": {
+                "category": "healthcare",
+                "training_weeks": 52
+            },
+            "S_COMBAT": {
+                "category": "security",
+                "training_weeks": 12
+            },
+            "S_COOKING": {
+                "category": "service",
+                "training_weeks": 8
+            },
+            "S_CUSTOMER_SVC": {
+                "category": "service",
+                "training_weeks": 2
+            }
+        }
+    },
+    "licenses": {
+        "_desc": "Required certifications for jobs - LIC_### encoding",
+        "_encoding": "LIC_[TYPE]",
+        "sample_licenses": {
+            "LIC_PILOT_COMMERCIAL": {
+                "issuer": "city",
+                "cost": 5000,
+                "renewal_years": 2
+            },
+            "LIC_MEDICAL_PRACTICE": {
+                "issuer": "temple",
+                "cost": 10000,
+                "renewal_years": 5
+            },
+            "LIC_SECURITY_TRANSIT": {
+                "issuer": "city",
+                "cost": 500,
+                "renewal_years": 1
+            },
+            "LIC_TEMPLE_ORDINATION": {
+                "issuer": "temple",
+                "cost": 0,
+                "lifetime": true
+            }
+        }
+    },
+    "workplaces": {
+        "_desc": "Workplace types where jobs exist - WP_### encoding",
+        "_encoding": "WP_[TYPE]",
+        "sample_workplaces": {
+            "WP_SKYPORT": {
+                "zone": "ZONE_C3",
+                "capacity": 500
+            },
+            "WP_HOSPITAL": {
+                "zone": "ZONE_C2",
+                "capacity": 200
+            },
+            "WP_NIGHTCLUB": {
+                "zone": "ZONE_C1",
+                "capacity": 50
+            },
+            "WP_FACTORY": {
+                "zone": "ZONE_I2",
+                "capacity": 300
+            },
+            "WP_UNDERCITY": {
+                "zone": "ZONE_U",
+                "legal": false
+            }
+        }
+    },
+    "career_progression": {
+        "_desc": "How NPCs advance in careers",
+        "advancement_factors": {
+            "experience_years": 0.4,
+            "performance": 0.3,
+            "connections": 0.2,
+            "luck": 0.1
+        },
+        "example_paths": {
+            "security": [
+                "JOB0202",
+                "JOB0203",
+                "JOB0201",
+                "JOB0220"
+            ],
+            "medical": [
+                "JOB0103",
+                "JOB0100",
+                "JOB0104",
+                "JOB0101"
+            ],
+            "hacking": [
+                "JOB0302",
+                "JOB0303",
+                "JOB0301",
+                "JOB0510"
+            ]
+        }
+    },
+    "_scalability_notes": {
+        "max_jobs": 9999,
+        "job_id_format": "JOB####",
+        "adding_jobs": "Add to appropriate category, increment ID",
+        "millions_of_npcs": "Each NPC references job by ID, not full object",
+        "job_lookup": "O(1) hash lookup by JOB#### code"
+    }
+}

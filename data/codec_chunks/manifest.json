@@ -169,16 +169,36 @@
         {
             "id": "chunk_20_economy",
             "file": "world_codec_20_economy.json",
-            "size_kb": 6,
+            "size_kb": 25,
             "category": "economy",
             "features": [
-                "income_by_archetype",
-                "taxation_system",
-                "city_budget",
-                "wealth_levels",
-                "trade_actions",
-                "economic_events"
+                "zoning_system",
+                "production_chains",
+                "megacorporations",
+                "progressive_taxation",
+                "land_value_calculation",
+                "employment_system",
+                "city_budget_allocation",
+                "economic_events",
+                "black_market",
+                "trade_and_import"
             ]
+        },
+        {
+            "id": "chunk_21_occupations",
+            "file": "world_codec_21_occupations.json",
+            "size_kb": 45,
+            "category": "occupations",
+            "features": [
+                "job_categories_15",
+                "jobs_100_plus",
+                "skills_encoding",
+                "licenses_system",
+                "workplaces",
+                "career_progression",
+                "automation_risk"
+            ],
+            "_scale": "JOB#### encoding supports 10,000 unique jobs"
         }
     ],
     "totals": {
@@ -192,7 +212,9 @@
         "cybernetics": 43,
         "medical_conditions": 60,
         "sensors": 80,
-        "languages": 11
+        "languages": 11,
+        "job_categories": 15,
+        "jobs": 100
     },
     "arweave_tags": [
         {
