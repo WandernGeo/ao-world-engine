@@ -7,10 +7,10 @@
 [![Powered by Arweave](https://img.shields.io/badge/Powered%20by-Arweave-black)](https://arweave.org)
 
 <p align="center">
-  <img src="assets/hero.png" width="800" alt="RE:ECHO City - Signal Noir">
+  <img src="assets/hero.png" width="800" alt="AO World Engine - Build Your World">
 </p>
 
-*Signal Noir style - cyberpunk meets film noir. Every world has its own aesthetic.*
+*Build persistent, decentralized worlds. Every world has its own aesthetic.*
 
 ## 📸 Screenshots
 
@@ -28,13 +28,13 @@
 
 ## 🎮 Live Demo - Talk to NPCs Now!
 
-**[▶ Test the NPC Chat](https://reecho-demo-1071951656531.us-central1.run.app)**
+**[▶ Test the NPC Chat](https://ao-world-engine-1071951656531.us-central1.run.app)**
 
-Chat with RE:ECHO City's founding NPCs and see how they think, remember, and react on any given day.
+Chat with demo NPCs and see how they think, remember, and react on any given day.
 
 | What to Test | Description |
 |--------------|-------------|
-| 🧠 **NPC Memory** | Ask Charlie about his holographic arm - he always remembers |
+| 🧠 **NPC Memory** | NPCs remember past conversations |
 | 🔗 **Relationships** | Ask about other characters - NPCs know who they trust |
 | ⏰ **Tick Time** | Change the tick to see different days/weather/moods |
 | 🎭 **Consistency** | Same questions, same tick = consistent answers |
@@ -60,8 +60,8 @@ YOUR WORLD (copyrighted)          THE ENGINE (open source)
         │ "Neo Tokyo"                       │
         │ "Martian Colony"                  │
         │ "Fantasy Kingdom"       ◀─────────┤
-        │ "RE:ECHO City"                    │
         │ "Your World Here"                 │
+        │                                   │
         │                                   │
         ▼                                   ▼
 ┌─────────────────────┐         ┌─────────────────────┐
@@ -103,7 +103,7 @@ The engine is lore-agnostic. Plug in your own world, factions, and art style.
 - **The Veil**: Thin barriers between layers (0.1% bleed chance per tick)
 - **The Watchers**: Users observing via visualization apps
 
-See [MULTIVERSE_LORE.md](./docs/MULTIVERSE_LORE.md) for the full multiverse system.
+See [ECHO_LAYERS.md](./docs/ECHO_LAYERS.md) for the full multiverse system (create your own lore!).
 
 ### 🧠 AI Oracle (LLM-Powered NPCs)
 
@@ -136,7 +136,7 @@ See [npc_semantic_profile.json](./schemas/npc_semantic_profile.json) for the ful
 
 ```bash
 # Clone the engine
-git clone https://github.com/wanderngeo/reecho-city.git ao-world-engine
+git clone https://github.com/WandernGeo/ao-world-engine.git
 cd ao-world-engine
 
 # Install AOS CLI
@@ -218,7 +218,6 @@ This protects the community while allowing you to build proprietary worlds **on 
 | [AI_NPC_SYSTEM.md](./docs/AI_NPC_SYSTEM.md) | LLM chat integration |
 | [BUILDING_YOUR_WORLD.md](./docs/BUILDING_YOUR_WORLD.md) | Create your own world |
 | [ARWEAVE_TRANSACTION_LOG.md](./docs/ARWEAVE_TRANSACTION_LOG.md) | Arweave upload history |
-| [WHITEPAPER.md](./docs/WHITEPAPER.md) | Full technical vision |
 
 ---
 

@@ -203,16 +203,18 @@ export default function ExplorePage() {
                 {buildingNPCs.map((npc, i) => {
                     const centerX = building.polygon.reduce((sum, p) => sum + p[0], 0) / building.polygon.length;
                     const centerY = building.polygon.reduce((sum, p) => sum + p[1], 0) / building.polygon.length + 15;
+                    const isSelected = selectedNPC?.id === npc.id;
                     return (
                         <circle
                             key={npc.id}
-                            cx={centerX + (i * 12) - ((buildingNPCs.length - 1) * 6)}
+                            cx={centerX + (i * 14) - ((buildingNPCs.length - 1) * 7)}
                             cy={centerY}
-                            r={5}
+                            r={isSelected ? 9 : 7}
                             fill={npc.mood === 'friendly' ? '#00ff88' : npc.mood === 'cautious' ? '#ffaa00' : '#ff4444'}
-                            stroke="#000"
-                            strokeWidth={1}
-                            className="cursor-pointer hover:r-7"
+                            stroke={isSelected ? '#fff' : '#000'}
+                            strokeWidth={isSelected ? 2 : 1}
+                            className="cursor-pointer transition-all hover:opacity-80"
+                            style={{ filter: isSelected ? 'drop-shadow(0 0 4px #0ff)' : undefined }}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedNPC(npc);

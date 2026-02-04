@@ -1,0 +1,466 @@
+{
+    "version": "1.0.0",
+    "description": "Cyberpunk futuristic items for RE:ECHO City",
+    "categories": {
+        "vehicles": "Hover cars, grav-bikes, transports",
+        "electronics": "Data chips, holo-devices, implants",
+        "consumables": "Synth food, stims, beverages",
+        "furniture": "Home items, decorations",
+        "weapons": "Energy, ballistic, melee",
+        "clothing": "Fashion, armor, accessories"
+    },
+    "items": {
+        "vehicles": [
+            {
+                "id": "V001",
+                "name": "Zenith Hover Sedan",
+                "type": "hover_car",
+                "tier": "standard",
+                "value": 45000,
+                "specs": {
+                    "max_altitude": "50m",
+                    "top_speed": "280 km/h",
+                    "seats": 4,
+                    "cargo": "medium",
+                    "fuel": "hydrogen cell",
+                    "range": "800 km"
+                },
+                "description": "Reliable mid-range hover vehicle. Common among middle-class residents."
+            },
+            {
+                "id": "V002",
+                "name": "Oni Grav-Bike",
+                "type": "grav_bike",
+                "tier": "standard",
+                "value": 18000,
+                "specs": {
+                    "max_altitude": "30m",
+                    "top_speed": "350 km/h",
+                    "seats": 1,
+                    "cargo": "minimal",
+                    "fuel": "plasma pack",
+                    "range": "400 km"
+                },
+                "description": "Street-legal gravity bike. Popular with couriers and thrill seekers."
+            },
+            {
+                "id": "V003",
+                "name": "Ghost Phantom X",
+                "type": "hover_car",
+                "tier": "luxury",
+                "value": 250000,
+                "specs": {
+                    "max_altitude": "200m",
+                    "top_speed": "400 km/h",
+                    "seats": 2,
+                    "cargo": "secure vault",
+                    "fuel": "antimatter cell",
+                    "range": "2000 km",
+                    "stealth": true,
+                    "autopilot": "full"
+                },
+                "description": "Elite hover vehicle with stealth capabilities. Corporate executives and shadow operators."
+            },
+            {
+                "id": "V004",
+                "name": "Ronin Street Bike",
+                "type": "grav_bike",
+                "tier": "street",
+                "value": 8000,
+                "specs": {
+                    "max_altitude": "15m",
+                    "top_speed": "220 km/h",
+                    "seats": 2,
+                    "cargo": "saddlebags",
+                    "fuel": "electric",
+                    "range": "250 km"
+                },
+                "description": "Affordable ground-effect bike. Common in the Undercity."
+            },
+            {
+                "id": "V005",
+                "name": "Temple Authority Cruiser",
+                "type": "patrol_vehicle",
+                "tier": "military",
+                "value": 180000,
+                "specs": {
+                    "max_altitude": "500m",
+                    "top_speed": "500 km/h",
+                    "seats": 4,
+                    "cargo": "prisoner transport",
+                    "fuel": "fusion core",
+                    "range": "5000 km",
+                    "weapons": "stun cannons",
+                    "armor": "reinforced"
+                },
+                "description": "Temple Guard patrol vehicle. Feared across all districts."
+            },
+            {
+                "id": "V006",
+                "name": "Cargo Hauler MK-IV",
+                "type": "transport",
+                "tier": "industrial",
+                "value": 75000,
+                "specs": {
+                    "max_altitude": "100m",
+                    "top_speed": "150 km/h",
+                    "seats": 2,
+                    "cargo": "heavy (10 tons)",
+                    "fuel": "diesel hybrid",
+                    "range": "1200 km"
+                },
+                "description": "Industrial cargo transport. Essential for district supply chains."
+            }
+        ],
+        "electronics": [
+            {
+                "id": "E001",
+                "name": "Standard Data Chip",
+                "type": "storage",
+                "tier": "common",
+                "value": 50,
+                "capacity": "100 TB"
+            },
+            {
+                "id": "E002",
+                "name": "Encrypted Data Chip",
+                "type": "storage",
+                "tier": "secure",
+                "value": 500,
+                "capacity": "100 TB",
+                "encryption": "military-grade"
+            },
+            {
+                "id": "E003",
+                "name": "Holo-Projector Personal",
+                "type": "display",
+                "tier": "standard",
+                "value": 800,
+                "size": "portable"
+            },
+            {
+                "id": "E004",
+                "name": "Neural Interface Basic",
+                "type": "implant",
+                "tier": "standard",
+                "value": 5000,
+                "functions": [
+                    "data access",
+                    "AR overlay"
+                ]
+            },
+            {
+                "id": "E005",
+                "name": "Ghost Protocol Suite",
+                "type": "hacking",
+                "tier": "illegal",
+                "value": 15000,
+                "functions": [
+                    "system intrusion",
+                    "trace masking",
+                    "data extraction"
+                ]
+            }
+        ],
+        "consumables": [
+            {
+                "id": "C001",
+                "name": "Synth Noodles",
+                "type": "food",
+                "tier": "common",
+                "value": 5,
+                "nutrition": "basic"
+            },
+            {
+                "id": "C002",
+                "name": "Premium Ramen Bowl",
+                "type": "food",
+                "tier": "quality",
+                "value": 25,
+                "nutrition": "enhanced"
+            },
+            {
+                "id": "C003",
+                "name": "Stim-Pak Blue",
+                "type": "stimulant",
+                "tier": "legal",
+                "value": 100,
+                "effects": [
+                    "alertness +2hrs",
+                    "fatigue reduction"
+                ]
+            },
+            {
+                "id": "C004",
+                "name": "Echo Spice",
+                "type": "narcotic",
+                "tier": "illegal",
+                "value": 500,
+                "effects": [
+                    "time perception alteration",
+                    "euphoria",
+                    "addictive"
+                ]
+            },
+            {
+                "id": "C005",
+                "name": "Chrome Coffee",
+                "type": "beverage",
+                "tier": "common",
+                "value": 8,
+                "effects": [
+                    "minor alertness"
+                ]
+            }
+        ],
+        "furniture": [
+            {
+                "id": "F001",
+                "name": "Sleep Pod Basic",
+                "type": "bed",
+                "tier": "minimal",
+                "value": 500
+            },
+            {
+                "id": "F002",
+                "name": "Comfort Bed Queen",
+                "type": "bed",
+                "tier": "standard",
+                "value": 2000
+            },
+            {
+                "id": "F003",
+                "name": "Holo-Desk Workstation",
+                "type": "desk",
+                "tier": "standard",
+                "value": 3000
+            },
+            {
+                "id": "F004",
+                "name": "Climate Chair",
+                "type": "seating",
+                "tier": "luxury",
+                "value": 5000
+            },
+            {
+                "id": "F005",
+                "name": "NutriFridge Premium",
+                "type": "appliance",
+                "tier": "standard",
+                "value": 1500,
+                "capacity": 50
+            },
+            {
+                "id": "F006",
+                "name": "Neon Art Display",
+                "type": "decoration",
+                "tier": "artistic",
+                "value": 800
+            },
+            {
+                "id": "F007",
+                "name": "Synth-Leather Couch",
+                "type": "seating",
+                "tier": "standard",
+                "value": 2500,
+                "seats": 3
+            },
+            {
+                "id": "F008",
+                "name": "Wall-Mounted Holo-Screen",
+                "type": "entertainment",
+                "tier": "standard",
+                "value": 1200,
+                "size": "60 inch"
+            }
+        ],
+        "weapons": [
+            {
+                "id": "W001",
+                "name": "Pulse Pistol",
+                "type": "energy",
+                "tier": "standard",
+                "value": 1200,
+                "damage": "non-lethal to lethal",
+                "legal": true
+            },
+            {
+                "id": "W002",
+                "name": "Street Blade",
+                "type": "melee",
+                "tier": "common",
+                "value": 200,
+                "damage": "medium"
+            },
+            {
+                "id": "W003",
+                "name": "Temple-Issue Stun Rifle",
+                "type": "energy",
+                "tier": "military",
+                "value": 8000,
+                "damage": "non-lethal",
+                "legal": "temple only"
+            }
+        ],
+        "clothing": [
+            {
+                "id": "CL001",
+                "name": "Worker Jumpsuit",
+                "type": "workwear",
+                "tier": "basic",
+                "value": 50
+            },
+            {
+                "id": "CL002",
+                "name": "Synth-Leather Jacket",
+                "type": "outerwear",
+                "tier": "street",
+                "value": 300
+            },
+            {
+                "id": "CL003",
+                "name": "Executive Suit",
+                "type": "formal",
+                "tier": "luxury",
+                "value": 5000
+            },
+            {
+                "id": "CL004",
+                "name": "Armored Trench Coat",
+                "type": "armor",
+                "tier": "tactical",
+                "value": 8000,
+                "protection": "ballistic level 2"
+            }
+        ]
+    },
+    "shop_templates": {
+        "noodle_shop": {
+            "inventory": [
+                "C001",
+                "C002",
+                "C005"
+            ],
+            "stock_range": [
+                10,
+                50
+            ]
+        },
+        "tech_shop": {
+            "inventory": [
+                "E001",
+                "E002",
+                "E003",
+                "E004"
+            ],
+            "stock_range": [
+                5,
+                20
+            ]
+        },
+        "vehicle_dealer": {
+            "inventory": [
+                "V001",
+                "V002",
+                "V004"
+            ],
+            "stock_range": [
+                1,
+                5
+            ]
+        },
+        "black_market": {
+            "inventory": [
+                "E005",
+                "C004",
+                "W002"
+            ],
+            "stock_range": [
+                1,
+                10
+            ]
+        },
+        "furniture_store": {
+            "inventory": [
+                "F001",
+                "F002",
+                "F003",
+                "F004",
+                "F005",
+                "F006",
+                "F007",
+                "F008"
+            ],
+            "stock_range": [
+                2,
+                10
+            ]
+        }
+    },
+    "npc_wealth_tiers": {
+        "poor": {
+            "credits_range": [
+                0,
+                500
+            ],
+            "home_furnishing": [
+                "F001"
+            ],
+            "vehicle_chance": 0.05
+        },
+        "working": {
+            "credits_range": [
+                500,
+                5000
+            ],
+            "home_furnishing": [
+                "F001",
+                "F005",
+                "F008"
+            ],
+            "vehicle_chance": 0.3,
+            "vehicles": [
+                "V004"
+            ]
+        },
+        "middle": {
+            "credits_range": [
+                5000,
+                50000
+            ],
+            "home_furnishing": [
+                "F002",
+                "F003",
+                "F005",
+                "F006",
+                "F007",
+                "F008"
+            ],
+            "vehicle_chance": 0.7,
+            "vehicles": [
+                "V001",
+                "V002"
+            ]
+        },
+        "wealthy": {
+            "credits_range": [
+                50000,
+                500000
+            ],
+            "home_furnishing": [
+                "F002",
+                "F003",
+                "F004",
+                "F005",
+                "F006",
+                "F007",
+                "F008"
+            ],
+            "vehicle_chance": 0.95,
+            "vehicles": [
+                "V001",
+                "V003"
+            ]
+        }
+    }
+}

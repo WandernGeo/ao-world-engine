@@ -1,6 +1,6 @@
 # Comprehensive Test Results
 
-**Generated:** 2026-02-03T19:04:26.174624  
+**Generated:** 2026-02-03T20:33:14.061629  
 **Total Tests:** 28  
 **Passed:** 24 ✅  
 **Failed:** 4 ❌
@@ -87,7 +87,7 @@ Breaking: Smuggling Bust Reported
 - 20 relationships loaded
 
 ### ✅ PASS Get relationship
-- Trust: 0.52
+- Trust: 0.53
 
 ### ❌ FAIL Event Engine
 - Module not found
