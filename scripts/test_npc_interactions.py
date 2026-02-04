@@ -8,6 +8,7 @@ Tests NPC-to-NPC interactions with:
 - Dialogue snippets
 - Relationship changes
 - Events generated
+- Risk-taking behaviors (NEW!)
 
 Uses the Signal Noir plugin for rich NPC data.
 """
@@ -18,6 +19,7 @@ import random
 from datetime import datetime
 sys.path.insert(0, 'scripts')
 from world_loader import WorldLoader
+from risk_venture_system import RiskVentureSystem, RISKY_ACTIONS
 
 # Color output
 class Colors:
@@ -158,6 +160,8 @@ def main():
     relationships = {}
     events = []
     interactions = []
+    risk_system = RiskVentureSystem(seed=42)
+    risky_attempts = []
     
     # Simulate 10 ticks
     print(f"{Colors.CYAN}{'─'*70}{Colors.END}")
@@ -189,6 +193,34 @@ def main():
             if event:
                 events.append(event)
                 print(f"   {Colors.CYAN}📰 NEWS: {event['headline']}{Colors.END}")
+            
+            # Risk-taking check (every other tick)
+            if tick % 20 == 0 and len(npcs) > 0:
+                risky_npc = random.choice(npcs)
+                personality = risky_npc.get('personality', {})
+                if isinstance(personality, dict):
+                    current_state = {"wealth": 80, "excitement": 30}
+                    best_action = risk_system.select_risky_action(
+                        risky_npc['id'], 
+                        personality, 
+                        current_state
+                    )
+                    if best_action:
+                        result = risk_system.attempt_action(
+                            risky_npc['id'], 
+                            best_action, 
+                            personality, 
+                            tick
+                        )
+                        risky_attempts.append(result)
+                        
+                        success_icon = "✓" if result['success'] else "✗"
+                        success_color = Colors.GREEN if result['success'] else Colors.RED
+                        print(f"\n   {Colors.BOLD}🎲 RISKY ACTION!{Colors.END}")
+                        print(f"   {risky_npc['name']} attempts: {result['action_name']}")
+                        print(f"   {success_color}{success_icon} {result['description']}{Colors.END}")
+                        print(f"   Risk Level: {result['risk_level']:.1%}")
+                        print(f"   Excitement: +{result['excitement_gained']:.0f}")
             
             print()
     
