@@ -45,7 +45,7 @@ interface District {
     buildings: Building[];
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8082';
 
 // Initial districts data - expanded city
 const INITIAL_DISTRICTS: District[] = [
@@ -184,7 +184,46 @@ export default function ExplorePage() {
     // Initialize on mount - fetch from API, fallback to generated data
     useEffect(() => {
         setMounted(true);
-        setDistricts(INITIAL_DISTRICTS);
+
+        // Load buildings from API and merge with layout from INITIAL_DISTRICTS
+        const loadBuildings = async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/buildings`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const apiBuildings = data.buildings || data;
+                    if (Array.isArray(apiBuildings) && apiBuildings.length > 0) {
+                        // Create a map of API buildings by ID
+                        const apiBuildingMap = new Map<string, { name: string; type: string }>();
+                        apiBuildings.forEach((b: { id: string; name: string; type: string }) => {
+                            apiBuildingMap.set(b.id, { name: b.name, type: b.type });
+                        });
+
+                        // Merge API data with layout from INITIAL_DISTRICTS
+                        const updatedDistricts = INITIAL_DISTRICTS.map(district => ({
+                            ...district,
+                            buildings: district.buildings.map(building => {
+                                const apiData = apiBuildingMap.get(building.id);
+                                if (apiData) {
+                                    return {
+                                        ...building,
+                                        name: apiData.name,
+                                        type: apiData.type as 'residential' | 'commercial' | 'temple' | 'industrial',
+                                    };
+                                }
+                                return building;
+                            })
+                        }));
+                        setDistricts(updatedDistricts);
+                        console.log(`Synced ${apiBuildingMap.size} buildings from API`);
+                    }
+                }
+            } catch (error) {
+                console.log('Building API fetch failed, using defaults:', error);
+                setDistricts(INITIAL_DISTRICTS);
+            }
+        };
+        loadBuildings();
 
         // Try to fetch NPCs from API
         const loadNPCs = async () => {
@@ -198,8 +237,8 @@ export default function ExplorePage() {
                         const mappedNPCs: NPC[] = apiNPCs.map((n: Record<string, unknown>) => ({
                             id: n.id as string,
                             name: n.name as string,
-                            location: (n.workplace as string) || (n.home as string) || 'B001', // Initial location
-                            activity: ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)],
+                            location: (n.home as string) || 'B001', // Start at home
+                            activity: 'sleeping', // Default to sleeping (will update on tick)
                             mood: MOODS[Math.floor(Math.random() * MOODS.length)],
                             archetype: n.archetype as string,
                             faction: n.faction as string,
@@ -237,12 +276,12 @@ export default function ExplorePage() {
         return () => clearInterval(interval);
     }, [isPlaying, tickSpeed, mounted]);
 
-    // Fetch NPC states when tick changes (throttled)
+    // Fetch NPC states when tick changes (every 2 ticks = ~12 min game time)
     useEffect(() => {
         if (!mounted) return;
 
-        // Only fetch every 10 ticks to avoid overwhelming the API
-        if (currentTick % 10 !== 0) return;
+        // Update every 2 ticks for smoother movement (~12 min game time between updates)
+        if (currentTick % 2 !== 0) return;
 
         const fetchNPCStates = async () => {
             try {
