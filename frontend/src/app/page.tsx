@@ -50,12 +50,12 @@ export default function Home() {
       {/* Stats */}
       <div className="flex gap-8 text-center mb-12">
         <div>
-          <div className="text-3xl font-mono font-bold text-cyan-400">25+</div>
-          <div className="text-xs text-zinc-500">NPCs with AI</div>
+          <div className="text-3xl font-mono font-bold text-cyan-400">800</div>
+          <div className="text-xs text-zinc-500">Simulated NPCs</div>
         </div>
         <div>
-          <div className="text-3xl font-mono font-bold text-purple-400">2000+</div>
-          <div className="text-xs text-zinc-500">Dialogue Lines</div>
+          <div className="text-3xl font-mono font-bold text-purple-400">19</div>
+          <div className="text-xs text-zinc-500">Buildings</div>
         </div>
         <div>
           <div className="text-3xl font-mono font-bold text-amber-400">∞</div>

@@ -40,6 +40,16 @@ interface APINPC {
 }
 
 const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const LOCAL_API = 'http://localhost:8082';
+
+// Try localhost first, fall back to Cloud
+async function getApiBase(): Promise<string> {
+    try {
+        const res = await fetch(`${LOCAL_API}/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
+        if (res.ok) return LOCAL_API;
+    } catch { /* ignore */ }
+    return CLOUD_API;
+}
 
 // Entity type colors - Grakn-inspired green/purple/cyan
 const TYPE_COLORS: Record<EntityType, string> = {
@@ -65,10 +75,11 @@ const TYPE_LABELS: Record<EntityType, string> = {
 // Fetch knowledge graph data from API
 async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relationships: Relationship[] } | null> {
     try {
+        const API_BASE = await getApiBase();
         // Fetch NPCs and buildings from API
         const [npcRes, buildingRes] = await Promise.all([
-            fetch(`${CLOUD_API}/api/npcs?limit=30`),
-            fetch(`${CLOUD_API}/api/buildings`),
+            fetch(`${API_BASE}/api/npcs?limit=200`),  // Increased from 30 to 200
+            fetch(`${API_BASE}/api/buildings`),
         ]);
 
         if (!npcRes.ok || !buildingRes.ok) return null;
@@ -279,15 +290,16 @@ export default function KnowledgeGraphPage() {
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
     const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(0.6); // Start zoomed out more
     const [pan, setPan] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isSimulating, setIsSimulating] = useState(true);
     const [stats, setStats] = useState({ entities: 0, relationships: 0, npcs: 0 });
+    const [draggedNode, setDraggedNode] = useState<string | null>(null); // NEW: track dragged node
 
-    const width = 800;
-    const height = 700;
+    const width = 1600; // Expanded from 800
+    const height = 1400; // Expanded from 700
 
     // Initialize data - try API first, fallback to generated
     useEffect(() => {
@@ -449,7 +461,7 @@ export default function KnowledgeGraphPage() {
         ctx.restore();
     }, [data, selectedEntity, hoveredEntity, filter, zoom, pan]);
 
-    // Mouse handlers
+    // Mouse handlers - support node dragging
     const handleMouseDown = (e: React.MouseEvent) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
@@ -457,32 +469,50 @@ export default function KnowledgeGraphPage() {
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
 
-        // Find clicked entity
+        // Check if clicking on a node - start dragging it
         for (const entity of data.entities) {
             const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
-            if (dist < 15) {
+            if (dist < 20) {
+                setDraggedNode(entity.id);
                 setSelectedEntity(entity);
+                setIsSimulating(false); // Pause simulation while dragging
                 return;
             }
         }
 
+        // Not on a node - start panning
         setIsDragging(true);
         setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
         setSelectedEntity(null);
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (isDragging) {
-            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
-            return;
-        }
-
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
 
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
 
+        // If dragging a node, update its position
+        if (draggedNode) {
+            setData(prev => ({
+                ...prev,
+                entities: prev.entities.map(e =>
+                    e.id === draggedNode
+                        ? { ...e, x: mx, y: my, vx: 0, vy: 0 }
+                        : e
+                )
+            }));
+            return;
+        }
+
+        // If panning the view
+        if (isDragging) {
+            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+            return;
+        }
+
+        // Hover detection
         for (const entity of data.entities) {
             const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
             if (dist < 15) {
@@ -493,10 +523,14 @@ export default function KnowledgeGraphPage() {
         setHoveredEntity(null);
     };
 
-    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        setDraggedNode(null);
+    };
+
     const handleWheel = (e: React.WheelEvent) => {
         e.preventDefault();
-        setZoom(z => Math.max(0.3, Math.min(3, z - e.deltaY * 0.001)));
+        setZoom(z => Math.max(0.2, Math.min(3, z - e.deltaY * 0.001)));
     };
 
     // Get relationships for selected entity
@@ -589,7 +623,7 @@ export default function KnowledgeGraphPage() {
                     </div>
 
                     <div className="absolute bottom-4 right-80 text-xs text-zinc-500">
-                        Drag to pan • Scroll to zoom • Click nodes to inspect
+                        Drag nodes to arrange • Scroll to zoom • Click nodes to inspect
                     </div>
                 </div>
 

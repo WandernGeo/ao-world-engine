@@ -19,7 +19,7 @@ interface Message {
 }
 
 const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
-const LOCAL_API = 'http://localhost:8080';
+const LOCAL_API = 'http://localhost:8082';
 
 // Try localhost first, fall back to Cloud
 async function getApiBase(): Promise<string> {

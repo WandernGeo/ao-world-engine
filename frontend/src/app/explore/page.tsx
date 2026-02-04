@@ -663,9 +663,18 @@ export default function ExplorePage() {
                                     <span className="text-cyan-400 font-bold">{npcs.filter(n => n.location === selectedBuilding.id).length}</span>
                                 </div>
 
-                                {/* Scrollable NPC list */}
+                                {/* Scrollable NPC list with role legend */}
                                 <div className="mt-3 pt-2 border-t border-zinc-700">
-                                    <div className="text-xs text-zinc-500 mb-2">NPCs in building:</div>
+                                    <div className="text-xs text-zinc-500 mb-1">NPCs in building:</div>
+                                    {/* Role Legend */}
+                                    <div className="flex flex-wrap gap-1 mb-2 text-[9px]">
+                                        <span className="px-1 py-0.5 bg-emerald-500/20 text-emerald-400 rounded">Resident</span>
+                                        <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 rounded">Employee</span>
+                                        <span className="px-1 py-0.5 bg-purple-500/20 text-purple-400 rounded">Vendor</span>
+                                        <span className="px-1 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">Customer</span>
+                                        <span className="px-1 py-0.5 bg-red-500/20 text-red-400 rounded">Security</span>
+                                        <span className="px-1 py-0.5 bg-zinc-600/30 text-zinc-400 rounded">Visitor</span>
+                                    </div>
                                     <div className="max-h-40 overflow-y-auto space-y-1">
                                         {npcs.filter(n => n.location === selectedBuilding.id).slice(0, 50).map(npc => {
                                             const role = getNPCRole(npc, selectedBuilding.id, selectedBuilding.type);
@@ -682,11 +691,14 @@ export default function ExplorePage() {
                                                         npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
                                                         }`} />
                                                     <span className="truncate flex-1">{npc.name}</span>
-                                                    <span className={`text-[10px] px-1 py-0.5 rounded ${role === 'Owner' ? 'bg-amber-500/20 text-amber-400' :
-                                                        role === 'Staff' || role === 'Employee' ? 'bg-blue-500/20 text-blue-400' :
-                                                            role === 'Security' ? 'bg-red-500/20 text-red-400' :
-                                                                role === 'Vendor' ? 'bg-green-500/20 text-green-400' :
-                                                                    'bg-zinc-700 text-zinc-400'
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${role === 'Resident' ? 'bg-emerald-500/20 text-emerald-400' :
+                                                        role === 'Owner' ? 'bg-amber-500/20 text-amber-300' :
+                                                            role === 'Employee' || role === 'Worker' ? 'bg-blue-500/20 text-blue-400' :
+                                                                role === 'Staff' || role === 'Server' || role === 'Clerk' ? 'bg-sky-500/20 text-sky-400' :
+                                                                    role === 'Vendor' ? 'bg-purple-500/20 text-purple-400' :
+                                                                        role === 'Security' || role === 'Guard' ? 'bg-red-500/20 text-red-400' :
+                                                                            role === 'Customer' || role === 'Patron' || role === 'Diner' || role === 'Gambler' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                                                'bg-zinc-600/30 text-zinc-400'
                                                         }`}>{role}</span>
                                                 </button>
                                             );
