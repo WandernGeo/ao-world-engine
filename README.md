@@ -26,11 +26,11 @@
 
 ---
 
-## 🎮 Live Demo - Talk to NPCs Now!
+## 🎮 Live Demo - Try the Simulation!
 
-**[▶ Test the NPC Chat](https://ao-world-engine-1071951656531.us-central1.run.app)**
+**[▶ Test the Simulation](https://ao-world-engine-1071951656531.us-central1.run.app)**
 
-Chat with demo NPCs and see how they think, remember, and react on any given day.
+Explore the world, talk to NPCs, and watch the simulation run in real-time.
 
 | What to Test | Description |
 |--------------|-------------|
