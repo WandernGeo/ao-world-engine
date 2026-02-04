@@ -1338,6 +1338,158 @@ def get_transport_endpoint():
     return jsonify(get_transport())
 
 
+# =============================================================================
+# SOCIAL DYNAMICS API
+# =============================================================================
+
+# Import social dynamics module
+import sys
+SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), "..", "scripts")
+if SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, SCRIPTS_DIR)
+
+try:
+    from social_dynamics import (
+        get_npc_social_summary, 
+        get_reputation,
+        find_potential_groups,
+        track_meeting,
+        update_trust_from_interaction,
+        get_relationship_type,
+        RELATIONSHIP_THRESHOLDS,
+        MEETING_THRESHOLDS
+    )
+    SOCIAL_DYNAMICS_AVAILABLE = True
+except ImportError:
+    SOCIAL_DYNAMICS_AVAILABLE = False
+
+
+@app.route("/api/social/npc/<npc_id>")
+def get_npc_social(npc_id):
+    """
+    Get social summary for an NPC.
+    Returns friends, colleagues, acquaintances, rivals.
+    """
+    if not SOCIAL_DYNAMICS_AVAILABLE:
+        return jsonify({"error": "Social dynamics module not available"}), 500
+    
+    npcs = get_npcs()
+    npc = next((n for n in npcs if n.get("id") == npc_id), None)
+    
+    if not npc:
+        return jsonify({"error": f"NPC {npc_id} not found"}), 404
+    
+    # Get or initialize relationships based on family/workplace
+    if "relationships" not in npc:
+        npc["relationships"] = {}
+        
+        # Initialize family relationships
+        family = npc.get("family", {})
+        if family.get("spouse_id"):
+            npc["relationships"][family["spouse_id"]] = {
+                "trust": 0.9, "meetings": 100, "type": "close_friend", 
+                "contexts": ["family"]
+            }
+        for parent_id in family.get("parent_ids", []):
+            npc["relationships"][parent_id] = {
+                "trust": 0.85, "meetings": 200, "type": "close_friend",
+                "contexts": ["family"]
+            }
+        for sibling_id in family.get("sibling_ids", []):
+            npc["relationships"][sibling_id] = {
+                "trust": 0.75, "meetings": 150, "type": "friend",
+                "contexts": ["family"]
+            }
+        
+        # Initialize workplace relationships
+        workplace = npc.get("workplace")
+        if workplace:
+            coworkers = [n for n in npcs if n.get("workplace") == workplace 
+                        and n["id"] != npc_id]
+            for coworker in coworkers[:10]:
+                if coworker["id"] not in npc["relationships"]:
+                    # Random-ish initial trust based on IDs
+                    seed = f"{npc_id}_{coworker['id']}"
+                    h = int(hashlib.md5(seed.encode()).hexdigest(), 16) % 100
+                    initial_trust = 0.3 + (h / 200)  # 0.3-0.8
+                    meetings = 10 + (h % 30)
+                    npc["relationships"][coworker["id"]] = {
+                        "trust": initial_trust, 
+                        "meetings": meetings,
+                        "type": get_relationship_type(initial_trust),
+                        "contexts": ["workplace"]
+                    }
+    
+    summary = get_npc_social_summary(npc)
+    
+    return jsonify({
+        "npc_id": npc_id,
+        "name": npc.get("name"),
+        "social": summary,
+        "thresholds": {
+            "trust_levels": RELATIONSHIP_THRESHOLDS,
+            "meeting_requirements": MEETING_THRESHOLDS,
+        }
+    })
+
+
+@app.route("/api/social/groups")
+def get_social_groups():
+    """
+    Get all social groups (coworkers, neighbors, faction cells).
+    Optional: ?workplace=<id> or ?building=<id> to filter.
+    """
+    if not SOCIAL_DYNAMICS_AVAILABLE:
+        return jsonify({"error": "Social dynamics module not available"}), 500
+    
+    npcs = get_npcs()
+    tick = int(request.args.get("tick", 100))
+    workplace_filter = request.args.get("workplace")
+    building_filter = request.args.get("building")
+    
+    groups = find_potential_groups(npcs, tick)
+    
+    # Filter if requested
+    if workplace_filter:
+        groups = [g for g in groups if workplace_filter in g.meeting_location]
+    if building_filter:
+        groups = [g for g in groups if building_filter in g.meeting_location]
+    
+    return jsonify({
+        "tick": tick,
+        "groups_count": len(groups),
+        "groups": [g.to_dict() for g in groups[:50]],  # Limit response
+        "group_types": {
+            "coworkers": len([g for g in groups if g.group_type == "coworkers"]),
+            "neighbors": len([g for g in groups if g.group_type == "neighbors"]),
+            "faction_cell": len([g for g in groups if g.group_type == "faction_cell"]),
+        }
+    })
+
+
+@app.route("/api/social/reputation/<npc_id>")
+def get_npc_reputation(npc_id):
+    """
+    Get an NPC's reputation across the city.
+    """
+    if not SOCIAL_DYNAMICS_AVAILABLE:
+        return jsonify({"error": "Social dynamics module not available"}), 500
+    
+    npcs = get_npcs()
+    npc = next((n for n in npcs if n.get("id") == npc_id), None)
+    
+    if not npc:
+        return jsonify({"error": f"NPC {npc_id} not found"}), 404
+    
+    reputation = get_reputation(npc, npcs)
+    
+    return jsonify({
+        "npc_id": npc_id,
+        "name": npc.get("name"),
+        "reputation": reputation,
+    })
+
+
 @app.route("/api/stats")
 def get_stats():
     """Get simulation statistics."""

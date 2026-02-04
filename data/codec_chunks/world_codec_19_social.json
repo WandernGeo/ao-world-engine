@@ -1,0 +1,231 @@
+{
+    "_chunk": {
+        "id": "19",
+        "name": "social_dynamics",
+        "category": "social",
+        "version": "1.0.0",
+        "description": "Relationship types, trust mechanics, group formation, and gossip systems",
+        "dependencies": [
+            "01_npcs",
+            "17_family"
+        ]
+    },
+    "_relationship_types": {
+        "_desc": "How trust level maps to relationship type",
+        "stranger": {
+            "trust_range": [
+                0,
+                0.25
+            ],
+            "interactions": "wary",
+            "greeting": "ignores or nods"
+        },
+        "acquaintance": {
+            "trust_range": [
+                0.25,
+                0.45
+            ],
+            "interactions": "polite",
+            "greeting": "brief hello"
+        },
+        "colleague": {
+            "trust_range": [
+                0.45,
+                0.65
+            ],
+            "interactions": "professional",
+            "greeting": "friendly wave"
+        },
+        "friend": {
+            "trust_range": [
+                0.65,
+                0.85
+            ],
+            "interactions": "warm",
+            "greeting": "stops to chat"
+        },
+        "close_friend": {
+            "trust_range": [
+                0.85,
+                1.0
+            ],
+            "interactions": "intimate",
+            "greeting": "enthusiastic greeting"
+        },
+        "rival": {
+            "trust_range": [
+                -0.3,
+                0
+            ],
+            "interactions": "tense",
+            "greeting": "glares"
+        },
+        "enemy": {
+            "trust_range": [
+                -1.0,
+                -0.3
+            ],
+            "interactions": "hostile",
+            "greeting": "confrontational"
+        }
+    },
+    "_trust_changes": {
+        "_desc": "How different interactions affect trust",
+        "passive": {
+            "same_location_once": 0.002,
+            "same_workplace_day": 0.01,
+            "same_home_building": 0.005,
+            "same_faction": 0.003
+        },
+        "positive": {
+            "greeting": 0.005,
+            "small_talk": 0.01,
+            "deep_conversation": 0.03,
+            "shared_meal": 0.02,
+            "trade_successful": 0.02,
+            "helped_in_need": 0.1,
+            "defended_in_fight": 0.15,
+            "gifted_item": 0.05,
+            "shared_secret": 0.08
+        },
+        "negative": {
+            "ignored": -0.005,
+            "rude_response": -0.02,
+            "argument": -0.08,
+            "insulted": -0.1,
+            "betrayed_secret": -0.2,
+            "stolen_from": -0.3,
+            "attacked": -0.5
+        }
+    },
+    "_group_types": {
+        "_desc": "Types of social groups NPCs can form",
+        "coworkers": {
+            "formation": "same workplace, 5+ meetings",
+            "bond_strength": 0.6,
+            "activities": [
+                "lunch",
+                "commute",
+                "complain_about_boss"
+            ]
+        },
+        "neighbors": {
+            "formation": "same residential building",
+            "bond_strength": 0.4,
+            "activities": [
+                "greet",
+                "borrow_items",
+                "gossip"
+            ]
+        },
+        "faction_cell": {
+            "formation": "same faction, assigned",
+            "bond_strength": 0.7,
+            "activities": [
+                "meetings",
+                "missions",
+                "training"
+            ]
+        },
+        "bar_regulars": {
+            "formation": "same bar, 10+ visits at same time",
+            "bond_strength": 0.5,
+            "activities": [
+                "drinking",
+                "games",
+                "stories"
+            ]
+        },
+        "gym_buddies": {
+            "formation": "same hobby=fitness, 5+ meetings",
+            "bond_strength": 0.5,
+            "activities": [
+                "workout",
+                "competition",
+                "encouragement"
+            ]
+        },
+        "childhood_friends": {
+            "formation": "assigned at generation",
+            "bond_strength": 0.8,
+            "activities": [
+                "reminisce",
+                "support",
+                "reunions"
+            ]
+        }
+    },
+    "_meeting_thresholds": {
+        "_desc": "Number of meetings to reach relationship levels",
+        "acquaintance": 3,
+        "colleague": 10,
+        "friend": 25,
+        "close_friend": 50
+    },
+    "_gossip_mechanics": {
+        "_desc": "How reputation spreads through social network",
+        "spread_probability": 0.3,
+        "decay_per_hop": 0.5,
+        "max_hops": 3,
+        "trust_required_to_believe": 0.4,
+        "gossip_contexts": [
+            "bar",
+            "workplace",
+            "home",
+            "market"
+        ],
+        "gossip_types": {
+            "positive": [
+                "helped someone",
+                "generous",
+                "brave",
+                "skilled"
+            ],
+            "negative": [
+                "stole",
+                "betrayed",
+                "violent",
+                "dishonest"
+            ],
+            "neutral": [
+                "seen at location",
+                "talking to someone",
+                "new job"
+            ]
+        }
+    },
+    "_reputation_effects": {
+        "_desc": "How reputation affects NPC behavior toward someone",
+        "high_reputation": {
+            "trust_bonus": 0.2,
+            "price_discount": 0.1,
+            "help_probability": 0.8,
+            "hire_preference": true
+        },
+        "low_reputation": {
+            "trust_penalty": -0.2,
+            "price_increase": 0.2,
+            "help_probability": 0.2,
+            "service_refusal": true
+        }
+    },
+    "_social_hooks": {
+        "_desc": "When to trigger social dynamics calculations",
+        "on_same_location": "check_meeting",
+        "on_interaction": "update_trust",
+        "on_event_witnessed": "gossip_spread",
+        "on_day_end": "form_groups",
+        "on_week_end": "decay_old_acquaintances"
+    },
+    "_initial_relationships": {
+        "_desc": "Relationships NPCs start with",
+        "family_spouse": 0.9,
+        "family_parent_child": 0.85,
+        "family_sibling": 0.75,
+        "same_household": 0.7,
+        "same_faction": 0.4,
+        "same_workplace": 0.3,
+        "same_building": 0.2,
+        "stranger": 0.1
+    }
+}
