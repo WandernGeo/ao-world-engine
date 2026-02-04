@@ -469,10 +469,10 @@ export default function KnowledgeGraphPage() {
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
 
-        // Check if clicking on a node - start dragging it
+        // Check if clicking on a node - start dragging it (increased radius)
         for (const entity of data.entities) {
             const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
-            if (dist < 20) {
+            if (dist < 30) { // Increased from 20 to 30 for easier clicking
                 setDraggedNode(entity.id);
                 setSelectedEntity(entity);
                 setIsSimulating(false); // Pause simulation while dragging
@@ -512,10 +512,10 @@ export default function KnowledgeGraphPage() {
             return;
         }
 
-        // Hover detection
+        // Hover detection (increased radius)
         for (const entity of data.entities) {
             const dist = Math.sqrt((entity.x - mx) ** 2 + (entity.y - my) ** 2);
-            if (dist < 15) {
+            if (dist < 25) { // Increased from 15 to 25
                 setHoveredEntity(entity);
                 return;
             }
@@ -530,7 +530,24 @@ export default function KnowledgeGraphPage() {
 
     const handleWheel = (e: React.WheelEvent) => {
         e.preventDefault();
-        setZoom(z => Math.max(0.2, Math.min(3, z - e.deltaY * 0.001)));
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (!rect) return;
+
+        // Mouse position relative to canvas
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        // Calculate new zoom
+        const delta = e.deltaY * -0.001;
+        const newZoom = Math.max(0.2, Math.min(3, zoom + delta));
+        const zoomRatio = newZoom / zoom;
+
+        // Adjust pan so zoom centers on mouse position
+        const newPanX = mouseX - (mouseX - pan.x) * zoomRatio;
+        const newPanY = mouseY - (mouseY - pan.y) * zoomRatio;
+
+        setZoom(newZoom);
+        setPan({ x: newPanX, y: newPanY });
     };
 
     // Get relationships for selected entity
