@@ -24,6 +24,21 @@ interface Relationship {
     type: string; // e.g. "works_at", "member_of", "knows", "owns"
 }
 
+interface APIBuilding {
+    id: string;
+    name: string;
+    type: string;
+}
+
+interface APINPC {
+    id: string;
+    name: string;
+    archetype: string;
+    faction: string;
+    home?: string;
+    workplace?: string;
+}
+
 const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
 
 // Entity type colors - Grakn-inspired green/purple/cyan
@@ -47,7 +62,93 @@ const TYPE_LABELS: Record<EntityType, string> = {
     event: 'Event',
 };
 
-// Generate knowledge graph data
+// Fetch knowledge graph data from API
+async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relationships: Relationship[] } | null> {
+    try {
+        // Fetch NPCs and buildings from API
+        const [npcRes, buildingRes] = await Promise.all([
+            fetch(`${CLOUD_API}/api/npcs?limit=30`),
+            fetch(`${CLOUD_API}/api/buildings`),
+        ]);
+
+        if (!npcRes.ok || !buildingRes.ok) return null;
+
+        const npcData = await npcRes.json();
+        const buildingData = await buildingRes.json();
+
+        const apiNPCs: APINPC[] = npcData.npcs || [];
+        const apiBuildings: APIBuilding[] = buildingData.buildings || [];
+
+        const entities: Entity[] = [];
+        const relationships: Relationship[] = [];
+
+        // Extract unique factions from NPCs
+        const factionSet = new Set<string>();
+        apiNPCs.forEach((n: APINPC) => {
+            if (n.faction) factionSet.add(n.faction);
+        });
+        const factions = Array.from(factionSet);
+
+        // Create faction entities
+        factions.forEach((name, i) => {
+            entities.push({
+                id: `faction_${name}`,
+                name: name.charAt(0).toUpperCase() + name.slice(1),
+                type: 'faction',
+                x: 400 + Math.cos(i * Math.PI * 2 / factions.length) * 250,
+                y: 350 + Math.sin(i * Math.PI * 2 / factions.length) * 250,
+                vx: 0, vy: 0,
+            });
+        });
+
+        // Create building entities (first 15)
+        apiBuildings.slice(0, 15).forEach((b: APIBuilding, i) => {
+            entities.push({
+                id: b.id,
+                name: b.name,
+                type: 'building',
+                x: 200 + Math.random() * 400,
+                y: 150 + Math.random() * 400,
+                vx: 0, vy: 0,
+                properties: { buildingType: b.type },
+            });
+        });
+
+        // Create NPC entities and relationships
+        apiNPCs.forEach((n: APINPC, i) => {
+            entities.push({
+                id: n.id,
+                name: n.name,
+                type: 'npc',
+                x: 150 + Math.random() * 500,
+                y: 100 + Math.random() * 500,
+                vx: 0, vy: 0,
+                properties: { archetype: n.archetype, faction: n.faction },
+            });
+
+            // Relationship to faction
+            if (n.faction) {
+                relationships.push({ source: n.id, target: `faction_${n.faction}`, type: 'member_of' });
+            }
+
+            // Relationship to workplace/home building
+            if (n.workplace && apiBuildings.find(b => b.id === n.workplace)) {
+                relationships.push({ source: n.id, target: n.workplace, type: 'works_at' });
+            }
+            if (n.home && apiBuildings.find(b => b.id === n.home)) {
+                relationships.push({ source: n.id, target: n.home, type: 'lives_at' });
+            }
+        });
+
+        console.log(`Knowledge graph loaded from API: ${entities.length} entities, ${relationships.length} relationships`);
+        return { entities, relationships };
+    } catch (error) {
+        console.log('Failed to fetch knowledge graph from API:', error);
+        return null;
+    }
+}
+
+// Generate knowledge graph data (fallback)
 function generateKnowledgeGraph(): { entities: Entity[], relationships: Relationship[] } {
     const entities: Entity[] = [];
     const relationships: Relationship[] = [];
@@ -188,15 +289,20 @@ export default function KnowledgeGraphPage() {
     const width = 800;
     const height = 700;
 
-    // Initialize data
+    // Initialize data - try API first, fallback to generated
     useEffect(() => {
-        const d = generateKnowledgeGraph();
-        setData(d);
-        setStats({
-            entities: d.entities.length,
-            relationships: d.relationships.length,
-            npcs: d.entities.filter(e => e.type === 'npc').length,
-        });
+        const loadData = async () => {
+            // Try to fetch from API first
+            const apiData = await fetchKnowledgeGraphFromAPI();
+            const d = apiData || generateKnowledgeGraph();
+            setData(d);
+            setStats({
+                entities: d.entities.length,
+                relationships: d.relationships.length,
+                npcs: d.entities.filter(e => e.type === 'npc').length,
+            });
+        };
+        loadData();
     }, []);
 
     // Force-directed simulation

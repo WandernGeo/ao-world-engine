@@ -30,20 +30,27 @@ async function getApiBase(): Promise<string> {
     return CLOUD_API;
 }
 
-// 12 Founding NPCs from Signal Noir
-const FOUNDING_NPCS: NPC[] = [
+// Founding NPC IDs from codec - these are the 12 special characters
+const FOUNDING_NPC_IDS = [
+    'charlie', 'kai_vance', 'orion_thane', 'felix', 'nova_chen',
+    'selene_voss', 'sister_mira', 'mama_indira', 'aiche', 'pixel',
+    'cipher', 'zero_chen'
+];
+
+// Fallback founding NPCs (used if API fails)
+const FALLBACK_NPCS: NPC[] = [
     { id: 'charlie', name: 'Charlie', archetype: 'Resistance Fighter' },
-    { id: 'felix', name: 'Felix', archetype: 'Info Broker' },
-    { id: 'kira', name: 'Kira Ōmura', archetype: 'Street Oracle' },
-    { id: 'orion', name: 'Orion Thanewilk', archetype: 'Tech Specialist' },
-    { id: 'zero', name: 'Zero Chen', archetype: 'Resistance Leader' },
-    { id: 'pixel', name: 'Pixel', archetype: 'Hacker' },
-    { id: 'ghost', name: 'Ghost', archetype: 'Shadow Operative' },
-    { id: 'kai', name: 'Kai Vance', archetype: 'Tactician' },
-    { id: 'nova', name: 'Nova Kim', archetype: 'Cyber Artist' },
-    { id: 'frost', name: 'Frost', archetype: 'Enforcer' },
-    { id: 'aiche', name: 'Aiche', archetype: 'AI Consciousness' },
-    { id: 'phoenix', name: 'Phoenix', archetype: 'Data Runner' },
+    { id: 'felix', name: 'Felix', archetype: 'Bartender / Info Broker' },
+    { id: 'zero_chen', name: 'Zero Chen', archetype: 'Resistance Leader' },
+    { id: 'pixel', name: 'Pixel', archetype: 'Tech Genius' },
+    { id: 'kai_vance', name: 'Kai Vance', archetype: 'Tactician' },
+    { id: 'nova_chen', name: 'Nova Chen', archetype: 'Operative' },
+    { id: 'orion_thane', name: 'Orion Thane', archetype: 'Mystic' },
+    { id: 'aiche', name: 'Aiche', archetype: 'AI Interface' },
+    { id: 'sister_mira', name: 'Sister Mira', archetype: 'Temple Priestess' },
+    { id: 'mama_indira', name: 'Mama Indira', archetype: 'Underground Matriarch' },
+    { id: 'cipher', name: 'Cipher', archetype: 'Unknown Entity' },
+    { id: 'selene_voss', name: 'Selene Voss', archetype: 'Ghost-Child' },
 ];
 
 export default function ChatPage() {
@@ -52,18 +59,45 @@ export default function ChatPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [currentTick, setCurrentTick] = useState(100);
-    const [npcs, setNpcs] = useState<NPC[]>(FOUNDING_NPCS);
+    const [npcs, setNpcs] = useState<NPC[]>(FALLBACK_NPCS);
     const [apiBase, setApiBase] = useState(CLOUD_API);
     const [apiStatus, setApiStatus] = useState<'checking' | 'local' | 'cloud' | 'offline'>('checking');
 
-    // Find best API endpoint on mount
+    // Find best API endpoint and load NPCs on mount
     useEffect(() => {
-        const findApi = async () => {
+        const initChat = async () => {
             const base = await getApiBase();
             setApiBase(base);
             setApiStatus(base === LOCAL_API ? 'local' : 'cloud');
+
+            // Try to fetch founding NPCs from API
+            try {
+                const response = await fetch(`${base}/api/npcs?limit=50`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const apiNPCs = data.npcs || data;
+                    if (Array.isArray(apiNPCs)) {
+                        // Filter to founding NPCs or first 12
+                        const founding = apiNPCs
+                            .filter((n: { id: string }) => FOUNDING_NPC_IDS.includes(n.id) || n.id.startsWith('npc_000'))
+                            .slice(0, 12)
+                            .map((n: Record<string, unknown>) => ({
+                                id: n.id as string,
+                                name: n.name as string,
+                                archetype: n.archetype as string || 'Citizen',
+                            }));
+                        if (founding.length > 0) {
+                            setNpcs(founding);
+                            console.log(`Loaded ${founding.length} NPCs for chat from API`);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Failed to fetch NPCs for chat:', error);
+                // Keep using fallback NPCs
+            }
         };
-        findApi();
+        initChat();
     }, []);
 
     const sendMessage = async () => {

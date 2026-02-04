@@ -97,6 +97,23 @@ const LAST_NAMES = ['Black', 'Chen', 'Vance', 'Reyes', 'Park', 'Kim', 'Silva', '
 const ACTIVITIES = ['working', 'trading', 'walking', 'talking', 'resting', 'eating', 'drinking', 'watching', 'waiting', 'hiding', 'reading', 'sleeping', 'praying', 'shopping', 'gambling', 'hacking', 'crafting', 'patrolling'];
 const MOODS = ['friendly', 'cautious', 'nervous', 'calm', 'busy', 'tired', 'focused', 'cheerful', 'cold', 'secretive'];
 
+// Determine NPC role in a building
+function getNPCRole(npc: NPC, buildingId: string, buildingType: string): string {
+    // Check if this is their workplace (employee/owner)
+    if (npc.location === buildingId) {
+        // Owner archetypes
+        if (npc.archetype?.includes('Bartender') || npc.archetype?.includes('Broker')) return 'Owner';
+        if (npc.archetype?.includes('vendor') || npc.archetype?.includes('Merchant')) return 'Vendor';
+        if (npc.archetype?.includes('service')) return 'Staff';
+        if (npc.archetype?.includes('guard')) return 'Security';
+        if (buildingType === 'entertainment' || buildingType === 'commercial') return 'Employee';
+        if (buildingType === 'residential') return 'Resident';
+        return 'Worker';
+    }
+    // They're visiting
+    return 'Patron';
+}
+
 function generateNPCs(districts: District[], count: number): NPC[] {
     const npcs: NPC[] = [];
     const allBuildings = districts.flatMap(d => d.buildings);
@@ -144,11 +161,46 @@ export default function ExplorePage() {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-    // Initialize on mount - generate 800 NPCs
+    // Initialize on mount - fetch from API, fallback to generated data
     useEffect(() => {
         setMounted(true);
         setDistricts(INITIAL_DISTRICTS);
-        setNpcs(generateNPCs(INITIAL_DISTRICTS, 800));
+
+        // Try to fetch NPCs from API
+        const loadNPCs = async () => {
+            try {
+                const response = await fetch(`${API_BASE}/api/npcs?limit=800`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const apiNPCs = data.npcs || data;
+                    if (Array.isArray(apiNPCs) && apiNPCs.length > 0) {
+                        // Map API NPCs to our format
+                        const mappedNPCs: NPC[] = apiNPCs.map((n: Record<string, unknown>) => ({
+                            id: n.id as string,
+                            name: n.name as string,
+                            location: (n.workplace as string) || (n.home as string) || 'B001', // Use workplace if available
+                            activity: ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)],
+                            mood: MOODS[Math.floor(Math.random() * MOODS.length)],
+                            archetype: n.archetype as string,
+                            faction: n.faction as string,
+                            role: n.role as string,
+                            mbti: (n.personality as { mbti?: string })?.mbti,
+                            traits: Array.isArray((n.personality as { all_traits?: string[] })?.all_traits)
+                                ? (n.personality as { all_traits: string[] }).all_traits.slice(0, 5)
+                                : undefined,
+                        }));
+                        setNpcs(mappedNPCs);
+                        console.log(`Loaded ${mappedNPCs.length} NPCs from API`);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('API fetch failed, using generated data:', error);
+            }
+            // Fallback to generated data
+            setNpcs(generateNPCs(INITIAL_DISTRICTS, 800));
+        };
+        loadNPCs();
     }, []);
 
     // Auto-advance tick when playing
@@ -188,6 +240,7 @@ export default function ExplorePage() {
     const renderBuilding = (building: Building, districtColor: string) => {
         const points = building.polygon.map(p => p.join(',')).join(' ');
         const isSelected = selectedBuilding?.id === building.id;
+        // Match NPCs to building by location (workplace or home)
         const buildingNPCs = (npcs || []).filter(n => n.location === building.id);
 
         return (
@@ -496,22 +549,30 @@ export default function ExplorePage() {
                                 <div className="mt-3 pt-2 border-t border-zinc-700">
                                     <div className="text-xs text-zinc-500 mb-2">NPCs in building:</div>
                                     <div className="max-h-40 overflow-y-auto space-y-1">
-                                        {npcs.filter(n => n.location === selectedBuilding.id).slice(0, 50).map(npc => (
-                                            <button
-                                                key={npc.id}
-                                                onClick={() => setSelectedNPC(npc)}
-                                                className={`w-full text-left px-2 py-1 rounded text-xs flex items-center gap-2 ${selectedNPC?.id === npc.id
-                                                    ? 'bg-cyan-600/30 border border-cyan-500/50'
-                                                    : 'bg-zinc-800/50 hover:bg-zinc-700/50'
-                                                    }`}
-                                            >
-                                                <span className={`w-2 h-2 rounded-full ${npc.mood === 'friendly' ? 'bg-green-400' :
-                                                    npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
-                                                    }`} />
-                                                <span className="truncate flex-1">{npc.name}</span>
-                                                <span className="text-zinc-500 text-[10px]">{npc.activity}</span>
-                                            </button>
-                                        ))}
+                                        {npcs.filter(n => n.location === selectedBuilding.id).slice(0, 50).map(npc => {
+                                            const role = getNPCRole(npc, selectedBuilding.id, selectedBuilding.type);
+                                            return (
+                                                <button
+                                                    key={npc.id}
+                                                    onClick={() => setSelectedNPC(npc)}
+                                                    className={`w-full text-left px-2 py-1 rounded text-xs flex items-center gap-2 ${selectedNPC?.id === npc.id
+                                                        ? 'bg-cyan-600/30 border border-cyan-500/50'
+                                                        : 'bg-zinc-800/50 hover:bg-zinc-700/50'
+                                                        }`}
+                                                >
+                                                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${npc.mood === 'friendly' ? 'bg-green-400' :
+                                                        npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
+                                                        }`} />
+                                                    <span className="truncate flex-1">{npc.name}</span>
+                                                    <span className={`text-[10px] px-1 py-0.5 rounded ${role === 'Owner' ? 'bg-amber-500/20 text-amber-400' :
+                                                            role === 'Staff' || role === 'Employee' ? 'bg-blue-500/20 text-blue-400' :
+                                                                role === 'Security' ? 'bg-red-500/20 text-red-400' :
+                                                                    role === 'Vendor' ? 'bg-green-500/20 text-green-400' :
+                                                                        'bg-zinc-700 text-zinc-400'
+                                                        }`}>{role}</span>
+                                                </button>
+                                            );
+                                        })}
                                         {npcs.filter(n => n.location === selectedBuilding.id).length > 50 && (
                                             <div className="text-center text-zinc-500 text-xs py-1">
                                                 +{npcs.filter(n => n.location === selectedBuilding.id).length - 50} more...
