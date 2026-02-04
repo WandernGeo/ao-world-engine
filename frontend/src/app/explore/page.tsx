@@ -45,7 +45,7 @@ interface District {
     buildings: Building[];
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8082';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
 
 // Initial districts data - expanded city
 const INITIAL_DISTRICTS: District[] = [
