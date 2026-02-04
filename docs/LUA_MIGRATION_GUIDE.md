@@ -193,41 +193,70 @@ end
 
 ## 🏗️ AO Process Architecture
 
+The simulation runs autonomously via CRON messages:
+
 ```
 ao-processes/
-├── world.lua           # Main world state, NPC registry
-├── simulation.lua      # Tick processing, schedule resolution
-├── events.lua          # Event generation, cascading
-├── memory.lua          # NPC memory persistence
-└── handlers.lua        # Message handlers for external calls
+├── world.lua           # Master coordinator, CRON tick advancement ✅
+├── district.lua        # Per-district NPC management ✅
+├── economy.lua         # Taxes, city budget, wealth tracking ✅
+├── social.lua          # Relationships, gossip, reputation ✅
+├── ai_oracle.lua       # LLM dialogue generation ✅
+└── global_event_bus.lua # Event propagation ✅
 ```
 
-### world.lua (Main Entry Point)
+### Process Hierarchy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     AO Network (Arweave)                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   ┌─────────┐  CRON every 10min   ┌──────────────┐          │
+│   │ world   │ ───────────────────→│ district_001 │          │
+│   │ .lua    │                     └──────────────┘          │
+│   │         │ ───────────────────→│ district_002 │          │
+│   │ Tick++  │                     └──────────────┘          │
+│   │         │ ───────────────────→│ ai_oracle    │          │
+│   └─────────┘                     └──────────────┘          │
+│       │                                                      │
+│       │ Every 240 ticks (game day)                          │
+│       ▼                                                      │
+│   ┌─────────┐         ┌──────────┐                          │
+│   │economy  │ ◄──────►│ social   │                          │
+│   │.lua     │         │ .lua     │                          │
+│   └─────────┘         └──────────┘                          │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### world.lua (Master Coordinator)
 
 ```lua
 local json = require("json")
 
--- Global state (persisted)
-NPCs = NPCs or {}
-CurrentTick = CurrentTick or 0
-Buildings = Buildings or {}
+-- Global state (persisted on Arweave - uppercase = persisted)
+WorldTick = WorldTick or 0
+WorldDay = WorldDay or 0
+Districts = Districts or {}
+CityBudget = CityBudget or 1000000
 
--- Initialize from Arweave data
-Handlers.add("init", Handlers.utils.hasMatchingTag("Action", "Init"), function(msg)
-    local data = json.decode(msg.Data)
-    NPCs = data.npcs or {}
-    Buildings = data.buildings or {}
-    ao.send({ Target = msg.From, Data = "Initialized with " .. #NPCs .. " NPCs" })
-end)
-
--- Get NPC state
-Handlers.add("get-npc", Handlers.utils.hasMatchingTag("Action", "GetNPC"), function(msg)
-    local npc_id = msg.Tags.NpcId
-    local npc = NPCs[npc_id]
-    if npc then
-        ao.send({ Target = msg.From, Data = json.encode(npc) })
-    else
-        ao.send({ Target = msg.From, Data = json.encode({ error = "NPC not found" }) })
+-- CRON handler - this is the simulation heartbeat
+Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg)
+    WorldTick = WorldTick + 1
+    
+    -- Day advancement
+    if WorldTick % 240 == 0 then
+        WorldDay = WorldDay + 1
+    end
+    
+    -- Broadcast to all districts
+    for district_id, process_id in pairs(Districts) do
+        ao.send({
+            Target = process_id,
+            Action = "Cron",
+            Data = json.encode({ tick = WorldTick })
+        })
     end
 end)
 ```
@@ -257,32 +286,32 @@ async def chat():
 
 ## 📋 Migration Checklist
 
-### Phase 1: Core Logic (Priority)
-- [ ] `api_simulation.py` → `simulation.lua`
-  - [ ] `get_npc_state()` function
-  - [ ] `calculate_needs()` function
-  - [ ] Schedule template lookup
-  
-- [ ] `event_engine.py` → `events.lua`
-  - [ ] `generate_event_at_tick()` function
-  - [ ] `does_event_occur()` function
-  - [ ] Event encoding/decoding
+### Phase 1: Core Lua Modules ✅
+- [x] `world.lua` - Master coordinator with CRON tick
+- [x] `district.lua` - NPC location calculation, schedules
+- [x] `economy.lua` - Tax collection, city budget, expenses
+- [x] `social.lua` - Relationship tracking, gossip
+- [x] `ai_oracle.lua` - Dialogue generation queue
+- [x] `global_event_bus.lua` - Event propagation
 
-### Phase 2: AI Systems
-- [ ] `simulation_behaviors.py` → `behaviors.lua`
-  - [ ] Needs system with decay
-  - [ ] NPC interactions
-  - [ ] Random events
+### Phase 2: Codec Integration
+- [x] `world_codec_20_economy.json` - Income, taxes, wealth levels
+- [x] `world_codec_19_social.json` - Trust mechanics, relationships
+- [ ] Load codec chunks from Arweave at init
 
-- [ ] `advanced_ai_systems.py` → `ai.lua`
-  - [ ] Utility AI decision making
-  - [ ] GOAP planning (simplified)
+### Phase 3: Deploy to AO Testnet
+- [ ] Upload Lua modules to Arweave
+- [ ] Spawn world process with `Cron-Interval: "10-minutes"`
+- [ ] Initialize districts with NPC data
+- [ ] Register economy and social processes with world
+- [ ] Monitor cron message flow
+- [ ] Verify tick advancement every 10 minutes
 
-### Phase 3: Data Integration
-- [ ] Load NPC data from Arweave
-- [ ] Load codec chunks from Arweave
-- [ ] Set up CRON for tick advancement
-- [ ] Deploy to AO mainnet
+### Phase 4: Testing
+- [ ] Local Lua testing with mock crypto
+- [ ] AO testnet deployment
+- [ ] Verify deterministic state reconstruction
+- [ ] Load test with 10,000+ NPCs
 
 ---
 

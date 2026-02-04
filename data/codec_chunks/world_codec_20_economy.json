@@ -1,0 +1,312 @@
+{
+    "_chunk": {
+        "id": "chunk_20_economy",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "economy",
+        "prev_chunk": "chunk_19_social",
+        "next_chunk": null
+    },
+    "currency": {
+        "_desc": "GEP (Global Exchange Points) - unified currency",
+        "code": "GEP",
+        "symbol": "◊",
+        "denominations": {
+            "micro": 0.01,
+            "standard": 1,
+            "kilo": 1000,
+            "mega": 1000000
+        }
+    },
+    "income_by_archetype": {
+        "_desc": "Base daily income in GEP per archetype",
+        "_encoding": "INC### where ### is archetype code",
+        "ARCH001_shopkeeper": {
+            "code": "INC001",
+            "base_daily": 120,
+            "variance": 0.3,
+            "_note": "Varies by sales"
+        },
+        "ARCH002_bartender": {
+            "code": "INC002",
+            "base_daily": 80,
+            "variance": 0.4,
+            "tip_potential": 0.2
+        },
+        "ARCH003_guard": {
+            "code": "INC003",
+            "base_daily": 100,
+            "variance": 0.1,
+            "_note": "Steady temple pay"
+        },
+        "ARCH004_street_vendor": {
+            "code": "INC004",
+            "base_daily": 50,
+            "variance": 0.6,
+            "_note": "Highly variable"
+        },
+        "ARCH005_medic": {
+            "code": "INC005",
+            "base_daily": 150,
+            "variance": 0.2
+        },
+        "ARCH006_civilian": {
+            "code": "INC006",
+            "base_daily": 75,
+            "variance": 0.3
+        },
+        "ARCH007_technician": {
+            "code": "INC007",
+            "base_daily": 130,
+            "variance": 0.2
+        },
+        "ARCH008_laborer": {
+            "code": "INC008",
+            "base_daily": 60,
+            "variance": 0.2
+        },
+        "ARCH009_smuggler": {
+            "code": "INC009",
+            "base_daily": 200,
+            "variance": 0.8,
+            "risk_modifier": 0.1
+        },
+        "ARCH010_priest": {
+            "code": "INC010",
+            "base_daily": 90,
+            "variance": 0.1,
+            "_note": "Temple stipend"
+        }
+    },
+    "expenses": {
+        "_desc": "Daily expense categories",
+        "_encoding": "EXP### where ### is expense type",
+        "basic_needs": {
+            "EXP001_food": {
+                "min_daily": 10,
+                "comfortable": 25,
+                "luxury": 50
+            },
+            "EXP002_housing": {
+                "slum": 5,
+                "basic": 15,
+                "comfortable": 40,
+                "luxury": 100
+            },
+            "EXP003_transport": {
+                "walking": 0,
+                "public": 5,
+                "private": 20
+            },
+            "EXP004_healthcare": {
+                "none": 0,
+                "basic_clinic": 10,
+                "private": 50
+            }
+        },
+        "optional": {
+            "EXP010_entertainment": 15,
+            "EXP011_substances": 20,
+            "EXP012_savings": "varies"
+        }
+    },
+    "taxation": {
+        "_desc": "City tax system",
+        "income_tax": {
+            "rate": 0.10,
+            "collected_by": "city_treasury",
+            "collection_frequency": "daily"
+        },
+        "sales_tax": {
+            "rate": 0.05,
+            "applies_to": [
+                "trade",
+                "purchase"
+            ],
+            "exemptions": [
+                "food_basic",
+                "medicine_basic"
+            ]
+        },
+        "temple_tithe": {
+            "rate": 0.05,
+            "voluntary": false,
+            "faction": "temple",
+            "_note": "Mandatory for true believers"
+        }
+    },
+    "city_budget": {
+        "_desc": "City services funded by taxes",
+        "services": {
+            "SVC001_police": {
+                "cost_per_officer": 80,
+                "officers_per_1000_pop": 5,
+                "effect_on_crime": -0.15
+            },
+            "SVC002_sanitation": {
+                "cost_per_worker": 40,
+                "workers_per_1000_pop": 3,
+                "effect_on_disease": -0.2
+            },
+            "SVC003_infrastructure": {
+                "cost_per_day": 3000,
+                "decay_without_funding": 0.01
+            },
+            "SVC004_healthcare": {
+                "cost_per_bed": 100,
+                "beds_per_1000_pop": 10
+            },
+            "SVC005_emergency": {
+                "cost_per_unit": 150,
+                "units_per_1000_pop": 2
+            }
+        },
+        "crisis_thresholds": {
+            "warning": 10000,
+            "critical": 5000,
+            "collapse": 1000
+        }
+    },
+    "trade_actions": {
+        "_desc": "Economic actions mapped to action codes",
+        "A071_buy": {
+            "verb": "V071",
+            "requires_gep": true,
+            "creates_transaction": true
+        },
+        "A072_sell": {
+            "verb": "V072",
+            "generates_gep": true,
+            "creates_transaction": true
+        },
+        "A073_trade": {
+            "verb": "V073",
+            "bilateral": true
+        },
+        "A075_haggle": {
+            "verb": "V276",
+            "modifies_price": true,
+            "skill_check": "S32_bargaining"
+        },
+        "A081_steal": {
+            "verb": "V082",
+            "generates_gep": true,
+            "illegal": true,
+            "crime_code": "CRIME001_theft"
+        },
+        "A058_bribe": {
+            "verb": "V058",
+            "reduces_gep": true,
+            "social_modifier": true
+        }
+    },
+    "economic_events": {
+        "_desc": "Events that affect economy",
+        "EVT_E001_market_crash": {
+            "effect": {
+                "all_prices": -0.3,
+                "job_loss_chance": 0.1
+            },
+            "duration_days": 30,
+            "probability": 0.0001
+        },
+        "EVT_E002_price_surge": {
+            "effect": {
+                "category_prices": 0.5
+            },
+            "duration_days": 7,
+            "probability": 0.001
+        },
+        "EVT_E003_tax_increase": {
+            "effect": {
+                "income_tax": 0.05
+            },
+            "probability": 0.0005,
+            "triggers": [
+                "budget_crisis"
+            ]
+        },
+        "EVT_E004_black_market_bust": {
+            "effect": {
+                "illegal_prices": 0.4
+            },
+            "probability": 0.002
+        }
+    },
+    "wealth_levels": {
+        "_desc": "NPC wealth classification",
+        "destitute": {
+            "gep_range": [
+                0,
+                100
+            ],
+            "behaviors": [
+                "BHV_BEG",
+                "BHV_STEAL"
+            ],
+            "housing": "none_or_slum"
+        },
+        "poor": {
+            "gep_range": [
+                100,
+                500
+            ],
+            "behaviors": [
+                "BHV_SAVE",
+                "BHV_EXTRA_WORK"
+            ],
+            "housing": "slum"
+        },
+        "working": {
+            "gep_range": [
+                500,
+                2000
+            ],
+            "behaviors": [
+                "BHV_NORMAL"
+            ],
+            "housing": "basic"
+        },
+        "comfortable": {
+            "gep_range": [
+                2000,
+                10000
+            ],
+            "behaviors": [
+                "BHV_LEISURE",
+                "BHV_SAVE"
+            ],
+            "housing": "comfortable"
+        },
+        "wealthy": {
+            "gep_range": [
+                10000,
+                100000
+            ],
+            "behaviors": [
+                "BHV_INVEST",
+                "BHV_LUXURY"
+            ],
+            "housing": "luxury"
+        },
+        "elite": {
+            "gep_range": [
+                100000,
+                null
+            ],
+            "behaviors": [
+                "BHV_INFLUENCE",
+                "BHV_POWER"
+            ],
+            "housing": "exclusive"
+        }
+    },
+    "inheritance": {
+        "_desc": "Wealth transfer on death",
+        "spouse_share": 0.5,
+        "children_share": 0.4,
+        "other_family_share": 0.1,
+        "no_heir_goes_to": "city_treasury",
+        "temple_tax_on_inheritance": 0.1
+    }
+}
