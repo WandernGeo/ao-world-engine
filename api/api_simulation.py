@@ -437,6 +437,122 @@ SCHEDULES = {
     },
     
     # =========================================================================
+    # EMERGENCY SERVICES (24/7 - always someone on duty)
+    # =========================================================================
+    "police_day": {  # Day shift 6am-6pm
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "waking", "location_type": "home"},
+        "T03": {"activity": "patrol", "location_type": "street"},
+        "T04": {"activity": "patrol", "location_type": "street"},
+        "T05": {"activity": "patrol", "location_type": "street"},
+        "T06": {"activity": "paperwork", "location_type": "workplace"},
+        "T07": {"activity": "shift_change", "location_type": "workplace"},
+        "T08": {"activity": "leisure", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "police_night": {  # Night shift 6pm-6am
+        "T01": {"activity": "patrol", "location_type": "street"},
+        "T02": {"activity": "patrol", "location_type": "street"},
+        "T03": {"activity": "shift_change", "location_type": "workplace"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "patrol", "location_type": "street"},
+        "T10": {"activity": "patrol", "location_type": "street"},
+    },
+    "ambulance_day": {  # EMT/Paramedic day shift
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "waking", "location_type": "home"},
+        "T03": {"activity": "responding", "location_type": "street"},
+        "T04": {"activity": "responding", "location_type": "street"},
+        "T05": {"activity": "standby", "location_type": "workplace"},
+        "T06": {"activity": "responding", "location_type": "street"},
+        "T07": {"activity": "shift_change", "location_type": "workplace"},
+        "T08": {"activity": "leisure", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "ambulance_night": {  # EMT/Paramedic night shift
+        "T01": {"activity": "responding", "location_type": "street"},
+        "T02": {"activity": "standby", "location_type": "workplace"},
+        "T03": {"activity": "shift_change", "location_type": "workplace"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "responding", "location_type": "street"},
+        "T10": {"activity": "responding", "location_type": "street"},
+    },
+    "clinic_doctor": {  # Hospital/Clinic medical staff
+        "T01": {"activity": "on_call", "location_type": "workplace"},
+        "T02": {"activity": "resting", "location_type": "workplace"},
+        "T03": {"activity": "treating", "location_type": "workplace"},
+        "T04": {"activity": "treating", "location_type": "workplace"},
+        "T05": {"activity": "treating", "location_type": "workplace"},
+        "T06": {"activity": "commuting", "location_type": "transit"},
+        "T07": {"activity": "leisure", "location_type": "home"},
+        "T08": {"activity": "relaxing", "location_type": "home"},
+        "T09": {"activity": "sleeping", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    
+    # =========================================================================
+    # TRANSPORT & INFRASTRUCTURE (24/7 operations)
+    # =========================================================================
+    "transit_driver_day": {  # Bus/tram driver day shift
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "waking", "location_type": "home"},
+        "T03": {"activity": "driving", "location_type": "transit"},
+        "T04": {"activity": "driving", "location_type": "transit"},
+        "T05": {"activity": "break", "location_type": "workplace"},
+        "T06": {"activity": "driving", "location_type": "transit"},
+        "T07": {"activity": "shift_end", "location_type": "workplace"},
+        "T08": {"activity": "leisure", "location_type": "bar"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "transit_driver_night": {  # Bus/tram driver night shift
+        "T01": {"activity": "driving", "location_type": "transit"},
+        "T02": {"activity": "driving", "location_type": "transit"},
+        "T03": {"activity": "shift_end", "location_type": "workplace"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "leisure", "location_type": "home"},
+        "T09": {"activity": "commuting", "location_type": "transit"},
+        "T10": {"activity": "driving", "location_type": "transit"},
+    },
+    "sanitation": {  # Garbage collection, street cleaning (early morning)
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "waking", "location_type": "home"},
+        "T03": {"activity": "collecting", "location_type": "street"},
+        "T04": {"activity": "collecting", "location_type": "street"},
+        "T05": {"activity": "collecting", "location_type": "street"},
+        "T06": {"activity": "returning", "location_type": "workplace"},
+        "T07": {"activity": "leisure", "location_type": "home"},
+        "T08": {"activity": "dinner", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "infrastructure_night": {  # Road work, repairs (night to avoid traffic)
+        "T01": {"activity": "repairing", "location_type": "street"},
+        "T02": {"activity": "repairing", "location_type": "street"},
+        "T03": {"activity": "shift_end", "location_type": "workplace"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "sleeping", "location_type": "home"},
+        "T08": {"activity": "waking", "location_type": "home"},
+        "T09": {"activity": "commuting", "location_type": "transit"},
+        "T10": {"activity": "repairing", "location_type": "street"},
+    },
+    
+    # =========================================================================
     # SPECIAL SCHEDULES (2% of population)
     # =========================================================================
     "resistance_fighter": {
@@ -556,6 +672,29 @@ def get_npc_state(npc: dict, tick: int) -> dict:
         "vendor": "shopkeeper",
         "shopkeeper": "shopkeeper",
         "clerk": "shopkeeper",
+        # Emergency services
+        "police": "police_day",
+        "cop": "police_day",
+        "officer": "police_day",
+        "detective": "police_day",
+        "enforcer": "police_night",
+        "medic": "ambulance_day",
+        "paramedic": "ambulance_day",
+        "emt": "ambulance_night",
+        "doctor": "clinic_doctor",
+        "nurse": "clinic_doctor",
+        "surgeon": "clinic_doctor",
+        # Transport workers
+        "driver": "transit_driver_day",
+        "bus driver": "transit_driver_day",
+        "tram operator": "transit_driver_day",
+        "taxi": "transit_driver_night",
+        "sanitation": "sanitation",
+        "garbage collector": "sanitation",
+        "street cleaner": "sanitation",
+        "road worker": "infrastructure_night",
+        "construction": "infrastructure_night",
+        "repair tech": "infrastructure_night",
     }
     
     # Get schedule: explicit > archetype mapping > default  
@@ -570,16 +709,26 @@ def get_npc_state(npc: dict, tick: int) -> dict:
             # Weighted random schedule assignment based on realistic population distribution
             # This creates variety: some at work, some home, some wandering
             schedule_weights = [
-                ("worker", 0.30),           # 30% - Standard workers with workplace
-                ("office_worker", 0.15),    # 15% - Office workers with lunch breaks
-                ("homebody", 0.15),         # 15% - Work from home / stay home
-                ("early_bird", 0.10),       # 10% - Early risers, early to bed
-                ("parent", 0.08),           # 8%  - Stay-at-home parents
+                ("worker", 0.25),           # 25% - Standard workers with workplace
+                ("office_worker", 0.12),    # 12% - Office workers with lunch breaks
+                ("homebody", 0.12),         # 12% - Work from home / stay home
+                ("early_bird", 0.08),       # 8% - Early risers, early to bed
+                ("parent", 0.06),           # 6%  - Stay-at-home parents
                 ("retiree", 0.05),          # 5%  - Retired, leisurely
                 ("student", 0.05),          # 5%  - Students
                 ("freelancer", 0.05),       # 5%  - Irregular hours
-                ("unemployed", 0.04),       # 4%  - Wandering, searching
+                ("unemployed", 0.03),       # 3%  - Wandering, searching
                 ("fitness", 0.03),          # 3%  - Athletes, trainers
+                # 24/7 Services (16% total - ensures city is always alive)
+                ("police_day", 0.02),       # 2%  - Police day shift
+                ("police_night", 0.02),     # 2%  - Police night shift
+                ("ambulance_day", 0.015),   # 1.5% - EMT day shift
+                ("ambulance_night", 0.015), # 1.5% - EMT night shift
+                ("transit_driver_day", 0.02),   # 2% - Transport day shift
+                ("transit_driver_night", 0.02), # 2% - Transport night shift
+                ("security_night", 0.03),   # 3%  - Security guards
+                ("sanitation", 0.01),       # 1%  - Garbage/cleaning
+                ("infrastructure_night", 0.01), # 1% - Road repairs
             ]
             
             # Use seeded random to pick schedule based on NPC ID (deterministic)
@@ -922,6 +1071,265 @@ def get_time():
     """Get time info for a tick."""
     tick = int(request.args.get("tick", 100))
     return jsonify(get_time_info(tick))
+
+
+@app.route("/api/traffic")
+def get_traffic():
+    """
+    Get traffic and street activity for a tick.
+    Returns vehicles, public transport, emergency services active at this time.
+    """
+    tick = int(request.args.get("tick", 100))
+    time_info = get_time_info(tick)
+    time_period = time_info["period"]
+    hour = time_info["hour"]
+    
+    # Traffic density by time period (0.0-1.0)
+    TRAFFIC_DENSITY = {
+        "T01": 0.05,  # 00:00-02:30 - Dead of night
+        "T02": 0.03,  # 02:30-05:00 - Absolute minimum
+        "T03": 0.35,  # 05:00-07:00 - Early commute
+        "T04": 0.80,  # 07:00-10:00 - Morning rush
+        "T05": 0.50,  # 10:00-12:00 - Mid-morning
+        "T06": 0.65,  # 12:00-14:00 - Lunch movement
+        "T07": 0.85,  # 14:00-17:00 - Evening rush peak
+        "T08": 0.55,  # 17:00-19:00 - Post-work
+        "T09": 0.25,  # 19:00-22:00 - Evening
+        "T10": 0.10,  # 22:00-midnight - Night owls
+    }
+    
+    density = TRAFFIC_DENSITY.get(time_period, 0.3)
+    
+    # Calculate number of vehicles visible (base of 20 at full density)
+    base_vehicles = 20
+    num_vehicles = int(base_vehicles * density)
+    
+    # Vehicle types and their activity at different times
+    def generate_vehicles(tick, count):
+        vehicles = []
+        for i in range(count):
+            seed = f"vehicle_{tick}_{i}"
+            r = seeded_random(seed)
+            
+            # Vehicle type distribution changes by time
+            is_night = time_period in ["T01", "T02", "T10"]
+            
+            if is_night:
+                # Night: More taxis, less private cars
+                if r < 0.40:
+                    vtype = "taxi"
+                elif r < 0.60:
+                    vtype = "personal_car"
+                elif r < 0.75:
+                    vtype = "delivery_drone"
+                elif r < 0.90:
+                    vtype = "cargo_truck"
+                else:
+                    vtype = "motorcycle"
+            else:
+                # Day: More varied traffic
+                if r < 0.50:
+                    vtype = "personal_car"
+                elif r < 0.65:
+                    vtype = "taxi"
+                elif r < 0.75:
+                    vtype = "bus"
+                elif r < 0.85:
+                    vtype = "delivery_drone"
+                elif r < 0.95:
+                    vtype = "cargo_truck"
+                else:
+                    vtype = "motorcycle"
+            
+            # Random position on major routes
+            routes = ["main_arterial", "market_ring", "hab_access", "temple_road"]
+            route = seeded_choice(routes, f"{seed}_route")
+            
+            vehicles.append({
+                "id": f"V_{tick}_{i:03d}",
+                "type": vtype,
+                "route": route,
+                "position": seeded_random(f"{seed}_pos"),
+            })
+        return vehicles
+    
+    vehicles = generate_vehicles(tick, num_vehicles)
+    
+    # Public transport - always running (reduced at night)
+    def get_public_transport(tick, time_period):
+        transports = []
+        is_night = time_period in ["T01", "T02", "T10"]
+        
+        # Tram Line 1 - Central Loop (24h)
+        transports.append({
+            "id": "TRAM_L1",
+            "name": "Central Loop",
+            "type": "tram",
+            "current_stop": seeded_choice(
+                ["Jade Tower", "Market Hall", "Temple", "Hab Blocks"],
+                f"tram1_{tick}"
+            ),
+            "passengers": int(60 * density * (0.3 if is_night else 1)),
+        })
+        
+        # Tram Line 2 - Undercity (not at night)
+        if not is_night:
+            transports.append({
+                "id": "TRAM_L2",
+                "name": "Undercity Express",
+                "type": "tram",
+                "current_stop": seeded_choice(
+                    ["Apartments", "Rusty Anchor", "Drone Depot", "Tunnels"],
+                    f"tram2_{tick}"
+                ),
+                "passengers": int(50 * density),
+            })
+        
+        # Night Bus (night only)
+        if is_night:
+            transports.append({
+                "id": "BUS_NIGHT",
+                "name": "Night Owl Service",
+                "type": "bus",
+                "current_stop": seeded_choice(
+                    ["Rusty Anchor", "Hab Blocks", "Jade Tower", "Apartments"],
+                    f"nightbus_{tick}"
+                ),
+                "passengers": int(15 * density * 3),  # Night riders
+            })
+        else:
+            # Day bus routes
+            transports.append({
+                "id": "BUS_A",
+                "name": "Market Shuttle",
+                "type": "bus",
+                "current_stop": seeded_choice(
+                    ["Market Hall", "AutoFab", "Recycling", "Temple Outpost"],
+                    f"busa_{tick}"
+                ),
+                "passengers": int(30 * density),
+            })
+        
+        return transports
+    
+    public_transport = get_public_transport(tick, time_period)
+    
+    # Emergency services - always present, more at night
+    def get_emergency_vehicles(tick, time_period):
+        emergency = []
+        is_night = time_period in ["T01", "T02", "T10"]
+        
+        # Police cruisers - more at night
+        num_police = 3 if is_night else 2
+        for i in range(num_police):
+            districts = ["undercity", "market_district", "temple_district", "hab_blocks"]
+            emergency.append({
+                "id": f"POLICE_{i+1}",
+                "type": "police_cruiser",
+                "activity": "patrolling",
+                "district": seeded_choice(districts, f"police_{tick}_{i}"),
+                "responding": seeded_random(f"police_resp_{tick}_{i}") < 0.1,
+            })
+        
+        # Ambulance - always one on duty
+        emergency.append({
+            "id": "AMB_01",
+            "type": "ambulance",
+            "activity": seeded_choice(["standby", "responding", "returning"], f"amb_{tick}"),
+            "stationed_at": "Clinic",
+            "responding": seeded_random(f"amb_resp_{tick}") < 0.08,
+        })
+        
+        # Night specific: garbage truck, road repair
+        if is_night and time_period in ["T02", "T03"]:
+            emergency.append({
+                "id": "SANITATION_01",
+                "type": "garbage_truck",
+                "activity": "collecting",
+                "district": seeded_choice(["market_district", "hab_blocks"], f"garb_{tick}"),
+            })
+        
+        if is_night and time_period in ["T01", "T02"]:
+            emergency.append({
+                "id": "REPAIR_01",
+                "type": "construction_vehicle",
+                "activity": "road_repair",
+                "location": seeded_choice(["main_arterial", "market_ring"], f"repair_{tick}"),
+            })
+        
+        return emergency
+    
+    emergency_vehicles = get_emergency_vehicles(tick, time_period)
+    
+    # Street NPCs (vendors, guards, etc.)
+    def get_street_npcs(tick, time_period, density):
+        street_npcs = []
+        is_day = time_period in ["T04", "T05", "T06", "T07", "T08"]
+        is_night = time_period in ["T01", "T02", "T10"]
+        
+        # Street vendors (day only)
+        if is_day:
+            for i in range(3):
+                street_npcs.append({
+                    "type": "street_vendor",
+                    "activity": "selling",
+                    "location": seeded_choice(
+                        ["Market Hall entrance", "Jade Tower plaza", "Temple steps"],
+                        f"vendor_{tick}_{i}"
+                    ),
+                })
+        
+        # Patrol guards (night shift)
+        if is_night:
+            for i in range(2):
+                street_npcs.append({
+                    "type": "security_patrol",
+                    "activity": "patrolling",
+                    "location": seeded_choice(
+                        ["Undercity streets", "Hab Block perimeter", "Market alleys"],
+                        f"guard_{tick}_{i}"
+                    ),
+                })
+        
+        # Random pedestrians (based on density)
+        num_pedestrians = int(20 * density)
+        for i in range(num_pedestrians):
+            street_npcs.append({
+                "type": "pedestrian",
+                "activity": seeded_choice(["walking", "waiting", "talking"], f"ped_{tick}_{i}"),
+                "location": seeded_choice(
+                    ["sidewalk", "crosswalk", "plaza", "bus_stop"],
+                    f"pedloc_{tick}_{i}"
+                ),
+            })
+        
+        return street_npcs
+    
+    street_npcs = get_street_npcs(tick, time_period, density)
+    
+    return jsonify({
+        "tick": tick,
+        "time": time_info,
+        "traffic_density": density,
+        "traffic_level": "dead" if density < 0.1 else "light" if density < 0.3 else "moderate" if density < 0.6 else "heavy",
+        "vehicles": {
+            "count": len(vehicles),
+            "list": vehicles,
+        },
+        "public_transport": {
+            "count": len(public_transport),
+            "services": public_transport,
+        },
+        "emergency_services": {
+            "count": len(emergency_vehicles),
+            "vehicles": emergency_vehicles,
+        },
+        "street_activity": {
+            "pedestrian_density": density * 0.8,
+            "npcs_visible": len(street_npcs),
+            "npcs": street_npcs[:20],  # Limit response size
+        },
+    })
 
 
 @app.route("/api/transport")

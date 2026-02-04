@@ -1,0 +1,366 @@
+{
+    "_chunk": {
+        "id": "18",
+        "name": "traffic_and_transport",
+        "category": "infrastructure",
+        "version": "1.0.0",
+        "description": "Vehicle traffic patterns, public transport routes, and street activity",
+        "dependencies": [
+            "02_locations",
+            "03_buildings"
+        ]
+    },
+    "_vehicle_types": {
+        "_desc": "Types of vehicles that move through the city",
+        "VT01": {
+            "name": "personal_car",
+            "speed": "fast",
+            "capacity": 4,
+            "frequency": "high"
+        },
+        "VT02": {
+            "name": "taxi",
+            "speed": "fast",
+            "capacity": 4,
+            "frequency": "high"
+        },
+        "VT03": {
+            "name": "bus",
+            "speed": "medium",
+            "capacity": 40,
+            "frequency": "medium"
+        },
+        "VT04": {
+            "name": "tram",
+            "speed": "medium",
+            "capacity": 60,
+            "frequency": "scheduled"
+        },
+        "VT05": {
+            "name": "ambulance",
+            "speed": "emergency",
+            "capacity": 2,
+            "frequency": "low"
+        },
+        "VT06": {
+            "name": "police_cruiser",
+            "speed": "patrol",
+            "capacity": 2,
+            "frequency": "medium"
+        },
+        "VT07": {
+            "name": "delivery_drone",
+            "speed": "fast",
+            "capacity": 1,
+            "frequency": "high"
+        },
+        "VT08": {
+            "name": "cargo_truck",
+            "speed": "slow",
+            "capacity": 100,
+            "frequency": "medium"
+        },
+        "VT09": {
+            "name": "garbage_truck",
+            "speed": "slow",
+            "capacity": 50,
+            "frequency": "low"
+        },
+        "VT10": {
+            "name": "construction_vehicle",
+            "speed": "slow",
+            "capacity": 0,
+            "frequency": "low"
+        },
+        "VT11": {
+            "name": "motorcycle",
+            "speed": "fast",
+            "capacity": 2,
+            "frequency": "medium"
+        },
+        "VT12": {
+            "name": "hover_bike",
+            "speed": "very_fast",
+            "capacity": 1,
+            "frequency": "low"
+        }
+    },
+    "_traffic_density_by_time": {
+        "_desc": "Traffic volume multiplier by time period (0.0-1.0)",
+        "T01": {
+            "density": 0.05,
+            "note": "00:00-02:30 - Dead of night"
+        },
+        "T02": {
+            "density": 0.03,
+            "note": "02:30-05:00 - Absolute minimum"
+        },
+        "T03": {
+            "density": 0.35,
+            "note": "05:00-07:00 - Early commute starts"
+        },
+        "T04": {
+            "density": 0.80,
+            "note": "07:00-10:00 - Morning rush"
+        },
+        "T05": {
+            "density": 0.50,
+            "note": "10:00-12:00 - Mid-morning"
+        },
+        "T06": {
+            "density": 0.65,
+            "note": "12:00-14:00 - Lunch movement"
+        },
+        "T07": {
+            "density": 0.85,
+            "note": "14:00-17:00 - Evening rush peak"
+        },
+        "T08": {
+            "density": 0.55,
+            "note": "17:00-19:00 - Post-work dining"
+        },
+        "T09": {
+            "density": 0.25,
+            "note": "19:00-22:00 - Evening activity"
+        },
+        "T10": {
+            "density": 0.10,
+            "note": "22:00-midnight - Night owls"
+        }
+    },
+    "_nighttime_traffic": {
+        "_desc": "What vehicles are active at night (T01, T02, T10)",
+        "always_active": [
+            "taxi",
+            "police_cruiser",
+            "ambulance"
+        ],
+        "night_specific": [
+            "garbage_truck",
+            "construction_vehicle",
+            "delivery_drone"
+        ],
+        "reduced": [
+            "personal_car",
+            "bus"
+        ],
+        "off": [
+            "school_bus",
+            "tour_bus"
+        ]
+    },
+    "_public_transport_routes": {
+        "_desc": "Fixed route public transport with schedules",
+        "tram_line_1": {
+            "name": "Central Loop",
+            "stops": [
+                "B01_jade_tower",
+                "B03_market_hall",
+                "B07_temple",
+                "B12_hab_blocks"
+            ],
+            "frequency_minutes": 10,
+            "operating_hours": {
+                "start": "05:00",
+                "end": "01:00"
+            },
+            "night_service": true
+        },
+        "tram_line_2": {
+            "name": "Undercity Express",
+            "stops": [
+                "B02_apartments",
+                "B04_rusty_anchor",
+                "B10_drone_depot",
+                "B11_tunnels"
+            ],
+            "frequency_minutes": 15,
+            "operating_hours": {
+                "start": "06:00",
+                "end": "00:00"
+            },
+            "night_service": false
+        },
+        "bus_route_A": {
+            "name": "Market District Shuttle",
+            "stops": [
+                "B03_market_hall",
+                "B06_autofab",
+                "B05_recycling",
+                "B08_temple_outpost"
+            ],
+            "frequency_minutes": 20,
+            "operating_hours": {
+                "start": "05:30",
+                "end": "23:00"
+            },
+            "night_service": false
+        },
+        "night_bus": {
+            "name": "Night Owl Service",
+            "stops": [
+                "B04_rusty_anchor",
+                "B12_hab_blocks",
+                "B01_jade_tower",
+                "B02_apartments"
+            ],
+            "frequency_minutes": 30,
+            "operating_hours": {
+                "start": "23:00",
+                "end": "05:00"
+            },
+            "night_service": true
+        }
+    },
+    "_street_segments": {
+        "_desc": "Major street segments with traffic patterns",
+        "main_arterial": {
+            "connects": [
+                "undercity",
+                "market_district",
+                "temple_district"
+            ],
+            "lanes": 4,
+            "traffic_flow": "bidirectional",
+            "has_tram": true
+        },
+        "market_ring": {
+            "connects": [
+                "market_north",
+                "market_south",
+                "market_east",
+                "market_west"
+            ],
+            "lanes": 2,
+            "traffic_flow": "one_way_clockwise",
+            "has_tram": false
+        },
+        "hab_block_access": {
+            "connects": [
+                "hab_blocks_a",
+                "hab_blocks_b",
+                "main_arterial"
+            ],
+            "lanes": 2,
+            "traffic_flow": "bidirectional",
+            "has_tram": false
+        }
+    },
+    "_emergency_services": {
+        "_desc": "Emergency vehicle spawning rules",
+        "police_patrol": {
+            "base_frequency_per_hour": 4,
+            "night_multiplier": 1.5,
+            "areas": [
+                "all_districts"
+            ],
+            "routes": "random_patrol"
+        },
+        "ambulance": {
+            "base_frequency_per_hour": 1,
+            "night_multiplier": 0.8,
+            "stationed_at": "clinic",
+            "response_to": "medical_events"
+        },
+        "fire_response": {
+            "base_frequency_per_hour": 0.2,
+            "stationed_at": "fire_station",
+            "response_to": "fire_events"
+        }
+    },
+    "_pedestrian_activity": {
+        "_desc": "Street-level pedestrian density by time",
+        "T01": {
+            "walkers": 0.02,
+            "note": "Almost empty streets"
+        },
+        "T02": {
+            "walkers": 0.01,
+            "note": "Only shift workers"
+        },
+        "T03": {
+            "walkers": 0.20,
+            "note": "Early commuters"
+        },
+        "T04": {
+            "walkers": 0.70,
+            "note": "Rush hour crowds"
+        },
+        "T05": {
+            "walkers": 0.40,
+            "note": "Steady flow"
+        },
+        "T06": {
+            "walkers": 0.55,
+            "note": "Lunch crowds"
+        },
+        "T07": {
+            "walkers": 0.75,
+            "note": "Evening rush"
+        },
+        "T08": {
+            "walkers": 0.45,
+            "note": "Dinner/entertainment"
+        },
+        "T09": {
+            "walkers": 0.20,
+            "note": "Evening wind-down"
+        },
+        "T10": {
+            "walkers": 0.08,
+            "note": "Bar-goers, night workers"
+        }
+    },
+    "_street_npcs": {
+        "_desc": "NPCs that are always visible on streets regardless of personal schedule",
+        "street_vendor": {
+            "count_per_district": 2,
+            "active_hours": [
+                "T04",
+                "T05",
+                "T06",
+                "T07",
+                "T08"
+            ],
+            "activity": "selling"
+        },
+        "patrol_officer": {
+            "count_per_district": 1,
+            "active_hours": [
+                "T01",
+                "T02",
+                "T03",
+                "T09",
+                "T10"
+            ],
+            "activity": "patrolling"
+        },
+        "taxi_driver": {
+            "count_visible": 5,
+            "active_hours": "all",
+            "activity": "driving"
+        },
+        "street_cleaner": {
+            "count_per_district": 1,
+            "active_hours": [
+                "T02",
+                "T03"
+            ],
+            "activity": "cleaning"
+        }
+    },
+    "_simulation_hooks": {
+        "on_tick": [
+            "calculate_traffic_density",
+            "spawn_vehicles_on_routes",
+            "update_public_transport_positions",
+            "check_emergency_events"
+        ],
+        "visible_entities": [
+            "Show vehicles on main streets",
+            "Display public transport on routes",
+            "Show emergency vehicles responding",
+            "Display street NPCs (vendors, guards)"
+        ]
+    }
+}
