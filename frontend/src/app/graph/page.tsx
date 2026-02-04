@@ -346,7 +346,7 @@ export default function KnowledgeGraphPage() {
     const [pan, setPan] = useState({ x: -1400, y: -1100 }); // Center on the graph cluster
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const [isSimulating, setIsSimulating] = useState(true);
+    const [isSimulating, setIsSimulating] = useState(false); // Start paused - no drift
     const [stats, setStats] = useState({ entities: 0, relationships: 0, npcs: 0 });
     const [draggedNode, setDraggedNode] = useState<string | null>(null); // NEW: track dragged node
     const [autoRotate, setAutoRotate] = useState(false); // Auto-rotation toggle
@@ -653,7 +653,7 @@ export default function KnowledgeGraphPage() {
             const nodeScreenY = proj.y * zoom + pan.y;
             // Compare with canvas mouse position
             const dist = Math.sqrt((nodeScreenX - canvasX) ** 2 + (nodeScreenY - canvasY) ** 2);
-            const hitRadius = Math.max(20, 30 * proj.scale * zoom); // Scale hit radius with zoom
+            const hitRadius = Math.max(30, 50 * proj.scale * zoom); // Big hit radius for easy clicking
             if (dist < hitRadius) {
                 setDraggedNode(entity.id);
                 setSelectedEntity(entity);
@@ -672,15 +672,15 @@ export default function KnowledgeGraphPage() {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
 
-        // Handle 3D rotation with right-drag
-        if (isRotating) {
-            const dx = e.clientX - rotateStart.x;
-            const dy = e.clientY - rotateStart.y;
-            setRotationY(prev => prev + dx * 0.005);
-            setRotationX(prev => Math.max(-Math.PI / 3, Math.min(Math.PI / 3, prev + dy * 0.005)));
-            setRotateStart({ x: e.clientX, y: e.clientY });
-            return;
-        }
+        // 3D rotation DISABLED - pure 2D mode for reliable clicking
+        // if (isRotating) {
+        //     const dx = e.clientX - rotateStart.x;
+        //     const dy = e.clientY - rotateStart.y;
+        //     setRotationY(prev => prev + dx * 0.005);
+        //     setRotationX(prev => Math.max(-Math.PI / 3, Math.min(Math.PI / 3, prev + dy * 0.005)));
+        //     setRotateStart({ x: e.clientX, y: e.clientY });
+        //     return;
+        // }
 
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
@@ -730,7 +730,7 @@ export default function KnowledgeGraphPage() {
             const nodeScreenX = proj.x * zoom + pan.x;
             const nodeScreenY = proj.y * zoom + pan.y;
             const dist = Math.sqrt((nodeScreenX - hoverCanvasX) ** 2 + (nodeScreenY - hoverCanvasY) ** 2);
-            const hitRadius = Math.max(20, 30 * proj.scale * zoom);
+            const hitRadius = Math.max(30, 50 * proj.scale * zoom); // Big hit radius for easy clicking
             if (dist < hitRadius) {
                 setHoveredEntity(entity);
                 if (canvasRef.current) canvasRef.current.style.cursor = 'pointer';
@@ -907,8 +907,8 @@ export default function KnowledgeGraphPage() {
                             {showFamilyOnly ? '👨‍👩‍👧 Family Only' : '👨‍👩‍👧 Show Family'}
                         </Button>
                         <div className="flex gap-1">
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(15, z + 0.2))}>+</Button>
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.2))}>−</Button>
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(30, z + 0.5))}>+</Button>
+                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.5))}>−</Button>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => { setPan({ x: -1400, y: -1100 }); setZoom(2.0); setRotationX(0); setRotationY(0); }}>Reset</Button>
                         <Button
