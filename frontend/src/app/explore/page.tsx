@@ -82,39 +82,31 @@ const INITIAL_DISTRICTS: District[] = [
     },
 ];
 
-const INITIAL_NPCS: NPC[] = [
-    // Undercity
-    { id: 'charlie', name: 'Charlie', location: 'B001', activity: 'drinking', mood: 'cautious' },
-    { id: 'felix', name: 'Felix', location: 'B001', activity: 'bartending', mood: 'friendly' },
-    { id: 'mason', name: 'Mason', location: 'B001', activity: 'gambling', mood: 'nervous' },
-    { id: 'ghost', name: 'Ghost', location: 'B002', activity: 'hiding', mood: 'paranoid' },
-    { id: 'drifter_1', name: 'Kira', location: 'B003', activity: 'sleeping', mood: 'tired' },
-    { id: 'drifter_2', name: 'Juno', location: 'B003', activity: 'reading', mood: 'calm' },
-    { id: 'mechanic', name: 'Wrench', location: 'B004', activity: 'working', mood: 'busy' },
-    // Market
-    { id: 'orion', name: 'Orion Thanewilk', location: 'B011', activity: 'hacking', mood: 'focused' },
-    { id: 'assistant', name: 'Pixel', location: 'B011', activity: 'organizing', mood: 'cheerful' },
-    { id: 'vendor_1', name: 'Old Chen', location: 'B010', activity: 'selling', mood: 'friendly' },
-    { id: 'vendor_2', name: 'Mika', location: 'B010', activity: 'haggling', mood: 'shrewd' },
-    { id: 'vendor_3', name: 'Boris', location: 'B010', activity: 'restocking', mood: 'grumpy' },
-    { id: 'chef_lin', name: 'Chef Lin', location: 'B012', activity: 'cooking', mood: 'passionate' },
-    { id: 'dealer', name: 'Slick', location: 'B013', activity: 'appraising', mood: 'calculating' },
-    { id: 'whisper', name: 'Whisper', location: 'B014', activity: 'listening', mood: 'secretive' },
-    // Temple
-    { id: 'inquisitor_1', name: 'Inquisitor Vex', location: 'B016', activity: 'interrogating', mood: 'cold' },
-    { id: 'clerk_1', name: 'Clerk 47', location: 'B016', activity: 'processing', mood: 'robotic' },
-    { id: 'clerk_2', name: 'Clerk 52', location: 'B016', activity: 'filing', mood: 'bored' },
-    { id: 'archivist', name: 'The Archivist', location: 'B017', activity: 'cataloging', mood: 'obsessed' },
-    { id: 'confessor', name: 'Father Null', location: 'B018', activity: 'praying', mood: 'devout' },
-    // Residential
-    { id: 'doc_mercy', name: 'Doc Mercy', location: 'B022', activity: 'treating', mood: 'compassionate' },
-    { id: 'nurse', name: 'Nurse Hana', location: 'B022', activity: 'assisting', mood: 'kind' },
-    { id: 'resident_1', name: 'Jun', location: 'B020', activity: 'sleeping', mood: 'exhausted' },
-    { id: 'resident_2', name: 'Leah', location: 'B020', activity: 'cooking', mood: 'hopeful' },
-    { id: 'resident_3', name: 'Marcus', location: 'B020', activity: 'gaming', mood: 'escapist' },
-    { id: 'resident_4', name: 'Yuki', location: 'B021', activity: 'studying', mood: 'determined' },
-    { id: 'resident_5', name: 'Old Man Reyes', location: 'B021', activity: 'reminiscing', mood: 'sad' },
-];
+// Cyberpunk name generator
+const FIRST_NAMES = ['Zero', 'Nova', 'Kai', 'Raven', 'Phoenix', 'Ghost', 'Blade', 'Cipher', 'Echo', 'Frost', 'Hex', 'Jinx', 'Neon', 'Pixel', 'Rogue', 'Shadow', 'Spike', 'Storm', 'Volt', 'Wire', 'Ash', 'Drake', 'Ember', 'Flux', 'Glitch', 'Haze', 'Ion', 'Jazz', 'Kira', 'Luna', 'Max', 'Nico', 'Ori', 'Pulse', 'Quinn', 'Rex', 'Sage', 'Trix', 'Vex', 'Wolf'];
+const LAST_NAMES = ['Black', 'Chen', 'Vance', 'Reyes', 'Park', 'Kim', 'Silva', 'Tanaka', 'Okafor', 'Petrov', 'Sato', 'Garcia', 'Wei', 'Nakamura', 'Hassan', 'Volkov', 'Martinez', 'Zhang', 'Singh', 'Yamamoto', 'Frost', 'Stone', 'Steel', 'Cross', 'Drake', 'Grey', 'Hart', 'Kane', 'Lynch', 'Moon'];
+const ACTIVITIES = ['working', 'trading', 'walking', 'talking', 'resting', 'eating', 'drinking', 'watching', 'waiting', 'hiding', 'reading', 'sleeping', 'praying', 'shopping', 'gambling', 'hacking', 'crafting', 'patrolling'];
+const MOODS = ['friendly', 'cautious', 'nervous', 'calm', 'busy', 'tired', 'focused', 'cheerful', 'cold', 'secretive'];
+
+function generateNPCs(districts: District[], count: number): NPC[] {
+    const npcs: NPC[] = [];
+    const allBuildings = districts.flatMap(d => d.buildings);
+
+    for (let i = 0; i < count; i++) {
+        const firstIdx = i % FIRST_NAMES.length;
+        const lastIdx = Math.floor(i / FIRST_NAMES.length) % LAST_NAMES.length;
+        const building = allBuildings[i % allBuildings.length];
+
+        npcs.push({
+            id: `npc_${i.toString().padStart(4, '0')}`,
+            name: `${FIRST_NAMES[firstIdx]} ${LAST_NAMES[lastIdx]}`,
+            location: building?.id || 'B001',
+            activity: ACTIVITIES[i % ACTIVITIES.length],
+            mood: MOODS[i % MOODS.length],
+        });
+    }
+    return npcs;
+}
 
 export default function ExplorePage() {
     // State - initialized as empty/defaults to avoid hydration mismatch
@@ -143,11 +135,11 @@ export default function ExplorePage() {
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-    // Initialize on mount to avoid hydration mismatch
+    // Initialize on mount - generate 800 NPCs
     useEffect(() => {
         setMounted(true);
         setDistricts(INITIAL_DISTRICTS);
-        setNpcs(INITIAL_NPCS);
+        setNpcs(generateNPCs(INITIAL_DISTRICTS, 800));
     }, []);
 
     // Auto-advance tick when playing
