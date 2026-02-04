@@ -17,14 +17,32 @@ interface Message {
     timestamp: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const LOCAL_API = 'http://localhost:8080';
 
-// Sample NPCs - will be loaded from API
-const SAMPLE_NPCS: NPC[] = [
+// Try localhost first, fall back to Cloud
+async function getApiBase(): Promise<string> {
+    try {
+        const res = await fetch(`${LOCAL_API}/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
+        if (res.ok) return LOCAL_API;
+    } catch { /* ignore */ }
+    return CLOUD_API;
+}
+
+// 12 Founding NPCs from Signal Noir
+const FOUNDING_NPCS: NPC[] = [
     { id: 'charlie', name: 'Charlie', archetype: 'Resistance Fighter' },
     { id: 'felix', name: 'Felix', archetype: 'Info Broker' },
     { id: 'kira', name: 'Kira Ōmura', archetype: 'Street Oracle' },
     { id: 'orion', name: 'Orion Thanewilk', archetype: 'Tech Specialist' },
+    { id: 'zero', name: 'Zero Chen', archetype: 'Resistance Leader' },
+    { id: 'pixel', name: 'Pixel', archetype: 'Hacker' },
+    { id: 'ghost', name: 'Ghost', archetype: 'Shadow Operative' },
+    { id: 'kai', name: 'Kai Vance', archetype: 'Tactician' },
+    { id: 'nova', name: 'Nova Kim', archetype: 'Cyber Artist' },
+    { id: 'frost', name: 'Frost', archetype: 'Enforcer' },
+    { id: 'aiche', name: 'Aiche', archetype: 'AI Consciousness' },
+    { id: 'phoenix', name: 'Phoenix', archetype: 'Data Runner' },
 ];
 
 export default function ChatPage() {
@@ -33,24 +51,18 @@ export default function ChatPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [currentTick, setCurrentTick] = useState(100);
-    const [npcs, setNpcs] = useState<NPC[]>(SAMPLE_NPCS);
+    const [npcs, setNpcs] = useState<NPC[]>(FOUNDING_NPCS);
+    const [apiBase, setApiBase] = useState(CLOUD_API);
+    const [apiStatus, setApiStatus] = useState<'checking' | 'local' | 'cloud' | 'offline'>('checking');
 
-    // Load NPCs from API
+    // Find best API endpoint on mount
     useEffect(() => {
-        const fetchNPCs = async () => {
-            try {
-                const res = await fetch(`${API_BASE}/api/npcs`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.npcs && data.npcs.length > 0) {
-                        setNpcs(data.npcs.slice(0, 12)); // Show first 12
-                    }
-                }
-            } catch {
-                // Keep sample NPCs
-            }
+        const findApi = async () => {
+            const base = await getApiBase();
+            setApiBase(base);
+            setApiStatus(base === LOCAL_API ? 'local' : 'cloud');
         };
-        fetchNPCs();
+        findApi();
     }, []);
 
     const sendMessage = async () => {
@@ -62,7 +74,7 @@ export default function ChatPage() {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`${API_BASE}/api/npc/chat`, {
+            const res = await fetch(`${apiBase}/api/npc/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -118,8 +130,8 @@ export default function ChatPage() {
                                 key={npc.id}
                                 onClick={() => { setSelectedNPC(npc); setMessages([]); }}
                                 className={`w-full text-left p-3 rounded-lg transition-all ${selectedNPC?.id === npc.id
-                                        ? 'bg-cyan-600/30 border border-cyan-500'
-                                        : 'bg-zinc-900 hover:bg-zinc-800 border border-transparent'
+                                    ? 'bg-cyan-600/30 border border-cyan-500'
+                                    : 'bg-zinc-900 hover:bg-zinc-800 border border-transparent'
                                     }`}
                             >
                                 <div className="font-medium">{npc.name}</div>
@@ -152,8 +164,8 @@ export default function ChatPage() {
                                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                     >
                                         <div className={`max-w-[70%] p-3 rounded-lg ${msg.role === 'user'
-                                                ? 'bg-cyan-600/30 text-cyan-100'
-                                                : 'bg-zinc-800 text-zinc-100'
+                                            ? 'bg-cyan-600/30 text-cyan-100'
+                                            : 'bg-zinc-800 text-zinc-100'
                                             }`}>
                                             {msg.content}
                                         </div>

@@ -19,25 +19,114 @@ interface Relationship {
     trust: number;
 }
 
-// Sample data - replaces with API data
-const SAMPLE_NODES: NPCNode[] = [
-    { id: 'charlie', name: 'Charlie', x: 400, y: 300, archetype: 'resistance_fighter', connections: ['felix', 'kira', 'zero_chen'] },
-    { id: 'felix', name: 'Felix', x: 300, y: 200, archetype: 'info_broker', connections: ['charlie', 'orion'] },
-    { id: 'kira', name: 'Kira', x: 500, y: 200, archetype: 'street_oracle', connections: ['charlie', 'aiche'] },
-    { id: 'zero_chen', name: 'Zero Chen', x: 250, y: 400, archetype: 'resistance_fighter', connections: ['charlie', 'kai_vance'] },
-    { id: 'orion', name: 'Orion', x: 200, y: 300, archetype: 'tech_specialist', connections: ['felix', 'pixel'] },
-    { id: 'aiche', name: 'Aiche', x: 600, y: 300, archetype: 'ai_consciousness', connections: ['kira'] },
-    { id: 'kai_vance', name: 'Kai Vance', x: 350, y: 450, archetype: 'tactician', connections: ['zero_chen', 'charlie'] },
-    { id: 'pixel', name: 'Pixel', x: 150, y: 380, archetype: 'hacker', connections: ['orion', 'charlie'] },
-];
+const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const LOCAL_API = 'http://localhost:8080';
+
+// Generate random position in a circle layout
+function generatePosition(index: number, total: number, centerX = 400, centerY = 350, radius = 250) {
+    const angle = (index / total) * 2 * Math.PI - Math.PI / 2;
+    return {
+        x: centerX + radius * Math.cos(angle) + (Math.random() - 0.5) * 50,
+        y: centerY + radius * Math.sin(angle) + (Math.random() - 0.5) * 50
+    };
+}
+
+// Archetypes for random assignment
+const ARCHETYPES = ['resistance_fighter', 'info_broker', 'street_oracle', 'tech_specialist', 'ai_consciousness', 'tactician', 'hacker', 'resident', 'vendor', 'worker', 'criminal'];
+
+// Generate demo nodes (shown while API loads or if API fails)
+function generateDemoNodes(count: number): NPCNode[] {
+    const nodes: NPCNode[] = [];
+    for (let i = 0; i < count; i++) {
+        const pos = generatePosition(i, count);
+        const id = `npc_${i.toString().padStart(3, '0')}`;
+        const archetype = ARCHETYPES[i % ARCHETYPES.length];
+        nodes.push({
+            id,
+            name: `NPC ${i + 1}`,
+            x: pos.x,
+            y: pos.y,
+            archetype,
+            connections: []
+        });
+    }
+    // Add random connections (2-4 per node)
+    nodes.forEach((node, i) => {
+        const numConnections = 2 + Math.floor(Math.random() * 3);
+        for (let c = 0; c < numConnections; c++) {
+            const targetIdx = Math.floor(Math.random() * nodes.length);
+            if (targetIdx !== i && !node.connections.includes(nodes[targetIdx].id)) {
+                node.connections.push(nodes[targetIdx].id);
+            }
+        }
+    });
+    return nodes;
+}
+
+// Initial displayed nodes - show subset for performance
+const INITIAL_NODES = generateDemoNodes(50);
 
 export default function GraphPage() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [nodes, setNodes] = useState<NPCNode[]>(SAMPLE_NODES);
+    const [nodes, setNodes] = useState<NPCNode[]>(INITIAL_NODES);
+    const [allNodes, setAllNodes] = useState<NPCNode[]>([]); // Full list from API
     const [selectedNode, setSelectedNode] = useState<NPCNode | null>(null);
     const [hoveredNode, setHoveredNode] = useState<NPCNode | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dragNode, setDragNode] = useState<string | null>(null);
+    const [displayCount, setDisplayCount] = useState(50);
+    const [totalNPCs, setTotalNPCs] = useState(800);
+    const [apiStatus, setApiStatus] = useState<'loading' | 'local' | 'cloud' | 'offline'>('loading');
+
+    // Load NPCs from API
+    useEffect(() => {
+        const loadNPCs = async () => {
+            try {
+                // Try local first
+                let res = await fetch(`${LOCAL_API}/api/npcs`, { signal: AbortSignal.timeout(2000) });
+                if (!res.ok) {
+                    res = await fetch(`${CLOUD_API}/api/npcs`, { signal: AbortSignal.timeout(5000) });
+                    setApiStatus('cloud');
+                } else {
+                    setApiStatus('local');
+                }
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.npcs && data.npcs.length > 0) {
+                        setTotalNPCs(data.npcs.length);
+                        // Convert API data to nodes
+                        const apiNodes: NPCNode[] = data.npcs.map((npc: any, i: number) => {
+                            const pos = generatePosition(i, data.npcs.length);
+                            return {
+                                id: npc.id || npc.key || `npc_${i}`,
+                                name: npc.name || `NPC ${i}`,
+                                x: pos.x,
+                                y: pos.y,
+                                archetype: npc.archetype || ARCHETYPES[i % ARCHETYPES.length],
+                                connections: npc.relationships?.map((r: any) => r.target) || []
+                            };
+                        });
+                        setAllNodes(apiNodes);
+                        setNodes(apiNodes.slice(0, displayCount));
+                    }
+                }
+            } catch {
+                setApiStatus('offline');
+                // Keep demo nodes
+            }
+        };
+        loadNPCs();
+    }, []);
+
+    // Update display when count changes
+    useEffect(() => {
+        if (allNodes.length > 0) {
+            setNodes(allNodes.slice(0, displayCount));
+        } else {
+            setNodes(generateDemoNodes(displayCount));
+        }
+    }, [displayCount, allNodes]);
 
     // Draw graph
     useEffect(() => {
@@ -204,7 +293,36 @@ export default function GraphPage() {
                 </div>
 
                 {/* Info Panel */}
-                <div className="w-72 p-4 border-l border-zinc-800">
+                <div className="w-72 p-4 border-l border-zinc-800 overflow-y-auto">
+                    {/* NPC Count Badge */}
+                    <div className="mb-4 p-3 bg-gradient-to-r from-cyan-900/50 to-purple-900/50 rounded-lg border border-cyan-500/30">
+                        <div className="flex items-center justify-between">
+                            <span className="text-xs text-cyan-400 font-mono">TOTAL NPCs</span>
+                            <span className={`text-xs px-2 py-0.5 rounded ${apiStatus === 'loading' ? 'bg-yellow-500/20 text-yellow-400' : apiStatus === 'offline' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
+                                {apiStatus === 'loading' ? 'Loading...' : apiStatus === 'offline' ? 'Demo Mode' : apiStatus === 'local' ? 'Local' : 'Cloud'}
+                            </span>
+                        </div>
+                        <div className="text-3xl font-bold text-white mt-1">{totalNPCs.toLocaleString()}</div>
+                        <div className="text-xs text-zinc-500">Showing {nodes.length} / {totalNPCs}</div>
+                    </div>
+
+                    {/* Display Slider */}
+                    <div className="mb-4">
+                        <label className="text-xs text-zinc-500 block mb-2">Display Count: {displayCount}</label>
+                        <input
+                            type="range"
+                            min="10"
+                            max="200"
+                            value={displayCount}
+                            onChange={(e) => setDisplayCount(Number(e.target.value))}
+                            className="w-full accent-cyan-500"
+                        />
+                        <div className="flex justify-between text-xs text-zinc-600">
+                            <span>10</span>
+                            <span>200</span>
+                        </div>
+                    </div>
+
                     <h2 className="text-xs text-cyan-400 font-mono mb-4">RELATIONSHIP GRAPH</h2>
 
                     {selectedNode ? (
