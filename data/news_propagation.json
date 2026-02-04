@@ -1,0 +1,231 @@
+{
+    "_desc": "News propagation system - how news spreads through NPCs over time",
+    "_version": "1.0.0",
+    "propagation_rules": {
+        "_desc": "News doesn't reach everyone instantly. It spreads through interactions.",
+        "awareness_levels": {
+            "unaware": 0,
+            "vague_rumor": 1,
+            "heard_about": 2,
+            "knows_details": 3,
+            "witnessed": 4
+        },
+        "spread_by_source": {
+            "TEMPLE_BROADCAST": {
+                "_desc": "Official news - spreads fastest, but not everyone trusts it",
+                "initial_reach": 0.60,
+                "spread_rate": 0.15,
+                "trust_modifier": {
+                    "temple_loyal": 1.0,
+                    "neutral": 0.7,
+                    "resistance": 0.3
+                }
+            },
+            "UNDERGROUND_WIRE": {
+                "_desc": "Resistance news - slower spread, trusted by some",
+                "initial_reach": 0.15,
+                "spread_rate": 0.08,
+                "trust_modifier": {
+                    "temple_loyal": 0.2,
+                    "neutral": 0.5,
+                    "resistance": 1.0
+                }
+            },
+            "MARKET_GAZETTE": {
+                "_desc": "Business news - moderate spread in commercial areas",
+                "initial_reach": 0.30,
+                "spread_rate": 0.10,
+                "trust_modifier": {
+                    "merchant": 1.0,
+                    "worker": 0.7,
+                    "default": 0.5
+                }
+            },
+            "SPIRE_HERALD": {
+                "_desc": "Elite news - limited to upper districts initially",
+                "initial_reach": 0.10,
+                "spread_rate": 0.05,
+                "districts": [
+                    "spire",
+                    "business_district",
+                    "temple_district"
+                ]
+            },
+            "DOCK_RUMORS": {
+                "_desc": "Street gossip - slow but reaches underground",
+                "initial_reach": 0.20,
+                "spread_rate": 0.12,
+                "districts": [
+                    "docks",
+                    "undercity",
+                    "old_quarter"
+                ]
+            }
+        },
+        "time_based_spread": {
+            "_desc": "How long until news reaches different percentages of population",
+            "1_tick": 0.10,
+            "10_ticks": 0.25,
+            "50_ticks": 0.50,
+            "100_ticks": 0.70,
+            "500_ticks": 0.85,
+            "1000_ticks": 0.95
+        },
+        "spread_modifiers": {
+            "same_location": 0.8,
+            "adjacent_district": 0.3,
+            "different_district": 0.05,
+            "same_faction": 0.4,
+            "same_occupation": 0.3,
+            "social_butterfly": 1.5,
+            "hermit": 0.2
+        }
+    },
+    "npc_news_memory": {
+        "_desc": "Each NPC tracks which news they've heard",
+        "schema": {
+            "news_id": "string",
+            "tick_heard": "int",
+            "awareness_level": "int (0-4)",
+            "source": "who told them",
+            "reaction": "string"
+        },
+        "max_remembered": 50,
+        "decay_after_ticks": 5000
+    },
+    "conversation_spread": {
+        "_desc": "When NPCs talk, they may share news",
+        "share_probability": {
+            "greeting": 0.05,
+            "small_talk": 0.30,
+            "gossip": 0.80,
+            "deep_conversation": 0.60
+        },
+        "topic_selection": [
+            {
+                "weight": 0.4,
+                "type": "recent_news",
+                "max_age_ticks": 100
+            },
+            {
+                "weight": 0.3,
+                "type": "significant_news",
+                "significance_threshold": 0.7
+            },
+            {
+                "weight": 0.2,
+                "type": "relevant_to_location",
+                "current_district": true
+            },
+            {
+                "weight": 0.1,
+                "type": "random_old_news",
+                "min_age_ticks": 100
+            }
+        ],
+        "sharing_dialogue": [
+            "Did you hear about {headline}?",
+            "Word is {headline_summary}...",
+            "Someone told me {headline_summary}.",
+            "Can you believe {headline}?",
+            "Everyone's talking about {headline_summary}.",
+            "I just heard - {headline}!",
+            "*lowers voice* They say {headline_summary}...",
+            "My cousin told me {headline_summary}.",
+            "Haven't you heard? {headline}!"
+        ],
+        "confirmation_responses": [
+            "Yeah, I heard about that.",
+            "Old news. I knew about that days ago.",
+            "Someone mentioned it to me.",
+            "I was there when it happened.",
+            "That's what everyone's saying."
+        ],
+        "first_hearing_responses": [
+            "Really? I hadn't heard.",
+            "No way! When did that happen?",
+            "Are you serious?",
+            "I can't believe it.",
+            "Thanks for telling me.",
+            "Huh. News to me.",
+            "Where'd you hear that?"
+        ],
+        "skeptic_responses": [
+            "Sounds like Temple propaganda to me.",
+            "I'll believe it when I see it.",
+            "That's just a rumor.",
+            "Who told you that? Sounds fake.",
+            "I don't trust anything I hear anymore."
+        ]
+    },
+    "significance_factors": {
+        "_desc": "What makes news more likely to spread",
+        "categories": {
+            "crime_violent": 0.9,
+            "echo_discovery": 0.95,
+            "political_major": 0.8,
+            "celebrity": 0.7,
+            "economic_major": 0.6,
+            "local_interest": 0.4,
+            "routine": 0.2
+        },
+        "involves_known_npc": 0.3,
+        "involves_player": 0.5,
+        "involves_faction": 0.25,
+        "local_to_district": 0.35
+    },
+    "example_propagation": {
+        "_desc": "Example: 'Robbery at Market' news spread",
+        "tick_0": {
+            "event": "Robbery occurs at Market",
+            "witnesses": [
+                "NPC_001",
+                "NPC_002",
+                "NPC_003"
+            ],
+            "awareness": {
+                "witnessed": 3,
+                "total": 800
+            }
+        },
+        "tick_10": {
+            "market_gazette_publishes": true,
+            "initial_readers": 240,
+            "awareness": {
+                "witnessed": 3,
+                "knows_details": 50,
+                "heard_about": 190,
+                "total": 800
+            }
+        },
+        "tick_50": {
+            "spread_via_conversations": true,
+            "new_aware": 150,
+            "awareness": {
+                "witnessed": 3,
+                "knows_details": 100,
+                "heard_about": 290,
+                "vague_rumor": 50,
+                "total": 800
+            }
+        },
+        "tick_100": {
+            "most_aware": true,
+            "awareness": {
+                "knows_details": 200,
+                "heard_about": 350,
+                "vague_rumor": 100,
+                "unaware": 150
+            }
+        },
+        "tick_500": {
+            "old_news": true,
+            "awareness": {
+                "knows_details": 100,
+                "heard_about": 400,
+                "vague_rumor": 200,
+                "unaware": 100
+            }
+        }
+    }
+}

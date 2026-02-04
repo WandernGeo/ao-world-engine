@@ -1,8 +1,8 @@
 # Comprehensive Test Results
 
-**Generated:** 2026-02-03T18:59:40.989729  
-**Total Tests:** 26  
-**Passed:** 22 ✅  
+**Generated:** 2026-02-03T19:04:26.174624  
+**Total Tests:** 28  
+**Passed:** 24 ✅  
 **Failed:** 4 ❌
 
 ---
@@ -22,6 +22,7 @@
 | Event | 1 | ⚠️ 0/1 passed |
 | Same | 1 | ✅ 1/1 passed |
 | 50% | 1 | ✅ 1/1 passed |
+| Utility | 2 | ✅ 2/2 passed |
 | AI | 1 | ⚠️ 0/1 passed |
 | Simulation | 1 | ⚠️ 0/1 passed |
 | Total | 1 | ✅ 1/1 passed |
@@ -86,7 +87,7 @@ Breaking: Smuggling Bust Reported
 - 20 relationships loaded
 
 ### ✅ PASS Get relationship
-- Trust: 0.51
+- Trust: 0.52
 
 ### ❌ FAIL Event Engine
 - Module not found
@@ -100,11 +101,17 @@ Breaking: Smuggling Bust Reported
 ### ✅ PASS 50% probability distribution
 - 479/1000 = 47.9% (expected 40-60%)
 
-### ❌ FAIL AI Systems Import
-- cannot import name 'UtilitySystem' from 'scripts.advanced_ai_systems' (/Users/ram/Documents/wandern/ao-world-engine/scripts/advanced_ai_systems.py)
+### ✅ PASS Utility AI: pick_best_action
+- Selected: UtilityAction.SOCIALIZE
+
+### ✅ PASS Utility AI: calculate score
+- EAT utility: 198.40
+
+### ❌ FAIL AI Systems
+- unhashable type: 'dict'
 
 ### ❌ FAIL Simulation Import
-- cannot import name 'get_location_at_tick' from 'scripts.simulation_behaviors' (/Users/ram/Documents/wandern/ao-world-engine/scripts/simulation_behaviors.py)
+- cannot import name 'SCHEDULE_TYPES' from 'scripts.simulation_behaviors' (/Users/ram/Documents/wandern/ao-world-engine/scripts/simulation_behaviors.py)
 
 ### ✅ PASS Total dialogue responses
 - 2541 unique response strings
