@@ -581,7 +581,7 @@ export default function KnowledgeGraphPage() {
                     />
 
                     {/* Filter buttons */}
-                    <div className="absolute top-4 left-4 flex gap-1 flex-wrap">
+                    <div className="absolute top-4 left-4 flex gap-1 flex-wrap z-20 bg-zinc-900/90 backdrop-blur-sm p-2 rounded-lg border border-zinc-700">
                         <Button
                             size="sm"
                             variant={filter === 'all' ? 'default' : 'outline'}
@@ -630,20 +630,20 @@ export default function KnowledgeGraphPage() {
                 {/* Info Panel */}
                 <div className="w-80 p-4 border-l border-zinc-800 overflow-y-auto bg-zinc-950/80 backdrop-blur">
                     {/* Stats */}
-                    <div className="mb-4 p-3 bg-gradient-to-r from-cyan-900/30 to-purple-900/30 rounded-lg border border-cyan-500/20">
-                        <div className="text-xs text-cyan-400 font-mono mb-2">KNOWLEDGE GRAPH</div>
-                        <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="mb-4 p-4 bg-gradient-to-r from-cyan-900/40 to-purple-900/40 rounded-lg border border-cyan-500/30">
+                        <div className="text-sm text-cyan-400 font-mono mb-3 font-bold">KNOWLEDGE GRAPH</div>
+                        <div className="grid grid-cols-3 gap-3 text-center">
                             <div>
-                                <div className="text-xl font-bold text-white">{stats.entities}</div>
-                                <div className="text-[10px] text-zinc-500">Entities</div>
+                                <div className="text-3xl font-bold text-white">{stats.entities}</div>
+                                <div className="text-xs text-zinc-400">Entities</div>
                             </div>
                             <div>
-                                <div className="text-xl font-bold text-white">{stats.relationships}</div>
-                                <div className="text-[10px] text-zinc-500">Relations</div>
+                                <div className="text-3xl font-bold text-white">{stats.relationships}</div>
+                                <div className="text-xs text-zinc-400">Relations</div>
                             </div>
                             <div>
-                                <div className="text-xl font-bold text-white">{stats.npcs}</div>
-                                <div className="text-[10px] text-zinc-500">NPCs</div>
+                                <div className="text-3xl font-bold text-white">{stats.npcs}</div>
+                                <div className="text-xs text-zinc-400">NPCs</div>
                             </div>
                         </div>
                     </div>
