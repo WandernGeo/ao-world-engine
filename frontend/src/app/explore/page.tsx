@@ -203,20 +203,20 @@ export default function ExplorePage() {
                     {building.name}
                 </text>
 
-                {/* NPC dots */}
-                {buildingNPCs.map((npc, i) => {
+                {/* NPC dots - limit to 5 visible per building */}
+                {buildingNPCs.slice(0, 5).map((npc, i) => {
                     const centerX = building.polygon.reduce((sum, p) => sum + p[0], 0) / building.polygon.length;
                     const centerY = building.polygon.reduce((sum, p) => sum + p[1], 0) / building.polygon.length + 15;
                     const isSelected = selectedNPC?.id === npc.id;
                     return (
                         <circle
                             key={npc.id}
-                            cx={centerX + (i * 14) - ((buildingNPCs.length - 1) * 7)}
+                            cx={centerX + (i * 12) - (Math.min(buildingNPCs.length, 5) - 1) * 6}
                             cy={centerY}
-                            r={isSelected ? 9 : 7}
+                            r={isSelected ? 6 : 4}
                             fill={npc.mood === 'friendly' ? '#00ff88' : npc.mood === 'cautious' ? '#ffaa00' : '#ff4444'}
                             stroke={isSelected ? '#fff' : '#000'}
-                            strokeWidth={isSelected ? 2 : 1}
+                            strokeWidth={1}
                             className="cursor-pointer transition-all hover:opacity-80"
                             style={{ filter: isSelected ? 'drop-shadow(0 0 4px #0ff)' : undefined }}
                             onClick={(e) => {
@@ -228,6 +228,17 @@ export default function ExplorePage() {
                         </circle>
                     );
                 })}
+                {/* Show count if more than 5 NPCs */}
+                {buildingNPCs.length > 5 && (
+                    <text
+                        x={building.polygon.reduce((sum, p) => sum + p[0], 0) / building.polygon.length + 35}
+                        y={building.polygon.reduce((sum, p) => sum + p[1], 0) / building.polygon.length + 18}
+                        className="fill-cyan-400 font-mono pointer-events-none"
+                        style={{ fontSize: '9px' }}
+                    >
+                        +{buildingNPCs.length - 5}
+                    </text>
+                )}
 
                 {/* Levels indicator */}
                 {building.levels > 1 && (
@@ -463,16 +474,36 @@ export default function ExplorePage() {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-zinc-500">Occupants</span>
-                                    <span className="text-zinc-300">{npcs.filter(n => n.location === selectedBuilding.id).length}</span>
+                                    <span className="text-cyan-400 font-bold">{npcs.filter(n => n.location === selectedBuilding.id).length}</span>
                                 </div>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="w-full mt-2"
-                                    onClick={() => setSelectedNPC(npcs.find(n => n.location === selectedBuilding.id) || null)}
-                                >
-                                    View Occupants
-                                </Button>
+
+                                {/* Scrollable NPC list */}
+                                <div className="mt-3 pt-2 border-t border-zinc-700">
+                                    <div className="text-xs text-zinc-500 mb-2">NPCs in building:</div>
+                                    <div className="max-h-40 overflow-y-auto space-y-1">
+                                        {npcs.filter(n => n.location === selectedBuilding.id).slice(0, 50).map(npc => (
+                                            <button
+                                                key={npc.id}
+                                                onClick={() => setSelectedNPC(npc)}
+                                                className={`w-full text-left px-2 py-1 rounded text-xs flex items-center gap-2 ${selectedNPC?.id === npc.id
+                                                        ? 'bg-cyan-600/30 border border-cyan-500/50'
+                                                        : 'bg-zinc-800/50 hover:bg-zinc-700/50'
+                                                    }`}
+                                            >
+                                                <span className={`w-2 h-2 rounded-full ${npc.mood === 'friendly' ? 'bg-green-400' :
+                                                        npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
+                                                    }`} />
+                                                <span className="truncate flex-1">{npc.name}</span>
+                                                <span className="text-zinc-500 text-[10px]">{npc.activity}</span>
+                                            </button>
+                                        ))}
+                                        {npcs.filter(n => n.location === selectedBuilding.id).length > 50 && (
+                                            <div className="text-center text-zinc-500 text-xs py-1">
+                                                +{npcs.filter(n => n.location === selectedBuilding.id).length - 50} more...
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                     )}
