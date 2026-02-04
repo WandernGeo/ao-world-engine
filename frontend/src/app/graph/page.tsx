@@ -342,8 +342,8 @@ export default function KnowledgeGraphPage() {
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
     const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(0.3); // Start very zoomed out to see full sphere
-    const [pan, setPan] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(0.7); // Start more zoomed in
+    const [pan, setPan] = useState({ x: -400, y: -300 }); // Center on the graph cluster
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isSimulating, setIsSimulating] = useState(true);
@@ -904,7 +904,7 @@ export default function KnowledgeGraphPage() {
                             <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(5, z + 0.1))}>+</Button>
                             <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.1))}>−</Button>
                         </div>
-                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: 0, y: 0 }); setZoom(0.3); setRotationX(0); setRotationY(0); }}>Reset</Button>
+                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: -400, y: -300 }); setZoom(0.7); setRotationX(0); setRotationY(0); }}>Reset</Button>
                         <Button
                             size="sm"
                             variant={autoRotate ? 'default' : 'outline'}
