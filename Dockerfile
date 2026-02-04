@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the project structure
 COPY api/ ./api/
 COPY data/ ./data/
+COPY scripts/ ./scripts/
 COPY demo/ ./demo/
 
 # Copy hero image to static folder

@@ -240,6 +240,145 @@ def stats():
         "archetypes": archetypes
     })
 
+
+# =============================================================================
+# TRAFFIC API (24-hour city simulation)
+# =============================================================================
+
+import hashlib
+
+def seeded_random(seed):
+    """Generate deterministic random float 0-1."""
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16) % 10000
+    return h / 10000
+
+def seeded_choice(items, seed):
+    """Deterministically choose from list."""
+    if not items:
+        return None
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+    return items[h % len(items)]
+
+@app.route("/api/traffic")
+def get_traffic():
+    """Get traffic and street activity for a tick."""
+    tick = request.args.get("tick", 100, type=int)
+    time_info = get_time_info(tick)
+    time_period = time_info["period"]
+    
+    TRAFFIC_DENSITY = {
+        "T01": 0.05, "T02": 0.03, "T03": 0.35, "T04": 0.80,
+        "T05": 0.50, "T06": 0.65, "T07": 0.85, "T08": 0.55,
+        "T09": 0.25, "T10": 0.10,
+    }
+    density = TRAFFIC_DENSITY.get(time_period, 0.3)
+    
+    # Quick vehicle generation
+    vehicles = []
+    num_vehicles = max(1, int(15 * density))
+    for i in range(num_vehicles):
+        vtype = seeded_choice(["car", "taxi", "truck", "motorcycle"], f"veh_{tick}_{i}")
+        vehicles.append({"type": vtype, "zone": seeded_choice(["market", "residential", "temple"], f"zonev_{tick}_{i}")})
+    
+    # Emergency services
+    is_night = time_period in ["T01", "T02", "T10"]
+    emergency = [
+        {"type": "police", "activity": "patrol", "responding": seeded_random(f"pol_{tick}") < 0.1},
+        {"type": "ambulance", "activity": "standby" if seeded_random(f"amb_{tick}") > 0.1 else "responding"}
+    ]
+    if is_night:
+        emergency.append({"type": "police", "activity": "patrol", "shift": "night"})
+    
+    return jsonify({
+        "tick": tick,
+        "traffic_density": density,
+        "traffic_level": "dead" if density < 0.1 else "light" if density < 0.3 else "moderate" if density < 0.6 else "heavy",
+        "vehicles": vehicles,
+        "emergency_services": emergency
+    })
+
+
+# =============================================================================
+# SOCIAL DYNAMICS API
+# =============================================================================
+
+# Try to import full social dynamics
+try:
+    from scripts.social_dynamics import (
+        get_npc_social_summary, get_reputation, find_potential_groups,
+        get_relationship_type, RELATIONSHIP_THRESHOLDS, MEETING_THRESHOLDS
+    )
+    SOCIAL_AVAILABLE = True
+except ImportError:
+    SOCIAL_AVAILABLE = False
+
+@app.route("/api/social/npc/<npc_id>")
+def get_npc_social(npc_id):
+    """Get NPC's social network."""
+    npcs = get_npcs()
+    npc = next((n for n in npcs if n.get("id") == npc_id), None)
+    if not npc:
+        return jsonify({"error": f"NPC {npc_id} not found"}), 404
+    
+    if not SOCIAL_AVAILABLE:
+        # Fallback: generate basic relationships from family/workplace
+        relationships = {}
+        family = npc.get("family", {})
+        if family.get("spouse_id"):
+            relationships["spouse"] = {"id": family["spouse_id"], "trust": 0.9}
+        workplace = npc.get("workplace")
+        coworkers = [n["id"] for n in npcs if n.get("workplace") == workplace and n["id"] != npc_id][:5]
+        
+        return jsonify({
+            "npc_id": npc_id,
+            "fallback": True,
+            "social": {
+                "family": family,
+                "coworkers": coworkers,
+                "total_connections": len(coworkers) + (1 if family.get("spouse_id") else 0)
+            }
+        })
+    
+    # Full social dynamics
+    if "relationships" not in npc:
+        npc["relationships"] = {}
+        family = npc.get("family", {})
+        if family.get("spouse_id"):
+            npc["relationships"][family["spouse_id"]] = {"trust": 0.9, "type": "close_friend"}
+        workplace = npc.get("workplace")
+        if workplace:
+            for other in npcs:
+                if other.get("workplace") == workplace and other["id"] != npc_id:
+                    seed = f"{npc_id}_{other['id']}"
+                    h = int(hashlib.md5(seed.encode()).hexdigest(), 16) % 100
+                    npc["relationships"][other["id"]] = {
+                        "trust": 0.3 + h/200, "meetings": 10 + h%30,
+                        "type": get_relationship_type(0.3 + h/200)
+                    }
+    
+    summary = get_npc_social_summary(npc)
+    return jsonify({
+        "npc_id": npc_id,
+        "name": npc.get("name"),
+        "social": summary
+    })
+
+@app.route("/api/social/groups")
+def get_social_groups():
+    """Get social groups."""
+    if not SOCIAL_AVAILABLE:
+        return jsonify({"error": "Social dynamics not available", "fallback": True, "groups": []})
+    
+    npcs = get_npcs()
+    tick = request.args.get("tick", 100, type=int)
+    groups = find_potential_groups(npcs, tick)
+    
+    return jsonify({
+        "groups_count": len(groups),
+        "groups": [g.to_dict() for g in groups[:30]]
+    })
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
