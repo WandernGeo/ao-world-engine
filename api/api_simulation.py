@@ -229,22 +229,93 @@ def generate_hobbies(npc: dict) -> list:
     return hobbies
 
 # =============================================================================
-# SCHEDULE SYSTEM
+# SCHEDULE SYSTEM - DIVERSE SCHEDULES FOR REALISTIC BEHAVIOR
 # =============================================================================
 
 SCHEDULES = {
-    "worker": {
+    # =========================================================================
+    # WORKER SCHEDULES (most common - 60% of population)
+    # =========================================================================
+    "worker": {  # Standard 9-5 worker
+        "T01": {"activity": "sleeping", "location_type": "home"},      # 00:00-02:30
+        "T02": {"activity": "sleeping", "location_type": "home"},      # 02:30-05:00
+        "T03": {"activity": "waking", "location_type": "home"},        # 05:00-07:00
+        "T04": {"activity": "working", "location_type": "workplace"},  # 07:00-10:00
+        "T05": {"activity": "working", "location_type": "workplace"},  # 10:00-12:00
+        "T06": {"activity": "working", "location_type": "workplace"},  # 12:00-14:00
+        "T07": {"activity": "commuting", "location_type": "transit"},  # 14:00-17:00
+        "T08": {"activity": "leisure", "location_type": "home"},       # 17:00-19:00
+        "T09": {"activity": "relaxing", "location_type": "home"},      # 19:00-22:00
+        "T10": {"activity": "sleeping", "location_type": "home"},      # 22:00-midnight
+    },
+    "office_worker": {  # Office hours with lunch break
         "T01": {"activity": "sleeping", "location_type": "home"},
         "T02": {"activity": "sleeping", "location_type": "home"},
         "T03": {"activity": "commuting", "location_type": "transit"},
         "T04": {"activity": "working", "location_type": "workplace"},
-        "T05": {"activity": "working", "location_type": "workplace"},
-        "T06": {"activity": "commuting", "location_type": "transit"},
-        "T07": {"activity": "leisure", "location_type": "entertainment"},
+        "T05": {"activity": "lunch", "location_type": "restaurant"},   # Lunch hour
+        "T06": {"activity": "working", "location_type": "workplace"},
+        "T07": {"activity": "commuting", "location_type": "transit"},
         "T08": {"activity": "socializing", "location_type": "bar"},
-        "T09": {"activity": "returning", "location_type": "transit"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
+    "early_bird": {  # Early riser, early finish
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "waking", "location_type": "home"},        # Up at 3am
+        "T03": {"activity": "working", "location_type": "workplace"},  # Work 5am
+        "T04": {"activity": "working", "location_type": "workplace"},
+        "T05": {"activity": "working", "location_type": "workplace"},
+        "T06": {"activity": "commuting", "location_type": "transit"},  # Done at 2pm
+        "T07": {"activity": "leisure", "location_type": "entertainment"},
+        "T08": {"activity": "dinner", "location_type": "home"},
+        "T09": {"activity": "sleeping", "location_type": "home"},      # Early bed
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    
+    # =========================================================================
+    # HOME-BASED SCHEDULES (20% of population)
+    # =========================================================================
+    "homebody": {  # Works from home / stays home a lot
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "sleeping", "location_type": "home"},
+        "T03": {"activity": "waking", "location_type": "home"},
+        "T04": {"activity": "working", "location_type": "home"},       # Remote work
+        "T05": {"activity": "working", "location_type": "home"},
+        "T06": {"activity": "lunch", "location_type": "home"},
+        "T07": {"activity": "working", "location_type": "home"},
+        "T08": {"activity": "leisure", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "parent": {  # Parent with kids - school runs
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "sleeping", "location_type": "home"},
+        "T03": {"activity": "parenting", "location_type": "home"},     # Morning routine
+        "T04": {"activity": "shopping", "location_type": "commercial"},
+        "T05": {"activity": "chores", "location_type": "home"},
+        "T06": {"activity": "cooking", "location_type": "home"},
+        "T07": {"activity": "parenting", "location_type": "home"},     # Kids home
+        "T08": {"activity": "dinner", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    "retiree": {  # Retired, leisurely schedule
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "sleeping", "location_type": "home"},
+        "T03": {"activity": "waking", "location_type": "home"},
+        "T04": {"activity": "leisure", "location_type": "home"},
+        "T05": {"activity": "walking", "location_type": "public"},     # Morning walk
+        "T06": {"activity": "lunch", "location_type": "restaurant"},
+        "T07": {"activity": "leisure", "location_type": "home"},
+        "T08": {"activity": "socializing", "location_type": "bar"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
+    
+    # =========================================================================
+    # SERVICE/RETAIL SCHEDULES (10% of population)
+    # =========================================================================
     "shopkeeper": {
         "T01": {"activity": "sleeping", "location_type": "home"},
         "T02": {"activity": "sleeping", "location_type": "home"},
@@ -257,6 +328,50 @@ SCHEDULES = {
         "T09": {"activity": "relaxing", "location_type": "home"},
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
+    
+    # =========================================================================
+    # NIGHT SHIFT SCHEDULES (8% of population)
+    # =========================================================================
+    "night_shift": {
+        "T01": {"activity": "working", "location_type": "workplace"},
+        "T02": {"activity": "working", "location_type": "workplace"},
+        "T03": {"activity": "commuting", "location_type": "transit"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "leisure", "location_type": "entertainment"},
+        "T09": {"activity": "commuting", "location_type": "transit"},
+        "T10": {"activity": "working", "location_type": "workplace"},
+    },
+    "late_night": {  # Bar staff, entertainers
+        "T01": {"activity": "working", "location_type": "workplace"},  # Closing bar
+        "T02": {"activity": "relaxing", "location_type": "home"},
+        "T03": {"activity": "sleeping", "location_type": "home"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "waking", "location_type": "home"},
+        "T07": {"activity": "leisure", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "working", "location_type": "workplace"},  # Bar opens
+        "T10": {"activity": "working", "location_type": "workplace"},
+    },
+    "security_night": {
+        "T01": {"activity": "patrol", "location_type": "public"},
+        "T02": {"activity": "patrol", "location_type": "public"},
+        "T03": {"activity": "shift_change", "location_type": "workplace"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "patrol", "location_type": "public"},
+        "T10": {"activity": "patrol", "location_type": "public"},
+    },
+    
+    # =========================================================================
+    # SPECIAL SCHEDULES (2% of population)
+    # =========================================================================
     "resistance_fighter": {
         "T01": {"activity": "sleeping", "location_type": "home"},
         "T02": {"activity": "training", "location_type": "hideout"},
@@ -266,86 +381,69 @@ SCHEDULES = {
         "T06": {"activity": "mission", "location_type": "varies"},
         "T07": {"activity": "returning", "location_type": "transit"},
         "T08": {"activity": "socializing", "location_type": "bar"},
-        "T09": {"activity": "personal", "location_type": "entertainment"},
+        "T09": {"activity": "personal", "location_type": "home"},
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
     "temple_guard": {
         "T01": {"activity": "patrol", "location_type": "public"},
         "T02": {"activity": "patrol", "location_type": "public"},
-        "T03": {"activity": "shift_change", "location_type": "barracks"},
+        "T03": {"activity": "shift_change", "location_type": "workplace"},
         "T04": {"activity": "patrol", "location_type": "public"},
         "T05": {"activity": "patrol", "location_type": "public"},
-        "T06": {"activity": "shift_change", "location_type": "barracks"},
+        "T06": {"activity": "shift_change", "location_type": "workplace"},
         "T07": {"activity": "patrol", "location_type": "public"},
         "T08": {"activity": "patrol", "location_type": "public"},
         "T09": {"activity": "off_duty", "location_type": "home"},
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
-    # Night shift workers - active at night, sleep during day
-    "night_shift": {
-        "T01": {"activity": "working", "location_type": "workplace"},  # Midnight-2:30am work
-        "T02": {"activity": "working", "location_type": "workplace"},  # 2:30-5am work
-        "T03": {"activity": "commuting", "location_type": "transit"},   # 5-7am going home
-        "T04": {"activity": "sleeping", "location_type": "home"},       # 7-10am sleep
-        "T05": {"activity": "sleeping", "location_type": "home"},       # 10am-12pm sleep
-        "T06": {"activity": "sleeping", "location_type": "home"},       # 12-2pm sleep
-        "T07": {"activity": "waking", "location_type": "home"},         # 2-5pm waking up
-        "T08": {"activity": "leisure", "location_type": "entertainment"},# 5-7pm leisure
-        "T09": {"activity": "commuting", "location_type": "transit"},   # 7-10pm going to work
-        "T10": {"activity": "working", "location_type": "workplace"},   # 10pm-midnight work
-    },
-    # Security - always active, rotating patrols
-    "security_night": {
-        "T01": {"activity": "patrol", "location_type": "public"},
-        "T02": {"activity": "patrol", "location_type": "public"},
-        "T03": {"activity": "patrol", "location_type": "public"},
-        "T04": {"activity": "shift_change", "location_type": "barracks"},
-        "T05": {"activity": "sleeping", "location_type": "home"},
-        "T06": {"activity": "sleeping", "location_type": "home"},
-        "T07": {"activity": "waking", "location_type": "home"},
-        "T08": {"activity": "commuting", "location_type": "transit"},
-        "T09": {"activity": "patrol", "location_type": "public"},
-        "T10": {"activity": "patrol", "location_type": "public"},
-    },
-    # Late night lifestyle - bartenders, entertainers
-    "late_night": {
-        "T01": {"activity": "working", "location_type": "bar"},
-        "T02": {"activity": "closing", "location_type": "bar"},
-        "T03": {"activity": "commuting", "location_type": "transit"},
-        "T04": {"activity": "sleeping", "location_type": "home"},
-        "T05": {"activity": "sleeping", "location_type": "home"},
-        "T06": {"activity": "sleeping", "location_type": "home"},
-        "T07": {"activity": "waking", "location_type": "home"},
-        "T08": {"activity": "commuting", "location_type": "transit"},
-        "T09": {"activity": "opening", "location_type": "bar"},
-        "T10": {"activity": "working", "location_type": "bar"},
-    },
-    # Jogger/fitness enthusiast - early morning runs
-    "fitness": {
+    "fitness": {  # Athletes, trainers
         "T01": {"activity": "sleeping", "location_type": "home"},
-        "T02": {"activity": "running", "location_type": "transit"},    # Pre-dawn jog!
-        "T03": {"activity": "exercising", "location_type": "public"},  # Morning workout
+        "T02": {"activity": "exercising", "location_type": "public"},  # Early workout
+        "T03": {"activity": "training", "location_type": "recreation"},
         "T04": {"activity": "working", "location_type": "workplace"},
-        "T05": {"activity": "working", "location_type": "workplace"},
+        "T05": {"activity": "lunch", "location_type": "restaurant"},
         "T06": {"activity": "commuting", "location_type": "transit"},
         "T07": {"activity": "exercising", "location_type": "public"},  # Evening gym
-        "T08": {"activity": "socializing", "location_type": "bar"},
-        "T09": {"activity": "running", "location_type": "transit"},    # Night jog!
+        "T08": {"activity": "relaxing", "location_type": "home"},
+        "T09": {"activity": "sleeping", "location_type": "home"},      # Early bed
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
-    # Default for any other schedule
-    "default": {
+    "student": {  # Students - classes and studying
         "T01": {"activity": "sleeping", "location_type": "home"},
         "T02": {"activity": "sleeping", "location_type": "home"},
         "T03": {"activity": "waking", "location_type": "home"},
-        "T04": {"activity": "active", "location_type": "public"},
-        "T05": {"activity": "active", "location_type": "public"},
-        "T06": {"activity": "active", "location_type": "public"},
-        "T07": {"activity": "leisure", "location_type": "entertainment"},
-        "T08": {"activity": "socializing", "location_type": "public"},
-        "T09": {"activity": "returning", "location_type": "transit"},
+        "T04": {"activity": "studying", "location_type": "workplace"},  # Class
+        "T05": {"activity": "studying", "location_type": "workplace"},
+        "T06": {"activity": "lunch", "location_type": "restaurant"},
+        "T07": {"activity": "studying", "location_type": "home"},
+        "T08": {"activity": "socializing", "location_type": "bar"},    # Party time
+        "T09": {"activity": "socializing", "location_type": "bar"},
         "T10": {"activity": "sleeping", "location_type": "home"},
-    }
+    },
+    "freelancer": {  # Irregular schedule
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "sleeping", "location_type": "home"},
+        "T03": {"activity": "sleeping", "location_type": "home"},      # Late riser
+        "T04": {"activity": "waking", "location_type": "home"},
+        "T05": {"activity": "working", "location_type": "home"},
+        "T06": {"activity": "working", "location_type": "home"},
+        "T07": {"activity": "working", "location_type": "home"},
+        "T08": {"activity": "leisure", "location_type": "entertainment"},
+        "T09": {"activity": "socializing", "location_type": "bar"},
+        "T10": {"activity": "working", "location_type": "home"},       # Night owl
+    },
+    "unemployed": {  # Looking for work, irregular
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "sleeping", "location_type": "home"},
+        "T03": {"activity": "waking", "location_type": "home"},
+        "T04": {"activity": "searching", "location_type": "commercial"},
+        "T05": {"activity": "leisure", "location_type": "home"},
+        "T06": {"activity": "leisure", "location_type": "public"},
+        "T07": {"activity": "socializing", "location_type": "bar"},
+        "T08": {"activity": "leisure", "location_type": "home"},
+        "T09": {"activity": "relaxing", "location_type": "home"},
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
 }
 
 def get_npc_state(npc: dict, tick: int) -> dict:
@@ -402,13 +500,32 @@ def get_npc_state(npc: dict, tick: int) -> dict:
                 schedule_type = sched
                 break
         else:
-            # Randomize ~20% to night shift based on NPC ID for variety
-            if seeded_random(f"{npc.get('id', '')}_shift") < 0.15:
-                schedule_type = seeded_choice(["night_shift", "late_night", "fitness"], f"{npc.get('id', '')}_random_shift")
-            else:
-                schedule_type = "default"
+            # Weighted random schedule assignment based on realistic population distribution
+            # This creates variety: some at work, some home, some wandering
+            schedule_weights = [
+                ("worker", 0.30),           # 30% - Standard workers with workplace
+                ("office_worker", 0.15),    # 15% - Office workers with lunch breaks
+                ("homebody", 0.15),         # 15% - Work from home / stay home
+                ("early_bird", 0.10),       # 10% - Early risers, early to bed
+                ("parent", 0.08),           # 8%  - Stay-at-home parents
+                ("retiree", 0.05),          # 5%  - Retired, leisurely
+                ("student", 0.05),          # 5%  - Students
+                ("freelancer", 0.05),       # 5%  - Irregular hours
+                ("unemployed", 0.04),       # 4%  - Wandering, searching
+                ("fitness", 0.03),          # 3%  - Athletes, trainers
+            ]
+            
+            # Use seeded random to pick schedule based on NPC ID (deterministic)
+            r = seeded_random(f"{npc.get('id', '')}_schedule")
+            cumulative = 0
+            schedule_type = "worker"  # Default fallback
+            for sched, weight in schedule_weights:
+                cumulative += weight
+                if r < cumulative:
+                    schedule_type = sched
+                    break
     
-    schedule = SCHEDULES.get(schedule_type, SCHEDULES["default"])
+    schedule = SCHEDULES.get(schedule_type, SCHEDULES["worker"])
     
     time_period = get_time_period(tick)
     slot = schedule.get(time_period, {"activity": "idle", "location_type": "home"})
