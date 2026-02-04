@@ -52,6 +52,82 @@
             ]
         }
     },
+    "role_based_access": {
+        "_desc": "Some roles have inherent access to information without needing trust",
+        "authority_figures": {
+            "temple_officer": {
+                "access_level": "shared",
+                "can_access": [
+                    "citizen_records",
+                    "faction_affiliations",
+                    "crime_history",
+                    "movement_logs"
+                ],
+                "about": "all_citizens"
+            },
+            "temple_inquisitor": {
+                "access_level": "private",
+                "can_access": [
+                    "private_beliefs",
+                    "suspected_resistance",
+                    "family_connections"
+                ],
+                "about": "suspects"
+            }
+        },
+        "tech_specialists": {
+            "orion_thanewilk": {
+                "_desc": "AI specialist with supercomputer - knows almost everything digital",
+                "access_level": "private",
+                "can_access": [
+                    "digital_comms",
+                    "financial_records",
+                    "location_history",
+                    "medical_records",
+                    "surveillance_feeds",
+                    "temple_databases"
+                ],
+                "about": "anyone_digital",
+                "passive_learning": "continuous"
+            },
+            "hacker": {
+                "access_level": "shared",
+                "can_access": [
+                    "public_records",
+                    "some_private_comms"
+                ],
+                "skill_dependent": true
+            }
+        },
+        "social_connectors": {
+            "bartender": {
+                "access_level": "surface_to_shared",
+                "can_access": [
+                    "local_gossip",
+                    "relationships",
+                    "overheard_secrets"
+                ],
+                "about": "regular_customers"
+            },
+            "information_broker": {
+                "access_level": "shared_to_private",
+                "can_access": [
+                    "rumors",
+                    "secrets_for_sale",
+                    "blackmail_material"
+                ],
+                "about": "anyone_interesting"
+            },
+            "temple_priest": {
+                "access_level": "private",
+                "can_access": [
+                    "confessions",
+                    "spiritual_struggles"
+                ],
+                "ethical_constraint": "should_not_share"
+            }
+        }
+    },
     "example_npc_profile": {
         "id": "charlie",
         "name": "Charlie",
