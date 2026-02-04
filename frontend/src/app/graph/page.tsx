@@ -634,8 +634,11 @@ export default function KnowledgeGraphPage() {
         const canvasY = screenY * scaleY;
 
         // Convert canvas coords to world coords (reverse the canvas transform)
-        const worldMouseX = (canvasX - pan.x) / zoom;
-        const worldMouseY = (canvasY - pan.y) / zoom;
+        // IMPORTANT: project3D returns coordinates in canvas space (before zoom/pan)
+        // So we need to compare against canvas coords, not world coords
+        // First, reverse the zoom/pan to get back to canvas space
+        const canvasMouseX = canvasX;  // Already in canvas space
+        const canvasMouseY = canvasY;  // Already in canvas space
 
         // Check if clicking on a node using PROJECTED coordinates (3D aware)
         // Sort by depth - front-most nodes (smallest depth/largest scale) first!
@@ -643,9 +646,14 @@ export default function KnowledgeGraphPage() {
             .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
             .sort((a, b) => a.proj.depth - b.proj.depth); // Smaller depth = closer to viewer
 
+        // Transform projected coords through zoom/pan to compare with mouse
         for (const { entity, proj } of sortedEntities) {
-            const dist = Math.sqrt((proj.x - worldMouseX) ** 2 + (proj.y - worldMouseY) ** 2);
-            const hitRadius = Math.max(25, 40 * proj.scale); // BIGGER hit radius for easier clicking
+            // Apply zoom and pan to projected position (same as canvas rendering)
+            const nodeScreenX = proj.x * zoom + pan.x;
+            const nodeScreenY = proj.y * zoom + pan.y;
+            // Compare with canvas mouse position
+            const dist = Math.sqrt((nodeScreenX - canvasX) ** 2 + (nodeScreenY - canvasY) ** 2);
+            const hitRadius = Math.max(20, 30 * proj.scale * zoom); // Scale hit radius with zoom
             if (dist < hitRadius) {
                 setDraggedNode(entity.id);
                 setSelectedEntity(entity);
@@ -711,27 +719,25 @@ export default function KnowledgeGraphPage() {
         const scaleY = height / rect.height;
         const hoverCanvasX = hoverScreenX * scaleX;
         const hoverCanvasY = hoverScreenY * scaleY;
-        // Convert canvas coords to world coords
-        const hoverWorldX = (hoverCanvasX - pan.x) / zoom;
-        const hoverWorldY = (hoverCanvasY - pan.y) / zoom;
 
         // Sort by depth - front-most nodes first (same as click detection)
         const sortedForHover = [...data.entities]
             .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
             .sort((a, b) => a.proj.depth - b.proj.depth);
 
+        // Transform projected coords through zoom/pan to compare with mouse (same as click)
         for (const { entity, proj } of sortedForHover) {
-            const dist = Math.sqrt((proj.x - hoverWorldX) ** 2 + (proj.y - hoverWorldY) ** 2);
-            const hitRadius = Math.max(25, 40 * proj.scale); // Match click detection radius
+            const nodeScreenX = proj.x * zoom + pan.x;
+            const nodeScreenY = proj.y * zoom + pan.y;
+            const dist = Math.sqrt((nodeScreenX - hoverCanvasX) ** 2 + (nodeScreenY - hoverCanvasY) ** 2);
+            const hitRadius = Math.max(20, 30 * proj.scale * zoom);
             if (dist < hitRadius) {
                 setHoveredEntity(entity);
-                // Change cursor to pointer when over a node
                 if (canvasRef.current) canvasRef.current.style.cursor = 'pointer';
                 return;
             }
         }
         setHoveredEntity(null);
-        // Reset cursor when not over a node
         if (canvasRef.current) canvasRef.current.style.cursor = 'default';
     };
 
