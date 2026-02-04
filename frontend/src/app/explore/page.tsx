@@ -33,15 +33,17 @@ interface District {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ao-world-engine-1071951656531.us-central1.run.app';
 
-// Initial districts data
+// Initial districts data - expanded city
 const INITIAL_DISTRICTS: District[] = [
     {
         id: 'undercity',
         name: 'Undercity',
         color: '#1a1a2e',
         buildings: [
-            { id: 'B001', name: "Felix's Bar", type: 'commercial', polygon: [[50, 100], [120, 100], [120, 160], [50, 160]], levels: 2, occupants: ['felix', 'charlie'] },
-            { id: 'B002', name: 'Abandoned Warehouse', type: 'industrial', polygon: [[140, 80], [220, 80], [220, 180], [140, 180]], levels: 3, occupants: [] },
+            { id: 'B001', name: "Felix's Bar", type: 'commercial', polygon: [[50, 150], [150, 150], [150, 220], [50, 220]], levels: 2, occupants: ['felix', 'charlie', 'mason'] },
+            { id: 'B002', name: 'Abandoned Warehouse', type: 'industrial', polygon: [[170, 130], [280, 130], [280, 250], [170, 250]], levels: 3, occupants: ['ghost'] },
+            { id: 'B003', name: 'Neon Motel', type: 'residential', polygon: [[50, 250], [130, 250], [130, 320], [50, 320]], levels: 4, occupants: ['drifter_1', 'drifter_2'] },
+            { id: 'B004', name: 'Chop Shop', type: 'industrial', polygon: [[150, 270], [250, 270], [250, 340], [150, 340]], levels: 1, occupants: ['mechanic'] },
         ],
     },
     {
@@ -49,8 +51,11 @@ const INITIAL_DISTRICTS: District[] = [
         name: 'Market District',
         color: '#2d2d44',
         buildings: [
-            { id: 'B010', name: 'Central Market', type: 'commercial', polygon: [[300, 50], [450, 50], [450, 150], [300, 150]], levels: 1, occupants: ['vendor_1', 'vendor_2'] },
-            { id: 'B011', name: 'Tech Shop', type: 'commercial', polygon: [[300, 170], [380, 170], [380, 230], [300, 230]], levels: 2, occupants: ['orion'] },
+            { id: 'B010', name: 'Central Market', type: 'commercial', polygon: [[350, 80], [520, 80], [520, 180], [350, 180]], levels: 1, occupants: ['vendor_1', 'vendor_2', 'vendor_3'] },
+            { id: 'B011', name: 'Tech Shop', type: 'commercial', polygon: [[350, 200], [450, 200], [450, 280], [350, 280]], levels: 2, occupants: ['orion', 'assistant'] },
+            { id: 'B012', name: 'Noodle Stand', type: 'commercial', polygon: [[470, 200], [550, 200], [550, 260], [470, 260]], levels: 1, occupants: ['chef_lin'] },
+            { id: 'B013', name: 'Pawn Shop', type: 'commercial', polygon: [[350, 300], [430, 300], [430, 370], [350, 370]], levels: 2, occupants: ['dealer'] },
+            { id: 'B014', name: 'Info Broker', type: 'commercial', polygon: [[450, 280], [540, 280], [540, 350], [450, 350]], levels: 1, occupants: ['whisper'] },
         ],
     },
     {
@@ -58,15 +63,55 @@ const INITIAL_DISTRICTS: District[] = [
         name: 'Temple District',
         color: '#3d2d2d',
         buildings: [
-            { id: 'B016', name: 'Citizen Processing', type: 'temple', polygon: [[500, 100], [650, 100], [650, 200], [580, 220], [500, 200]], levels: 5, occupants: ['inquisitor_1'] },
+            { id: 'B016', name: 'Citizen Processing', type: 'temple', polygon: [[620, 100], [780, 100], [780, 220], [700, 250], [620, 220]], levels: 5, occupants: ['inquisitor_1', 'clerk_1', 'clerk_2'] },
+            { id: 'B017', name: 'Archive Tower', type: 'temple', polygon: [[620, 270], [720, 270], [720, 380], [620, 380]], levels: 8, occupants: ['archivist'] },
+            { id: 'B018', name: 'Confession Hall', type: 'temple', polygon: [[740, 250], [820, 250], [820, 340], [740, 340]], levels: 3, occupants: ['confessor'] },
+        ],
+    },
+    {
+        id: 'residential',
+        name: 'Hab Blocks',
+        color: '#252538',
+        buildings: [
+            { id: 'B020', name: 'Block A-7', type: 'residential', polygon: [[50, 380], [150, 380], [150, 480], [50, 480]], levels: 12, occupants: ['resident_1', 'resident_2', 'resident_3'] },
+            { id: 'B021', name: 'Block A-8', type: 'residential', polygon: [[170, 380], [270, 380], [270, 480], [170, 480]], levels: 12, occupants: ['resident_4', 'resident_5'] },
+            { id: 'B022', name: 'Clinic', type: 'commercial', polygon: [[290, 400], [380, 400], [380, 470], [290, 470]], levels: 2, occupants: ['doc_mercy', 'nurse'] },
         ],
     },
 ];
 
 const INITIAL_NPCS: NPC[] = [
+    // Undercity
     { id: 'charlie', name: 'Charlie', location: 'B001', activity: 'drinking', mood: 'cautious' },
     { id: 'felix', name: 'Felix', location: 'B001', activity: 'bartending', mood: 'friendly' },
-    { id: 'orion', name: 'Orion Thanewilk', location: 'B011', activity: 'working', mood: 'focused' },
+    { id: 'mason', name: 'Mason', location: 'B001', activity: 'gambling', mood: 'nervous' },
+    { id: 'ghost', name: 'Ghost', location: 'B002', activity: 'hiding', mood: 'paranoid' },
+    { id: 'drifter_1', name: 'Kira', location: 'B003', activity: 'sleeping', mood: 'tired' },
+    { id: 'drifter_2', name: 'Juno', location: 'B003', activity: 'reading', mood: 'calm' },
+    { id: 'mechanic', name: 'Wrench', location: 'B004', activity: 'working', mood: 'busy' },
+    // Market
+    { id: 'orion', name: 'Orion Thanewilk', location: 'B011', activity: 'hacking', mood: 'focused' },
+    { id: 'assistant', name: 'Pixel', location: 'B011', activity: 'organizing', mood: 'cheerful' },
+    { id: 'vendor_1', name: 'Old Chen', location: 'B010', activity: 'selling', mood: 'friendly' },
+    { id: 'vendor_2', name: 'Mika', location: 'B010', activity: 'haggling', mood: 'shrewd' },
+    { id: 'vendor_3', name: 'Boris', location: 'B010', activity: 'restocking', mood: 'grumpy' },
+    { id: 'chef_lin', name: 'Chef Lin', location: 'B012', activity: 'cooking', mood: 'passionate' },
+    { id: 'dealer', name: 'Slick', location: 'B013', activity: 'appraising', mood: 'calculating' },
+    { id: 'whisper', name: 'Whisper', location: 'B014', activity: 'listening', mood: 'secretive' },
+    // Temple
+    { id: 'inquisitor_1', name: 'Inquisitor Vex', location: 'B016', activity: 'interrogating', mood: 'cold' },
+    { id: 'clerk_1', name: 'Clerk 47', location: 'B016', activity: 'processing', mood: 'robotic' },
+    { id: 'clerk_2', name: 'Clerk 52', location: 'B016', activity: 'filing', mood: 'bored' },
+    { id: 'archivist', name: 'The Archivist', location: 'B017', activity: 'cataloging', mood: 'obsessed' },
+    { id: 'confessor', name: 'Father Null', location: 'B018', activity: 'praying', mood: 'devout' },
+    // Residential
+    { id: 'doc_mercy', name: 'Doc Mercy', location: 'B022', activity: 'treating', mood: 'compassionate' },
+    { id: 'nurse', name: 'Nurse Hana', location: 'B022', activity: 'assisting', mood: 'kind' },
+    { id: 'resident_1', name: 'Jun', location: 'B020', activity: 'sleeping', mood: 'exhausted' },
+    { id: 'resident_2', name: 'Leah', location: 'B020', activity: 'cooking', mood: 'hopeful' },
+    { id: 'resident_3', name: 'Marcus', location: 'B020', activity: 'gaming', mood: 'escapist' },
+    { id: 'resident_4', name: 'Yuki', location: 'B021', activity: 'studying', mood: 'determined' },
+    { id: 'resident_5', name: 'Old Man Reyes', location: 'B021', activity: 'reminiscing', mood: 'sad' },
 ];
 
 export default function ExplorePage() {
@@ -79,6 +124,12 @@ export default function ExplorePage() {
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [npcs, setNpcs] = useState<NPC[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
+
+    // Pan and zoom state
+    const [zoom, setZoom] = useState(1);
+    const [pan, setPan] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
     // Initialize on mount to avoid hydration mismatch
     useEffect(() => {
@@ -215,32 +266,54 @@ export default function ExplorePage() {
 
             <div className="pt-14 flex h-screen">
                 {/* Main Canvas */}
-                <div className="flex-1 relative overflow-hidden">
+                <div
+                    className="flex-1 relative overflow-hidden cursor-grab active:cursor-grabbing"
+                    onMouseDown={(e) => {
+                        setIsDragging(true);
+                        setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+                    }}
+                    onMouseMove={(e) => {
+                        if (isDragging) {
+                            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+                        }
+                    }}
+                    onMouseUp={() => setIsDragging(false)}
+                    onMouseLeave={() => setIsDragging(false)}
+                    onWheel={(e) => {
+                        e.preventDefault();
+                        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                        setZoom(prev => Math.min(Math.max(prev * delta, 0.5), 3));
+                    }}
+                >
                     <svg
-                        viewBox="0 0 800 500"
+                        viewBox="0 0 900 550"
                         className="w-full h-full"
-                        style={{ background: 'linear-gradient(180deg, #0a0a0f 0%, #12121a 100%)' }}
+                        style={{
+                            background: 'linear-gradient(180deg, #0a0a0f 0%, #12121a 100%)',
+                            transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+                            transformOrigin: 'center center',
+                        }}
                     >
                         {/* Grid lines */}
-                        {[...Array(20)].map((_, i) => (
+                        {[...Array(24)].map((_, i) => (
                             <line
                                 key={`h${i}`}
                                 x1={0}
                                 y1={i * 25}
-                                x2={800}
+                                x2={900}
                                 y2={i * 25}
-                                stroke="rgba(0, 255, 255, 0.05)"
+                                stroke="rgba(0, 255, 255, 0.03)"
                                 strokeWidth={0.5}
                             />
                         ))}
-                        {[...Array(32)].map((_, i) => (
+                        {[...Array(36)].map((_, i) => (
                             <line
                                 key={`v${i}`}
                                 x1={i * 25}
                                 y1={0}
                                 x2={i * 25}
-                                y2={500}
-                                stroke="rgba(0, 255, 255, 0.05)"
+                                y2={550}
+                                stroke="rgba(0, 255, 255, 0.03)"
                                 strokeWidth={0.5}
                             />
                         ))}
@@ -250,37 +323,65 @@ export default function ExplorePage() {
                             <text
                                 key={district.id}
                                 x={district.buildings[0]?.polygon[0][0] || 0}
-                                y={30}
-                                className="fill-zinc-600 font-mono"
-                                style={{ fontSize: '12px' }}
+                                y={district.buildings[0]?.polygon[0][1] - 10 || 30}
+                                className="fill-zinc-500 font-mono"
+                                style={{ fontSize: '11px', fontWeight: 'bold' }}
                             >
                                 {district.name.toUpperCase()}
                             </text>
                         ))}
 
+                        {/* Streets */}
+                        <path d="M 0 360 L 900 360" stroke="rgba(60, 60, 80, 0.6)" strokeWidth={25} />
+                        <path d="M 300 0 L 300 550" stroke="rgba(60, 60, 80, 0.6)" strokeWidth={20} />
+                        <path d="M 600 0 L 600 550" stroke="rgba(60, 60, 80, 0.6)" strokeWidth={20} />
+                        {/* Street markings */}
+                        <path d="M 0 360 L 900 360" stroke="rgba(255, 200, 0, 0.3)" strokeWidth={2} strokeDasharray="20 30" />
+
                         {/* Buildings */}
                         {districts.map(district =>
                             district.buildings.map(building => renderBuilding(building, district.color))
                         )}
-
-                        {/* Streets */}
-                        <path
-                            d="M 0 300 L 800 300"
-                            stroke="rgba(100, 100, 100, 0.5)"
-                            strokeWidth={20}
-                            strokeLinecap="round"
-                        />
-                        <path
-                            d="M 250 0 L 250 500"
-                            stroke="rgba(100, 100, 100, 0.5)"
-                            strokeWidth={15}
-                            strokeLinecap="round"
-                        />
                     </svg>
+
+                    {/* Zoom Controls */}
+                    <div className="absolute bottom-4 left-4 flex flex-col gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-black/70 w-10 h-10 text-lg"
+                            onClick={() => setZoom(prev => Math.min(prev * 1.2, 3))}
+                        >
+                            +
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-black/70 w-10 h-10 text-lg"
+                            onClick={() => setZoom(prev => Math.max(prev * 0.8, 0.5))}
+                        >
+                            −
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-black/70 w-10 h-10 text-xs"
+                            onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
+                        >
+                            ⟲
+                        </Button>
+                    </div>
+
+                    {/* Stats Overlay */}
+                    <div className="absolute top-4 right-4 bg-black/70 px-3 py-2 rounded border border-cyan-500/30 font-mono text-xs">
+                        <div className="text-cyan-400">NPCs: {npcs.length}</div>
+                        <div className="text-purple-400">Buildings: {districts.reduce((sum, d) => sum + d.buildings.length, 0)}</div>
+                        <div className="text-zinc-500">Zoom: {Math.round(zoom * 100)}%</div>
+                    </div>
 
                     {/* View Mode Buttons */}
                     <div className="absolute top-4 left-4 flex gap-2">
-                        <Button variant="outline" size="sm" className="bg-black/50">District View</Button>
+                        <Button variant="outline" size="sm" className="bg-black/70">District View</Button>
                         <Button variant="ghost" size="sm" className="text-zinc-500">Blueprint</Button>
                         <Button variant="ghost" size="sm" className="text-zinc-500">3D</Button>
                     </div>
