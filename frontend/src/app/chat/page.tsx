@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -53,7 +54,10 @@ const FALLBACK_NPCS: NPC[] = [
     { id: 'selene_voss', name: 'Selene Voss', archetype: 'Ghost-Child' },
 ];
 
-export default function ChatPage() {
+function ChatPageContent() {
+    const searchParams = useSearchParams();
+    const npcIdFromUrl = searchParams.get('npc');
+
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
@@ -99,6 +103,17 @@ export default function ChatPage() {
         };
         initChat();
     }, []);
+
+    // Deep linking: auto-select NPC from URL parameter
+    useEffect(() => {
+        if (npcIdFromUrl && npcs.length > 0 && !selectedNPC) {
+            const npcFromUrl = npcs.find(n => n.id === npcIdFromUrl || n.name.toLowerCase().replace(/\s+/g, '_') === npcIdFromUrl.toLowerCase());
+            if (npcFromUrl) {
+                setSelectedNPC(npcFromUrl);
+                console.log(`Deep link: auto-selected NPC ${npcFromUrl.name}`);
+            }
+        }
+    }, [npcIdFromUrl, npcs, selectedNPC]);
 
     const sendMessage = async () => {
         if (!message.trim() || !selectedNPC) return;
@@ -286,5 +301,14 @@ export default function ChatPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Wrap with Suspense for useSearchParams (required by Next.js)
+export default function ChatPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-950 flex items-center justify-center"><span className="text-cyan-400">Loading chat...</span></div>}>
+            <ChatPageContent />
+        </Suspense>
     );
 }

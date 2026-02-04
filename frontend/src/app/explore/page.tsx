@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { TimeControls } from '@/components/TimeControls';
 import { SceneGenerator } from '@/components/SceneGenerator';
 import { TimelineBar } from '@/components/TimelineBar';
@@ -154,7 +155,11 @@ function generateNPCs(districts: District[], count: number): NPC[] {
     return npcs;
 }
 
-export default function ExplorePage() {
+function ExplorePageContent() {
+    const searchParams = useSearchParams();
+    const npcIdFromUrl = searchParams.get('npc');
+    const buildingIdFromUrl = searchParams.get('building');
+
     // State - initialized as empty/defaults to avoid hydration mismatch
     const [mounted, setMounted] = useState(false);
     const [currentTick, setCurrentTick] = useState(100);
@@ -265,6 +270,34 @@ export default function ExplorePage() {
         };
         loadNPCs();
     }, []);
+
+    // Deep linking: auto-select NPC or building from URL parameters
+    useEffect(() => {
+        if (!mounted) return;
+
+        // Auto-select NPC from URL
+        if (npcIdFromUrl && npcs.length > 0 && !selectedNPC) {
+            const npcFromUrl = npcs.find(n => n.id === npcIdFromUrl || n.name.toLowerCase().replace(/\s+/g, '_') === npcIdFromUrl.toLowerCase());
+            if (npcFromUrl) {
+                setSelectedNPC(npcFromUrl);
+                // Also select the building they're in
+                const allBuildings = districts.flatMap(d => d.buildings);
+                const building = allBuildings.find(b => b.id === npcFromUrl.location);
+                if (building) setSelectedBuilding(building);
+                console.log(`Deep link: auto-selected NPC ${npcFromUrl.name}`);
+            }
+        }
+
+        // Auto-select building from URL
+        if (buildingIdFromUrl && districts.length > 0 && !selectedBuilding) {
+            const allBuildings = districts.flatMap(d => d.buildings);
+            const building = allBuildings.find(b => b.id === buildingIdFromUrl || b.name.toLowerCase().replace(/\s+/g, '_') === buildingIdFromUrl.toLowerCase());
+            if (building) {
+                setSelectedBuilding(building);
+                console.log(`Deep link: auto-selected building ${building.name}`);
+            }
+        }
+    }, [npcIdFromUrl, buildingIdFromUrl, npcs, districts, mounted, selectedNPC, selectedBuilding]);
 
     // Auto-advance tick when playing
     useEffect(() => {
@@ -834,5 +867,14 @@ export default function ExplorePage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Wrap with Suspense for useSearchParams (required by Next.js)
+export default function ExplorePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center"><span className="text-cyan-400">Loading city...</span></div>}>
+            <ExplorePageContent />
+        </Suspense>
     );
 }
