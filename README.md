@@ -24,22 +24,30 @@
 | ![Chat](docs/screenshots/chat.png) | ![API](docs/screenshots/api.png) |
 | Talk to NPCs with LLM-powered dialogue | RESTful API for integration |
 
+## 🚀 Get Started
+
+| Option | Description | Link |
+|--------|-------------|------|
+| 🎮 **Test the Simulation** | Try our live demo with 800+ NPCs | [**Launch Demo →**](https://ao-world-engine-1071951656531.us-central1.run.app) |
+| 🛠️ **Build Your Own** | Fork the repo and create your world | [**GitHub Repo →**](https://github.com/WandernGeo/ao-world-engine) |
+| 🎨 **Frontend Only** | Just want the visualizer? | [**Frontend Docs →**](docs/FRONTEND_GUIDE.md) |
+| ☁️ **Cloud Deployment** | Deploy on Cloud Run or your infra | [**Deploy Guide →**](docs/DEPLOYMENT.md) |
+| 🤝 **Have Us Build It** | Custom world development services | [**Contact Us →**](mailto:contact@wandern.geo) |
+
 ---
 
-## 🎮 Live Demo - Try the Simulation!
+## 🎮 What Can You Test?
 
-**[▶ Test the Simulation](https://ao-world-engine-1071951656531.us-central1.run.app)**
-
-Explore the world, talk to NPCs, and watch the simulation run in real-time.
-
-| What to Test | Description |
-|--------------|-------------|
+| Feature | Description |
+|---------|-------------|
 | 🧠 **NPC Memory** | NPCs remember past conversations |
 | 🔗 **Relationships** | Ask about other characters - NPCs know who they trust |
 | ⏰ **Tick Time** | Change the tick to see different days/weather/moods |
 | 🎭 **Consistency** | Same questions, same tick = consistent answers |
+| 🎲 **Risk System** | NPCs take risks based on personality (heists, gambling, ventures) |
+| 🌍 **Physics** | Gravity, inertia, projectiles, collisions |
 
-> **What's a Tick?** A tick is one unit of simulation time. Day = tick ÷ 24, Hour = tick % 24. At tick 100, it's Day 5 at 4:00 AM. Every NPC's location, mood, and the weather are deterministically calculated from the tick.
+> **What's a Tick?** A tick is one unit of simulation time. Day = tick ÷ 24, Hour = tick % 24. At tick 100, it's Day 5 at 4:00 AM.
 
 ---
 
