@@ -644,12 +644,32 @@ Handlers.add("freeze-simulation", Handlers.utils.hasMatchingTag("Action", "freez
     print("❄️  Simulation FROZEN at tick " .. WorldTick)
 end)
 
--- KILL SWITCH - Terminate simulation permanently
+-- KILL SWITCH - Terminate simulation permanently (HIDDEN - owner + passphrase required)
+-- Send: { Action = "terminate-simulation", Data = json.encode({key = "YOUR_SECRET"}) }
 Handlers.add("terminate-simulation", Handlers.utils.hasMatchingTag("Action", "terminate-simulation"), function(msg)
     if not is_owner(msg.From) then
         ao.send({ Target = msg.From, Action = "error", Data = "Unauthorized" })
         return
     end
+    
+    -- Require secret passphrase in Data.key
+    local data = json.decode(msg.Data or "{}")
+    local secret_hash = 1337424242  -- Pre-computed hash of your secret passphrase
+    
+    if data.key then
+        local hash = 0
+        for i = 1, #data.key do
+            hash = (hash * 31 + string.byte(data.key, i)) % 2147483647
+        end
+        if hash ~= secret_hash then
+            ao.send({ Target = msg.From, Action = "error", Data = "Invalid key" })
+            return
+        end
+    else
+        ao.send({ Target = msg.From, Action = "error", Data = "Key required" })
+        return
+    end
+    
     SimulationStatus = "terminated"
     ao.send({
         Target = msg.From,
@@ -657,10 +677,10 @@ Handlers.add("terminate-simulation", Handlers.utils.hasMatchingTag("Action", "te
         Data = json.encode({ 
             status = "terminated", 
             final_tick = WorldTick,
-            message = "Simulation terminated. Layer archived."
+            message = "Layer archived permanently."
         })
     })
-    print("☠️  Simulation TERMINATED at tick " .. WorldTick)
+    print("☠️  SIMULATION TERMINATED at tick " .. WorldTick)
 end)
 
 -- Get simulation status

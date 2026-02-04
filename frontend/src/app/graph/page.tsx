@@ -623,16 +623,19 @@ export default function KnowledgeGraphPage() {
             return;
         }
 
-        // Screen mouse position
+        // Screen mouse position relative to canvas element
         const screenX = e.clientX - rect.left;
         const screenY = e.clientY - rect.top;
 
-        // Convert screen coords to world coords (reverse the canvas transform)
-        // Canvas uses: ctx.translate(pan.x, pan.y); ctx.scale(zoom, zoom);
-        // So: screenCoord = (worldCoord * zoom) + pan
-        // Therefore: worldCoord = (screenCoord - pan) / zoom
-        const worldMouseX = (screenX - pan.x) / zoom;
-        const worldMouseY = (screenY - pan.y) / zoom;
+        // IMPORTANT: Account for CSS scaling of canvas (canvas is 2400x2000 but CSS scales it to fit)
+        const scaleX = width / rect.width;
+        const scaleY = height / rect.height;
+        const canvasX = screenX * scaleX;
+        const canvasY = screenY * scaleY;
+
+        // Convert canvas coords to world coords (reverse the canvas transform)
+        const worldMouseX = (canvasX - pan.x) / zoom;
+        const worldMouseY = (canvasY - pan.y) / zoom;
 
         // Check if clicking on a node using PROJECTED coordinates (3D aware)
         // Sort by depth - front-most nodes (smallest depth/largest scale) first!
@@ -701,11 +704,16 @@ export default function KnowledgeGraphPage() {
         }
 
         // Hover detection using PROJECTED coordinates (3D aware)
-        // Convert screen coords to world coords (reverse canvas transform)
+        // Convert screen coords to canvas coords (accounting for CSS scaling)
         const hoverScreenX = e.clientX - rect.left;
         const hoverScreenY = e.clientY - rect.top;
-        const hoverWorldX = (hoverScreenX - pan.x) / zoom;
-        const hoverWorldY = (hoverScreenY - pan.y) / zoom;
+        const scaleX = width / rect.width;
+        const scaleY = height / rect.height;
+        const hoverCanvasX = hoverScreenX * scaleX;
+        const hoverCanvasY = hoverScreenY * scaleY;
+        // Convert canvas coords to world coords
+        const hoverWorldX = (hoverCanvasX - pan.x) / zoom;
+        const hoverWorldY = (hoverCanvasY - pan.y) / zoom;
 
         // Sort by depth - front-most nodes first (same as click detection)
         const sortedForHover = [...data.entities]
