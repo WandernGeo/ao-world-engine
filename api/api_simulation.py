@@ -281,6 +281,58 @@ SCHEDULES = {
         "T09": {"activity": "off_duty", "location_type": "home"},
         "T10": {"activity": "sleeping", "location_type": "home"},
     },
+    # Night shift workers - active at night, sleep during day
+    "night_shift": {
+        "T01": {"activity": "working", "location_type": "workplace"},  # Midnight-2:30am work
+        "T02": {"activity": "working", "location_type": "workplace"},  # 2:30-5am work
+        "T03": {"activity": "commuting", "location_type": "transit"},   # 5-7am going home
+        "T04": {"activity": "sleeping", "location_type": "home"},       # 7-10am sleep
+        "T05": {"activity": "sleeping", "location_type": "home"},       # 10am-12pm sleep
+        "T06": {"activity": "sleeping", "location_type": "home"},       # 12-2pm sleep
+        "T07": {"activity": "waking", "location_type": "home"},         # 2-5pm waking up
+        "T08": {"activity": "leisure", "location_type": "entertainment"},# 5-7pm leisure
+        "T09": {"activity": "commuting", "location_type": "transit"},   # 7-10pm going to work
+        "T10": {"activity": "working", "location_type": "workplace"},   # 10pm-midnight work
+    },
+    # Security - always active, rotating patrols
+    "security_night": {
+        "T01": {"activity": "patrol", "location_type": "public"},
+        "T02": {"activity": "patrol", "location_type": "public"},
+        "T03": {"activity": "patrol", "location_type": "public"},
+        "T04": {"activity": "shift_change", "location_type": "barracks"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "patrol", "location_type": "public"},
+        "T10": {"activity": "patrol", "location_type": "public"},
+    },
+    # Late night lifestyle - bartenders, entertainers
+    "late_night": {
+        "T01": {"activity": "working", "location_type": "bar"},
+        "T02": {"activity": "closing", "location_type": "bar"},
+        "T03": {"activity": "commuting", "location_type": "transit"},
+        "T04": {"activity": "sleeping", "location_type": "home"},
+        "T05": {"activity": "sleeping", "location_type": "home"},
+        "T06": {"activity": "sleeping", "location_type": "home"},
+        "T07": {"activity": "waking", "location_type": "home"},
+        "T08": {"activity": "commuting", "location_type": "transit"},
+        "T09": {"activity": "opening", "location_type": "bar"},
+        "T10": {"activity": "working", "location_type": "bar"},
+    },
+    # Jogger/fitness enthusiast - early morning runs
+    "fitness": {
+        "T01": {"activity": "sleeping", "location_type": "home"},
+        "T02": {"activity": "running", "location_type": "transit"},    # Pre-dawn jog!
+        "T03": {"activity": "exercising", "location_type": "public"},  # Morning workout
+        "T04": {"activity": "working", "location_type": "workplace"},
+        "T05": {"activity": "working", "location_type": "workplace"},
+        "T06": {"activity": "commuting", "location_type": "transit"},
+        "T07": {"activity": "exercising", "location_type": "public"},  # Evening gym
+        "T08": {"activity": "socializing", "location_type": "bar"},
+        "T09": {"activity": "running", "location_type": "transit"},    # Night jog!
+        "T10": {"activity": "sleeping", "location_type": "home"},
+    },
     # Default for any other schedule
     "default": {
         "T01": {"activity": "sleeping", "location_type": "home"},
@@ -302,7 +354,60 @@ def get_npc_state(npc: dict, tick: int) -> dict:
     Deterministic based on NPC ID and tick.
     Now DYNAMIC: Uses hobbies and personality for variety!
     """
-    schedule_type = npc.get("schedule", "default")
+    # Map archetype to schedule type
+    archetype = npc.get("archetype", "").lower()
+    
+    # Archetype-to-schedule mapping for variety
+    ARCHETYPE_TO_SCHEDULE = {
+        # Night workers
+        "security guard": "security_night",
+        "guard": "security_night",
+        "security": "security_night",
+        "night watchman": "security_night",
+        "bouncer": "late_night",
+        "bartender": "late_night",
+        "club owner": "late_night",
+        "entertainer": "late_night",
+        "dealer": "late_night",
+        "gambler": "late_night",
+        # Industrial night shifts
+        "factory worker": "night_shift",
+        "dock worker": "night_shift",
+        "technician": "night_shift",
+        "maintenance": "night_shift",
+        # Fitness types
+        "athlete": "fitness",
+        "trainer": "fitness",
+        "courier": "fitness",
+        # Resistance
+        "resistance fighter": "resistance_fighter",
+        "resistance leader": "resistance_fighter",
+        "operative": "resistance_fighter",
+        # Temple
+        "temple guard": "temple_guard",
+        "inquisitor": "temple_guard",
+        # Shopkeepers
+        "merchant": "shopkeeper",
+        "vendor": "shopkeeper",
+        "shopkeeper": "shopkeeper",
+        "clerk": "shopkeeper",
+    }
+    
+    # Get schedule: explicit > archetype mapping > default  
+    schedule_type = npc.get("schedule")
+    if not schedule_type:
+        # Try to match archetype keywords
+        for keyword, sched in ARCHETYPE_TO_SCHEDULE.items():
+            if keyword in archetype:
+                schedule_type = sched
+                break
+        else:
+            # Randomize ~20% to night shift based on NPC ID for variety
+            if seeded_random(f"{npc.get('id', '')}_shift") < 0.15:
+                schedule_type = seeded_choice(["night_shift", "late_night", "fitness"], f"{npc.get('id', '')}_random_shift")
+            else:
+                schedule_type = "default"
+    
     schedule = SCHEDULES.get(schedule_type, SCHEDULES["default"])
     
     time_period = get_time_period(tick)

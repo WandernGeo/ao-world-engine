@@ -165,6 +165,7 @@ export default function ExplorePage() {
     const [npcs, setNpcs] = useState<NPC[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
     const [showBlueprint, setShowBlueprint] = useState(false);
+    const [expandedNPCList, setExpandedNPCList] = useState(false); // NEW: show all NPCs
 
     // Timeline events
     const [timelineEvents, setTimelineEvents] = useState([
@@ -675,8 +676,8 @@ export default function ExplorePage() {
                                         <span className="px-1 py-0.5 bg-red-500/20 text-red-400 rounded">Security</span>
                                         <span className="px-1 py-0.5 bg-zinc-600/30 text-zinc-400 rounded">Visitor</span>
                                     </div>
-                                    <div className="max-h-40 overflow-y-auto space-y-1">
-                                        {npcs.filter(n => n.location === selectedBuilding.id).slice(0, 50).map(npc => {
+                                    <div className="max-h-60 overflow-y-auto space-y-1">
+                                        {npcs.filter(n => n.location === selectedBuilding.id).slice(0, expandedNPCList ? 500 : 50).map(npc => {
                                             const role = getNPCRole(npc, selectedBuilding.id, selectedBuilding.type);
                                             return (
                                                 <button
@@ -703,10 +704,15 @@ export default function ExplorePage() {
                                                 </button>
                                             );
                                         })}
-                                        {npcs.filter(n => n.location === selectedBuilding.id).length > 50 && (
-                                            <div className="text-center text-zinc-500 text-xs py-1">
-                                                +{npcs.filter(n => n.location === selectedBuilding.id).length - 50} more...
-                                            </div>
+                                        {npcs.filter(n => n.location === selectedBuilding.id).length > 50 && !expandedNPCList && (
+                                            <button onClick={() => setExpandedNPCList(true)} className="w-full text-center text-cyan-400 hover:text-cyan-300 text-xs py-2 hover:bg-cyan-500/10 rounded cursor-pointer">
+                                                + Show all {npcs.filter(n => n.location === selectedBuilding.id).length - 50} more...
+                                            </button>
+                                        )}
+                                        {expandedNPCList && npcs.filter(n => n.location === selectedBuilding.id).length > 50 && (
+                                            <button onClick={() => setExpandedNPCList(false)} className="w-full text-center text-zinc-400 hover:text-zinc-300 text-xs py-2 hover:bg-zinc-700/30 rounded cursor-pointer">
+                                                ▲ Show less
+                                            </button>
                                         )}
                                     </div>
                                 </div>
