@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { TimeControls } from '@/components/TimeControls';
 import { SceneGenerator } from '@/components/SceneGenerator';
 import { TimelineBar } from '@/components/TimelineBar';
@@ -271,13 +272,19 @@ export default function ExplorePage() {
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-b from-zinc-900 to-transparent z-50 flex items-center px-4 border-b border-cyan-500/20">
-                <h1 className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                     AO WORLD ENGINE
-                </h1>
+                </Link>
                 <nav className="ml-8 flex gap-4">
-                    <Button variant="ghost" size="sm" className="text-cyan-400">Explore</Button>
-                    <Button variant="ghost" size="sm" className="text-zinc-500 hover:text-cyan-400">Chat</Button>
-                    <Button variant="ghost" size="sm" className="text-zinc-500 hover:text-cyan-400">Graph</Button>
+                    <Link href="/explore" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Explore
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Chat
+                    </Link>
+                    <Link href="/graph" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Graph
+                    </Link>
                 </nav>
             </header>
 
@@ -486,12 +493,12 @@ export default function ExplorePage() {
                                                 key={npc.id}
                                                 onClick={() => setSelectedNPC(npc)}
                                                 className={`w-full text-left px-2 py-1 rounded text-xs flex items-center gap-2 ${selectedNPC?.id === npc.id
-                                                        ? 'bg-cyan-600/30 border border-cyan-500/50'
-                                                        : 'bg-zinc-800/50 hover:bg-zinc-700/50'
+                                                    ? 'bg-cyan-600/30 border border-cyan-500/50'
+                                                    : 'bg-zinc-800/50 hover:bg-zinc-700/50'
                                                     }`}
                                             >
                                                 <span className={`w-2 h-2 rounded-full ${npc.mood === 'friendly' ? 'bg-green-400' :
-                                                        npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
+                                                    npc.mood === 'cautious' ? 'bg-amber-400' : 'bg-red-400'
                                                     }`} />
                                                 <span className="truncate flex-1">{npc.name}</span>
                                                 <span className="text-zinc-500 text-[10px]">{npc.activity}</span>

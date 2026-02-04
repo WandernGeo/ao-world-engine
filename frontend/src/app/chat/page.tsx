@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -110,13 +111,19 @@ export default function ChatPage() {
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-b from-zinc-900 to-transparent z-50 flex items-center px-4 border-b border-cyan-500/20">
-                <h1 className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                <Link href="/" className="font-mono text-lg font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                     AO WORLD ENGINE
-                </h1>
+                </Link>
                 <nav className="ml-8 flex gap-4">
-                    <a href="/explore"><Button variant="ghost" size="sm" className="text-zinc-500 hover:text-cyan-400">Explore</Button></a>
-                    <Button variant="ghost" size="sm" className="text-cyan-400">Chat</Button>
-                    <a href="/graph"><Button variant="ghost" size="sm" className="text-zinc-500 hover:text-cyan-400">Graph</Button></a>
+                    <Link href="/explore" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Explore
+                    </Link>
+                    <Link href="/chat" className="text-sm font-medium text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Chat
+                    </Link>
+                    <Link href="/graph" className="text-sm font-medium text-zinc-500 hover:text-cyan-400 px-3 py-1.5 rounded transition-colors">
+                        Graph
+                    </Link>
                 </nav>
             </header>
 
