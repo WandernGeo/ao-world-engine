@@ -1,6 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import Link from 'next/link';
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 interface LogEntry {
     tick: number;
@@ -9,259 +14,360 @@ interface LogEntry {
     data: Record<string, unknown>;
 }
 
-interface LogStats {
-    total_logs: number;
-    logs_by_type: Record<string, number>;
-    first_tick: number;
-    last_tick: number;
-    buffer_sizes: Record<string, number>;
-}
-
-interface WorldStatus {
-    world_name: string;
-    version: string;
+interface WorldSnapshot {
     tick: number;
     day: number;
     year: number;
+    time_period: string;
     population: number;
     active_npcs: number;
     budget: number;
-    districts: number;
-    uptime_ticks: number;
+    economy: EconomySnapshot;
+    npcs: NPCSnapshot[];
+    logs: LogEntry[];
 }
 
-interface EconomyStatus {
-    budget: number;
+interface EconomySnapshot {
+    gdp: number;
+    inflation: number;
+    unemployment_rate: number;
+    gini_coefficient: number;
+    black_market_share: number;
     crisis_level: string;
-    indicators: {
-        gdp: number;
-        inflation: number;
-        unemployment_rate: number;
-        gini_coefficient: number;
-        black_market_share: number;
-    };
     service_levels: Record<string, number>;
 }
 
+interface NPCSnapshot {
+    id: string;
+    name: string;
+    location: string;
+    state: string;
+    mood: number;
+    energy: number;
+    wealth: number;
+}
+
+interface DetailPanel {
+    type: 'npc' | 'economy' | 'district' | 'log' | null;
+    data: unknown;
+}
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
 const LOG_TYPES = [
+    { id: 'all', label: 'All Events', color: 'bg-white' },
     { id: 'npc_action', label: 'NPC Actions', color: 'bg-blue-500' },
     { id: 'npc_meeting', label: 'Meetings', color: 'bg-green-500' },
     { id: 'economy_tx', label: 'Economy', color: 'bg-yellow-500' },
     { id: 'building_event', label: 'Buildings', color: 'bg-purple-500' },
     { id: 'world_event', label: 'World Events', color: 'bg-red-500' },
-    { id: 'system_tick', label: 'System Ticks', color: 'bg-gray-500' },
 ];
 
+const NPCS: Record<string, { name: string; role: string; district: string }> = {
+    C01: { name: 'Charlie', role: 'detective', district: 'neon_district' },
+    C02: { name: 'Kai Vance', role: 'tech_specialist', district: 'neon_district' },
+    C03: { name: 'Orion Thane', role: 'bartender', district: 'neon_district' },
+    C04: { name: 'Felix', role: 'street_vendor', district: 'neon_district' },
+    C05: { name: 'Nova Chen', role: 'street_medic', district: 'temple_quarter' },
+    C06: { name: 'Selene Voss', role: 'smuggler', district: 'undercity' },
+    C07: { name: 'Sister Mira', role: 'temple_priest', district: 'temple_quarter' },
+    C08: { name: 'Mama Indira', role: 'shop_owner', district: 'neon_district' },
+    C09: { name: 'Aiche', role: 'ai_companion', district: 'neon_district' },
+    C10: { name: 'Pixel', role: 'hacker', district: 'undercity' },
+    C11: { name: 'Cipher', role: 'info_broker', district: 'neon_district' },
+    C12: { name: 'Zero Chen', role: 'journalist', district: 'temple_quarter' },
+};
+
+const PLAYBACK_SPEEDS = [
+    { label: '0.5x', value: 0.5 },
+    { label: '1x', value: 1 },
+    { label: '2x', value: 2 },
+    { label: '5x', value: 5 },
+    { label: '10x', value: 10 },
+];
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
 export default function MonitorPage() {
+    // Connection state
     const [processId, setProcessId] = useState<string>('');
-    const [connected, setConnected] = useState(false);
-    const [status, setStatus] = useState<WorldStatus | null>(null);
-    const [economy, setEconomy] = useState<EconomyStatus | null>(null);
-    const [logs, setLogs] = useState<LogEntry[]>([]);
-    const [logStats, setLogStats] = useState<LogStats | null>(null);
-    const [selectedLogType, setSelectedLogType] = useState('npc_action');
-    const [autoRefresh, setAutoRefresh] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Mock data for demo mode
     const [demoMode, setDemoMode] = useState(true);
+    const [connected, setConnected] = useState(false);
 
-    const generateMockData = useCallback(() => {
-        const mockStatus: WorldStatus = {
-            world_name: 'SignalNoir.1',
-            version: '0.1.0-alpha',
-            tick: Math.floor(Date.now() / 1000) % 100000,
-            day: Math.floor((Date.now() / 1000) % 100000 / 240) + 1,
-            year: 2087,
-            population: 12,
-            active_npcs: Math.floor(Math.random() * 4) + 8,
-            budget: 100000 - Math.floor(Math.random() * 5000),
-            districts: 3,
-            uptime_ticks: Math.floor((Date.now() / 1000) % 100000),
-        };
+    // Time machine state
+    const [history, setHistory] = useState<WorldSnapshot[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
-        const mockEconomy: EconomyStatus = {
-            budget: mockStatus.budget,
-            crisis_level: mockStatus.budget > 80000 ? 'healthy' : mockStatus.budget > 50000 ? 'strained' : 'crisis',
-            indicators: {
-                gdp: 900000 + Math.floor(Math.random() * 100000),
-                inflation: 0.02 + Math.random() * 0.01,
-                unemployment_rate: 0.12 + Math.random() * 0.05,
-                gini_coefficient: 0.72 + Math.random() * 0.05,
-                black_market_share: 0.20 + Math.random() * 0.1,
-            },
-            service_levels: {
-                law_enforcement: 0.85 + Math.random() * 0.15,
-                infrastructure: 0.90 + Math.random() * 0.10,
-                healthcare: 0.80 + Math.random() * 0.20,
-                sanitation: 0.75 + Math.random() * 0.25,
-                education: 0.70 + Math.random() * 0.30,
-            },
-        };
+    // UI state
+    const [selectedLogType, setSelectedLogType] = useState('all');
+    const [detailPanel, setDetailPanel] = useState<DetailPanel>({ type: null, data: null });
+    const [showHelp, setShowHelp] = useState(false);
 
-        const npcs = ['C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09', 'C10', 'C11', 'C12'];
-        const npcNames: Record<string, string> = {
-            C01: 'Charlie', C02: 'Kai Vance', C03: 'Orion Thane', C04: 'Felix',
-            C05: 'Nova Chen', C06: 'Selene Voss', C07: 'Sister Mira', C08: 'Mama Indira',
-            C09: 'Aiche', C10: 'Pixel', C11: 'Cipher', C12: 'Zero Chen',
-        };
-        const locations = ['L001', 'L003', 'L004', 'L026', 'L031', 'L050'];
-        const actions = ['move', 'talk', 'work', 'rest', 'observe', 'trade'];
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-        const mockLogs: LogEntry[] = [];
-        for (let i = 0; i < 20; i++) {
+    // ============================================================================
+    // DATA GENERATION (Demo Mode)
+    // ============================================================================
+
+    // Persistent refs for gradual changes (not random jumps each tick)
+    const economyStateRef = useRef({
+        gdp: 920000,
+        inflation: 0.025,
+        unemployment_rate: 0.14,
+        gini_coefficient: 0.73,
+        black_market_share: 0.22,
+    });
+
+    const npcStateRef = useRef<Record<string, { mood: number; energy: number; wealth: number; location: string; state: string }>>({});
+
+    const generateSnapshot = useCallback((baseTick: number): WorldSnapshot => {
+        const tick = baseTick;
+        const day = Math.floor(tick / 240) + 1;
+        const hour = Math.floor((tick % 240) / 10);
+        const timePeriods = ['T01', 'T02', 'T03', 'T04', 'T05'];
+        const time_period = timePeriods[Math.floor(hour / 5) % 5];
+
+        const locations = ['L001', 'L003', 'L004', 'L026', 'L031', 'L050', 'L051', 'L032'];
+        const states = ['idle', 'working', 'moving', 'talking', 'resting', 'observing'];
+        const actions = ['move', 'talk', 'work', 'rest', 'observe', 'trade', 'hack', 'pray'];
+
+        // Generate NPC states with persistence (gradual changes)
+        const npcs: NPCSnapshot[] = Object.entries(NPCS).map(([id, info]) => {
+            let s = npcStateRef.current[id];
+            if (!s) {
+                // Initialize
+                s = {
+                    mood: 0.5 + Math.random() * 0.3,
+                    energy: 0.6 + Math.random() * 0.3,
+                    wealth: Math.floor(100 + Math.random() * 400),
+                    location: locations[Math.floor(Math.random() * locations.length)],
+                    state: states[Math.floor(Math.random() * states.length)],
+                };
+                npcStateRef.current[id] = s;
+            }
+            // Gradual drift
+            s.mood = Math.max(0.1, Math.min(0.95, s.mood + (Math.random() - 0.5) * 0.02));
+            s.energy = Math.max(0.1, Math.min(0.95, s.energy + (Math.random() - 0.5) * 0.03));
+            if (Math.random() < 0.08) s.wealth += Math.floor((Math.random() - 0.4) * 30);
+            if (Math.random() < 0.1) s.state = states[Math.floor(Math.random() * states.length)];
+            if (Math.random() < 0.05) s.location = locations[Math.floor(Math.random() * locations.length)];
+
+            return { id, name: info.name, ...s };
+        });
+
+        // Generate logs for this tick
+        const logs: LogEntry[] = [];
+        const logCount = Math.floor(Math.random() * 4) + 1;
+        for (let i = 0; i < logCount; i++) {
             const npc = npcs[Math.floor(Math.random() * npcs.length)];
-            const logTypes = ['npc_action', 'npc_meeting', 'economy_tx', 'building_event', 'world_event', 'system_tick'];
-            const logType = selectedLogType || logTypes[Math.floor(Math.random() * logTypes.length)];
+            const logTypes = ['npc_action', 'npc_meeting', 'economy_tx', 'building_event', 'world_event'];
+            const logType = logTypes[Math.floor(Math.random() * logTypes.length)];
 
             let data: Record<string, unknown> = {};
-
             switch (logType) {
                 case 'npc_action':
                     data = {
-                        npc_id: npc,
-                        npc_name: npcNames[npc],
+                        npc_id: npc.id,
+                        npc_name: npc.name,
                         action: actions[Math.floor(Math.random() * actions.length)],
-                        location: locations[Math.floor(Math.random() * locations.length)],
+                        location: npc.location,
                     };
                     break;
                 case 'npc_meeting':
-                    const npc2 = npcs.filter(n => n !== npc)[Math.floor(Math.random() * (npcs.length - 1))];
+                    const other = npcs.filter(n => n.id !== npc.id)[Math.floor(Math.random() * 11)];
                     data = {
-                        participants: [npc, npc2],
-                        participant_names: [npcNames[npc], npcNames[npc2]],
-                        location: locations[Math.floor(Math.random() * locations.length)],
-                        trust_delta: (Math.random() * 0.1 - 0.02).toFixed(3),
+                        npc_id: npc.id,
+                        npc_name: npc.name,
+                        other_id: other.id,
+                        other_name: other.name,
+                        location: npc.location,
+                        trust_delta: (Math.random() * 0.06 - 0.01).toFixed(3),
                     };
                     break;
                 case 'economy_tx':
                     data = {
-                        tx_type: ['tax', 'trade', 'salary', 'ubi'][Math.floor(Math.random() * 4)],
-                        amount: Math.floor(Math.random() * 500) + 10,
-                        from: npc,
-                        to: 'city_treasury',
+                        tx_type: ['tax', 'trade', 'salary', 'ubi', 'tithe'][Math.floor(Math.random() * 5)],
+                        amount: Math.floor(10 + Math.random() * 200),
+                        from: npc.id,
+                        to: Math.random() > 0.5 ? 'city_treasury' : npcs[Math.floor(Math.random() * 12)].id,
                     };
                     break;
                 case 'building_event':
                     data = {
-                        building_id: locations[Math.floor(Math.random() * locations.length)],
-                        npc_id: npc,
+                        npc_id: npc.id,
+                        npc_name: npc.name,
+                        building_id: npc.location,
                         event: Math.random() > 0.5 ? 'entry' : 'exit',
                     };
                     break;
                 case 'world_event':
                     data = {
-                        event_type: ['weather_change', 'market_peak', 'power_fluctuation'][Math.floor(Math.random() * 3)],
+                        event_type: ['weather_change', 'market_shift', 'power_fluctuation', 'curfew_start'][Math.floor(Math.random() * 4)],
                         scope: 'city',
-                    };
-                    break;
-                case 'system_tick':
-                    data = {
-                        day: mockStatus.day,
-                        year: mockStatus.year,
-                        time_period: ['T01', 'T02', 'T03', 'T04', 'T05'][Math.floor(Math.random() * 5)],
-                        population: mockStatus.population,
-                        budget: mockStatus.budget,
+                        severity: ['minor', 'moderate', 'major'][Math.floor(Math.random() * 3)],
                     };
                     break;
             }
 
-            mockLogs.push({
-                tick: mockStatus.tick - i * 10,
-                type: logType,
-                timestamp: mockStatus.tick - i * 10,
-                data,
-            });
+            logs.push({ tick, type: logType, timestamp: tick, data });
         }
 
-        const mockStats: LogStats = {
-            total_logs: 1234 + Math.floor(Math.random() * 100),
-            logs_by_type: {
-                npc_action: 456,
-                npc_meeting: 123,
-                economy_tx: 234,
-                building_event: 187,
-                world_event: 45,
-                system_tick: 189,
+        // Gradual economy changes (realistic drift, not random jumps)
+        const eco = economyStateRef.current;
+        eco.gdp += Math.floor((Math.random() - 0.45) * 300); // Slight growth trend
+        eco.inflation = Math.max(0.01, Math.min(0.06, eco.inflation + (Math.random() - 0.5) * 0.0005));
+        eco.unemployment_rate = Math.max(0.05, Math.min(0.25, eco.unemployment_rate + (Math.random() - 0.5) * 0.001));
+        eco.gini_coefficient = Math.max(0.5, Math.min(0.85, eco.gini_coefficient + (Math.random() - 0.5) * 0.001));
+        eco.black_market_share = Math.max(0.1, Math.min(0.4, eco.black_market_share + (Math.random() - 0.5) * 0.002));
+
+        const budget = 100000 - day * 50 + Math.floor((Math.random() - 0.5) * 50);
+
+        return {
+            tick,
+            day,
+            year: 2087,
+            time_period,
+            population: 12,
+            active_npcs: npcs.filter(n => n.state !== 'resting').length,
+            budget: Math.max(50000, budget),
+            economy: {
+                gdp: eco.gdp,
+                inflation: eco.inflation,
+                unemployment_rate: eco.unemployment_rate,
+                gini_coefficient: eco.gini_coefficient,
+                black_market_share: eco.black_market_share,
+                crisis_level: budget > 80000 ? 'healthy' : budget > 50000 ? 'strained' : 'crisis',
+                service_levels: {
+                    law_enforcement: 0.85,
+                    infrastructure: 0.88,
+                    healthcare: 0.80,
+                    sanitation: 0.75,
+                },
             },
-            first_tick: 0,
-            last_tick: mockStatus.tick,
-            buffer_sizes: {
-                npc_action: 500,
-                npc_meeting: 200,
-                economy_tx: 300,
-                building_event: 200,
-                world_event: 100,
-                system_tick: 1000,
-            },
+            npcs,
+            logs,
         };
+    }, []);
 
-        setStatus(mockStatus);
-        setEconomy(mockEconomy);
-        setLogs(mockLogs);
-        setLogStats(mockStats);
-        setConnected(true);
-    }, [selectedLogType]);
+    // ============================================================================
+    // TIME MACHINE CONTROLS
+    // ============================================================================
 
-    // Auto-refresh effect
+    // Initialize history
     useEffect(() => {
-        if (autoRefresh && demoMode) {
-            const interval = setInterval(generateMockData, 5000);
-            return () => clearInterval(interval);
+        if (demoMode && history.length === 0) {
+            const initialHistory: WorldSnapshot[] = [];
+            for (let i = 0; i < 100; i++) {
+                initialHistory.push(generateSnapshot(i * 10));
+            }
+            setHistory(initialHistory);
+            setCurrentIndex(initialHistory.length - 1);
+            setConnected(true);
         }
-    }, [autoRefresh, demoMode, generateMockData]);
+    }, [demoMode, history.length, generateSnapshot]);
 
-    // Initial load for demo mode
+    // Playback loop
     useEffect(() => {
-        if (demoMode) {
-            generateMockData();
-        }
-    }, [demoMode, generateMockData]);
+        if (isPlaying && demoMode && history.length > 0) {
+            intervalRef.current = setInterval(() => {
+                setHistory(prev => {
+                    const lastTick = prev[prev.length - 1]?.tick || 0;
+                    const newSnapshot = generateSnapshot(lastTick + 10);
+                    const updated = [...prev.slice(-199), newSnapshot];
+                    return updated;
+                });
+                setCurrentIndex(prev => prev + 1);
+            }, 1000 / playbackSpeed);
 
-    const handleConnect = async () => {
-        if (demoMode) {
-            generateMockData();
-            return;
+            return () => {
+                if (intervalRef.current) clearInterval(intervalRef.current);
+            };
         }
+    }, [isPlaying, demoMode, playbackSpeed, generateSnapshot, history.length]);
 
-        if (!processId) {
-            setError('Please enter a Process ID');
-            return;
-        }
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleRewind = () => {
+        setIsPlaying(false);
+        setCurrentIndex(Math.max(0, currentIndex - 10));
+    };
+    const handleFastForward = () => {
+        setIsPlaying(false);
+        setCurrentIndex(Math.min(history.length - 1, currentIndex + 10));
+    };
+    const handleSeek = (index: number) => {
+        setIsPlaying(false);
+        setCurrentIndex(index);
+    };
+    const handleJumpToLive = () => {
+        setCurrentIndex(history.length - 1);
+        setIsPlaying(true);
+    };
 
-        setIsLoading(true);
-        setError(null);
+    // Current snapshot
+    const currentSnapshot = history[Math.min(currentIndex, history.length - 1)];
+    const isLive = currentIndex >= history.length - 1;
 
-        try {
-            // TODO: Implement actual AO connection via aoconnect
-            // For now, this is a placeholder
-            setError('Live connection not yet implemented. Use Demo Mode.');
-        } catch (err) {
-            setError(`Connection failed: ${err}`);
-        } finally {
-            setIsLoading(false);
-        }
+    // Filtered logs
+    const allLogs = history.slice(0, currentIndex + 1).flatMap(s => s.logs).slice(-100);
+    const filteredLogs = selectedLogType === 'all'
+        ? allLogs
+        : allLogs.filter(l => l.type === selectedLogType);
+
+    // ============================================================================
+    // DETAIL HANDLERS
+    // ============================================================================
+
+    const openNPCDetail = (npc: NPCSnapshot) => {
+        const npcInfo = NPCS[npc.id];
+        setDetailPanel({
+            type: 'npc',
+            data: {
+                ...npc, ...npcInfo, recentLogs: allLogs.filter(l =>
+                    l.data.npc_id === npc.id || l.data.other_id === npc.id
+                ).slice(-10)
+            }
+        });
+    };
+
+    const openEconomyDetail = () => {
+        if (!currentSnapshot) return;
+        setDetailPanel({
+            type: 'economy',
+            data: {
+                ...currentSnapshot.economy,
+                budget: currentSnapshot.budget,
+                recentTx: allLogs.filter(l => l.type === 'economy_tx').slice(-20),
+                gdpHistory: history.slice(Math.max(0, currentIndex - 50), currentIndex + 1).map(s => s.economy.gdp),
+            }
+        });
+    };
+
+    const openLogDetail = (log: LogEntry) => {
+        setDetailPanel({ type: 'log', data: log });
     };
 
     const formatLogData = (log: LogEntry): string => {
         const d = log.data;
         switch (log.type) {
             case 'npc_action':
-                return `${d.npc_name || d.npc_id} → ${d.action} at ${d.location}`;
+                return `${d.npc_name} → ${d.action} at ${d.location}`;
             case 'npc_meeting':
-                const names = d.participant_names as string[] || d.participants as string[];
-                return `${names?.[0]} met ${names?.[1]} (trust: ${d.trust_delta})`;
+                return `${d.npc_name} met ${d.other_name} (Δ trust: ${d.trust_delta})`;
             case 'economy_tx':
-                return `${d.tx_type}: ${d.amount} GEP (${d.from} → ${d.to})`;
+                return `${d.tx_type}: ◊${d.amount} (${d.from} → ${d.to})`;
             case 'building_event':
-                return `${d.npc_id} ${d.event} ${d.building_id}`;
+                return `${d.npc_name} ${d.event} ${d.building_id}`;
             case 'world_event':
-                return `${d.event_type} (${d.scope})`;
-            case 'system_tick':
-                return `Day ${d.day} | Budget: ${d.budget} GEP`;
+                return `${d.event_type} (${d.severity})`;
             default:
-                return JSON.stringify(d).slice(0, 60);
+                return JSON.stringify(d).slice(0, 50);
         }
     };
 
@@ -269,19 +375,37 @@ export default function MonitorPage() {
         return LOG_TYPES.find(lt => lt.id === type)?.color || 'bg-gray-500';
     };
 
+    // ============================================================================
+    // RENDER
+    // ============================================================================
+
+    if (!currentSnapshot) {
+        return (
+            <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full mx-auto mb-4" />
+                    <p className="text-gray-400">Loading simulation data...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-6">
+        <div className="min-h-screen bg-gray-900 text-white">
             {/* Header */}
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+            <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                             SignalNoir.1 Monitor
                         </h1>
-                        <p className="text-gray-400 mt-1">Real-time simulation monitoring</p>
+                        <span className={`px-2 py-1 text-xs rounded ${isLive ? 'bg-red-500' : 'bg-yellow-500'}`}>
+                            {isLive ? '● LIVE' : `◉ T${currentSnapshot.tick}`}
+                        </span>
                     </div>
 
                     <div className="flex items-center gap-4">
+                        {/* Mode Toggle */}
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="checkbox"
@@ -289,189 +413,275 @@ export default function MonitorPage() {
                                 onChange={(e) => setDemoMode(e.target.checked)}
                                 className="w-4 h-4 rounded"
                             />
-                            <span className="text-sm text-gray-400">Demo Mode</span>
+                            <span className="text-sm text-white">Demo Mode</span>
                         </label>
 
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={autoRefresh}
-                                onChange={(e) => setAutoRefresh(e.target.checked)}
-                                className="w-4 h-4 rounded"
-                            />
-                            <span className="text-sm text-gray-400">Auto-refresh</span>
-                        </label>
+                        {/* Process ID (when not in demo mode) */}
+                        {!demoMode && (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={processId}
+                                    onChange={(e) => setProcessId(e.target.value)}
+                                    placeholder="AO Process ID"
+                                    className="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm w-48"
+                                />
+                                <button className="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 rounded text-sm">
+                                    Connect
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Help */}
+                        <button
+                            onClick={() => setShowHelp(!showHelp)}
+                            className="text-gray-400 hover:text-white"
+                        >
+                            ?
+                        </button>
+
+                        {/* Link to NPCs page */}
+                        <Link href="/npcs" className="text-sm text-cyan-400 hover:text-cyan-300">
+                            View NPCs →
+                        </Link>
                     </div>
                 </div>
+            </div>
 
-                {/* Connection Panel */}
-                {!demoMode && (
-                    <div className="bg-gray-800 rounded-lg p-4 mb-6">
-                        <div className="flex items-center gap-4">
-                            <input
-                                type="text"
-                                value={processId}
-                                onChange={(e) => setProcessId(e.target.value)}
-                                placeholder="AO Process ID"
-                                className="flex-1 bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:border-cyan-500 focus:outline-none"
-                            />
+            {/* Help Panel */}
+            {showHelp && (
+                <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+                    <div className="max-w-7xl mx-auto text-sm text-gray-300">
+                        <h3 className="font-bold text-white mb-2">How to Use This Monitor</h3>
+                        <ul className="space-y-1 list-disc list-inside">
+                            <li><strong>Demo Mode</strong>: Simulates tick data locally. Turn OFF to connect to a live AO process.</li>
+                            <li><strong>AO Process ID</strong>: Enter the deployed SignalNoir.1 process ID to connect to live data.</li>
+                            <li><strong>Time Controls</strong>: Play/Pause the simulation, rewind to see past ticks, or scrub through history.</li>
+                            <li><strong>Click any metric</strong>: Click on NPCs, economy stats, or logs to see detailed breakdowns.</li>
+                            <li><strong>Speed</strong>: Adjust playback speed from 0.5x to 10x.</li>
+                        </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* Time Machine Controls */}
+            <div className="bg-gray-850 border-b border-gray-700 px-6 py-3" style={{ backgroundColor: '#1a1f2e' }}>
+                <div className="max-w-7xl mx-auto flex items-center gap-6">
+                    {/* Playback Controls */}
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleRewind}
+                            className="p-2 bg-gray-700 hover:bg-gray-600 rounded"
+                            title="Rewind 10 ticks"
+                        >
+                            ⏪
+                        </button>
+                        {isPlaying ? (
                             <button
-                                onClick={handleConnect}
-                                disabled={isLoading}
-                                className="px-6 py-2 bg-cyan-600 hover:bg-cyan-700 rounded font-medium disabled:opacity-50"
+                                onClick={handlePause}
+                                className="p-2 bg-cyan-600 hover:bg-cyan-700 rounded"
+                                title="Pause"
                             >
-                                {isLoading ? 'Connecting...' : 'Connect'}
+                                ⏸
                             </button>
-                        </div>
-                        {error && (
-                            <p className="text-red-400 text-sm mt-2">{error}</p>
+                        ) : (
+                            <button
+                                onClick={handlePlay}
+                                className="p-2 bg-cyan-600 hover:bg-cyan-700 rounded"
+                                title="Play"
+                            >
+                                ▶
+                            </button>
+                        )}
+                        <button
+                            onClick={handleFastForward}
+                            className="p-2 bg-gray-700 hover:bg-gray-600 rounded"
+                            title="Forward 10 ticks"
+                        >
+                            ⏩
+                        </button>
+                        {!isLive && (
+                            <button
+                                onClick={handleJumpToLive}
+                                className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm"
+                            >
+                                Jump to Live
+                            </button>
                         )}
                     </div>
-                )}
 
-                {/* Status Cards */}
-                {connected && status && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <h3 className="text-gray-400 text-sm mb-1">World Tick</h3>
-                            <p className="text-2xl font-bold text-cyan-400">{status.tick.toLocaleString()}</p>
-                            <p className="text-xs text-gray-500">Day {status.day}, Year {status.year}</p>
+                    {/* Timeline Scrubber */}
+                    <div className="flex-1 flex items-center gap-3">
+                        <span className="text-xs text-gray-400">T{history[0]?.tick || 0}</span>
+                        <input
+                            type="range"
+                            min={0}
+                            max={history.length - 1}
+                            value={Math.min(currentIndex, history.length - 1)}
+                            onChange={(e) => handleSeek(parseInt(e.target.value))}
+                            className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                        />
+                        <span className="text-xs text-gray-400">T{history[history.length - 1]?.tick || 0}</span>
+                    </div>
+
+                    {/* Speed Control */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">Speed:</span>
+                        {PLAYBACK_SPEEDS.map(s => (
+                            <button
+                                key={s.value}
+                                onClick={() => setPlaybackSpeed(s.value)}
+                                className={`px-2 py-1 text-xs rounded ${playbackSpeed === s.value ? 'bg-cyan-600' : 'bg-gray-700 hover:bg-gray-600'
+                                    }`}
+                            >
+                                {s.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Current Time Display */}
+                    <div className="text-right">
+                        <div className="text-lg font-bold text-white">
+                            Day {currentSnapshot.day} • {currentSnapshot.time_period}
                         </div>
-
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <h3 className="text-gray-400 text-sm mb-1">Population</h3>
-                            <p className="text-2xl font-bold text-green-400">{status.population}</p>
-                            <p className="text-xs text-gray-500">{status.active_npcs} active NPCs</p>
-                        </div>
-
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <h3 className="text-gray-400 text-sm mb-1">City Budget</h3>
-                            <p className="text-2xl font-bold text-yellow-400">◊{status.budget.toLocaleString()}</p>
-                            <p className="text-xs text-gray-500">
-                                {economy?.crisis_level === 'healthy' && '✅ Healthy'}
-                                {economy?.crisis_level === 'strained' && '⚠️ Strained'}
-                                {economy?.crisis_level === 'crisis' && '🔴 Crisis'}
-                            </p>
-                        </div>
-
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <h3 className="text-gray-400 text-sm mb-1">Districts</h3>
-                            <p className="text-2xl font-bold text-purple-400">{status.districts}</p>
-                            <p className="text-xs text-gray-500">{status.world_name}</p>
+                        <div className="text-xs text-gray-400">
+                            Year {currentSnapshot.year} • Tick {currentSnapshot.tick}
                         </div>
                     </div>
-                )}
+                </div>
+            </div>
 
-                {/* Economy Indicators */}
-                {connected && economy && (
-                    <div className="bg-gray-800 rounded-lg p-4 mb-6 border border-gray-700">
-                        <h3 className="text-lg font-semibold mb-4">Economic Indicators</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            <div>
-                                <p className="text-gray-400 text-xs">GDP</p>
-                                <p className="text-lg font-medium">◊{economy.indicators.gdp.toLocaleString()}</p>
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+                    {/* Left Panel - World Status */}
+                    <div className="lg:col-span-1 space-y-4">
+                        {/* Status Cards */}
+                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                            <h3 className="text-gray-200 text-sm mb-3 font-semibold">World Status</h3>
+
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Population</span>
+                                    <span className="text-green-400 font-bold">{currentSnapshot.population}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Active NPCs</span>
+                                    <span className="text-white">{currentSnapshot.active_npcs}</span>
+                                </div>
+                                <div
+                                    className="flex justify-between cursor-pointer hover:bg-gray-700 -mx-2 px-2 py-1 rounded"
+                                    onClick={openEconomyDetail}
+                                >
+                                    <span className="text-gray-400">City Budget</span>
+                                    <span className="text-yellow-400 font-bold">◊{currentSnapshot.budget.toLocaleString()}</span>
+                                </div>
+                                <div
+                                    className="flex justify-between cursor-pointer hover:bg-gray-700 -mx-2 px-2 py-1 rounded"
+                                    onClick={openEconomyDetail}
+                                >
+                                    <span className="text-gray-400">Crisis Level</span>
+                                    <span className={
+                                        currentSnapshot.economy.crisis_level === 'healthy' ? 'text-green-400' :
+                                            currentSnapshot.economy.crisis_level === 'strained' ? 'text-yellow-400' :
+                                                'text-red-400'
+                                    }>
+                                        {currentSnapshot.economy.crisis_level.toUpperCase()}
+                                    </span>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-gray-400 text-xs">Inflation</p>
-                                <p className="text-lg font-medium">{(economy.indicators.inflation * 100).toFixed(1)}%</p>
+                        </div>
+
+                        {/* Economy Indicators - Clickable */}
+                        <div
+                            className="bg-gray-800 rounded-lg p-4 border border-gray-700 cursor-pointer hover:border-cyan-500 transition-colors"
+                            onClick={openEconomyDetail}
+                        >
+                            <h3 className="text-gray-200 text-sm mb-3 font-semibold flex justify-between">
+                                Economy
+                                <span className="text-cyan-400 text-xs">Click for details →</span>
+                            </h3>
+
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <span className="text-gray-400 text-xs">GDP</span>
+                                    <p className="text-white font-medium">◊{(currentSnapshot.economy.gdp / 1000).toFixed(0)}k</p>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 text-xs">Inflation</span>
+                                    <p className="text-white font-medium">{(currentSnapshot.economy.inflation * 100).toFixed(1)}%</p>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 text-xs">Unemployment</span>
+                                    <p className="text-orange-400 font-medium">{(currentSnapshot.economy.unemployment_rate * 100).toFixed(1)}%</p>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400 text-xs">Black Market</span>
+                                    <p className="text-red-400 font-medium">{(currentSnapshot.economy.black_market_share * 100).toFixed(0)}%</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-gray-400 text-xs">Unemployment</p>
-                                <p className="text-lg font-medium text-orange-400">
-                                    {(economy.indicators.unemployment_rate * 100).toFixed(1)}%
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-gray-400 text-xs">Gini Coefficient</p>
-                                <p className="text-lg font-medium">{economy.indicators.gini_coefficient.toFixed(2)}</p>
-                            </div>
-                            <div>
-                                <p className="text-gray-400 text-xs">Black Market</p>
-                                <p className="text-lg font-medium text-red-400">
-                                    {(economy.indicators.black_market_share * 100).toFixed(0)}%
-                                </p>
+                        </div>
+
+                        {/* Active NPCs - Clickable */}
+                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                            <h3 className="text-gray-200 text-sm mb-3 font-semibold">NPCs</h3>
+
+                            <div className="space-y-2 max-h-64 overflow-y-auto">
+                                {currentSnapshot.npcs.map(npc => (
+                                    <div
+                                        key={npc.id}
+                                        className="flex items-center gap-2 px-2 py-1.5 bg-gray-700/50 rounded cursor-pointer hover:bg-gray-700"
+                                        onClick={() => openNPCDetail(npc)}
+                                    >
+                                        <div className={`w-2 h-2 rounded-full ${npc.state === 'working' ? 'bg-green-500' :
+                                            npc.state === 'moving' ? 'bg-blue-500' :
+                                                npc.state === 'resting' ? 'bg-yellow-500' :
+                                                    'bg-gray-500'
+                                            }`} />
+                                        <span className="text-white text-sm flex-1">{npc.name}</span>
+                                        <span className="text-gray-400 text-xs">{npc.state}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
-                )}
 
-                {/* Main Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Log Type Selector */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <h3 className="text-lg font-semibold mb-4">Log Categories</h3>
-                            <div className="space-y-2">
-                                {LOG_TYPES.map((lt) => (
+                    {/* Middle Panel - Event Stream */}
+                    <div className="lg:col-span-2">
+                        <div className="bg-gray-800 rounded-lg border border-gray-700 h-full flex flex-col">
+                            {/* Log Type Filter */}
+                            <div className="p-4 border-b border-gray-700 flex flex-wrap gap-2">
+                                {LOG_TYPES.map(lt => (
                                     <button
                                         key={lt.id}
-                                        onClick={() => {
-                                            setSelectedLogType(lt.id);
-                                            if (demoMode) generateMockData();
-                                        }}
-                                        className={`w-full flex items-center justify-between px-4 py-2 rounded ${selectedLogType === lt.id
-                                                ? 'bg-gray-700 border border-cyan-500'
-                                                : 'bg-gray-700/50 hover:bg-gray-700'
+                                        onClick={() => setSelectedLogType(lt.id)}
+                                        className={`flex items-center gap-1.5 px-3 py-1 rounded text-sm ${selectedLogType === lt.id
+                                            ? 'bg-gray-600 text-white'
+                                            : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700'
                                             }`}
                                     >
-                                        <span className="flex items-center gap-2">
-                                            <span className={`w-3 h-3 rounded-full ${lt.color}`}></span>
-                                            {lt.label}
-                                        </span>
-                                        <span className="text-gray-500 text-sm">
-                                            {logStats?.logs_by_type[lt.id] || 0}
-                                        </span>
+                                        <span className={`w-2 h-2 rounded-full ${lt.color}`} />
+                                        {lt.label}
                                     </button>
                                 ))}
                             </div>
 
-                            {logStats && (
-                                <div className="mt-6 pt-4 border-t border-gray-700">
-                                    <p className="text-sm text-gray-400">
-                                        Total Logs: <span className="text-white font-medium">{logStats.total_logs.toLocaleString()}</span>
-                                    </p>
-                                    <p className="text-sm text-gray-400 mt-1">
-                                        Tick Range: {logStats.first_tick} - {logStats.last_tick}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Log Stream */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-semibold">
-                                    {LOG_TYPES.find(lt => lt.id === selectedLogType)?.label || 'Logs'}
-                                </h3>
-                                <button
-                                    onClick={() => demoMode ? generateMockData() : handleConnect()}
-                                    className="text-sm text-cyan-400 hover:text-cyan-300"
-                                >
-                                    Refresh
-                                </button>
-                            </div>
-
-                            <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                                {logs.length === 0 ? (
-                                    <p className="text-gray-500 text-center py-8">No logs yet</p>
+                            {/* Event List */}
+                            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                                {filteredLogs.length === 0 ? (
+                                    <p className="text-gray-500 text-center py-8">No events in this category</p>
                                 ) : (
-                                    logs.map((log, idx) => (
+                                    filteredLogs.slice().reverse().map((log, idx) => (
                                         <div
-                                            key={idx}
-                                            className="flex items-start gap-3 px-3 py-2 bg-gray-700/50 rounded hover:bg-gray-700"
+                                            key={`${log.tick}-${idx}`}
+                                            className="flex items-start gap-3 px-3 py-2 bg-gray-700/30 rounded cursor-pointer hover:bg-gray-700/60"
+                                            onClick={() => openLogDetail(log)}
                                         >
-                                            <span className={`w-2 h-2 rounded-full mt-2 ${getLogColor(log.type)}`}></span>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center justify-between">
-                                                    <p className="text-sm text-white truncate">
-                                                        {formatLogData(log)}
-                                                    </p>
-                                                    <span className="text-xs text-gray-500 ml-2 shrink-0">
-                                                        T{log.tick}
-                                                    </span>
-                                                </div>
+                                            <span className={`w-2 h-2 rounded-full mt-1.5 ${getLogColor(log.type)}`} />
+                                            <div className="flex-1">
+                                                <p className="text-white text-sm">{formatLogData(log)}</p>
+                                                <p className="text-gray-500 text-xs">T{log.tick}</p>
                                             </div>
                                         </div>
                                     ))
@@ -479,14 +689,197 @@ export default function MonitorPage() {
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Footer */}
-                <div className="mt-8 text-center text-gray-500 text-sm">
-                    <p>SignalNoir.1 - AO World Engine Monitor</p>
-                    <p className="mt-1">
-                        {demoMode ? '🔶 Demo Mode - Simulated Data' : connected ? '🟢 Connected' : '⚪ Disconnected'}
-                    </p>
+                    {/* Right Panel - Detail View */}
+                    <div className="lg:col-span-1">
+                        {detailPanel.type ? (
+                            <div className="bg-gray-800 rounded-lg border border-cyan-500 p-4 shadow-lg shadow-cyan-500/10">
+                                <div className="flex justify-between items-start mb-4">
+                                    <h3 className="font-bold text-cyan-400">
+                                        {detailPanel.type === 'npc' && 'NPC Details'}
+                                        {detailPanel.type === 'economy' && 'Economy Details'}
+                                        {detailPanel.type === 'log' && 'Event Details'}
+                                    </h3>
+                                    <button
+                                        onClick={() => setDetailPanel({ type: null, data: null })}
+                                        className="text-gray-400 hover:text-white"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+
+                                {/* NPC Detail */}
+                                {detailPanel.type === 'npc' && detailPanel.data && (
+                                    <div className="space-y-4">
+                                        {(() => {
+                                            const npc = detailPanel.data as NPCSnapshot & { role?: string; district?: string; recentLogs?: LogEntry[] };
+                                            return (
+                                                <>
+                                                    <div>
+                                                        <h4 className="text-xl font-bold text-white">{npc.name}</h4>
+                                                        <p className="text-gray-400 capitalize">{npc.role?.replace(/_/g, ' ')}</p>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-2 gap-3 text-sm">
+                                                        <div>
+                                                            <span className="text-gray-400">Location</span>
+                                                            <p className="text-white font-mono">{npc.location}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">State</span>
+                                                            <p className="text-white capitalize">{npc.state}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Mood</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex-1 h-2 bg-gray-700 rounded-full">
+                                                                    <div className="h-full bg-cyan-500 rounded-full" style={{ width: `${npc.mood * 100}%` }} />
+                                                                </div>
+                                                                <span className="text-white text-xs">{Math.round(npc.mood * 100)}%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Energy</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex-1 h-2 bg-gray-700 rounded-full">
+                                                                    <div className="h-full bg-green-500 rounded-full" style={{ width: `${npc.energy * 100}%` }} />
+                                                                </div>
+                                                                <span className="text-white text-xs">{Math.round(npc.energy * 100)}%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Wealth</span>
+                                                            <p className="text-yellow-400 font-bold">◊{npc.wealth}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">District</span>
+                                                            <p className="text-white capitalize">{npc.district?.replace(/_/g, ' ')}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <h5 className="text-gray-400 text-sm mb-2">Recent Activity</h5>
+                                                        <div className="space-y-1 max-h-40 overflow-y-auto">
+                                                            {(npc.recentLogs || []).slice(-5).map((log, i) => (
+                                                                <div key={i} className="text-xs text-gray-300 bg-gray-700/50 px-2 py-1 rounded">
+                                                                    T{log.tick}: {formatLogData(log)}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    <Link
+                                                        href="/npcs"
+                                                        className="block text-center text-cyan-400 hover:text-cyan-300 text-sm"
+                                                    >
+                                                        View All NPCs →
+                                                    </Link>
+                                                </>
+                                            );
+                                        })()}
+                                    </div>
+                                )}
+
+                                {/* Economy Detail */}
+                                {detailPanel.type === 'economy' && detailPanel.data && (
+                                    <div className="space-y-4">
+                                        {(() => {
+                                            const eco = detailPanel.data as EconomySnapshot & { budget: number; recentTx?: LogEntry[]; gdpHistory?: number[] };
+                                            return (
+                                                <>
+                                                    <div className="grid grid-cols-2 gap-3 text-sm">
+                                                        <div>
+                                                            <span className="text-gray-400">GDP</span>
+                                                            <p className="text-white font-bold">◊{eco.gdp.toLocaleString()}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Budget</span>
+                                                            <p className="text-yellow-400 font-bold">◊{eco.budget.toLocaleString()}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Inflation</span>
+                                                            <p className="text-white">{(eco.inflation * 100).toFixed(2)}%</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Unemployment</span>
+                                                            <p className="text-orange-400">{(eco.unemployment_rate * 100).toFixed(1)}%</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Gini</span>
+                                                            <p className="text-white">{eco.gini_coefficient.toFixed(3)}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-gray-400">Black Market</span>
+                                                            <p className="text-red-400">{(eco.black_market_share * 100).toFixed(0)}%</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <h5 className="text-gray-400 text-sm mb-2">Service Levels</h5>
+                                                        <div className="space-y-2">
+                                                            {Object.entries(eco.service_levels).map(([service, level]) => (
+                                                                <div key={service} className="flex items-center gap-2">
+                                                                    <span className="text-gray-400 text-xs capitalize flex-1">{service.replace(/_/g, ' ')}</span>
+                                                                    <div className="w-24 h-2 bg-gray-700 rounded-full">
+                                                                        <div
+                                                                            className={`h-full rounded-full ${level > 0.8 ? 'bg-green-500' : level > 0.5 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                                                            style={{ width: `${level * 100}%` }}
+                                                                        />
+                                                                    </div>
+                                                                    <span className="text-white text-xs w-10">{Math.round(level * 100)}%</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <h5 className="text-gray-400 text-sm mb-2">Recent Transactions</h5>
+                                                        <div className="space-y-1 max-h-32 overflow-y-auto">
+                                                            {(eco.recentTx || []).slice(-5).map((tx, i) => (
+                                                                <div key={i} className="text-xs text-gray-300 bg-gray-700/50 px-2 py-1 rounded">
+                                                                    {formatLogData(tx)}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            );
+                                        })()}
+                                    </div>
+                                )}
+
+                                {/* Log Detail */}
+                                {detailPanel.type === 'log' && detailPanel.data && (
+                                    <div className="space-y-4">
+                                        {(() => {
+                                            const log = detailPanel.data as LogEntry;
+                                            return (
+                                                <>
+                                                    <div>
+                                                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs ${getLogColor(log.type)}`}>
+                                                            {LOG_TYPES.find(lt => lt.id === log.type)?.label}
+                                                        </span>
+                                                        <p className="text-gray-400 text-sm mt-2">Tick {log.tick}</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <h5 className="text-gray-400 text-sm mb-2">Event Data</h5>
+                                                        <pre className="text-xs text-gray-300 bg-gray-700/50 p-3 rounded overflow-x-auto">
+                                                            {JSON.stringify(log.data, null, 2)}
+                                                        </pre>
+                                                    </div>
+                                                </>
+                                            );
+                                        })()}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center">
+                                <p className="text-gray-500">Click on any NPC, metric, or event to see details</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
