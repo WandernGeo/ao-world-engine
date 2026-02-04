@@ -450,8 +450,8 @@ def list_npcs():
     if block:
         npcs = [n for n in npcs if str(n.get("block")) == block]
     
-    # Pagination
-    limit = min(int(request.args.get("limit", 50)), 500)
+    # Pagination - allow up to 1000 NPCs for full simulation
+    limit = min(int(request.args.get("limit", 50)), 1000)
     offset = int(request.args.get("offset", 0))
     
     total = len(npcs)
