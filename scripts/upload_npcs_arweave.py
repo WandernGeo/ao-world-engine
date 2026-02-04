@@ -1,182 +1,120 @@
 #!/usr/bin/env python3
 """
-Upload Founding NPCs to Arweave via Cloud Function
-====================================================
-
-Uses the wandern-arweave-uploader Cloud Function which handles
-wallet signing and Turbo bundler integration.
-
-Usage:
-  python3 upload_npcs_arweave.py --dry-run     # Test without uploading
-  python3 upload_npcs_arweave.py               # Actually upload
+Upload NPC chunks to Arweave via the wandern-arweave-uploader service.
+Uploads in chunks of <100KB for free tier.
 """
 
-import os
-import sys
 import json
-import hashlib
 import requests
-import argparse
-from datetime import datetime
+from pathlib import Path
 
-# Add parent to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from data.founding_npcs import FOUNDING_NPCS, create_npc_for_arweave
+# Arweave uploader endpoint
+UPLOADER_URL = "https://wandern-arweave-uploader-1071951656531.us-central1.run.app/"
 
-# Cloud Function that handles Turbo/Arweave uploads
-ARWEAVE_UPLOADER_URL = os.environ.get(
-    "ARWEAVE_UPLOADER_URL",
-    "https://arweave-uploader-zdku5kri5a-uc.a.run.app"
-)
+# NPC data path
+NPC_DATA = Path("data/npc_chunks/first_800_npcs.json")
+CHUNKS_DIR = Path("data/npc_chunks")
 
-ARWEAVE_GATEWAY = "https://arweave.net"
-
-
-def upload_via_cloud_function(data: dict, tags: list, dry_run: bool = False) -> str:
-    """
-    Upload data to Arweave via the wandern-arweave-uploader Cloud Function.
+def upload_chunk(chunk_data: dict, chunk_name: str, tags: list = None) -> str:
+    """Upload a single chunk to Arweave."""
+    if tags is None:
+        tags = []
     
-    The Cloud Function handles wallet signing and Turbo bundler integration.
+    # Add default tags
+    default_tags = [
+        {"name": "App-Name", "value": "AO-World-Engine"},
+        {"name": "Content-Type", "value": "application/json"},
+        {"name": "Type", "value": "npc-data"},
+        {"name": "Chunk", "value": chunk_name},
+        {"name": "Version", "value": "1.0"}
+    ]
     
-    Returns transaction ID.
-    """
-    if dry_run:
-        # Generate deterministic fake tx_id for testing
-        json_data = json.dumps(data, separators=(',', ':'))
-        fake_tx = hashlib.sha256(json_data.encode()).hexdigest()[:43]
-        return f"DRY_RUN_{fake_tx}"
+    all_tags = default_tags + tags
     
+    payload = {
+        "data": chunk_data,
+        "tags": all_tags,
+        "content_type": "application/json"
+    }
+    
+    print(f"📤 Uploading {chunk_name}...")
     try:
-        payload = {
-            "data": json.dumps(data),
-            "tags": tags,
-            "content_type": "application/json"
-        }
+        response = requests.post(UPLOADER_URL, json=payload, timeout=120)
+        result = response.json()
         
-        response = requests.post(
-            ARWEAVE_UPLOADER_URL,
-            json=payload,
-            timeout=60
-        )
-        
-        if response.status_code in [200, 201]:
-            result = response.json()
-            tx_id = result.get("tx_id") or result.get("id") or result.get("txId")
-            return tx_id
+        if "tx_id" in result:
+            print(f"  ✅ Success! TX: {result['tx_id']}")
+            print(f"  🔗 https://arweave.net/{result['tx_id']}")
+            return result["tx_id"]
         else:
-            print(f"  ❌ Upload failed: {response.status_code}")
-            print(f"     {response.text[:200]}")
+            print(f"  ❌ Error: {result}")
             return None
-            
     except Exception as e:
-        print(f"  ❌ Upload error: {e}")
+        print(f"  ❌ Failed: {e}")
         return None
 
-
-def verify_on_arweave(tx_id: str) -> bool:
-    """Verify transaction exists on Arweave gateway."""
-    if tx_id.startswith("DRY_RUN"):
-        return True
-    
-    try:
-        response = requests.get(f"{ARWEAVE_GATEWAY}/{tx_id}", timeout=10)
-        return response.status_code == 200
-    except:
-        return False
-
-
 def main():
-    parser = argparse.ArgumentParser(description="Upload Founding NPCs to Arweave")
-    parser.add_argument("--dry-run", action="store_true", help="Test without uploading")
-    args = parser.parse_args()
+    print("🚀 AO World Engine - Arweave NPC Upload")
+    print("=" * 50)
     
-    print("=" * 60)
-    print("UPLOAD FOUNDING NPCS TO ARWEAVE")
-    print("=" * 60)
-    print(f"Cloud Function: {ARWEAVE_UPLOADER_URL}")
-    print(f"Mode: {'DRY RUN (no actual upload)' if args.dry_run else 'LIVE UPLOAD'}")
-    print()
+    # Check if we should upload individual chunks or combined
+    manifest_path = CHUNKS_DIR / "manifest.json"
     
-    results = []
-    total_bytes = 0
-    
-    for npc_key, npc_data in FOUNDING_NPCS.items():
-        arweave_ready = create_npc_for_arweave(npc_key, npc_data)
+    if manifest_path.exists():
+        with open(manifest_path) as f:
+            manifest = json.load(f)
         
-        profile_json = json.dumps(arweave_ready["profile"], separators=(',', ':'))
-        profile_bytes = len(profile_json.encode('utf-8'))
+        print(f"📦 Found {manifest['total_chunks']} chunks totaling {manifest['total_npcs']} NPCs")
+        print()
         
-        print(f"📤 Uploading {npc_data['name']} ({profile_bytes} bytes)...")
+        # Upload first 10 chunks (about 840 NPCs for ~83KB each)
+        upload_results = []
+        for chunk_info in manifest["chunks"][:10]:
+            chunk_path = CHUNKS_DIR / chunk_info["file"]
+            with open(chunk_path) as f:
+                chunk_data = json.load(f)
+            
+            chunk_size = chunk_path.stat().st_size
+            print(f"\n📄 {chunk_info['file']}: {chunk_info['npc_count']} NPCs, {chunk_size/1024:.1f}KB")
+            
+            if chunk_size > 100 * 1024:
+                print("  ⚠️ Chunk exceeds 100KB limit - skipping")
+                continue
+            
+            tx_id = upload_chunk(chunk_data, chunk_info["id"], [
+                {"name": "NPC-Count", "value": str(chunk_info["npc_count"])},
+                {"name": "NPC-Range", "value": chunk_data["_meta"]["npc_id_range"]}
+            ])
+            
+            if tx_id:
+                upload_results.append({
+                    "chunk": chunk_info["id"],
+                    "tx_id": tx_id,
+                    "npc_count": chunk_info["npc_count"]
+                })
         
-        tx_id = upload_via_cloud_function(
-            arweave_ready["profile"], 
-            arweave_ready["tags"],
-            dry_run=args.dry_run
-        )
+        print("\n" + "=" * 50)
+        print("📊 Upload Summary")
+        print("=" * 50)
         
-        if tx_id:
-            print(f"   ✅ TX: {tx_id}")
-            results.append({
-                "npc_key": npc_key,
-                "npc_id": npc_data["id"],
-                "name": npc_data["name"],
-                "tx_id": tx_id,
-                "size_bytes": profile_bytes,
-                "success": True
-            })
-            total_bytes += profile_bytes
-        else:
-            print(f"   ❌ Failed")
-            results.append({
-                "npc_key": npc_key,
-                "npc_id": npc_data["id"],
-                "name": npc_data["name"],
-                "tx_id": None,
-                "success": False
-            })
-    
-    # Summary
-    print()
-    print("=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
-    
-    successful = [r for r in results if r["success"]]
-    failed = [r for r in results if not r["success"]]
-    
-    print(f"✅ Successful: {len(successful)}/{len(results)}")
-    print(f"❌ Failed: {len(failed)}/{len(results)}")
-    print(f"📦 Total uploaded: {total_bytes} bytes")
-    print(f"💰 Cost: FREE (under 100KB per file)")
-    
-    # Save results
-    output_file = "/Users/ram/Documents/wandern/ao-world-engine/data/arweave_upload_results.json"
-    with open(output_file, 'w') as f:
-        json.dump({
-            "timestamp": datetime.now().isoformat(),
-            "dry_run": args.dry_run,
-            "uploader": ARWEAVE_UPLOADER_URL,
-            "results": results,
-            "summary": {
-                "total": len(results),
-                "successful": len(successful),
-                "failed": len(failed),
-                "total_bytes": total_bytes
-            }
-        }, f, indent=2)
-    
-    print(f"\n📁 Results saved to: {output_file}")
-    
-    if not args.dry_run and successful:
-        print("\n🔍 View on Arweave:")
-        for r in successful[:3]:
-            print(f"   https://arweave.net/{r['tx_id']}")
-        if len(successful) > 3:
-            print(f"   ... and {len(successful) - 3} more")
-    
-    return len(failed) == 0
-
+        total_npcs = sum(r["npc_count"] for r in upload_results)
+        print(f"✅ Uploaded {len(upload_results)} chunks ({total_npcs} NPCs)")
+        
+        for r in upload_results:
+            print(f"  - {r['chunk']}: {r['tx_id']}")
+        
+        # Save results
+        results_path = CHUNKS_DIR / "arweave_uploads.json"
+        with open(results_path, 'w') as f:
+            json.dump({
+                "uploaded_at": "2026-02-04",
+                "chunks": upload_results,
+                "total_npcs": total_npcs
+            }, f, indent=2)
+        print(f"\n💾 Results saved to: {results_path}")
+        
+    else:
+        print("❌ No manifest found. Run generate_10k_npcs.py first.")
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    main()
