@@ -1,0 +1,296 @@
+{
+    "_desc": "NPC Reputation System - how well known NPCs are in different contexts",
+    "_version": "1.0.0",
+    "reputation_scopes": {
+        "_desc": "Different spheres where an NPC can have reputation",
+        "family": {
+            "_desc": "Within their family/close circle",
+            "size": "5-20 people",
+            "spread_speed": "instant",
+            "decay": "none"
+        },
+        "friends": {
+            "_desc": "Friend network",
+            "size": "10-50 people",
+            "spread_speed": "fast",
+            "decay": "slow"
+        },
+        "workplace": {
+            "_desc": "Coworkers and professional contacts",
+            "size": "20-100 people",
+            "spread_speed": "medium",
+            "decay": "medium"
+        },
+        "neighborhood": {
+            "_desc": "Local area, regular hang-outs",
+            "size": "50-200 people",
+            "spread_speed": "medium",
+            "decay": "medium"
+        },
+        "district": {
+            "_desc": "Entire district like Undercity, Market, Spire",
+            "size": "500-5000 people",
+            "spread_speed": "slow",
+            "decay": "fast"
+        },
+        "city": {
+            "_desc": "City-wide fame/infamy",
+            "size": "50000+ people",
+            "spread_speed": "very_slow",
+            "decay": "very_fast",
+            "requires": "significant_event"
+        },
+        "faction": {
+            "_desc": "Within a specific faction (Temple, Resistance, etc)",
+            "size": "varies",
+            "spread_speed": "medium",
+            "decay": "slow"
+        }
+    },
+    "reputation_levels": {
+        "unknown": {
+            "value": 0,
+            "label": "Unknown",
+            "news_threshold": false
+        },
+        "vaguely_familiar": {
+            "value": 1,
+            "label": "Vaguely Familiar",
+            "news_threshold": false
+        },
+        "known_face": {
+            "value": 2,
+            "label": "Known Face",
+            "news_threshold": false
+        },
+        "recognized": {
+            "value": 3,
+            "label": "Recognized",
+            "news_threshold": "local"
+        },
+        "notable": {
+            "value": 4,
+            "label": "Notable",
+            "news_threshold": "district"
+        },
+        "well_known": {
+            "value": 5,
+            "label": "Well-Known",
+            "news_threshold": "district"
+        },
+        "famous": {
+            "value": 6,
+            "label": "Famous",
+            "news_threshold": "city"
+        },
+        "legendary": {
+            "value": 7,
+            "label": "Legendary",
+            "news_threshold": "city"
+        }
+    },
+    "npc_reputation_schema": {
+        "_desc": "How to store NPC reputation data",
+        "example": {
+            "npc_id": "charlie",
+            "reputations": {
+                "family": {
+                    "level": 5,
+                    "sentiment": "loved",
+                    "last_event": null
+                },
+                "friends": {
+                    "level": 4,
+                    "sentiment": "trusted",
+                    "last_event": "helped_move"
+                },
+                "neighborhood_undercity": {
+                    "level": 3,
+                    "sentiment": "reliable",
+                    "last_event": "delivered_package"
+                },
+                "district_market": {
+                    "level": 2,
+                    "sentiment": "neutral",
+                    "last_event": null
+                },
+                "city": {
+                    "level": 1,
+                    "sentiment": "unknown",
+                    "last_event": null
+                },
+                "faction_resistance": {
+                    "level": 3,
+                    "sentiment": "ally",
+                    "last_event": "passed_intel"
+                }
+            }
+        }
+    },
+    "reputation_events": {
+        "_desc": "How events affect reputation",
+        "positive_events": {
+            "save_life": {
+                "family": 2,
+                "friends": 2,
+                "neighborhood": 1,
+                "city": 0.5
+            },
+            "public_heroism": {
+                "neighborhood": 2,
+                "district": 1,
+                "city": 0.5
+            },
+            "business_success": {
+                "workplace": 2,
+                "district": 1
+            },
+            "generous_donation": {
+                "neighborhood": 1,
+                "district": 0.5,
+                "faction": 1
+            },
+            "solve_crime": {
+                "neighborhood": 1,
+                "district": 0.5,
+                "faction_temple": 1
+            },
+            "artistic_achievement": {
+                "district": 1,
+                "city": 0.5
+            }
+        },
+        "negative_events": {
+            "commit_robbery": {
+                "neighborhood": -2,
+                "district": -1,
+                "city": -0.5
+            },
+            "murder": {
+                "neighborhood": -3,
+                "district": -2,
+                "city": -1
+            },
+            "public_scandal": {
+                "neighborhood": -1,
+                "district": -1,
+                "city": -0.5
+            },
+            "betrayal": {
+                "family": -3,
+                "friends": -3,
+                "faction": -2
+            },
+            "business_fraud": {
+                "workplace": -2,
+                "district": -1
+            }
+        }
+    },
+    "news_triggers_by_reputation": {
+        "_desc": "Events generate news based on NPC reputation",
+        "rules": [
+            {
+                "condition": "npc_reputation.city >= 5",
+                "event_types": [
+                    "death",
+                    "marriage",
+                    "arrest",
+                    "achievement"
+                ],
+                "news_level": "city_wide",
+                "example": "City-famous Felix arrested - Temple investigation ongoing"
+            },
+            {
+                "condition": "npc_reputation.district >= 4",
+                "event_types": [
+                    "death",
+                    "crime_victim",
+                    "business_event",
+                    "public_speech"
+                ],
+                "news_level": "district",
+                "example": "Well-known Market vendor robbed at knifepoint"
+            },
+            {
+                "condition": "npc_reputation.neighborhood >= 3",
+                "event_types": [
+                    "death",
+                    "major_event"
+                ],
+                "news_level": "local_gossip",
+                "example": "Word spreads that regular at corner bar was attacked"
+            },
+            {
+                "condition": "event_involves_faction_leader",
+                "event_types": [
+                    "any"
+                ],
+                "news_level": "faction_wide",
+                "example": "Resistance leader spotted in restricted area"
+            }
+        ],
+        "cascade_to_news_mapping": {
+            "suspect_arrest": {
+                "min_reputation": 3,
+                "headline_template": "{npc_name} arrested in connection with {crime_type}",
+                "scope": "district"
+            },
+            "trial": {
+                "min_reputation": 4,
+                "headline_template": "Trial begins for {npc_name} in {crime_type} case",
+                "scope": "district_or_city"
+            },
+            "murder": {
+                "min_reputation": 2,
+                "headline_template": "Tragedy strikes: {victim_name} found dead in {location}",
+                "scope": "neighborhood_or_higher"
+            },
+            "echo_discovery": {
+                "min_reputation": 0,
+                "headline_template": "Strange sounds reported near {location} - Echo sighting?",
+                "scope": "city",
+                "always_newsworthy": true
+            },
+            "temple_crackdown": {
+                "min_reputation": 0,
+                "headline_template": "Temple forces disperse crowd in {location}",
+                "scope": "city",
+                "always_newsworthy": true
+            },
+            "resistance_protest": {
+                "min_reputation": 0,
+                "headline_template": "Unrest in {location} as citizens gather",
+                "scope": "city",
+                "always_newsworthy": true
+            }
+        }
+    },
+    "dialogue_for_reputation": {
+        "_desc": "How NPCs talk about well-known people",
+        "asking_about_famous_npc": [
+            "{npc_name}? Everyone knows {them}. {reputation_summary}.",
+            "You don't know {npc_name}? {they} {reputation_deed}.",
+            "Oh, {npc_name}. {reputation_sentiment} one, that.",
+            "{npc_name} is {reputation_adjective}. Ask anyone around here."
+        ],
+        "asking_about_unknown_npc": [
+            "{npc_name}? Never heard of them.",
+            "Don't know anyone by that name.",
+            "Can't help you. Don't know every face in this city.",
+            "Who? *shrugs*"
+        ],
+        "asking_about_locally_known": [
+            "I think I've seen {them} around {location}.",
+            "{npc_name}? Yeah, {they} come in here sometimes.",
+            "Rings a bell. Ask at {frequents_location}.",
+            "Face is familiar. Can't tell you much though."
+        ],
+        "npc_commenting_on_own_reputation": [
+            "I keep a low profile. Safer that way.",
+            "Everyone knows me around here. That's the problem.",
+            "I'm nobody special. Just trying to get by.",
+            "My reputation precedes me, I know."
+        ]
+    }
+}

@@ -1,0 +1,297 @@
+{
+    "_desc": "Canned dialogue responses for cascade events - NPC reactions to world events",
+    "_version": "1.0.0",
+    "event_dialogue": {
+        "robbery": {
+            "witness": [
+                "I saw the whole thing. Happened so fast.",
+                "*shaking* They had a weapon. Just took everything.",
+                "I'm still processing what I saw.",
+                "Someone needs to tell the Temple. This can't keep happening."
+            ],
+            "victim": [
+                "They took everything I had on me.",
+                "I didn't even see their face.",
+                "This city used to be safer.",
+                "*visibly shaken* I just want to go home."
+            ],
+            "bystander_aware": [
+                "Did you hear? Someone got robbed right over there.",
+                "Getting dangerous around here.",
+                "Keep your valuables hidden. Just saying.",
+                "Crime's getting worse. Temple doesn't care."
+            ],
+            "criminal_sympathizer": [
+                "Desperate times make desperate people.",
+                "Not saying it's right, but I understand.",
+                "Temple squeezes us, we squeeze each other.",
+                "*looks away* I don't judge."
+            ]
+        },
+        "witness_report": {
+            "reporter": [
+                "I had to tell someone. It's not right.",
+                "Temple needs to know what happened.",
+                "Hope I did the right thing. Just told them what I saw.",
+                "Couldn't just stay silent."
+            ],
+            "neighbor_aware": [
+                "Someone talked. Temple's going to be asking questions.",
+                "Word is there's a witness. Brave or stupid.",
+                "I heard someone reported it. Things are about to get complicated.",
+                "*whispers* Someone snitched. Keep your head down."
+            ]
+        },
+        "temple_investigation": {
+            "nervous_citizen": [
+                "Temple officers everywhere. What happened?",
+                "*glances around* Best stay out of their way.",
+                "They're asking everyone questions. I don't know anything.",
+                "Investigation means trouble for someone."
+            ],
+            "cooperative_citizen": [
+                "I already told them what I know.",
+                "Hope they catch whoever did it.",
+                "Finally, Temple's doing something useful.",
+                "I saw the officers. Good, we need order."
+            ],
+            "suspicious_citizen": [
+                "Temple's 'investigating.' Wonder what they're really after.",
+                "When they investigate, someone disappears. Watch.",
+                "All this for a robbery? They're looking for something else.",
+                "*scoffs* Temple investigation. That's code for harassment."
+            ]
+        },
+        "suspect_arrest": {
+            "witness_to_arrest": [
+                "They dragged someone off. Looked rough.",
+                "Saw the arrest. Didn't look like they were gentle.",
+                "Temple took someone in. Don't know if they were guilty.",
+                "Another arrest. Streets getting emptier."
+            ],
+            "family_of_arrested": [
+                "They took {name}! We have to do something!",
+                "*crying* I don't know where they're keeping them.",
+                "They're innocent! The Temple doesn't care!",
+                "I need to find a way to see them. Please help."
+            ],
+            "neighbor_reaction": [
+                "They arrested someone from the building. Crazy.",
+                "Never thought it would be them. Seemed normal.",
+                "Temple finally got someone. Hope it's the right person.",
+                "Another one gone. Who's next?"
+            ]
+        },
+        "trial": {
+            "following_trial": [
+                "Did you hear the verdict?",
+                "Trial's been going on. Everyone's talking about it.",
+                "They say {defendant} might get off.",
+                "Temple judges are harsh. Don't expect mercy."
+            ],
+            "family_at_trial": [
+                "I was there every day. They didn't listen.",
+                "The trial was a joke. Decision was already made.",
+                "We're hoping for the best. That's all we can do.",
+                "*exhausted* It's finally over. Now we wait."
+            ]
+        },
+        "gossip_spread": {
+            "spreading_gossip": [
+                "Did you hear what happened? *leans in*",
+                "I probably shouldn't say, but...",
+                "You didn't hear this from me, but...",
+                "Everyone's talking about {event_summary}."
+            ],
+            "receiving_gossip": [
+                "Really? I hadn't heard.",
+                "That doesn't surprise me, honestly.",
+                "Who told you that?",
+                "Interesting. I'll keep that in mind."
+            ]
+        },
+        "murder": {
+            "witness": [
+                "*traumatized* I saw... I saw them die.",
+                "There was so much blood. I can't unsee it.",
+                "They didn't even have a chance.",
+                "I should have done something. I just froze."
+            ],
+            "neighbor": [
+                "Someone was killed right nearby. I can't believe it.",
+                "This wasn't supposed to happen here.",
+                "Murder? Here? What's happening to this place?",
+                "*locked door* I'm not opening for anyone tonight."
+            ],
+            "general_awareness": [
+                "Did you hear? Someone was killed.",
+                "There was a murder. Temple's all over it now.",
+                "Death in the district. Everyone's on edge.",
+                "*grim* Another one lost to the streets."
+            ]
+        },
+        "family_grief": {
+            "grieving_family": [
+                "*crying* They're gone. They're really gone.",
+                "I don't know how to go on without them.",
+                "Why them? Why?",
+                "*stares blankly* Everything feels empty now."
+            ],
+            "friend_of_family": [
+                "I'm so sorry for your loss.",
+                "Is there anything I can do?",
+                "They were good. Didn't deserve this.",
+                "We're all here for you."
+            ],
+            "community_response": [
+                "Terrible news about {victim_name}. So sad.",
+                "The family must be devastated.",
+                "Some things just aren't fair.",
+                "May they find peace."
+            ]
+        },
+        "echo_discovery": {
+            "believer": [
+                "Can you believe it? Real music! The Echoes are REAL!",
+                "*excited* I heard it too! Like voices from the past!",
+                "This proves everything! They can't hide the truth!",
+                "The Echoes have returned. The Silence is ending!"
+            ],
+            "skeptic": [
+                "Another 'Echo sighting.' Right. Probably a hoax.",
+                "People hear what they want to hear.",
+                "I'll believe it when I hear it myself.",
+                "*rolls eyes* Mass hysteria. Nothing more."
+            ],
+            "curious": [
+                "Something happened. Something strange.",
+                "I heard there were... sounds? Music?",
+                "Everyone's talking about it. Wish I'd been there.",
+                "Makes you wonder what's really out there."
+            ],
+            "temple_response": [
+                "Unauthorized auditory phenomena. Under investigation.",
+                "Citizens should not approach. Report sightings.",
+                "Spreading rumors about 'Echoes' is a violation.",
+                "There is no music. The Silence protects us."
+            ]
+        },
+        "temple_crackdown": {
+            "fearful_citizen": [
+                "Stay inside! It's not safe out there!",
+                "*hiding* The Temple is everywhere.",
+                "Don't draw attention. Just blend in.",
+                "I'm not leaving until this blows over."
+            ],
+            "angry_citizen": [
+                "This is how they keep us down! Violence and fear!",
+                "They call this peace? This is oppression!",
+                "When did protecting us mean attacking us?",
+                "*fists clenched* Someday we'll fight back."
+            ],
+            "compliant_citizen": [
+                "The Temple knows best. Those people were troublemakers.",
+                "If you follow the rules, you have nothing to fear.",
+                "Order must be maintained. Even if it's harsh.",
+                "I support the Temple. We need stability."
+            ],
+            "resistance_view": [
+                "They're showing their true colors now.",
+                "Every crackdown creates more of us.",
+                "Remember this moment. Remember who they really are.",
+                "*determined* This changes nothing. We continue."
+            ]
+        },
+        "resistance_protest": {
+            "participant": [
+                "We won't be silenced anymore!",
+                "For the Echoes! For the truth!",
+                "Join us! Stand together!",
+                "*chanting* No more lies! No more Silence!"
+            ],
+            "supportive_observer": [
+                "About time someone stood up.",
+                "*quiet nod* Brave souls.",
+                "I wish I could be out there with them.",
+                "Someone had to say it."
+            ],
+            "nervous_observer": [
+                "This is going to end badly. I can feel it.",
+                "They're brave, but the Temple won't let this stand.",
+                "I support them, but I can't be seen here.",
+                "*looks for exit* Temple's coming. I need to go."
+            ]
+        },
+        "area_patrol_increase": {
+            "noticed_patrols": [
+                "More guards than usual. Something's up.",
+                "Temple's everywhere today. Watch your step.",
+                "Increased patrols. Wonder what they're looking for.",
+                "*nervous* Best behavior, everyone."
+            ]
+        },
+        "curfew_imposed": {
+            "complaint": [
+                "Curfew again? How am I supposed to work?",
+                "This is ridiculous. We're not children.",
+                "Another curfew. Another excuse to control us.",
+                "They take more freedoms every day."
+            ],
+            "acceptance": [
+                "If it keeps us safe, I'll manage.",
+                "Better a curfew than more crime.",
+                "I'll be home before dark anyway.",
+                "Small price for security."
+            ]
+        },
+        "business_closes": {
+            "owner": [
+                "Couldn't keep it going. The end of an era.",
+                "I tried everything. It just wasn't enough.",
+                "This place was my life. Now what?",
+                "*defeated* Sometimes you can't fight the tide."
+            ],
+            "employee": [
+                "Lost my job. Now what am I going to do?",
+                "Another business closed. Another line for work.",
+                "This economy's killing us.",
+                "*worried* I have family depending on me."
+            ],
+            "customer": [
+                "Shame about that place. I used to go there.",
+                "Another one bites the dust.",
+                "Nothing lasts forever, I guess.",
+                "Where am I supposed to go now?"
+            ]
+        }
+    },
+    "intent_mappings": {
+        "_desc": "Map user questions to event dialogue",
+        "what_happened": [
+            "robbery.bystander_aware",
+            "murder.general_awareness",
+            "gossip_spread.spreading_gossip"
+        ],
+        "did_you_hear": [
+            "gossip_spread.receiving_gossip",
+            "echo_discovery.curious"
+        ],
+        "are_you_okay": [
+            "robbery.victim",
+            "murder.witness",
+            "family_grief.grieving_family"
+        ],
+        "what_do_you_think": [
+            "temple_investigation.suspicious_citizen",
+            "resistance_protest.supportive_observer"
+        ],
+        "temple_question": [
+            "temple_crackdown.fearful_citizen",
+            "temple_investigation.cooperative_citizen"
+        ],
+        "echo_question": [
+            "echo_discovery.believer",
+            "echo_discovery.skeptic"
+        ]
+    }
+}
