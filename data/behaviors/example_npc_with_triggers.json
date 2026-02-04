@@ -1,8 +1,8 @@
 {
     "$schema": "NPC with embedded behavior triggers",
     "id": "charlie",
-    "name": "Charlie",
-    "full_name": "Charlie 'Ghost' Reyes",
+    "name": "Guard_01",
+    "full_name": "Guard_01 'Ghost' Reyes",
     "demographics": {
         "age": 28,
         "gender": "male",
@@ -42,7 +42,7 @@
             "priority": 10,
             "behavior_ref": "BEH_npc_life::buy_food",
             "fallback_arweave": "ar://BEH_npc_life",
-            "description": "Charlie seeks food when hungry"
+            "description": "Guard_01 seeks food when hungry"
         },
         {
             "id": "TRG_tired",
@@ -53,7 +53,7 @@
             "params": {
                 "need": "energy"
             },
-            "description": "Charlie goes to sleep when exhausted"
+            "description": "Guard_01 goes to sleep when exhausted"
         },
         {
             "id": "TRG_enemy_spotted",
@@ -61,7 +61,7 @@
             "condition": "other.faction == 'temple' and other.job == 'temple_guard'",
             "priority": 8,
             "behavior_ref": "BEH_simulation::calculate_interaction",
-            "description": "Charlie reacts to Temple guards"
+            "description": "Guard_01 reacts to Temple guards"
         },
         {
             "id": "TRG_payday",
@@ -69,7 +69,7 @@
             "condition": "tick % 24 == 0 and self.job != 'unemployed'",
             "priority": 5,
             "behavior_ref": "BEH_npc_life::earn_wage",
-            "description": "Charlie receives daily wage"
+            "description": "Guard_01 receives daily wage"
         },
         {
             "id": "TRG_faction_meeting",
@@ -88,7 +88,7 @@
             "condition": "self.relationships[other.id].trust > 0.5",
             "priority": 3,
             "behavior_ref": "BEH_simulation::calculate_interaction",
-            "description": "Charlie greets friends"
+            "description": "Guard_01 greets friends"
         }
     ],
     "behaviors": {
@@ -96,17 +96,17 @@
         "daily_routine": {
             "arweave_ref": "ar://BEH_npc_life",
             "entry_point": "get_scheduled_activity",
-            "description": "Determines what Charlie should be doing at any given time"
+            "description": "Determines what Guard_01 should be doing at any given time"
         },
         "combat": {
             "arweave_ref": "ar://BEH_simulation",
             "entry_point": "calculate_interaction",
-            "description": "How Charlie handles combat/confrontation"
+            "description": "How Guard_01 handles combat/confrontation"
         },
         "economy": {
             "arweave_ref": "ar://BEH_npc_life",
             "entry_point": "earn_wage",
-            "description": "Charlie's economic activities"
+            "description": "Guard_01's economic activities"
         }
     },
     "schedule": {

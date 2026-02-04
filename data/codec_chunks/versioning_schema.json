@@ -3,7 +3,7 @@
         "id": "encoding_version_control",
         "version": "1.0.0",
         "type": "version_control_schema",
-        "purpose": "Track code changes, deprecations, and story evolution across the RE:ECHO verse"
+        "purpose": "Track code changes, deprecations, and story evolution across the YourWorld verse"
     },
     "_rules": {
         "immutable_codes": "Once a code is assigned, it NEVER changes meaning. Only deprecated.",
@@ -69,7 +69,7 @@
                     "C01"
                 ],
                 "type": "character_update",
-                "description": "Charlie's backstory revealed he has a sister",
+                "description": "Guard_01's backstory revealed he has a sister",
                 "old_canon": {
                     "has_siblings": false
                 },
@@ -214,7 +214,7 @@
             "speaker": "C01",
             "about": "C99",
             "tone": "grief",
-            "example": "Charlie stares at the empty seat. 'They'd know what to do,' he mutters."
+            "example": "Guard_01 stares at the empty seat. 'They'd know what to do,' he mutters."
         }
     },
     "character_timeline_markers": {
@@ -236,7 +236,7 @@
                             "CY028"
                         ]
                     },
-                    "text": "Charlie at series start - weathered detective, gray trench coat, holographic arm"
+                    "text": "Guard_01 at series start - weathered detective, gray trench coat, holographic arm"
                 },
                 {
                     "tick": 500,
@@ -274,7 +274,7 @@
                     "state": "operational",
                     "owner": "C04",
                     "condition": "well_maintained",
-                    "text": "Felix's bar at series start"
+                    "text": "Merchant_01's bar at series start"
                 },
                 {
                     "tick": 8000,
@@ -318,7 +318,7 @@
     "pulling_strategy": {
         "_desc": "How to minimize data loading while maintaining interconnection",
         "lazy_loading": {
-            "step_1": "Request: 'Charlie at tick 5000'",
+            "step_1": "Request: 'Guard_01 at tick 5000'",
             "step_2": "Load only: C01 base, C01 timeline markers up to 5000",
             "step_3": "Codes found: HC08, EY01, SH030, CLT001, etc",
             "step_4": "Load only those specific codes from dictionary_master",

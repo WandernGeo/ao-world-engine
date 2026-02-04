@@ -1,7 +1,7 @@
 {
     "_meta": {
         "version": "1.0.0",
-        "name": "RE:ECHO World Codec",
+        "name": "YourWorld World Codec",
         "description": "Deterministic knowledge dictionary - decode world state from tick seeds",
         "encoding": "Unique codes map to full entries. Use hash(npc+tick) % len(category) to select."
     },
@@ -172,7 +172,7 @@
         "O00": "ring"
     },
     "locations": {
-        "_desc": "Places in RE:ECHO City (30 unique)",
+        "_desc": "Places in Example City (30 unique)",
         "L01": {
             "n": "neon_bar",
             "d": "Smoky bar with cyan neon, neutral ground"
@@ -298,7 +298,7 @@
         "_desc": "Character registry (12 founders + slots for 88)",
         "C01": {
             "n": "charlie",
-            "f": "Charlie",
+            "f": "Guard_01",
             "r": "Protagonist"
         },
         "C02": {
@@ -308,12 +308,12 @@
         },
         "C03": {
             "n": "orion_thane",
-            "f": "Orion Thane",
+            "f": "Mystic_01 Thane",
             "r": "Mystic"
         },
         "C04": {
             "n": "felix",
-            "f": "Felix",
+            "f": "Merchant_01",
             "r": "Bartender"
         },
         "C05": {
@@ -661,6 +661,6 @@
         "description": "How to decode events from tick seeds",
         "example": "hash('charlie_50_events') % 60 = action_idx, >> 8 % 100 = object_idx, etc.",
         "event_format": "[ACTION]-[TARGET]-[OBJECT/LOCATION]-[TICK]",
-        "sample_decoded": "A01-C09-L08-T050 = 'Charlie met Aiche in alley at tick 50'"
+        "sample_decoded": "A01-C09-L08-T050 = 'Guard_01 met Aiche in alley at tick 50'"
     }
 }

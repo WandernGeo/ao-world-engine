@@ -24,7 +24,7 @@
         "charlie": {
             "code": "C01",
             "id": "npc_0001",
-            "name": "Charlie",
+            "name": "Guard_01",
             "full_name": "Unknown (abandoned his old identity)",
             "age": 45,
             "gender": "male",
@@ -126,11 +126,11 @@
                 "morality": 0.6
             },
             "backstory": {
-                "summary": "Former Temple enforcer who discovered the truth about ECHO and defected to the Resistance. Now works as an investigator in the shadows of RE:ECHO City.",
+                "summary": "Former Temple enforcer who discovered the truth about ECHO and defected to the Resistance. Now works as an investigator in the shadows of Example City.",
                 "chapters": [
                     {
                         "period": "Origin (Before Tick 0)",
-                        "content": "Charlie was born in the Residential Core to factory workers. His parents died in an 'industrial accident' when he was 12 - later he'd learn it was Temple-orchestrated population control. Orphaned, he was recruited into Temple Youth Brigade, trained as an enforcer."
+                        "content": "Guard_01 was born in the Residential Core to factory workers. His parents died in an 'industrial accident' when he was 12 - later he'd learn it was Temple-orchestrated population control. Orphaned, he was recruited into Temple Youth Brigade, trained as an enforcer."
                     },
                     {
                         "period": "Temple Years (Tick -1000 to -200)",
@@ -138,15 +138,15 @@
                     },
                     {
                         "period": "The Awakening (Tick -200 to 0)",
-                        "content": "While tracking layer anomalies, Charlie discovered classified Temple documents revealing the truth: ECHO wasn't just surveillance - it was reality manipulation. The Temple was pruning 'divergent' timelines, erasing people who didn't fit their vision. His own parents had been 'corrected.' Charlie's crisis of faith was total. He sabotaged his own mission, warning the Resistance cell he was meant to destroy."
+                        "content": "While tracking layer anomalies, Guard_01 discovered classified Temple documents revealing the truth: ECHO wasn't just surveillance - it was reality manipulation. The Temple was pruning 'divergent' timelines, erasing people who didn't fit their vision. His own parents had been 'corrected.' Guard_01's crisis of faith was total. He sabotaged his own mission, warning the Resistance cell he was meant to destroy."
                     },
                     {
                         "period": "Defection (Tick 0 to 500)",
-                        "content": "Zero Chen, the Resistance leader, took a chance on him. Many didn't trust the former enforcer. Charlie proved himself in a raid on Temple Archives, but lost his arm saving Kai Vance from a trap. Zero personally gave him the holographic arm - a symbol of his rebirth. 'This arm has never hurt an innocent. Neither will you, from now on.'"
+                        "content": "Zero Chen, the Resistance leader, took a chance on him. Many didn't trust the former enforcer. Guard_01 proved himself in a raid on Temple Archives, but lost his arm saving Fixer_01 from a trap. Zero personally gave him the holographic arm - a symbol of his rebirth. 'This arm has never hurt an innocent. Neither will you, from now on.'"
                     },
                     {
                         "period": "Present Day (Tick 500+)",
-                        "content": "Now the Resistance's primary investigator. Charlie works the shadows, following leads, gathering intelligence. He's haunted by his past but committed to atonement. He knows more about Temple operations than almost anyone alive - which makes him valuable and dangerous."
+                        "content": "Now the Resistance's primary investigator. Guard_01 works the shadows, following leads, gathering intelligence. He's haunted by his past but committed to atonement. He knows more about Temple operations than almost anyone alive - which makes him valuable and dangerous."
                     }
                 ],
                 "key_events": [
@@ -198,13 +198,13 @@
                             "reason": "Saved Kai, received arm"
                         }
                     ],
-                    "history": "Zero took a chance on Charlie when no one else would. She gave him his arm and his purpose. He would die for her without hesitation.",
+                    "history": "Zero took a chance on Guard_01 when no one else would. She gave him his arm and his purpose. He would die for her without hesitation.",
                     "dynamic": "Mutual respect, few words needed. She trusts his instincts; he trusts her vision.",
                     "shared_secrets": [
                         "Temple Archive codes",
                         "Location of Layer stabilizers"
                     ],
-                    "conflict_potential": "If Zero ever compromised the cause, Charlie would be devastated but choose the mission"
+                    "conflict_potential": "If Zero ever compromised the cause, Guard_01 would be devastated but choose the mission"
                 },
                 "kai_vance": {
                     "type": "R01",
@@ -219,61 +219,61 @@
                         {
                             "tick": 500,
                             "value": 0.9,
-                            "reason": "Charlie saved his life"
+                            "reason": "Guard_01 saved his life"
                         }
                     ],
-                    "history": "Kai initially distrusted Charlie more than anyone. Then Charlie took a plasma bolt meant for Kai, losing his arm. Now Kai plans every mission with Charlie's input.",
-                    "dynamic": "Professional respect, tactical partnership. Kai is logical; Charlie is instinctive. Together they cover blind spots.",
+                    "history": "Kai initially distrusted Guard_01 more than anyone. Then Guard_01 took a plasma bolt meant for Kai, losing his arm. Now Kai plans every mission with Guard_01's input.",
+                    "dynamic": "Professional respect, tactical partnership. Kai is logical; Guard_01 is instinctive. Together they cover blind spots.",
                     "shared_secrets": [
                         "Temple tactical weaknesses",
                         "Emergency extraction protocols"
                     ],
-                    "conflict_potential": "Kai's by-the-numbers approach sometimes clashes with Charlie's gut feelings"
+                    "conflict_potential": "Kai's by-the-numbers approach sometimes clashes with Guard_01's gut feelings"
                 },
                 "felix": {
                     "type": "R04",
                     "type_name": "friend",
                     "trust": 0.7,
-                    "history": "Felix knew Charlie from his enforcer days - was terrified of him then. Now they share drinks and information. Felix knows Charlie's past but doesn't judge.",
-                    "dynamic": "Easy banter, mutual usefulness. Charlie pays for information; Felix provides an ear and a safe place to drink.",
+                    "history": "Merchant_01 knew Guard_01 from his enforcer days - was terrified of him then. Now they share drinks and information. Merchant_01 knows Guard_01's past but doesn't judge.",
+                    "dynamic": "Easy banter, mutual usefulness. Guard_01 pays for information; Merchant_01 provides an ear and a safe place to drink.",
                     "shared_secrets": [
-                        "Some of Charlie's old enforcer contacts"
+                        "Some of Guard_01's old enforcer contacts"
                     ],
-                    "conflict_potential": "Felix is neutral - if Temple offered enough, he might sell information"
+                    "conflict_potential": "Merchant_01 is neutral - if Temple offered enough, he might sell information"
                 },
                 "nova_chen": {
                     "type": "R03",
                     "type_name": "rival",
                     "trust": 0.5,
-                    "history": "Zero's sister, technically on the same side, but Nova is a wildcard. She's jealous of Zero's trust in Charlie and thinks he should have died for his enforcer past.",
+                    "history": "Zero's sister, technically on the same side, but Nova is a wildcard. She's jealous of Zero's trust in Guard_01 and thinks he should have died for his enforcer past.",
                     "dynamic": "Tension, mutual wariness. They work together when needed but watch each other closely.",
                     "shared_secrets": [
-                        "None - Nova doesn't trust Charlie with secrets"
+                        "None - Nova doesn't trust Guard_01 with secrets"
                     ],
-                    "conflict_potential": "High. Nova might betray Charlie if she thought it served the greater good"
+                    "conflict_potential": "High. Nova might betray Guard_01 if she thought it served the greater good"
                 },
                 "sister_mira": {
                     "type": "R12",
                     "type_name": "contact",
                     "trust": 0.6,
-                    "history": "A Temple priestess who secretly feeds Charlie information. She believes the Temple has lost its way but can't leave.",
-                    "dynamic": "Careful, encrypted communications. Charlie protects her identity at all costs.",
+                    "history": "A Temple priestess who secretly feeds Guard_01 information. She believes the Temple has lost its way but can't leave.",
+                    "dynamic": "Careful, encrypted communications. Guard_01 protects her identity at all costs.",
                     "shared_secrets": [
                         "Temple ritual schedules",
                         "Names of sympathetic Temple members"
                     ],
-                    "conflict_potential": "If exposed, Mira would be executed. Charlie feels responsible for her safety."
+                    "conflict_potential": "If exposed, Mira would be executed. Guard_01 feels responsible for her safety."
                 },
-                "aiche": {
+                "City_AI": {
                     "type": "R12",
                     "type_name": "contact",
                     "trust": 0.6,
-                    "history": "The AI entity that sometimes appears to warn of layer disturbances. Charlie doesn't fully understand Aiche but respects the warnings.",
-                    "dynamic": "Mysterious, one-way communication usually. Aiche appears when needed, speaks in riddles.",
+                    "history": "The AI entity that sometimes appears to warn of layer disturbances. Guard_01 doesn't fully understand City_AI but respects the warnings.",
+                    "dynamic": "Mysterious, one-way communication usually. City_AI appears when needed, speaks in riddles.",
                     "shared_secrets": [
-                        "Aiche has shown Charlie glimpses of other timelines"
+                        "City_AI has shown Guard_01 glimpses of other timelines"
                     ],
-                    "conflict_potential": "Unknown - Aiche's true motives are unclear"
+                    "conflict_potential": "Unknown - City_AI's true motives are unclear"
                 }
             },
             "skills_primary": [
@@ -355,7 +355,7 @@
             "behaviors": {
                 "daily_routine": {
                     "dawn": "Light sleep, nightmares often wake him early",
-                    "morning": "Coffee at Felix's bar, scans news feeds",
+                    "morning": "Coffee at Merchant_01's bar, scans news feeds",
                     "noon": "Investigation work, following leads",
                     "afternoon": "Meetings, dead drops, informant contacts",
                     "evening": "Report to Zero, tactical planning",
@@ -448,7 +448,7 @@
                 "In this city, the truth is whatever survives until morning."
             ],
             "quotes_by_others": {
-                "zero_chen": "Charlie's the best weapon we have. A knife that cut its own chains.",
+                "zero_chen": "Guard_01's the best weapon we have. A knife that cut its own chains.",
                 "kai_vance": "I didn't trust him until he bled for me. Now I'd follow him into the Temple itself.",
                 "felix": "Used to terrify me when he walked in wearing Temple colors. Now he's just another broken soul at my bar. Funny how that works.",
                 "nova_chen": "My sister risks everything for that former butcher. One day, he'll prove me right about him. I just hope it doesn't cost us the war."

@@ -60,7 +60,7 @@
         ]
     },
     "founding_canon_events": {
-        "_desc": "Core story events that define RE:ECHO lore",
+        "_desc": "Core story events that define YourWorld lore",
         "CE_20670101_001": {
             "event_id": "CE_20670101_001",
             "tick": 0,
@@ -85,13 +85,13 @@
             "event_id": "CE_20730615_001",
             "tick": 52560,
             "type": "EVT_MEET",
-            "name": "Zero Saves Charlie",
+            "name": "Zero Saves Guard_01",
             "participants": [
                 "zero_chen",
                 "charlie"
             ],
             "location": "L028",
-            "description": "Zero Chen loses his right arm saving young Charlie during a Temple raid",
+            "description": "Zero Chen loses his right arm saving young Guard_01 during a Temple raid",
             "outcome": "bond_formed",
             "consequences": {
                 "zero_chen": {
@@ -110,21 +110,21 @@
             "event_id": "CE_20750312_001",
             "tick": 70080,
             "type": "EVT_MEET",
-            "name": "Charlie Meets Aiche",
+            "name": "Guard_01 Meets City_AI",
             "participants": [
                 "charlie",
-                "aiche"
+                "City_AI"
             ],
             "location": "L052",
-            "description": "Charlie accidentally discovers Aiche's core consciousness at a layer tear",
+            "description": "Guard_01 accidentally discovers City_AI's core consciousness at a layer tear",
             "outcome": "revelation",
             "consequences": {
                 "charlie": {
-                    "learns_secret": "aiche_is_city",
-                    "trust_with_aiche": 0.6,
+                    "learns_secret": "City_AI_is_city",
+                    "trust_with_City_AI": 0.6,
                     "layer_sense_awakening": true
                 },
-                "aiche": {
+                "City_AI": {
                     "reveals_to_human": true,
                     "secret_shared_count": 1
                 }
@@ -133,20 +133,20 @@
             "episode_ref": "S01E05",
             "dialogue_snippet": {
                 "charlie": "What... what are you?",
-                "aiche": "I am the city, Charlie. I have been watching you since you were born."
+                "City_AI": "I am the city, Guard_01. I have been watching you since you were born."
             }
         },
         "CE_20750415_001": {
             "event_id": "CE_20750415_001",
             "tick": 70920,
             "type": "EVT_MEET",
-            "name": "Kai Vance Joins Charlie",
+            "name": "Fixer_01 Joins Guard_01",
             "participants": [
                 "charlie",
                 "kai_vance"
             ],
             "location": "L011",
-            "description": "Former military tactician Kai Vance offers to join resistance after Temple kills his family",
+            "description": "Former military tactician Fixer_01 offers to join resistance after Temple kills his family",
             "outcome": "alliance_formed",
             "consequences": {
                 "kai_vance": {
@@ -174,7 +174,7 @@
                 "sister_mira"
             ],
             "location": "L003",
-            "description": "Charlie infiltrates Temple, confronts Sister Mira, discovers her doubts",
+            "description": "Guard_01 infiltrates Temple, confronts Sister Mira, discovers her doubts",
             "outcome": "standoff",
             "consequences": {
                 "charlie": {
@@ -239,12 +239,12 @@
         "_desc": "How canon events integrate with simulation",
         "at_tick_lookup": {
             "description": "When simulation reaches a tick with canon event, that event MUST happen",
-            "example": "At tick 70080, if charlie is near L052, the Aiche revelation triggers",
+            "example": "At tick 70080, if charlie is near L052, the City_AI revelation triggers",
             "override_rng": true
         },
         "post_event_state": {
             "description": "After canon event, NPC states update accordingly",
-            "example": "After CE_20750312_001, charlie.knows('aiche_is_city') = true"
+            "example": "After CE_20750312_001, charlie.knows('City_AI_is_city') = true"
         }
     },
     "event_propagation": {
@@ -256,17 +256,17 @@
             "secret_events_spread_slower": true
         },
         "example": {
-            "event": "CE_20750312_001 - Charlie meets Aiche",
+            "event": "CE_20750312_001 - Guard_01 meets City_AI",
             "tick_0": {
                 "knows": [
                     "charlie",
-                    "aiche"
+                    "City_AI"
                 ]
             },
             "tick_100": {
                 "knows": [
                     "charlie",
-                    "aiche",
+                    "City_AI",
                     "felix"
                 ],
                 "felix_knows_limited": true
@@ -274,7 +274,7 @@
             "tick_500": {
                 "knows": [
                     "charlie",
-                    "aiche",
+                    "City_AI",
                     "felix",
                     "pixel"
                 ]

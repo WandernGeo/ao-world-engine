@@ -14,7 +14,7 @@
     "language_schema": {
         "_desc": "Schema for defining any language (human, fictional, or invented)",
         "required_fields": {
-            "code": "Unique 3-6 character code (e.g., 'en', 'klingon', 'reecho_street')",
+            "code": "Unique 3-6 character code (e.g., 'en', 'klingon', 'example_street')",
             "name": "Human-readable name",
             "type": "human | fictional | conlang | pidgin | machine",
             "script": "Writing system (latin, cyrillic, custom, etc.)",
@@ -123,7 +123,7 @@
                 "vocabulary_entries": 40000
             }
         },
-        "reecho_languages": {
+        "example_languages": {
             "street_creole": {
                 "name": "Street Creole",
                 "type": "pidgin",
@@ -135,7 +135,7 @@
                     "es",
                     "ja"
                 ],
-                "description": "Mixed street language of RE:ECHO City, borrowing from all immigrant communities",
+                "description": "Mixed street language of Example City, borrowing from all immigrant communities",
                 "slang_level": 0.9,
                 "tech_integration": "high",
                 "sample": {
@@ -156,7 +156,7 @@
                     "latin",
                     "sanskrit"
                 ],
-                "description": "Ritualized language of the Temple of the Signal",
+                "description": "Ritualized language of the Example_Faction_1",
                 "slang_level": 0.0,
                 "sacred": true,
                 "sample": {

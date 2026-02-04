@@ -1,0 +1,150 @@
+{
+    "_chunk": {
+        "id": "chunk_example_lore",
+        "version": "1.0.0",
+        "type": "example_lore",
+        "note": "This is EXAMPLE lore. Replace with your world's story."
+    },
+    "world_name": "Example City",
+    "genre": "customizable",
+    "timeline": {
+        "_instructions": "Define your world's history here. Examples below.",
+        "eras": [
+            {
+                "name": "The Founding",
+                "years": "Year 0-50",
+                "description": "How your world began. [Customize this]",
+                "key_events": [
+                    "First settlers arrive",
+                    "City core established",
+                    "Initial governance formed"
+                ]
+            },
+            {
+                "name": "The Expansion",
+                "years": "Year 50-150",
+                "description": "Growth period. [Add your details]",
+                "key_events": [
+                    "Population boom",
+                    "New districts built",
+                    "Trade routes opened"
+                ]
+            },
+            {
+                "name": "The Current Era",
+                "years": "Year 150-Present",
+                "description": "Where your story takes place. [This is now]",
+                "key_events": [
+                    "Current tensions",
+                    "Recent discoveries",
+                    "Ongoing conflicts"
+                ]
+            }
+        ]
+    },
+    "factions": {
+        "_instructions": "Define groups that compete for power/influence.",
+        "examples": [
+            {
+                "id": "FACTION_01",
+                "name": "The Establishment",
+                "type": "government",
+                "description": "Those in power. [Customize]",
+                "goals": [
+                    "Maintain order",
+                    "Control resources"
+                ]
+            },
+            {
+                "id": "FACTION_02",
+                "name": "The Rebels",
+                "type": "resistance",
+                "description": "Those who oppose. [Customize]",
+                "goals": [
+                    "Freedom",
+                    "Change"
+                ]
+            },
+            {
+                "id": "FACTION_03",
+                "name": "The Merchants",
+                "type": "economic",
+                "description": "Those who profit. [Customize]",
+                "goals": [
+                    "Wealth",
+                    "Influence"
+                ]
+            }
+        ]
+    },
+    "locations": {
+        "_instructions": "Define districts/areas of your world.",
+        "districts": [
+            {
+                "id": "DISTRICT_A",
+                "name": "Central District",
+                "description": "Heart of the city. [Customize]",
+                "mood": "busy, commercial"
+            },
+            {
+                "id": "DISTRICT_B",
+                "name": "Industrial Zone",
+                "description": "Where work happens. [Customize]",
+                "mood": "gritty, working-class"
+            },
+            {
+                "id": "DISTRICT_C",
+                "name": "Elite Quarter",
+                "description": "Where power lives. [Customize]",
+                "mood": "wealthy, guarded"
+            },
+            {
+                "id": "DISTRICT_D",
+                "name": "The Outskirts",
+                "description": "Edge of civilization. [Customize]",
+                "mood": "dangerous, lawless"
+            }
+        ]
+    },
+    "customization_examples": {
+        "cyberpunk": {
+            "world_name": "Neon City",
+            "eras": [
+                "Pre-Collapse",
+                "The Dark Years",
+                "Corporate Era"
+            ],
+            "factions": [
+                "Megacorps",
+                "Netrunners",
+                "Street Gangs"
+            ]
+        },
+        "fantasy": {
+            "world_name": "Eldoria",
+            "eras": [
+                "Age of Magic",
+                "Dragon Wars",
+                "The Peace"
+            ],
+            "factions": [
+                "Mage Guild",
+                "Knight Orders",
+                "Thieves Guild"
+            ]
+        },
+        "post_apocalyptic": {
+            "world_name": "The Wastes",
+            "eras": [
+                "Before the Fall",
+                "The Collapse",
+                "Rebuilding"
+            ],
+            "factions": [
+                "Survivors",
+                "Raiders",
+                "Techno-Cult"
+            ]
+        }
+    }
+}

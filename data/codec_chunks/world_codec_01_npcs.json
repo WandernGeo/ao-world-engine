@@ -11,7 +11,7 @@
         "_desc": "The 12 founders with interconnected relationships",
         "charlie": {
             "code": "C01",
-            "name": "Charlie",
+            "name": "Guard_01",
             "role": "Protagonist / Resistance Fighter",
             "faction": "Resistance",
             "location_home": "L026",
@@ -45,7 +45,7 @@
                     "trust": 0.5,
                     "history": "Zero's sister, complicated"
                 },
-                "aiche": {
+                "City_AI": {
                     "type": "R12",
                     "trust": 0.6,
                     "history": "Mysterious AI ally"
@@ -72,7 +72,7 @@
         },
         "kai_vance": {
             "code": "C02",
-            "name": "Kai Vance",
+            "name": "Fixer_01",
             "role": "Tactician",
             "faction": "Resistance",
             "location_home": "L025",
@@ -124,7 +124,7 @@
         },
         "orion_thane": {
             "code": "C03",
-            "name": "Orion Thane",
+            "name": "Mystic_01 Thane",
             "role": "Mystic / Layer Walker",
             "faction": "Mystic",
             "location_home": "L051",
@@ -168,7 +168,7 @@
         },
         "felix": {
             "code": "C04",
-            "name": "Felix",
+            "name": "Merchant_01",
             "role": "Bartender / Information Broker",
             "faction": "Neutral",
             "location_home": "L011",
@@ -219,7 +219,7 @@
         },
         "nova_chen": {
             "code": "C05",
-            "name": "Nova Chen",
+            "name": "Medic_01",
             "role": "Operative",
             "faction": "Neutral",
             "location_home": "L026",
@@ -282,7 +282,7 @@
                     "trust": 0.9,
                     "history": "Her guide and mentor"
                 },
-                "aiche": {
+                "City_AI": {
                     "type": "R04",
                     "trust": 0.7,
                     "history": "Both exist between states"
@@ -401,9 +401,9 @@
                 "I've buried three husbands and two regimes."
             ]
         },
-        "aiche": {
+        "City_AI": {
             "code": "C09",
-            "name": "Aiche",
+            "name": "City_AI",
             "role": "AI Interface / City Consciousness",
             "faction": "Neutral",
             "location_home": "L053",
@@ -480,10 +480,10 @@
                     "trust": 0.8,
                     "history": "He mentored her"
                 },
-                "aiche": {
+                "City_AI": {
                     "type": "R04",
                     "trust": 0.8,
-                    "history": "Aiche taught her to code"
+                    "history": "City_AI taught her to code"
                 },
                 "felix": {
                     "type": "R12",
@@ -533,7 +533,7 @@
                     "trust": 0.2,
                     "history": "Mutual distrust"
                 },
-                "aiche": {
+                "City_AI": {
                     "type": "R03",
                     "trust": 0.2,
                     "history": "Competing for data supremacy"
@@ -883,7 +883,7 @@
                         "stance": "business_opportunity"
                     }
                 },
-                "special_rule": "Felix treats everyone as potential customer first"
+                "special_rule": "Merchant_01 treats everyone as potential customer first"
             },
             "sister_mira": {
                 "archetype_overrides": {
@@ -929,7 +929,7 @@
             "default_action": "cautious_interaction",
             "consult_first": [
                 "pixel",
-                "aiche",
+                "City_AI",
                 "cipher"
             ],
             "never_touch_if": [
@@ -942,7 +942,7 @@
             "default_action": "seek_translation",
             "fallback": "gesture_communication",
             "ask_help_from": [
-                "aiche",
+                "City_AI",
                 "felix",
                 "translator_npcs"
             ]
@@ -1508,7 +1508,7 @@
         },
         "shopkeepers_and_services": {
             "M006": {
-                "name": "Felix 'The Fence' Vargas",
+                "name": "Merchant_01 'The Fence' Vargas",
                 "code": "M006",
                 "role": "Bar owner / Information broker",
                 "faction": "neutral_leaning_resistance",
@@ -1603,7 +1603,7 @@
                 "faction": "civilian",
                 "age": 28,
                 "gender": "female",
-                "backstory": "Former university student before Temple closed the schools. Works for Felix but secretly documenting everything for a history she hopes to write someday. Has photographic memory.",
+                "backstory": "Former university student before Temple closed the schools. Works for Merchant_01 but secretly documenting everything for a history she hopes to write someday. Has photographic memory.",
                 "schedule": {
                     "T01": {
                         "activity": "closing_work",
@@ -1669,7 +1669,7 @@
                 "faction": "civilian",
                 "age": 35,
                 "gender": "male",
-                "backstory": "Was a champion in Temple-sanctioned pit fights until he refused to kill a child combatant. Scarred and exiled from the arena. Felix took him in. Gentle giant with a dangerous past.",
+                "backstory": "Was a champion in Temple-sanctioned pit fights until he refused to kill a child combatant. Scarred and exiled from the arena. Merchant_01 took him in. Gentle giant with a dangerous past.",
                 "schedule": {
                     "T01": {
                         "activity": "securing_bar",

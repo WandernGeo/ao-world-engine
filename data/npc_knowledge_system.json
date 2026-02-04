@@ -130,10 +130,10 @@
     },
     "example_npc_profile": {
         "id": "charlie",
-        "name": "Charlie",
+        "name": "Guard_01",
         "public_knowledge": {
-            "_desc": "Anyone who meets Charlie knows this",
-            "name": "Charlie",
+            "_desc": "Anyone who meets Guard_01 knows this",
+            "name": "Guard_01",
             "occupation": "Courier / Information Broker",
             "faction": "Neutral (publicly)",
             "visible_cyberware": [
@@ -148,14 +148,14 @@
             "personality_vibe": "Cautious but helpful",
             "reputation": "Reliable for deliveries, knows things",
             "frequents": [
-                "Felix's Bar",
+                "Merchant_01's Bar",
                 "Neon Market",
                 "Dead drop alley"
             ],
             "associates_with": "Various, seems well-connected"
         },
         "shared_knowledge": {
-            "_desc": "Charlie shares this if trust is built",
+            "_desc": "Guard_01 shares this if trust is built",
             "lore_sections": [
                 "CHARLIE_ORIGIN",
                 "CHARLIE_GOALS",
@@ -187,22 +187,22 @@
         "_desc": "Discrete chunks of lore that can be passed between NPCs",
         "CHARLIE_ORIGIN": {
             "id": "LORE_CHARLIE_001",
-            "summary": "Charlie grew up in the Undercity after the Silence",
-            "full_text": "Charlie was orphaned during the chaos following The Silence. Raised by the streets and kind strangers, they learned to survive by being useful - running messages, finding things, knowing things others didn't want known.",
+            "summary": "Guard_01 grew up in the Undercity after the Silence",
+            "full_text": "Guard_01 was orphaned during the chaos following The Silence. Raised by the streets and kind strangers, they learned to survive by being useful - running messages, finding things, knowing things others didn't want known.",
             "can_share": true,
             "trust_required": 0.4
         },
         "CHARLIE_GOALS": {
             "id": "LORE_CHARLIE_002",
-            "summary": "Charlie wants to find the truth about their parents",
-            "full_text": "Charlie's parents disappeared when they were young. All Charlie has are fragments - a data chip they can't decode, whispers that their parents knew something important, and a feeling that the Temple was involved.",
+            "summary": "Guard_01 wants to find the truth about their parents",
+            "full_text": "Guard_01's parents disappeared when they were young. All Guard_01 has are fragments - a data chip they can't decode, whispers that their parents knew something important, and a feeling that the Temple was involved.",
             "can_share": true,
             "trust_required": 0.6
         },
         "CHARLIE_SECRET": {
             "id": "LORE_CHARLIE_003",
-            "summary": "Charlie has a piece of Echo technology",
-            "full_text": "Hidden in a secret compartment in their holographic arm is a fragment of something their parents left behind. Charlie doesn't know what it is, but when they hold it, they sometimes hear... something. Like distant music.",
+            "summary": "Guard_01 has a piece of Echo technology",
+            "full_text": "Hidden in a secret compartment in their holographic arm is a fragment of something their parents left behind. Guard_01 doesn't know what it is, but when they hold it, they sometimes hear... something. Like distant music.",
             "can_share": false,
             "trust_required": 0.9,
             "share_conditions": [
@@ -366,7 +366,7 @@
     "discovery_events": {
         "_desc": "How NPCs learn private info without being told",
         "witness_action": {
-            "example": "NPC sees Charlie meeting with resistance",
+            "example": "NPC sees Guard_01 meeting with resistance",
             "learns": [
                 "FACT_CHARLIE_RESISTANCE_CONNECTION"
             ],
@@ -374,7 +374,7 @@
             "blackmail_potential": true
         },
         "find_evidence": {
-            "example": "NPC finds Charlie's hidden data chip",
+            "example": "NPC finds Guard_01's hidden data chip",
             "learns": [
                 "LORE_CHARLIE_SECRET"
             ],
@@ -382,7 +382,7 @@
             "relationship_impact": "major"
         },
         "overhear_conversation": {
-            "example": "NPC overhears Charlie talking to Felix",
+            "example": "NPC overhears Guard_01 talking to Merchant_01",
             "learns": "fragment of conversation topic",
             "accuracy": 0.7,
             "can_share": true
@@ -393,19 +393,19 @@
         "system_knowledge": {
             "_desc": "Objective facts stored in world state",
             "examples": [
-                "Charlie's real name is [REDACTED]",
-                "Charlie was born in Sector 7",
-                "Charlie's parents were resistance leaders",
-                "Charlie has Echo fragment in arm"
+                "Guard_01's real name is [REDACTED]",
+                "Guard_01 was born in Sector 7",
+                "Guard_01's parents were resistance leaders",
+                "Guard_01 has Echo fragment in arm"
             ],
             "source": "world_state.npcs[id].true_facts"
         },
         "personal_knowledge": {
             "_desc": "What an individual NPC believes (may be wrong)",
             "examples": [
-                "I think Charlie is trustworthy",
-                "Charlie seems nervous around Temple guards",
-                "Someone told me Charlie has a hidden weapon"
+                "I think Guard_01 is trustworthy",
+                "Guard_01 seems nervous around Temple guards",
+                "Someone told me Guard_01 has a hidden weapon"
             ],
             "source": "npc.memory.about_npcs[id]",
             "can_be_wrong": true
