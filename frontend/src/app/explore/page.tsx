@@ -25,6 +25,14 @@ interface NPC {
     location: string;
     activity: string;
     mood: string;
+    // Extended bio fields
+    archetype?: string;
+    mbti?: string;
+    zodiac?: string;
+    faction?: string;
+    role?: string;
+    traits?: string[];
+    catchphrase?: string;
 }
 
 interface District {
@@ -522,8 +530,12 @@ export default function ExplorePage() {
                                 <CardTitle className="text-green-400 font-mono text-sm flex items-center gap-2">
                                     👤 {selectedNPC.name}
                                 </CardTitle>
+                                {selectedNPC.role && (
+                                    <p className="text-xs text-zinc-500 italic">{selectedNPC.role}</p>
+                                )}
                             </CardHeader>
-                            <CardContent className="text-sm space-y-2">
+                            <CardContent className="text-xs space-y-2">
+                                {/* Basic Info */}
                                 <div className="flex justify-between">
                                     <span className="text-zinc-500">Activity</span>
                                     <span className="text-zinc-300 capitalize">{selectedNPC.activity}</span>
@@ -534,7 +546,61 @@ export default function ExplorePage() {
                                         selectedNPC.mood === 'cautious' ? 'text-amber-400' : 'text-red-400'
                                         }`}>{selectedNPC.mood}</span>
                                 </div>
-                                <Button variant="default" size="sm" className="w-full mt-2 bg-cyan-600 hover:bg-cyan-500">
+
+                                {/* Personality Section */}
+                                {(selectedNPC.archetype || selectedNPC.mbti || selectedNPC.zodiac) && (
+                                    <div className="pt-2 mt-2 border-t border-zinc-700">
+                                        <div className="text-zinc-400 font-mono mb-1">PERSONALITY</div>
+                                        {selectedNPC.archetype && (
+                                            <div className="flex justify-between">
+                                                <span className="text-zinc-500">Archetype</span>
+                                                <span className="text-purple-400">{selectedNPC.archetype}</span>
+                                            </div>
+                                        )}
+                                        {selectedNPC.mbti && (
+                                            <div className="flex justify-between">
+                                                <span className="text-zinc-500">MBTI</span>
+                                                <span className="text-cyan-400">{selectedNPC.mbti}</span>
+                                            </div>
+                                        )}
+                                        {selectedNPC.zodiac && (
+                                            <div className="flex justify-between">
+                                                <span className="text-zinc-500">Zodiac</span>
+                                                <span className="text-amber-400 capitalize">{selectedNPC.zodiac}</span>
+                                            </div>
+                                        )}
+                                        {selectedNPC.faction && (
+                                            <div className="flex justify-between">
+                                                <span className="text-zinc-500">Faction</span>
+                                                <span className="text-emerald-400">{selectedNPC.faction}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Traits */}
+                                {selectedNPC.traits && selectedNPC.traits.length > 0 && (
+                                    <div className="pt-2 mt-2 border-t border-zinc-700">
+                                        <div className="text-zinc-400 font-mono mb-1">TRAITS</div>
+                                        <div className="flex flex-wrap gap-1">
+                                            {selectedNPC.traits.slice(0, 5).map((trait, i) => (
+                                                <span key={i} className="px-1.5 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-300 capitalize">
+                                                    {trait.replace(/_/g, ' ')}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Catchphrase */}
+                                {selectedNPC.catchphrase && (
+                                    <div className="pt-2 mt-2 border-t border-zinc-700">
+                                        <div className="text-zinc-400 font-mono mb-1">CATCHPHRASE</div>
+                                        <p className="text-zinc-300 italic text-[11px]">"{selectedNPC.catchphrase}"</p>
+                                    </div>
+                                )}
+
+                                <Button variant="default" size="sm" className="w-full mt-3 bg-cyan-600 hover:bg-cyan-500">
                                     💬 Chat with {selectedNPC.name}
                                 </Button>
                             </CardContent>
