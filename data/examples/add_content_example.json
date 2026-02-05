@@ -1,0 +1,234 @@
+{
+    "_doc": "Example: Add this JSON to import new content",
+    "_gradual": {
+        "vehicle": 100,
+        "school": 50
+    },
+    "vehicle": {
+        "luxury_hover_limo": {
+            "name": "Luxury Hover Limo",
+            "category": "hover",
+            "make": "Prestige Motors",
+            "model": "Executive",
+            "colors": [
+                "black",
+                "pearl_white",
+                "champagne"
+            ],
+            "capacity": 8,
+            "speed": 120,
+            "autonomous": true,
+            "rarity": 0.02,
+            "faction_preference": "echo_corp",
+            "markers": [
+                "luxury",
+                "corporate",
+                "vip_transport"
+            ],
+            "price": 500000
+        },
+        "resistance_van": {
+            "name": "Resistance Transport",
+            "category": "truck",
+            "make": "Salvage Industries",
+            "model": "Stealth Runner",
+            "colors": [
+                "camo_urban",
+                "rust_patina"
+            ],
+            "capacity": 12,
+            "speed": 90,
+            "rarity": 0.05,
+            "faction_preference": "resistance",
+            "district_preference": "old_chinatown",
+            "markers": [
+                "resistance_affiliated",
+                "unmarked",
+                "hidden_compartment"
+            ],
+            "price": 20000
+        }
+    },
+    "school": {
+        "tech_academy": {
+            "name": "Cyber Academy",
+            "description": "Training ground for future hackers and tech surgeons",
+            "location": "tech_district",
+            "markers": [
+                "education",
+                "high_tech",
+                "cybernetic_training"
+            ],
+            "seekable_traits": [
+                "education",
+                "tech_skill",
+                "career_change"
+            ],
+            "action_triggers": {
+                "enroll": {
+                    "required_markers": [
+                        "student",
+                        "tech_enthusiast"
+                    ],
+                    "effect": "gain_skill_hacking"
+                },
+                "attend_class": {
+                    "required_markers": [
+                        "enrolled"
+                    ],
+                    "effect": "skill_progress"
+                }
+            },
+            "owner_faction": "cyber_collective",
+            "capacity": 200
+        },
+        "temple_seminary": {
+            "name": "Temple Seminary",
+            "description": "Where acolytes learn the ways of the Signal",
+            "location": "temple_district",
+            "markers": [
+                "education",
+                "faith",
+                "temple_of_signal"
+            ],
+            "seekable_traits": [
+                "spirituality",
+                "purpose",
+                "community"
+            ],
+            "action_triggers": {
+                "join": {
+                    "required_markers": [
+                        "seeker",
+                        "faithful"
+                    ],
+                    "effect": "join_temple_of_signal"
+                }
+            },
+            "owner_faction": "temple_of_signal"
+        }
+    },
+    "bar": {
+        "underground_cantina": {
+            "name": "The Black Mask Cantina",
+            "description": "Where the Underground conducts its business",
+            "location": "undercity",
+            "markers": [
+                "criminal",
+                "underground_connected",
+                "no_questions"
+            ],
+            "seekable_traits": [
+                "contact",
+                "deal",
+                "information"
+            ],
+            "action_triggers": {
+                "drink": {
+                    "required_markers": [],
+                    "effect": "social_need_fulfilled"
+                },
+                "make_deal": {
+                    "required_markers": [
+                        "underground_connected"
+                    ],
+                    "effect": "mission_available"
+                },
+                "recruit": {
+                    "required_markers": [
+                        "underground_recruiter"
+                    ],
+                    "effect": "recruit_npc"
+                }
+            },
+            "owner_faction": "underground",
+            "hours": [
+                20,
+                4
+            ]
+        }
+    },
+    "lore": {
+        "founding_of_echo_corp": {
+            "title": "The Founding of ECHO Corporation",
+            "category": "history",
+            "era": "pre_echo",
+            "year": 2035,
+            "content": "In 2035, three tech visionaries merged their AI research labs to form ECHO Corporation...",
+            "related_factions": [
+                "echo_corp"
+            ],
+            "discovery_markers": [
+                "historian",
+                "researcher",
+                "corporate_archives"
+            ]
+        },
+        "mutant_uprising": {
+            "title": "The Mutant Uprising of 2048",
+            "category": "history",
+            "era": "echo_rise",
+            "year": 2048,
+            "content": "When ECHO's experiments went wrong, the first generation of Vivid Mutants emerged...",
+            "related_factions": [
+                "vivid_mutants",
+                "echo_corp"
+            ],
+            "discovery_markers": [
+                "mutant_history",
+                "activist"
+            ]
+        }
+    },
+    "npc": {
+        "reporter_chen": {
+            "name": "Maya Chen",
+            "gender": "female",
+            "age": 32,
+            "occupation": "reporter",
+            "faction": "resistance",
+            "home_district": "old_chinatown",
+            "markers": [
+                "journalist",
+                "resistance_affiliated",
+                "truth_seeker",
+                "underground_connected"
+            ],
+            "personality": {
+                "openness": 0.9,
+                "conscientiousness": 0.7,
+                "extraversion": 0.6,
+                "agreeableness": 0.5,
+                "neuroticism": 0.4
+            },
+            "backstory": "Former ECHO Corps PR writer who discovered the truth and defected...",
+            "skills": [
+                "investigation",
+                "writing",
+                "hacking"
+            ]
+        },
+        "newscaster_kira": {
+            "name": "Kira Volkov",
+            "gender": "female",
+            "age": 28,
+            "occupation": "newscaster",
+            "faction": "echo_corp",
+            "home_district": "downtown",
+            "markers": [
+                "media",
+                "echo_agent",
+                "public_figure",
+                "propaganda"
+            ],
+            "personality": {
+                "openness": 0.4,
+                "conscientiousness": 0.8,
+                "extraversion": 0.9,
+                "agreeableness": 0.6,
+                "neuroticism": 0.3
+            },
+            "backstory": "The face of ECHO News, Kira delivers the 'truth' as ECHO sees it..."
+        }
+    }
+}
