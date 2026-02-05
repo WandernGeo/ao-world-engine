@@ -276,7 +276,32 @@ export default function MonitorPage() {
     const [detailPanel, setDetailPanel] = useState<DetailPanel>({ type: null, data: null });
     const [showHelp, setShowHelp] = useState(false);
 
+    // Loaded NPCs from JSON (800 NPCs)
+    const [loadedNpcs, setLoadedNpcs] = useState<Array<{
+        id: string;
+        name: string;
+        faction: string;
+        archetype: string;
+        location: string;
+        activity: string;
+        mood: string;
+        backstory: string;
+    }>>([]);
+
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Load 800 NPCs from public folder
+    useEffect(() => {
+        fetch('/data/npcs.json')
+            .then(res => res.json())
+            .then(data => {
+                if (data.npcs && Array.isArray(data.npcs)) {
+                    setLoadedNpcs(data.npcs);
+                    console.log(`Loaded ${data.npcs.length} NPCs from JSON`);
+                }
+            })
+            .catch(err => console.error('Failed to load NPCs:', err));
+    }, []);
 
     // ============================================================================
     // DATA GENERATION (Demo Mode)
@@ -305,18 +330,20 @@ export default function MonitorPage() {
         const actions = ['move', 'talk', 'work', 'rest', 'observe', 'trade', 'hack', 'pray'];
 
         // Generate NPC states with persistence (gradual changes)
-        const npcs: NPCSnapshot[] = Object.entries(NPCS).map(([id, info]) => {
-            let s = npcStateRef.current[id];
+        // Use loadedNpcs if available, fallback to hardcoded NPCS
+        const npcSource = loadedNpcs.length > 0 ? loadedNpcs : Object.entries(NPCS).map(([id, info]) => ({ id, name: info.name, faction: 'Unknown', archetype: info.role, location: 'L001', activity: 'idle', mood: 'neutral', backstory: '' }));
+        const npcs: NPCSnapshot[] = npcSource.slice(0, 50).map((npc) => {  // Show first 50 for performance
+            let s = npcStateRef.current[npc.id];
             if (!s) {
-                // Initialize
+                // Initialize from loaded data
                 s = {
                     mood: 0.5 + Math.random() * 0.3,
                     energy: 0.6 + Math.random() * 0.3,
                     wealth: Math.floor(100 + Math.random() * 400),
-                    location: locations[Math.floor(Math.random() * locations.length)],
-                    state: states[Math.floor(Math.random() * states.length)],
+                    location: npc.location || locations[Math.floor(Math.random() * locations.length)],
+                    state: npc.activity || states[Math.floor(Math.random() * states.length)],
                 };
-                npcStateRef.current[id] = s;
+                npcStateRef.current[npc.id] = s;
             }
             // Gradual drift
             s.mood = Math.max(0.1, Math.min(0.95, s.mood + (Math.random() - 0.5) * 0.02));
@@ -325,7 +352,7 @@ export default function MonitorPage() {
             if (Math.random() < 0.1) s.state = states[Math.floor(Math.random() * states.length)];
             if (Math.random() < 0.05) s.location = locations[Math.floor(Math.random() * locations.length)];
 
-            return { id, name: info.name, ...s };
+            return { id: npc.id, name: npc.name, ...s };
         });
 
         // Generate logs for this tick
@@ -400,7 +427,7 @@ export default function MonitorPage() {
             day,
             year: 2087,
             time_period,
-            population: 12,
+            population: loadedNpcs.length || 800,
             active_npcs: npcs.filter(n => n.state !== 'resting').length,
             budget: Math.max(50000, budget),
             economy: {
@@ -420,7 +447,7 @@ export default function MonitorPage() {
             npcs,
             logs,
         };
-    }, []);
+    }, [loadedNpcs]);
 
     // ============================================================================
     // TIME MACHINE CONTROLS
