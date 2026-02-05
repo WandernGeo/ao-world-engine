@@ -5,15 +5,14 @@
  * Provides read-only access to world state without requiring a wallet.
  */
 
-import { connect, dryrun } from "@permaweb/aoconnect";
+import { dryrun } from "@permaweb/aoconnect";
 
 // Process IDs from deployment
 export const AO_PROCESS_IDS = {
     world: "3KJMDJ81ob8qHUB8Fc-fn9n4pmSBqIh2S1DOM1zkqt0",
 };
 
-// Initialize AO connection (read-only)
-const ao = connect();
+// No connection needed - dryrun works without wallet
 
 /**
  * Query world state from AO
