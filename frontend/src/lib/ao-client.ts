@@ -12,46 +12,33 @@ export const AO_PROCESS_IDS = {
     world: "3KJMDJ81ob8qHUB8Fc-fn9n4pmSBqIh2S1DOM1zkqt0",
 };
 
-// No connection needed - dryrun works without wallet
-
 /**
- * Query world state from AO
+ * Query world state from AO using get-state handler
  */
 export async function getWorldState(): Promise<{
-    worldTick: number;
+    tick: number;
+    day: number;
+    year: number;
     population: number;
-    districts: number;
     budget: number;
-    currentTime: string;
+    time: { hour: number; period: string };
 }> {
     try {
         const result = await dryrun({
             process: AO_PROCESS_IDS.world,
-            tags: [{ name: "Action", value: "Eval" }],
-            data: `
-        local state = get_state()
-        if state then
-          return require("json").encode({
-            world_tick = state.world_tick or 0,
-            population = state.population or 0,
-            districts = state.districts or 0,
-            budget = state.budget or 0,
-            current_time = state.current_time or "unknown"
-          })
-        else
-          return require("json").encode({error = "No state"})
-        end
-      `,
+            tags: [{ name: "Action", value: "get-state" }],
+            data: "{}",
         });
 
         if (result.Messages?.[0]?.Data) {
             const data = JSON.parse(result.Messages[0].Data);
             return {
-                worldTick: data.world_tick || 0,
+                tick: data.tick || 0,
+                day: data.day || 0,
+                year: data.year || 0,
                 population: data.population || 0,
-                districts: data.districts || 0,
                 budget: data.budget || 0,
-                currentTime: data.current_time || "unknown",
+                time: data.time || { hour: 0, period: "T01" },
             };
         }
         throw new Error("No response from AO");
@@ -59,103 +46,104 @@ export async function getWorldState(): Promise<{
         console.error("Failed to query AO world state:", error);
         // Return fallback for demo mode
         return {
-            worldTick: 0,
+            tick: 0,
+            day: 0,
+            year: 0,
             population: 800,
-            districts: 12,
             budget: 1000000,
-            currentTime: new Date().toISOString(),
+            time: { hour: 0, period: "T01" },
         };
     }
 }
 
 /**
- * Query NPC location from AO (deterministic based on tick)
+ * Query economy stats from AO using get-economy handler
  */
-export async function getNPCLocation(
-    npcId: string
-): Promise<{ location: string; activity: string } | null> {
+export async function getEconomyState(): Promise<{
+    budget: number;
+    taxRate: number;
+    population: number;
+    estimatedDailyRevenue: number;
+}> {
     try {
         const result = await dryrun({
             process: AO_PROCESS_IDS.world,
-            tags: [{ name: "Action", value: "Eval" }],
-            data: `
-        local npc = get_npc("${npcId}")
-        if npc then
-          return require("json").encode({
-            location = npc.current_location or npc.home_location,
-            activity = npc.current_activity or "idle"
-          })
-        end
-        return require("json").encode({error = "NPC not found"})
-      `,
+            tags: [{ name: "Action", value: "get-economy" }],
+            data: "{}",
         });
 
         if (result.Messages?.[0]?.Data) {
             const data = JSON.parse(result.Messages[0].Data);
-            if (data.error) return null;
-            return data;
+            return {
+                budget: data.budget || 0,
+                taxRate: data.tax_rate || 0.1,
+                population: data.population || 0,
+                estimatedDailyRevenue: data.estimated_daily_revenue || 0,
+            };
         }
-        return null;
+        throw new Error("No response from AO");
     } catch (error) {
-        console.error("Failed to query NPC location:", error);
-        return null;
+        console.error("Failed to query AO economy:", error);
+        return {
+            budget: 1000000,
+            taxRate: 0.1,
+            population: 800,
+            estimatedDailyRevenue: 6000,
+        };
     }
 }
 
 /**
- * Get all founding NPCs from AO
+ * Query time info from AO using get-time handler
  */
-export async function getFoundingNPCs(): Promise<
-    Array<{
-        id: string;
-        name: string;
-        faction: string;
-        role: string;
-        location: string;
-    }>
-> {
+export async function getTimeState(): Promise<{
+    tick: number;
+    day: number;
+    hour: number;
+    period: string;
+    year: number;
+}> {
     try {
         const result = await dryrun({
             process: AO_PROCESS_IDS.world,
-            tags: [{ name: "Action", value: "Eval" }],
-            data: `
-        local npcs = get_all_founding_npcs()
-        local list = {}
-        for key, npc in pairs(npcs) do
-          table.insert(list, {
-            id = npc.id,
-            name = npc.name,
-            faction = npc.faction,
-            role = npc.role,
-            location = npc.home_location
-          })
-        end
-        return require("json").encode(list)
-      `,
+            tags: [{ name: "Action", value: "get-time" }],
+            data: "{}",
         });
 
         if (result.Messages?.[0]?.Data) {
-            return JSON.parse(result.Messages[0].Data);
+            const data = JSON.parse(result.Messages[0].Data);
+            return {
+                tick: data.tick || 0,
+                day: data.day || 0,
+                hour: data.hour || 0,
+                period: data.period || "T01",
+                year: data.year || 0,
+            };
         }
-        return [];
+        throw new Error("No response from AO");
     } catch (error) {
-        console.error("Failed to query founding NPCs:", error);
-        return [];
+        console.error("Failed to query AO time:", error);
+        return { tick: 0, day: 0, hour: 0, period: "T01", year: 0 };
     }
 }
 
 /**
- * Check if AO connection is live
+ * Check if AO connection is live by querying state
  */
 export async function isAOLive(): Promise<boolean> {
     try {
         const result = await dryrun({
             process: AO_PROCESS_IDS.world,
-            tags: [{ name: "Action", value: "Eval" }],
-            data: "return 'live'",
+            tags: [{ name: "Action", value: "get-state" }],
+            data: "{}",
         });
-        return result.Messages?.[0]?.Data === "live";
+        return !!(result.Messages?.[0]?.Data);
     } catch {
         return false;
     }
 }
+
+// Re-export for convenience
+export type WorldState = Awaited<ReturnType<typeof getWorldState>>;
+export type EconomyState = Awaited<ReturnType<typeof getEconomyState>>;
+export type TimeState = Awaited<ReturnType<typeof getTimeState>>;

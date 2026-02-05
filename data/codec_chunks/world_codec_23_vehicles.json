@@ -1,0 +1,411 @@
+{
+    "version": "1.0",
+    "description": "Vehicle Preferences System - What cars/vehicles NPCs choose based on wealth, faction, and personality",
+    "last_updated": "2026-02-05",
+    "vehicle_tiers": {
+        "pedestrian": {
+            "wealth_range": [
+                0,
+                200
+            ],
+            "description": "No vehicle, walks or uses public transit",
+            "options": [
+                "walking",
+                "public_transit",
+                "bicycle"
+            ]
+        },
+        "budget": {
+            "wealth_range": [
+                200,
+                1000
+            ],
+            "description": "Cheap, functional vehicles",
+            "options": [
+                "used_scooter",
+                "old_compact",
+                "motorbike"
+            ]
+        },
+        "economy": {
+            "wealth_range": [
+                1000,
+                5000
+            ],
+            "description": "Basic new or decent used vehicles",
+            "options": [
+                "compact_car",
+                "sedan",
+                "electric_scooter"
+            ]
+        },
+        "standard": {
+            "wealth_range": [
+                5000,
+                20000
+            ],
+            "description": "Comfortable, reliable vehicles",
+            "options": [
+                "mid_sedan",
+                "crossover",
+                "electric_car"
+            ]
+        },
+        "premium": {
+            "wealth_range": [
+                20000,
+                100000
+            ],
+            "description": "Luxury, performance vehicles",
+            "options": [
+                "luxury_sedan",
+                "sports_car",
+                "premium_suv",
+                "hover_car"
+            ]
+        },
+        "elite": {
+            "wealth_range": [
+                100000,
+                null
+            ],
+            "description": "Top-tier, exclusive vehicles",
+            "options": [
+                "hypercar",
+                "armored_limousine",
+                "private_vtol",
+                "custom_hover"
+            ]
+        }
+    },
+    "vehicles": [
+        {
+            "id": "VH001",
+            "name": "Public Transit Pass",
+            "tier": "pedestrian",
+            "cost": 50,
+            "status": 0.0
+        },
+        {
+            "id": "VH002",
+            "name": "Bicycle",
+            "tier": "pedestrian",
+            "cost": 100,
+            "status": 0.1
+        },
+        {
+            "id": "VH003",
+            "name": "Used Scooter",
+            "tier": "budget",
+            "cost": 300,
+            "status": 0.2
+        },
+        {
+            "id": "VH004",
+            "name": "Old Compact",
+            "tier": "budget",
+            "cost": 800,
+            "status": 0.2
+        },
+        {
+            "id": "VH005",
+            "name": "Motorbike",
+            "tier": "budget",
+            "cost": 1500,
+            "status": 0.3
+        },
+        {
+            "id": "VH006",
+            "name": "Compact Car",
+            "tier": "economy",
+            "cost": 3000,
+            "status": 0.4
+        },
+        {
+            "id": "VH007",
+            "name": "Electric Scooter",
+            "tier": "economy",
+            "cost": 2000,
+            "status": 0.4
+        },
+        {
+            "id": "VH008",
+            "name": "Sedan",
+            "tier": "economy",
+            "cost": 5000,
+            "status": 0.5
+        },
+        {
+            "id": "VH009",
+            "name": "Mid-Size Sedan",
+            "tier": "standard",
+            "cost": 12000,
+            "status": 0.6
+        },
+        {
+            "id": "VH010",
+            "name": "Electric Car",
+            "tier": "standard",
+            "cost": 15000,
+            "status": 0.6
+        },
+        {
+            "id": "VH011",
+            "name": "Crossover SUV",
+            "tier": "standard",
+            "cost": 18000,
+            "status": 0.6
+        },
+        {
+            "id": "VH012",
+            "name": "Luxury Sedan",
+            "tier": "premium",
+            "cost": 40000,
+            "status": 0.8
+        },
+        {
+            "id": "VH013",
+            "name": "Sports Car",
+            "tier": "premium",
+            "cost": 60000,
+            "status": 0.85
+        },
+        {
+            "id": "VH014",
+            "name": "Premium SUV",
+            "tier": "premium",
+            "cost": 50000,
+            "status": 0.8
+        },
+        {
+            "id": "VH015",
+            "name": "Hover Car",
+            "tier": "premium",
+            "cost": 80000,
+            "status": 0.9
+        },
+        {
+            "id": "VH016",
+            "name": "Hypercar",
+            "tier": "elite",
+            "cost": 200000,
+            "status": 0.95
+        },
+        {
+            "id": "VH017",
+            "name": "Armored Limousine",
+            "tier": "elite",
+            "cost": 300000,
+            "status": 0.95
+        },
+        {
+            "id": "VH018",
+            "name": "Private VTOL",
+            "tier": "elite",
+            "cost": 500000,
+            "status": 1.0
+        },
+        {
+            "id": "VH019",
+            "name": "Custom Hover",
+            "tier": "elite",
+            "cost": 400000,
+            "status": 1.0
+        }
+    ],
+    "faction_vehicle_preferences": {
+        "resistance": {
+            "description": "Practical, unremarkable, escape-ready",
+            "preferred": [
+                "motorbike",
+                "old_compact",
+                "sedan"
+            ],
+            "avoid": [
+                "luxury",
+                "flashy",
+                "corporate_branded"
+            ],
+            "modifications": [
+                "tinted_windows",
+                "enhanced_engine",
+                "emp_shielding"
+            ]
+        },
+        "megacorp": {
+            "description": "Status symbols, corporate fleet",
+            "preferred": [
+                "luxury_sedan",
+                "premium_suv",
+                "hover_car",
+                "limousine"
+            ],
+            "avoid": [
+                "used",
+                "cheap",
+                "damaged"
+            ],
+            "modifications": [
+                "self_driving",
+                "armor",
+                "comm_suite"
+            ]
+        },
+        "temple": {
+            "description": "Modest, functional, eco-friendly",
+            "preferred": [
+                "electric_car",
+                "public_transit",
+                "walking"
+            ],
+            "avoid": [
+                "ostentatious",
+                "gas_guzzler"
+            ],
+            "modifications": [
+                "minimal"
+            ]
+        },
+        "undercity": {
+            "description": "Modified, street-racing, stolen",
+            "preferred": [
+                "motorbike",
+                "sports_car",
+                "hover_car"
+            ],
+            "avoid": [
+                "boring",
+                "slow"
+            ],
+            "modifications": [
+                "neon_lights",
+                "nitro",
+                "hacked_registration"
+            ]
+        },
+        "street_gangs": {
+            "description": "Gang-marked, loud, intimidating",
+            "preferred": [
+                "motorbike",
+                "muscle_car",
+                "suv"
+            ],
+            "avoid": [
+                "corporate_looking"
+            ],
+            "modifications": [
+                "gang_colors",
+                "loud_exhaust",
+                "tinted"
+            ]
+        },
+        "special_forces": {
+            "description": "Tactical, armored, fast",
+            "preferred": [
+                "armored_suv",
+                "tactical_vehicle",
+                "vtol"
+            ],
+            "avoid": [
+                "civilian",
+                "flashy"
+            ],
+            "modifications": [
+                "armor",
+                "weapons_mount",
+                "stealth"
+            ]
+        },
+        "neutral": {
+            "description": "Practical for their budget",
+            "preferred": [
+                "any_affordable"
+            ],
+            "avoid": [],
+            "modifications": [
+                "optional"
+            ]
+        }
+    },
+    "personality_vehicle_modifiers": {
+        "practical": {
+            "prioritize": "fuel_efficiency",
+            "avoid": "flashy",
+            "status_weight": -0.2
+        },
+        "vain": {
+            "prioritize": "appearance",
+            "status_weight": 0.3,
+            "stretch_budget": true
+        },
+        "adventurous": {
+            "prioritize": "speed",
+            "prefer": "sports_car",
+            "avoid": "sedan"
+        },
+        "cautious": {
+            "prioritize": "safety",
+            "prefer": "suv",
+            "avoid": "motorcycle"
+        },
+        "rebellious": {
+            "prioritize": "unusual",
+            "modification_chance": 0.8
+        }
+    },
+    "vehicle_selection_algorithm": {
+        "description": "How NPCs choose what to drive",
+        "steps": [
+            "1. Determine affordable tier from NPC wealth",
+            "2. Get faction vehicle preferences",
+            "3. Apply personality modifiers",
+            "4. Check if NPC already owns a vehicle",
+            "5. Calculate status vs practicality weight",
+            "6. Select vehicle from accessible tier (±1 tier variance)",
+            "7. Apply modifications based on faction/personality",
+            "8. Calculate maintenance costs"
+        ]
+    },
+    "driving_outfit_correlation": {
+        "description": "What NPCs wear correlates with what they drive",
+        "rules": [
+            "elite_vehicle → upper_tier_clothing",
+            "motorbike → tactical_jacket OR synth_leather",
+            "public_transit → practical_clothing",
+            "sports_car → stylish_clothing",
+            "work_vehicle → work_clothing"
+        ]
+    },
+    "vehicle_ownership_by_district": {
+        "downtown": {
+            "ownership_rate": 0.4,
+            "average_tier": "standard",
+            "public_transit_usage": 0.8
+        },
+        "residential_upper": {
+            "ownership_rate": 0.95,
+            "average_tier": "premium",
+            "public_transit_usage": 0.1
+        },
+        "residential_lower": {
+            "ownership_rate": 0.5,
+            "average_tier": "budget",
+            "public_transit_usage": 0.6
+        },
+        "industrial": {
+            "ownership_rate": 0.7,
+            "average_tier": "economy",
+            "public_transit_usage": 0.4
+        },
+        "undercity": {
+            "ownership_rate": 0.3,
+            "average_tier": "budget",
+            "public_transit_usage": 0.3
+        },
+        "temple_district": {
+            "ownership_rate": 0.2,
+            "average_tier": "economy",
+            "public_transit_usage": 0.7
+        }
+    }
+}

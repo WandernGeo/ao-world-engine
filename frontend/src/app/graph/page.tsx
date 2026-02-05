@@ -1,10 +1,21 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
 
-// Entity types like Grakn
+// Dynamically import Graph3D to avoid SSR issues with Three.js
+const Graph3D = dynamic(() => import('@/components/Graph3D'), {
+    ssr: false,
+    loading: () => (
+        <div className="flex-1 flex items-center justify-center bg-zinc-950">
+            <div className="text-cyan-400 font-mono animate-pulse">Loading 3D Graph...</div>
+        </div>
+    ),
+});
+
+// Entity types
 type EntityType = 'npc' | 'building' | 'faction' | 'lore' | 'item' | 'location' | 'event';
 
 interface Entity {
@@ -13,22 +24,16 @@ interface Entity {
     type: EntityType;
     x: number;
     y: number;
-    z: number; // 3D depth coordinate
+    z: number;
     vx: number;
     vy: number;
-    vz: number; // velocity in z
+    vz: number;
     properties?: Record<string, string>;
 }
 
 interface Relationship {
     source: string;
     target: string;
-    type: string; // e.g. "works_at", "member_of", "knows", "owns"
-}
-
-interface APIBuilding {
-    id: string;
-    name: string;
     type: string;
 }
 
@@ -44,16 +49,18 @@ interface APINPC {
         parent_ids?: string[];
         sibling_ids?: string[];
         children_ids?: string[];
-        household_id?: string;
-        marital_status?: string;
     };
-    age?: number;
+}
+
+interface APIBuilding {
+    id: string;
+    name: string;
+    type: string;
 }
 
 const CLOUD_API = 'https://ao-world-engine-api-1071951656531.us-central1.run.app';
 const LOCAL_API = 'http://localhost:8081';
 
-// Try localhost first, fall back to Cloud
 async function getApiBase(): Promise<string> {
     try {
         const res = await fetch(`${LOCAL_API}/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
@@ -62,15 +69,15 @@ async function getApiBase(): Promise<string> {
     return CLOUD_API;
 }
 
-// Entity type colors - Grakn-inspired green/purple/cyan
+// Entity type colors
 const TYPE_COLORS: Record<EntityType, string> = {
-    npc: '#10b981',       // Emerald green
-    building: '#8b5cf6',  // Purple
-    faction: '#f59e0b',   // Amber
-    lore: '#06b6d4',      // Cyan
-    item: '#ec4899',      // Pink
-    location: '#6366f1',  // Indigo
-    event: '#ef4444',     // Red
+    npc: '#10b981',
+    building: '#8b5cf6',
+    faction: '#f59e0b',
+    lore: '#06b6d4',
+    item: '#ec4899',
+    location: '#6366f1',
+    event: '#ef4444',
 };
 
 const TYPE_LABELS: Record<EntityType, string> = {
@@ -83,13 +90,12 @@ const TYPE_LABELS: Record<EntityType, string> = {
     event: 'Event',
 };
 
-// Fetch knowledge graph data from API
+// Fetch knowledge graph from API
 async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relationships: Relationship[] } | null> {
     try {
         const API_BASE = await getApiBase();
-        // Fetch NPCs (with full profiles) and buildings from API
         const [npcRes, buildingRes] = await Promise.all([
-            fetch(`${API_BASE}/api/npcs/all?limit=800`),  // All 800 NPCs with full profiles
+            fetch(`${API_BASE}/api/npcs/all?limit=800`),
             fetch(`${API_BASE}/api/buildings`),
         ]);
 
@@ -104,86 +110,97 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
         const entities: Entity[] = [];
         const relationships: Relationship[] = [];
 
-        // Extract unique factions from NPCs
+        // Get unique factions
         const factionSet = new Set<string>();
-        apiNPCs.forEach((n: APINPC) => {
-            if (n.faction) factionSet.add(n.faction);
-        });
+        apiNPCs.forEach(n => { if (n.faction) factionSet.add(n.faction); });
         const factions = Array.from(factionSet);
 
-        // Create faction entities - on outer sphere shell
+        // Create FACTION HUBS - spread far apart in a ring
+        const factionPositions = new Map<string, { x: number, y: number, z: number }>();
         factions.forEach((name, i) => {
             const theta = (i * Math.PI * 2) / factions.length;
-            const phi = Math.PI / 3; // Upper hemisphere
+            const hubRadius = 600;  // Large separation between hubs
+            const pos = {
+                x: Math.cos(theta) * hubRadius,
+                y: Math.sin(theta) * hubRadius,
+                z: ((i % 3) - 1) * 150,  // Varied Z levels
+            };
+            factionPositions.set(name, pos);
             entities.push({
                 id: `faction_${name}`,
                 name: name.charAt(0).toUpperCase() + name.slice(1),
                 type: 'faction',
-                x: 600 + Math.sin(phi) * Math.cos(theta) * 400,
-                y: 500 + Math.sin(phi) * Math.sin(theta) * 400,
-                z: Math.cos(phi) * 300,
+                x: pos.x,
+                y: pos.y,
+                z: pos.z,
                 vx: 0, vy: 0, vz: 0,
             });
         });
 
-        // Create building entities (first 15) - spread in sphere
-        apiBuildings.slice(0, 15).forEach((b: APIBuilding, i) => {
-            const theta = (i * Math.PI * 2) / 15;
-            const phi = Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+        // Create building entities - in center
+        apiBuildings.slice(0, 20).forEach((b, i) => {
+            const theta = (i * Math.PI * 2) / 20;
+            const radius = 200;
             entities.push({
                 id: b.id,
                 name: b.name,
                 type: 'building',
-                x: 600 + Math.sin(phi) * Math.cos(theta) * 350,
-                y: 500 + Math.sin(phi) * Math.sin(theta) * 350,
-                z: Math.cos(phi) * 250 + (Math.random() - 0.5) * 100,
+                x: Math.cos(theta) * radius,
+                y: Math.sin(theta) * radius,
+                z: (Math.random() - 0.5) * 100,
                 vx: 0, vy: 0, vz: 0,
                 properties: { buildingType: b.type },
             });
         });
 
-        // Create NPC entities and relationships - spread throughout sphere
-        apiNPCs.forEach((n: APINPC, i) => {
-            const theta = (i * 0.618 * Math.PI * 2) % (Math.PI * 2); // Golden angle
-            const phi = Math.acos(1 - 2 * ((i % 100) / 100)); // Uniform sphere distribution
-            const radius = 200 + Math.random() * 150;
+        // Group NPCs by faction for counting
+        const npcsByFaction = new Map<string, number>();
+        apiNPCs.forEach(n => {
+            const f = n.faction || 'unknown';
+            npcsByFaction.set(f, (npcsByFaction.get(f) || 0) + 1);
+        });
+        const factionNpcIndex = new Map<string, number>();
+
+        // Create NPC entities - ORBITING their faction hub
+        apiNPCs.forEach((n, i) => {
+            const faction = n.faction || 'unknown';
+            const factionPos = factionPositions.get(faction) || { x: 0, y: 0, z: 0 };
+
+            // Get this NPC's index within faction
+            const idx = factionNpcIndex.get(faction) || 0;
+            factionNpcIndex.set(faction, idx + 1);
+
+            // Spiral around faction hub
+            const count = npcsByFaction.get(faction) || 100;
+            const angle = (idx / count) * Math.PI * 6;  // Multiple rotations
+            const orbitRadius = 50 + (idx / count) * 150;  // Spiral outward
+
             entities.push({
                 id: n.id,
                 name: n.name,
                 type: 'npc',
-                x: 600 + Math.sin(phi) * Math.cos(theta) * radius,
-                y: 500 + Math.sin(phi) * Math.sin(theta) * radius,
-                z: Math.cos(phi) * radius * 0.8,
+                x: factionPos.x + Math.cos(angle) * orbitRadius,
+                y: factionPos.y + Math.sin(angle) * orbitRadius,
+                z: factionPos.z + (Math.random() - 0.5) * 100,
                 vx: 0, vy: 0, vz: 0,
                 properties: { archetype: n.archetype, faction: n.faction },
             });
 
-            // Relationship to faction
+            // Faction relationship
             if (n.faction) {
                 relationships.push({ source: n.id, target: `faction_${n.faction}`, type: 'member_of' });
             }
 
-            // Relationship to workplace/home building
-            if (n.workplace && apiBuildings.find(b => b.id === n.workplace)) {
-                relationships.push({ source: n.id, target: n.workplace, type: 'works_at' });
-            }
-            if (n.home && apiBuildings.find(b => b.id === n.home)) {
-                relationships.push({ source: n.id, target: n.home, type: 'lives_at' });
-            }
-
             // Family relationships
             if (n.family) {
-                // Spouse relationship
-                if (n.family.spouse_id && n.id < n.family.spouse_id) {  // Avoid duplicates
+                if (n.family.spouse_id && n.id < n.family.spouse_id) {
                     relationships.push({ source: n.id, target: n.family.spouse_id, type: 'spouse' });
                 }
-                // Parent-child relationships
                 if (n.family.children_ids) {
                     n.family.children_ids.forEach(childId => {
                         relationships.push({ source: n.id, target: childId, type: 'parent_of' });
                     });
                 }
-                // Sibling relationships (only add if this NPC's ID is less to avoid duplicates)
                 if (n.family.sibling_ids) {
                     n.family.sibling_ids.forEach(sibId => {
                         if (n.id < sibId) {
@@ -194,20 +211,19 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
             }
         });
 
-        console.log(`Knowledge graph loaded from API: ${entities.length} entities, ${relationships.length} relationships`);
+        console.log(`Loaded: ${entities.length} entities, ${relationships.length} relationships`);
         return { entities, relationships };
     } catch (error) {
-        console.log('Failed to fetch knowledge graph from API:', error);
+        console.error('Failed to fetch knowledge graph:', error);
         return null;
     }
 }
 
-// Generate knowledge graph data (fallback)
-function generateKnowledgeGraph(): { entities: Entity[], relationships: Relationship[] } {
+// Fallback data generator
+function generateFallbackGraph(): { entities: Entity[], relationships: Relationship[] } {
     const entities: Entity[] = [];
     const relationships: Relationship[] = [];
 
-    // Factions
     const factions = ['Resistance', 'Temple Authority', 'Civilian', 'Criminal Syndicate', 'Tech Guild'];
     factions.forEach((name, i) => {
         const theta = (i * Math.PI * 2) / factions.length;
@@ -215,214 +231,54 @@ function generateKnowledgeGraph(): { entities: Entity[], relationships: Relation
             id: `faction_${i}`,
             name,
             type: 'faction',
-            x: 600 + Math.cos(theta) * 400,
-            y: 500 + Math.sin(theta) * 400,
-            z: (Math.random() - 0.5) * 300,
-            vx: 0, vy: 0, vz: 0,
-        });
-    });
-
-    // Locations/Districts
-    const locations = ['Undercity', 'Market District', 'Temple District', 'Industrial Zone', 'Hab Blocks', 'Shadow Grid'];
-    locations.forEach((name, i) => {
-        const theta = ((i + 0.5) * Math.PI * 2) / locations.length;
-        entities.push({
-            id: `location_${i}`,
-            name,
-            type: 'location',
-            x: 600 + Math.cos(theta) * 280,
-            y: 500 + Math.sin(theta) * 280,
+            x: Math.cos(theta) * 300,
+            y: Math.sin(theta) * 300,
             z: (Math.random() - 0.5) * 200,
             vx: 0, vy: 0, vz: 0,
         });
     });
 
-    // Buildings
-    const buildings = [
-        { name: "Felix's Bar", loc: 0 },
-        { name: 'Central Market', loc: 1 },
-        { name: 'Citizen Processing', loc: 2 },
-        { name: 'AutoFab Factory', loc: 3 },
-        { name: 'Block A-7', loc: 4 },
-        { name: 'Tech Shop', loc: 1 },
-        { name: 'Archive Tower', loc: 2 },
-        { name: 'Neon Motel', loc: 0 },
-        { name: 'Clinic', loc: 4 },
-        { name: 'Resistance Hideout', loc: 5 },
-    ];
-    buildings.forEach((b, i) => {
-        const id = `building_${i}`;
-        const theta = (i * Math.PI * 2) / buildings.length;
-        entities.push({
-            id,
-            name: b.name,
-            type: 'building',
-            x: 600 + Math.cos(theta) * (200 + Math.random() * 150),
-            y: 500 + Math.sin(theta) * (200 + Math.random() * 150),
-            z: (Math.random() - 0.5) * 250,
-            vx: 0, vy: 0, vz: 0,
-        });
-        // Building is in location
-        relationships.push({ source: id, target: `location_${b.loc}`, type: 'located_in' });
-    });
-
-    // Lore entries
-    const loreItems = [
-        { name: 'The Collapse', related: ['faction_1'] },
-        { name: 'Echo Layers', related: ['location_5'] },
-        { name: 'The Watchers', related: ['faction_1'] },
-        { name: 'Founding Charter', related: ['faction_0'] },
-        { name: 'Signal Noir Protocol', related: ['faction_4'] },
-    ];
-    loreItems.forEach((l, i) => {
-        const id = `lore_${i}`;
-        entities.push({
-            id,
-            name: l.name,
-            type: 'lore',
-            x: 600 + (Math.random() - 0.5) * 500,
-            y: 500 + (Math.random() - 0.5) * 400,
-            z: (Math.random() - 0.5) * 300,
-            vx: 0, vy: 0, vz: 0,
-        });
-        l.related.forEach(r => {
-            relationships.push({ source: id, target: r, type: 'references' });
-        });
-    });
-
-    // NPCs - generate a good set connected to buildings and factions
-    const npcNames = [
-        { name: 'Zero Chen', faction: 0, building: 9, archetype: 'Leader' },
-        { name: 'Charlie Reyes', faction: 0, building: 0, archetype: 'Fighter' },
-        { name: 'Kira Ōmura', faction: 2, building: 1, archetype: 'Oracle' },
-        { name: 'Felix Tanaka', faction: 2, building: 0, archetype: 'Broker' },
-        { name: 'Nova Chen', faction: 2, building: 5, archetype: 'Mercenary' },
-        { name: 'Inquisitor Vex', faction: 1, building: 2, archetype: 'Authority' },
-        { name: 'The Archivist', faction: 1, building: 6, archetype: 'Scholar' },
-        { name: 'Doc Mercy', faction: 2, building: 8, archetype: 'Healer' },
-        { name: 'Ghost Sato', faction: 3, building: 7, archetype: 'Criminal' },
-        { name: 'Pixel', faction: 4, building: 5, archetype: 'Hacker' },
-        { name: 'Cipher', faction: 4, building: 9, archetype: 'AI Entity' },
-        { name: 'Aiche', faction: 2, building: 1, archetype: 'AI Consciousness' },
+    // Sample NPCs
+    const npcs = [
+        { name: 'Zero Chen', faction: 0, archetype: 'Leader' },
+        { name: 'Charlie Reyes', faction: 0, archetype: 'Fighter' },
+        { name: 'Kira Ōmura', faction: 2, archetype: 'Oracle' },
+        { name: 'Felix Tanaka', faction: 2, archetype: 'Broker' },
+        { name: 'Pixel', faction: 4, archetype: 'Hacker' },
     ];
 
-    npcNames.forEach((n, i) => {
-        const id = `npc_${i}`;
-        const theta = (i * 0.618 * Math.PI * 2) % (Math.PI * 2); // Golden angle
+    npcs.forEach((n, i) => {
+        const theta = (i * 0.618 * Math.PI * 2) % (Math.PI * 2);
         entities.push({
-            id,
+            id: `npc_${i}`,
             name: n.name,
             type: 'npc',
-            x: 600 + Math.cos(theta) * (150 + Math.random() * 200),
-            y: 500 + Math.sin(theta) * (150 + Math.random() * 200),
-            z: (Math.random() - 0.5) * 350,
+            x: Math.cos(theta) * 150,
+            y: Math.sin(theta) * 150,
+            z: (Math.random() - 0.5) * 200,
             vx: 0, vy: 0, vz: 0,
             properties: { archetype: n.archetype },
         });
-        // Member of faction
-        relationships.push({ source: id, target: `faction_${n.faction}`, type: 'member_of' });
-        // Works at or frequents building
-        relationships.push({ source: id, target: `building_${n.building}`, type: 'frequents' });
+        relationships.push({ source: `npc_${i}`, target: `faction_${n.faction}`, type: 'member_of' });
     });
-
-    // Add some NPC-to-NPC relationships
-    relationships.push({ source: 'npc_0', target: 'npc_1', type: 'mentor' });
-    relationships.push({ source: 'npc_0', target: 'npc_4', type: 'sibling' });
-    relationships.push({ source: 'npc_1', target: 'npc_3', type: 'knows' });
-    relationships.push({ source: 'npc_2', target: 'npc_11', type: 'consults' });
-    relationships.push({ source: 'npc_5', target: 'npc_6', type: 'commands' });
-    relationships.push({ source: 'npc_9', target: 'npc_10', type: 'collaborates' });
 
     return { entities, relationships };
 }
 
 export default function KnowledgeGraphPage() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
     const [data, setData] = useState<{ entities: Entity[], relationships: Relationship[] }>({ entities: [], relationships: [] });
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
-    const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(1.5); // Start with moderate zoom
-    const [pan, setPan] = useState({ x: 0, y: 0 }); // Will be set after data loads
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const [isSimulating, setIsSimulating] = useState(false); // Start paused - no drift
+    const [showFamilyOnly, setShowFamilyOnly] = useState(false);
+    const [isSimulating, setIsSimulating] = useState(false);
+    const [controlMode, setControlMode] = useState<'orbit' | 'fly'>('fly');
     const [stats, setStats] = useState({ entities: 0, relationships: 0, npcs: 0 });
-    const [draggedNode, setDraggedNode] = useState<string | null>(null); // NEW: track dragged node
-    const [autoRotate, setAutoRotate] = useState(false); // Auto-rotation toggle
-    const [showFamilyOnly, setShowFamilyOnly] = useState(false); // Show only family relationships
 
-    // 3D rotation state
-    const [rotationX, setRotationX] = useState(0); // Rotation around X axis (tilt up/down)
-    const [rotationY, setRotationY] = useState(0); // Rotation around Y axis (spin left/right)
-    const [isRotating, setIsRotating] = useState(false); // Right-click drag to rotate
-    const [rotateStart, setRotateStart] = useState({ x: 0, y: 0 });
-    // Removed bouncy drag state - no more throw effect
-
-    // Dynamic canvas dimensions - match container for pixel-perfect clicks
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [canvasSize, setCanvasSize] = useState({ width: 1200, height: 800 });
-    const width = canvasSize.width;
-    const height = canvasSize.height;
-
-    // ResizeObserver to keep canvas matching container
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const observer = new ResizeObserver(entries => {
-            for (const entry of entries) {
-                const { width, height } = entry.contentRect;
-                setCanvasSize({ width: Math.floor(width), height: Math.floor(height) });
-            }
-        });
-        observer.observe(container);
-        return () => observer.disconnect();
-    }, []);
-
-    // 3D projection helper - project 3D point to 2D
-    const project3D = (x: number, y: number, z: number = 0) => {
-        const centerX = width / 2;
-        const centerY = height / 2;
-
-        // Translate to center
-        let px = x - centerX;
-        let py = y - centerY;
-        let pz = z;
-
-        // Rotate around Y axis
-        const cosY = Math.cos(rotationY);
-        const sinY = Math.sin(rotationY);
-        const rx = px * cosY - pz * sinY;
-        const rz = px * sinY + pz * cosY;
-        px = rx;
-        pz = rz;
-
-        // Rotate around X axis
-        const cosX = Math.cos(rotationX);
-        const sinX = Math.sin(rotationX);
-        const ry = py * cosX - pz * sinX;
-        pz = py * sinX + pz * cosX;
-        py = ry;
-
-        // Perspective projection with depth fade
-        const perspective = 1200; // Deeper perspective
-        const scale = Math.max(0.2, perspective / (perspective + pz));
-
-        return {
-            x: centerX + px * scale,
-            y: centerY + py * scale,
-            scale: scale,
-            depth: pz // Keep track of depth for rendering order
-        };
-    };
-
-    // Initialize data - try API first, fallback to generated
+    // Load data
     useEffect(() => {
         const loadData = async () => {
-            // Try to fetch from API first
             const apiData = await fetchKnowledgeGraphFromAPI();
-            const d = apiData || generateKnowledgeGraph();
+            const d = apiData || generateFallbackGraph();
             setData(d);
             setStats({
                 entities: d.entities.length,
@@ -433,401 +289,18 @@ export default function KnowledgeGraphPage() {
         loadData();
     }, []);
 
-    // Auto-center graph when data loads
-    useEffect(() => {
-        if (data.entities.length === 0) return;
+    const handleSelectEntity = useCallback((entity: Entity | null) => {
+        setSelectedEntity(entity);
+    }, []);
 
-        // Calculate entity bounds
-        const xs = data.entities.map(e => e.x);
-        const ys = data.entities.map(e => e.y);
-        const minX = Math.min(...xs);
-        const maxX = Math.max(...xs);
-        const minY = Math.min(...ys);
-        const maxY = Math.max(...ys);
-
-        // Calculate center of entities
-        const centerX = (minX + maxX) / 2;
-        const centerY = (minY + maxY) / 2;
-
-        // Center view on the graph
-        const viewCenterX = width / 2;
-        const viewCenterY = height / 2;
-        setPan({
-            x: viewCenterX - centerX * zoom,
-            y: viewCenterY - centerY * zoom
-        });
-    }, [data.entities.length > 0 ? 1 : 0]); // Only run once when data loads
-
-    // Function to center graph (for Reset button)
-    const centerGraph = () => {
-        if (data.entities.length === 0) return;
-        const xs = data.entities.map(e => e.x);
-        const ys = data.entities.map(e => e.y);
-        const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
-        const centerY = (Math.min(...ys) + Math.max(...ys)) / 2;
-        setPan({
-            x: width / 2 - centerX * zoom,
-            y: height / 2 - centerY * zoom
-        });
-        setRotationX(0);
-        setRotationY(0);
-    };
-
-    // Force-directed simulation
-    useEffect(() => {
-        if (!isSimulating || data.entities.length === 0) return;
-
-        const interval = setInterval(() => {
-            setData(prev => {
-                const entities = [...prev.entities];
-                const relationships = prev.relationships;
-
-                // Apply forces - bouncy spring physics in 3D!
-                entities.forEach((e, i) => {
-                    // Initialize z if undefined
-                    if (e.z === undefined) e.z = (Math.random() - 0.5) * 600;
-                    if (e.vz === undefined) e.vz = 0;
-
-                    // Strong repulsion from other entities (3D)
-                    entities.forEach((other, j) => {
-                        if (i === j) return;
-                        const dx = e.x - other.x;
-                        const dy = e.y - other.y;
-                        const dz = (e.z || 0) - (other.z || 0);
-                        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-                        const force = 2000 / (dist * dist); // Stronger repulsion
-                        e.vx += (dx / dist) * force * 0.15;
-                        e.vy += (dy / dist) * force * 0.15;
-                        e.vz += (dz / dist) * force * 0.15;
-                    });
-
-                    // Bouncy spring attraction along relationships
-                    relationships.forEach(r => {
-                        if (r.source === e.id || r.target === e.id) {
-                            const other = entities.find(x => x.id === (r.source === e.id ? r.target : r.source));
-                            if (other) {
-                                const dx = other.x - e.x;
-                                const dy = other.y - e.y;
-                                const dz = (other.z || 0) - (e.z || 0);
-                                const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-                                const idealDist = 180; // Ideal spring length
-                                const springForce = (dist - idealDist) * 0.008; // Bouncy spring
-                                e.vx += (dx / dist) * springForce;
-                                e.vy += (dy / dist) * springForce;
-                                e.vz += (dz / dist) * springForce;
-                            }
-                        }
-                    });
-
-                    // Gentle center gravity (keeps sphere centered)
-                    e.vx += (width / 2 - e.x) * 0.0003;
-                    e.vy += (height / 2 - e.y) * 0.0003;
-                    e.vz += (0 - (e.z || 0)) * 0.0001; // Gentle z centering
-
-                    // High damping (more friction = less bounce)
-                    e.vx *= 0.75;
-                    e.vy *= 0.75;
-                    e.vz *= 0.75;
-
-                    // Update position
-                    e.x += e.vx;
-                    e.y += e.vy;
-                    e.z = (e.z || 0) + e.vz;
-
-                    // Soft bounds (bounce at edges)
-                    if (e.x < 100) { e.x = 100; e.vx *= -0.5; }
-                    if (e.x > width - 100) { e.x = width - 100; e.vx *= -0.5; }
-                    if (e.y < 100) { e.y = 100; e.vy *= -0.5; }
-                    if (e.y > height - 100) { e.y = height - 100; e.vy *= -0.5; }
-                    if (e.z < -400) { e.z = -400; e.vz *= -0.5; }
-                    if (e.z > 400) { e.z = 400; e.vz *= -0.5; }
-                });
-
-                return { entities, relationships };
-            });
-        }, 30);
-
-        return () => clearInterval(interval);
-    }, [isSimulating, data.entities.length]);
-
-    // Auto-rotation effect
-    useEffect(() => {
-        if (!autoRotate) return;
-
-        const interval = setInterval(() => {
-            setRotationY(prev => prev + 0.01); // Slow continuous rotation
-        }, 30);
-
-        return () => clearInterval(interval);
-    }, [autoRotate]);
-
-    // Drawing
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        // Clear
-        ctx.fillStyle = '#0a0a0f';
-        ctx.fillRect(0, 0, width, height);
-
-        ctx.save();
-        ctx.translate(pan.x, pan.y);
-        ctx.scale(zoom, zoom);
-
-        const entities = filter === 'all' ? data.entities : data.entities.filter(e => e.type === filter);
-        const entityIds = new Set(entities.map(e => e.id));
-
-        // Draw relationships first
-        const familyTypes = ['spouse', 'parent_of', 'sibling'];
-        data.relationships.forEach(r => {
-            // Filter by showFamilyOnly
-            if (showFamilyOnly && !familyTypes.includes(r.type)) return;
-
-            if (!entityIds.has(r.source) && filter !== 'all') return;
-            if (!entityIds.has(r.target) && filter !== 'all') return;
-
-            const source = data.entities.find(e => e.id === r.source);
-            const target = data.entities.find(e => e.id === r.target);
-            if (!source || !target) return;
-
-            const isHighlighted = selectedEntity && (r.source === selectedEntity.id || r.target === selectedEntity.id);
-            const isFamily = familyTypes.includes(r.type);
-
-            // Color by relationship type
-            let edgeColor = 'rgba(34, 211, 238, 0.15)'; // Default cyan
-            if (r.type === 'spouse') edgeColor = isHighlighted ? '#ec4899' : 'rgba(236, 72, 153, 0.4)'; // Pink
-            else if (r.type === 'parent_of') edgeColor = isHighlighted ? '#22d3ee' : 'rgba(34, 211, 238, 0.4)'; // Cyan
-            else if (r.type === 'sibling') edgeColor = isHighlighted ? '#f59e0b' : 'rgba(245, 158, 11, 0.4)'; // Amber
-            else if (isHighlighted) edgeColor = '#22d3ee';
-
-            // Apply 3D projection
-            const srcProj = project3D(source.x, source.y);
-            const tgtProj = project3D(target.x, target.y);
-
-            ctx.beginPath();
-            ctx.moveTo(srcProj.x, srcProj.y);
-            ctx.lineTo(tgtProj.x, tgtProj.y);
-            ctx.strokeStyle = edgeColor;
-            ctx.lineWidth = isHighlighted ? 2 : (isFamily ? 1 : 0.5);
-            ctx.stroke();
-
-            // Draw relationship label at midpoint if highlighted
-            if (isHighlighted) {
-                const mx = (srcProj.x + tgtProj.x) / 2;
-                const my = (srcProj.y + tgtProj.y) / 2;
-                ctx.font = '9px monospace';
-                ctx.fillStyle = '#67e8f9';
-                ctx.textAlign = 'center';
-                ctx.fillText(r.type, mx, my - 3);
-            }
-        });
-
-        // Draw entities
-        entities.forEach(entity => {
-            const isSelected = selectedEntity?.id === entity.id;
-            const isHovered = hoveredEntity?.id === entity.id;
-            const isConnected = selectedEntity && data.relationships.some(r =>
-                (r.source === selectedEntity.id && r.target === entity.id) ||
-                (r.target === selectedEntity.id && r.source === entity.id)
-            );
-
-            const color = TYPE_COLORS[entity.type];
-            const baseSize = isSelected ? 6 : isHovered ? 5 : 4;
-
-            // Apply 3D projection
-            const proj = project3D(entity.x, entity.y);
-            const size = Math.max(1, Math.abs(baseSize * proj.scale)); // Ensure positive radius
-
-            // Glow for selected/connected
-            if (isSelected || isConnected) {
-                ctx.beginPath();
-                ctx.arc(proj.x, proj.y, size + 4, 0, Math.PI * 2);
-                ctx.fillStyle = isSelected ? 'rgba(34, 211, 238, 0.3)' : 'rgba(34, 211, 238, 0.15)';
-                ctx.fill();
-            }
-
-            // Node
-            ctx.beginPath();
-            ctx.arc(proj.x, proj.y, size, 0, Math.PI * 2);
-            ctx.fillStyle = color;
-            ctx.fill();
-
-            // Label (only if large enough to see)
-            if (proj.scale > 0.5) {
-                ctx.font = `${Math.round(10 * proj.scale)}px monospace`;
-                ctx.fillStyle = isSelected ? '#fff' : isConnected ? '#a5f3fc' : '#94a3b8';
-                ctx.textAlign = 'center';
-                ctx.fillText(entity.name, proj.x, proj.y + size + 12);
-            }
-        });
-
-        ctx.restore();
-    }, [data, selectedEntity, hoveredEntity, filter, zoom, pan, showFamilyOnly, rotationX, rotationY]);
-
-    // Mouse handlers - support node dragging and panning
-    const handleMouseDown = (e: React.MouseEvent) => {
-        const rect = canvasRef.current?.getBoundingClientRect();
-        if (!rect) return;
-
-        // Right-click = start panning
-        if (e.button === 2) {
-            e.preventDefault();
-            setIsDragging(true);
-            setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-            return;
+    const handleDoubleClickEntity = useCallback((entity: Entity) => {
+        if (entity.type === 'npc') {
+            window.location.href = `/npcs?npc=${encodeURIComponent(entity.name)}`;
+        } else if (entity.type === 'building') {
+            window.location.href = `/explore?building=${encodeURIComponent(entity.id)}`;
         }
+    }, []);
 
-        // Mouse position (canvas dimensions now match container, no CSS scaling)
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        // Check if clicking on a node
-        const sortedEntities = [...data.entities]
-            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
-            .sort((a, b) => a.proj.depth - b.proj.depth);
-
-        for (const { entity, proj } of sortedEntities) {
-            // Node position after zoom/pan
-            const nodeX = proj.x * zoom + pan.x;
-            const nodeY = proj.y * zoom + pan.y;
-
-            const dist = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
-            const hitRadius = Math.max(20, 30 * proj.scale * zoom);
-
-            if (dist < hitRadius) {
-                setDraggedNode(entity.id);
-                setSelectedEntity(entity);
-                setIsSimulating(false);
-                return;
-            }
-        }
-
-        // Left-click on empty space - deselect
-        setSelectedEntity(null);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const rect = canvasRef.current?.getBoundingClientRect();
-        if (!rect) return;
-
-        // Mouse position (no CSS scaling - canvas matches container)
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        // World coords for node dragging
-        const worldX = (mouseX - pan.x) / zoom;
-        const worldY = (mouseY - pan.y) / zoom;
-
-        // If dragging a node
-        if (draggedNode) {
-            setData(prev => ({
-                ...prev,
-                entities: prev.entities.map(ent =>
-                    ent.id === draggedNode
-                        ? { ...ent, x: worldX, y: worldY, vx: 0, vy: 0 }
-                        : ent
-                )
-            }));
-            return;
-        }
-
-        // If panning the view
-        if (isDragging) {
-            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
-            return;
-        }
-
-        // Hover detection
-        const sortedForHover = [...data.entities]
-            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
-            .sort((a, b) => a.proj.depth - b.proj.depth);
-
-        for (const { entity, proj } of sortedForHover) {
-            const nodeX = proj.x * zoom + pan.x;
-            const nodeY = proj.y * zoom + pan.y;
-            const dist = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
-            const hitRadius = Math.max(20, 30 * proj.scale * zoom);
-
-            if (dist < hitRadius) {
-                setHoveredEntity(entity);
-                if (canvasRef.current) canvasRef.current.style.cursor = 'pointer';
-                return;
-            }
-        }
-        setHoveredEntity(null);
-        if (canvasRef.current) canvasRef.current.style.cursor = 'grab';
-    };
-
-    const handleMouseUp = () => {
-        // Keep simulation PAUSED when releasing - no more auto-resume that causes jitter
-        // User can click PLAY if they want physics
-        if (draggedNode) {
-            // Node stays where you dropped it - sticky!
-        }
-        setIsDragging(false);
-        setDraggedNode(null);
-        setIsRotating(false);
-    };
-
-    const handleContextMenu = (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevent context menu on right-click
-    };
-
-    // Double-click to navigate to NPC/building page
-    const handleDoubleClick = (e: React.MouseEvent) => {
-        const rect = canvasRef.current?.getBoundingClientRect();
-        if (!rect) return;
-
-        const screenX = e.clientX - rect.left;
-        const screenY = e.clientY - rect.top;
-        const worldMouseX = (screenX - pan.x) / zoom;
-        const worldMouseY = (screenY - pan.y) / zoom;
-
-        // Find clicked entity using depth-sorted projection
-        const sortedEntities = [...data.entities]
-            .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
-            .sort((a, b) => a.proj.depth - b.proj.depth);
-
-        for (const { entity, proj } of sortedEntities) {
-            const dist = Math.sqrt((proj.x - worldMouseX) ** 2 + (proj.y - worldMouseY) ** 2);
-            const hitRadius = Math.max(25, 40 * proj.scale);
-            if (dist < hitRadius) {
-                // Navigate based on entity type
-                if (entity.type === 'npc') {
-                    window.location.href = `/npcs?npc=${encodeURIComponent(entity.name)}`;
-                } else if (entity.type === 'building') {
-                    window.location.href = `/explore?building=${encodeURIComponent(entity.id)}`;
-                }
-                return;
-            }
-        }
-    };
-
-    const handleWheel = (e: React.WheelEvent) => {
-        e.preventDefault();
-        const rect = canvasRef.current?.getBoundingClientRect();
-        if (!rect) return;
-
-        // Mouse position (no CSS scaling - canvas matches container)
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        // Calculate new zoom
-        const delta = e.deltaY * -0.003;
-        const newZoom = Math.max(0.3, Math.min(4, zoom + delta));
-        const zoomRatio = newZoom / zoom;
-
-        // Adjust pan so zoom centers on mouse position
-        const newPanX = mouseX - (mouseX - pan.x) * zoomRatio;
-        const newPanY = mouseY - (mouseY - pan.y) * zoomRatio;
-
-        setZoom(newZoom);
-        setPan({ x: newPanX, y: newPanY });
-    };
-
-    // Get relationships for selected entity
     const getRelationships = () => {
         if (!selectedEntity) return [];
         return data.relationships
@@ -856,27 +329,28 @@ export default function KnowledgeGraphPage() {
                     <Link href="/chat" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Chat
                     </Link>
-                    <Link href="/graph" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
+                    <Link href="/graph" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors bg-cyan-600/30">
                         Graph
                     </Link>
                 </nav>
+                <div className="ml-auto text-xs text-cyan-400 font-mono">
+                    WebGL 3D • Click nodes to select • Drag to rotate
+                </div>
             </header>
 
             <div className="pt-14 flex h-screen">
-                {/* Canvas */}
-                <div ref={containerRef} className={`flex-1 relative ${hoveredEntity ? 'cursor-pointer' : 'cursor-grab'} active:cursor-grabbing overflow-hidden`}>
-                    <canvas
-                        ref={canvasRef}
-                        width={width}
-                        height={height}
-                        style={{ width: '100%', height: '100%' }}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onMouseLeave={handleMouseUp}
-                        onWheel={handleWheel}
-                        onContextMenu={handleContextMenu}
-                        onDoubleClick={handleDoubleClick}
+                {/* 3D Canvas */}
+                <div className="flex-1 relative">
+                    <Graph3D
+                        entities={data.entities}
+                        relationships={data.relationships}
+                        selectedEntity={selectedEntity}
+                        onSelectEntity={handleSelectEntity}
+                        onDoubleClickEntity={handleDoubleClickEntity}
+                        filter={filter}
+                        showFamilyOnly={showFamilyOnly}
+                        isSimulating={isSimulating}
+                        controlMode={controlMode}
                     />
 
                     {/* Filter buttons */}
@@ -906,17 +380,17 @@ export default function KnowledgeGraphPage() {
                         ))}
                     </div>
 
-                    {/* Controls - prominent play button */}
-                    <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap items-center bg-zinc-900/80 p-2 rounded-lg border border-zinc-700 backdrop-blur-sm">
+                    {/* Controls */}
+                    <div className="absolute bottom-4 left-4 flex gap-2 items-center bg-zinc-900/80 p-2 rounded-lg border border-zinc-700 backdrop-blur-sm">
                         <Button
                             size="lg"
                             variant={isSimulating ? 'default' : 'outline'}
                             onClick={() => setIsSimulating(!isSimulating)}
-                            className={`px-6 font-bold transition-all ${isSimulating
-                                ? 'bg-gradient-to-r from-cyan-500 to-purple-500 shadow-lg shadow-cyan-500/50 animate-pulse'
+                            className={`px-6 font-bold ${isSimulating
+                                ? 'bg-gradient-to-r from-cyan-500 to-purple-500 shadow-lg shadow-cyan-500/50'
                                 : 'border-cyan-500 text-cyan-400 hover:bg-cyan-500/20'}`}
                         >
-                            {isSimulating ? '⏸ PAUSE' : '▶ PLAY'}
+                            {isSimulating ? '⏸ PAUSE' : '▶ PHYSICS'}
                         </Button>
                         <Button
                             size="sm"
@@ -924,25 +398,23 @@ export default function KnowledgeGraphPage() {
                             onClick={() => setShowFamilyOnly(!showFamilyOnly)}
                             className={showFamilyOnly ? 'bg-pink-600' : ''}
                         >
-                            {showFamilyOnly ? '👨‍👩‍👧 Family Only' : '👨‍👩‍👧 Show Family'}
+                            👨‍👩‍👧 Family
                         </Button>
-                        <div className="flex gap-1">
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(30, z + 0.5))}>+</Button>
-                            <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.5))}>−</Button>
-                        </div>
-                        <Button size="sm" variant="outline" onClick={centerGraph}>Reset</Button>
                         <Button
                             size="sm"
-                            variant={autoRotate ? 'default' : 'outline'}
-                            onClick={() => setAutoRotate(!autoRotate)}
-                            className={autoRotate ? 'bg-purple-600 shadow-lg shadow-purple-500/30' : ''}
+                            variant={controlMode === 'fly' ? 'default' : 'outline'}
+                            onClick={() => setControlMode(m => m === 'fly' ? 'orbit' : 'fly')}
+                            className={controlMode === 'fly' ? 'bg-violet-600' : ''}
+                            title="Fly: WASD/Arrows to move, mouse to look | Orbit: drag to rotate"
                         >
-                            {autoRotate ? '🔄 Spinning' : '🔄 Auto Spin'}
+                            {controlMode === 'fly' ? '🚀 FLY' : '🔄 ORBIT'}
                         </Button>
                     </div>
 
                     <div className="absolute bottom-4 right-80 text-xs text-zinc-500">
-                        Drag nodes · Scroll=zoom · Right-drag=3D rotate · Click to inspect
+                        {controlMode === 'fly'
+                            ? 'WASD/Arrows: move • Mouse: look • Scroll: zoom • Click: select'
+                            : 'Drag: rotate • Scroll: zoom • Click: select • Double-click: fly to'}
                     </div>
                 </div>
 
@@ -1001,19 +473,10 @@ export default function KnowledgeGraphPage() {
                                         ))}
                                     </div>
                                 )}
-                                {/* View Full Profile Button */}
                                 <Button
                                     size="sm"
                                     className="w-full mt-3 bg-cyan-600 hover:bg-cyan-500 text-white"
-                                    onClick={() => {
-                                        if (selectedEntity.type === 'npc') {
-                                            window.location.href = `/npcs?npc=${encodeURIComponent(selectedEntity.name)}`;
-                                        } else if (selectedEntity.type === 'building') {
-                                            window.location.href = `/explore?building=${encodeURIComponent(selectedEntity.id)}`;
-                                        } else {
-                                            window.location.href = `/explore`;
-                                        }
-                                    }}
+                                    onClick={() => handleDoubleClickEntity(selectedEntity)}
                                 >
                                     {selectedEntity.type === 'npc' ? '👤 View NPC Profile' :
                                         selectedEntity.type === 'building' ? '🏢 View Building' : '🔍 Explore'}

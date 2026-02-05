@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { getWorldState, getEconomyState, isAOLive } from '@/lib/ao-client';
 
 // ============================================================================
 // TYPES
@@ -425,7 +426,7 @@ export default function MonitorPage() {
     // TIME MACHINE CONTROLS
     // ============================================================================
 
-    // Initialize history
+    // Initialize history (demo mode)
     useEffect(() => {
         if (demoMode && history.length === 0) {
             const initialHistory: WorldSnapshot[] = [];
@@ -437,6 +438,79 @@ export default function MonitorPage() {
             setConnected(true);
         }
     }, [demoMode, history.length, generateSnapshot]);
+
+    // Live AO mode - fetch real state
+    useEffect(() => {
+        if (demoMode) return;
+
+        let isMounted = true;
+
+        async function fetchAOState() {
+            try {
+                const [state, economy, live] = await Promise.all([
+                    getWorldState(),
+                    getEconomyState(),
+                    isAOLive()
+                ]);
+
+                if (!isMounted) return;
+
+                setConnected(live);
+
+                // Create snapshot from AO data
+                const aoSnapshot: WorldSnapshot = {
+                    tick: state.tick,
+                    day: state.day,
+                    year: state.year,
+                    time_period: state.time?.period || 'T01',
+                    population: state.population,
+                    active_npcs: Math.floor(state.population * 0.8),
+                    budget: state.budget,
+                    economy: {
+                        gdp: economy.budget * 0.9,
+                        inflation: 0.025,
+                        unemployment_rate: 0.14,
+                        gini_coefficient: 0.73,
+                        black_market_share: 0.22,
+                        crisis_level: state.budget > 800000 ? 'healthy' : 'strained',
+                        service_levels: { law_enforcement: 0.85, infrastructure: 0.88, healthcare: 0.80, sanitation: 0.75 },
+                    },
+                    npcs: Object.entries(NPCS).map(([id, info]) => ({
+                        id,
+                        name: info.name,
+                        location: 'L001',
+                        state: 'working',
+                        mood: 0.7,
+                        energy: 0.8,
+                        wealth: 200,
+                    })),
+                    logs: [{
+                        tick: state.tick,
+                        type: 'world_event',
+                        timestamp: state.tick,
+                        data: { event_type: 'ao_sync', scope: 'city', severity: 'minor' }
+                    }],
+                };
+
+                setHistory(prev => {
+                    const updated = [...prev.slice(-199), aoSnapshot];
+                    return updated;
+                });
+                setCurrentIndex(prev => prev + 1);
+
+            } catch (error) {
+                console.error('Failed to fetch AO state:', error);
+            }
+        }
+
+        fetchAOState();
+        const interval = setInterval(fetchAOState, 30000); // Poll every 30s
+
+        return () => {
+            isMounted = false;
+            clearInterval(interval);
+        };
+    }, [demoMode]);
 
     // Playback loop
     useEffect(() => {

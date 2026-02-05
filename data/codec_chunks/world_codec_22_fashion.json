@@ -1,0 +1,634 @@
+{
+    "version": "1.0",
+    "description": "Fashion and Clothing System - NPC appearance choices based on wealth, faction, culture, and personality",
+    "last_updated": "2026-02-05",
+    "economic_tiers": {
+        "destitute": {
+            "wealth_range": [
+                0,
+                100
+            ],
+            "description": "Street dwellers, homeless",
+            "quality": "worn",
+            "brand_access": [
+                "salvage",
+                "charity"
+            ]
+        },
+        "poor": {
+            "wealth_range": [
+                100,
+                500
+            ],
+            "description": "Day laborers, unemployed",
+            "quality": "basic",
+            "brand_access": [
+                "generic",
+                "secondhand"
+            ]
+        },
+        "working": {
+            "wealth_range": [
+                500,
+                2000
+            ],
+            "description": "Factory workers, service workers",
+            "quality": "standard",
+            "brand_access": [
+                "generic",
+                "budget",
+                "workwear"
+            ]
+        },
+        "middle": {
+            "wealth_range": [
+                2000,
+                10000
+            ],
+            "description": "Office workers, skilled labor",
+            "quality": "good",
+            "brand_access": [
+                "mainstream",
+                "fashion",
+                "professional"
+            ]
+        },
+        "upper": {
+            "wealth_range": [
+                10000,
+                50000
+            ],
+            "description": "Managers, professionals",
+            "quality": "premium",
+            "brand_access": [
+                "designer",
+                "luxury",
+                "custom"
+            ]
+        },
+        "elite": {
+            "wealth_range": [
+                50000,
+                null
+            ],
+            "description": "Executives, megacorp leaders",
+            "quality": "bespoke",
+            "brand_access": [
+                "haute_couture",
+                "exclusive",
+                "custom"
+            ]
+        }
+    },
+    "faction_styles": {
+        "resistance": {
+            "description": "Practical, utilitarian, urban camouflage",
+            "colors": [
+                "black",
+                "dark_gray",
+                "olive",
+                "navy"
+            ],
+            "preferred_items": [
+                "tactical_jacket",
+                "cargo_pants",
+                "combat_boots",
+                "hood"
+            ],
+            "accessories": [
+                "bandana",
+                "goggles",
+                "backpack"
+            ],
+            "avoid": [
+                "bright_colors",
+                "corporate_logos",
+                "formal_wear"
+            ]
+        },
+        "megacorp": {
+            "description": "Corporate, sleek, professional",
+            "colors": [
+                "charcoal",
+                "navy",
+                "white",
+                "silver"
+            ],
+            "preferred_items": [
+                "business_suit",
+                "dress_shirt",
+                "smart_shoes",
+                "blazer"
+            ],
+            "accessories": [
+                "smart_watch",
+                "briefcase",
+                "badge"
+            ],
+            "avoid": [
+                "casual",
+                "worn",
+                "rebellious_symbols"
+            ]
+        },
+        "temple": {
+            "description": "Modest, traditional, spiritual",
+            "colors": [
+                "white",
+                "gold",
+                "saffron",
+                "burgundy"
+            ],
+            "preferred_items": [
+                "robes",
+                "tunic",
+                "sandals",
+                "head_covering"
+            ],
+            "accessories": [
+                "prayer_beads",
+                "amulet",
+                "staff"
+            ],
+            "avoid": [
+                "revealing",
+                "synthetic",
+                "tech_heavy"
+            ]
+        },
+        "undercity": {
+            "description": "Street, cyberpunk, recycled",
+            "colors": [
+                "neon",
+                "black",
+                "chrome",
+                "graffiti"
+            ],
+            "preferred_items": [
+                "synth_leather",
+                "cyberwear",
+                "boots",
+                "mask"
+            ],
+            "accessories": [
+                "chains",
+                "piercings",
+                "led_implants"
+            ],
+            "avoid": [
+                "formal",
+                "clean",
+                "expensive"
+            ]
+        },
+        "street_gangs": {
+            "description": "Gang colors, intimidating, marked",
+            "colors": [
+                "gang_specific",
+                "red",
+                "blue",
+                "black"
+            ],
+            "preferred_items": [
+                "jacket",
+                "bandana",
+                "tank_top",
+                "sneakers"
+            ],
+            "accessories": [
+                "tattoos",
+                "chains",
+                "caps"
+            ],
+            "avoid": [
+                "neutral",
+                "corporate"
+            ]
+        },
+        "special_forces": {
+            "description": "Tactical, military, armored",
+            "colors": [
+                "black",
+                "urban_camo",
+                "dark_blue"
+            ],
+            "preferred_items": [
+                "tactical_armor",
+                "uniform",
+                "combat_boots",
+                "helmet"
+            ],
+            "accessories": [
+                "weapon_holster",
+                "comm_device",
+                "visor"
+            ],
+            "avoid": [
+                "civilian",
+                "casual"
+            ]
+        },
+        "neutral": {
+            "description": "Varied, practical, unremarkable",
+            "colors": [
+                "any"
+            ],
+            "preferred_items": [
+                "varied"
+            ],
+            "accessories": [
+                "varied"
+            ],
+            "avoid": []
+        }
+    },
+    "clothing_categories": {
+        "tops": {
+            "items": [
+                {
+                    "id": "CLT001",
+                    "name": "T-Shirt",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLT002",
+                    "name": "Tank Top",
+                    "tier": "poor",
+                    "formality": 0.0
+                },
+                {
+                    "id": "CLT003",
+                    "name": "Button Shirt",
+                    "tier": "working",
+                    "formality": 0.5
+                },
+                {
+                    "id": "CLT004",
+                    "name": "Dress Shirt",
+                    "tier": "middle",
+                    "formality": 0.7
+                },
+                {
+                    "id": "CLT005",
+                    "name": "Hoodie",
+                    "tier": "poor",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLT006",
+                    "name": "Tactical Jacket",
+                    "tier": "working",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLT007",
+                    "name": "Blazer",
+                    "tier": "middle",
+                    "formality": 0.8
+                },
+                {
+                    "id": "CLT008",
+                    "name": "Business Suit Jacket",
+                    "tier": "upper",
+                    "formality": 0.9
+                },
+                {
+                    "id": "CLT009",
+                    "name": "Synth-Leather Jacket",
+                    "tier": "working",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLT010",
+                    "name": "Temple Robes",
+                    "tier": "working",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLT011",
+                    "name": "Cyberwear Top",
+                    "tier": "middle",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLT012",
+                    "name": "Designer Blouse",
+                    "tier": "upper",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLT013",
+                    "name": "Armored Vest",
+                    "tier": "middle",
+                    "formality": 0.4
+                }
+            ]
+        },
+        "bottoms": {
+            "items": [
+                {
+                    "id": "CLB001",
+                    "name": "Jeans",
+                    "tier": "poor",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLB002",
+                    "name": "Cargo Pants",
+                    "tier": "working",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLB003",
+                    "name": "Dress Pants",
+                    "tier": "middle",
+                    "formality": 0.7
+                },
+                {
+                    "id": "CLB004",
+                    "name": "Suit Trousers",
+                    "tier": "upper",
+                    "formality": 0.9
+                },
+                {
+                    "id": "CLB005",
+                    "name": "Shorts",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLB006",
+                    "name": "Tactical Pants",
+                    "tier": "middle",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLB007",
+                    "name": "Skirt",
+                    "tier": "working",
+                    "formality": 0.5
+                },
+                {
+                    "id": "CLB008",
+                    "name": "Temple Robes Lower",
+                    "tier": "working",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLB009",
+                    "name": "Synth-Leather Pants",
+                    "tier": "middle",
+                    "formality": 0.3
+                }
+            ]
+        },
+        "footwear": {
+            "items": [
+                {
+                    "id": "CLF001",
+                    "name": "Sneakers",
+                    "tier": "poor",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLF002",
+                    "name": "Combat Boots",
+                    "tier": "working",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLF003",
+                    "name": "Dress Shoes",
+                    "tier": "middle",
+                    "formality": 0.8
+                },
+                {
+                    "id": "CLF004",
+                    "name": "Sandals",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLF005",
+                    "name": "Work Boots",
+                    "tier": "working",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLF006",
+                    "name": "High Heels",
+                    "tier": "middle",
+                    "formality": 0.7
+                },
+                {
+                    "id": "CLF007",
+                    "name": "Designer Shoes",
+                    "tier": "upper",
+                    "formality": 0.8
+                },
+                {
+                    "id": "CLF008",
+                    "name": "Tactical Boots",
+                    "tier": "middle",
+                    "formality": 0.4
+                }
+            ]
+        },
+        "headwear": {
+            "items": [
+                {
+                    "id": "CLH001",
+                    "name": "Baseball Cap",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLH002",
+                    "name": "Beanie",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLH003",
+                    "name": "Bandana",
+                    "tier": "poor",
+                    "formality": 0.0
+                },
+                {
+                    "id": "CLH004",
+                    "name": "Hood",
+                    "tier": "poor",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLH005",
+                    "name": "Fedora",
+                    "tier": "middle",
+                    "formality": 0.5
+                },
+                {
+                    "id": "CLH006",
+                    "name": "Temple Head Covering",
+                    "tier": "working",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLH007",
+                    "name": "Visor",
+                    "tier": "working",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLH008",
+                    "name": "Helmet",
+                    "tier": "middle",
+                    "formality": 0.4
+                }
+            ]
+        },
+        "accessories": {
+            "items": [
+                {
+                    "id": "CLA001",
+                    "name": "Watch",
+                    "tier": "working",
+                    "formality": 0.5
+                },
+                {
+                    "id": "CLA002",
+                    "name": "Smart Watch",
+                    "tier": "middle",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLA003",
+                    "name": "Sunglasses",
+                    "tier": "poor",
+                    "formality": 0.3
+                },
+                {
+                    "id": "CLA004",
+                    "name": "Backpack",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLA005",
+                    "name": "Briefcase",
+                    "tier": "middle",
+                    "formality": 0.8
+                },
+                {
+                    "id": "CLA006",
+                    "name": "Jewelry",
+                    "tier": "middle",
+                    "formality": 0.6
+                },
+                {
+                    "id": "CLA007",
+                    "name": "Chains",
+                    "tier": "poor",
+                    "formality": 0.1
+                },
+                {
+                    "id": "CLA008",
+                    "name": "Prayer Beads",
+                    "tier": "working",
+                    "formality": 0.5
+                },
+                {
+                    "id": "CLA009",
+                    "name": "Goggles",
+                    "tier": "working",
+                    "formality": 0.2
+                },
+                {
+                    "id": "CLA010",
+                    "name": "LED Implants",
+                    "tier": "middle",
+                    "formality": 0.2
+                }
+            ]
+        }
+    },
+    "personality_modifiers": {
+        "extrovert": {
+            "color_preference": "bright",
+            "style_modifier": 0.2,
+            "accessory_count": "+1"
+        },
+        "introvert": {
+            "color_preference": "muted",
+            "style_modifier": -0.1,
+            "accessory_count": "-1"
+        },
+        "practical": {
+            "prioritize": "function_over_form",
+            "avoid": "decorative"
+        },
+        "vain": {
+            "prioritize": "appearance",
+            "quality_modifier": "+1_tier"
+        },
+        "rebellious": {
+            "avoid_faction_norm": true,
+            "prefer": "counter_culture"
+        }
+    },
+    "neighborhood_fashion": {
+        "downtown": {
+            "dominant_style": "megacorp",
+            "wealth_floor": "middle",
+            "formality_baseline": 0.6
+        },
+        "industrial": {
+            "dominant_style": "working",
+            "wealth_floor": "working",
+            "formality_baseline": 0.2
+        },
+        "residential_upper": {
+            "dominant_style": "upscale",
+            "wealth_floor": "upper",
+            "formality_baseline": 0.5
+        },
+        "residential_lower": {
+            "dominant_style": "casual",
+            "wealth_floor": "poor",
+            "formality_baseline": 0.2
+        },
+        "undercity": {
+            "dominant_style": "street",
+            "wealth_floor": "destitute",
+            "formality_baseline": 0.1
+        },
+        "temple_district": {
+            "dominant_style": "modest",
+            "wealth_floor": "working",
+            "formality_baseline": 0.5
+        },
+        "port": {
+            "dominant_style": "practical",
+            "wealth_floor": "working",
+            "formality_baseline": 0.2
+        },
+        "tech_zone": {
+            "dominant_style": "tech_casual",
+            "wealth_floor": "middle",
+            "formality_baseline": 0.3
+        }
+    },
+    "outfit_selection_algorithm": {
+        "description": "How NPCs choose what to wear",
+        "steps": [
+            "1. Determine economic tier from NPC wealth",
+            "2. Get faction style preferences",
+            "3. Apply personality modifiers",
+            "4. Consider neighborhood norms",
+            "5. Check occasion (work vs leisure)",
+            "6. Select items from accessible tiers",
+            "7. Apply randomness (±1 tier variance)",
+            "8. Generate outfit code"
+        ]
+    }
+}
