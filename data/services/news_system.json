@@ -1,0 +1,176 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO News System",
+        "description": "Procedural news generation based on world events and NPC actions"
+    },
+    "news_outlets": {
+        "NO01": {
+            "name": "Temple Herald",
+            "faction": "Temple",
+            "bias": "pro_temple",
+            "censored": true,
+            "coverage": [
+                "official_events",
+                "temple_announcements",
+                "crime_sanitized"
+            ],
+            "tone": "authoritative"
+        },
+        "NO02": {
+            "name": "Chrome Wire",
+            "faction": "Corp",
+            "bias": "pro_business",
+            "censored": false,
+            "coverage": [
+                "market_news",
+                "tech",
+                "corporate_events"
+            ],
+            "tone": "professional"
+        },
+        "NO03": {
+            "name": "Neon Underground",
+            "faction": "Independent",
+            "bias": "anti_authority",
+            "censored": false,
+            "coverage": [
+                "crime",
+                "corruption",
+                "resistance",
+                "underground"
+            ],
+            "tone": "gritty"
+        },
+        "NO04": {
+            "name": "The Undercity Voice",
+            "faction": "Resistance",
+            "bias": "pro_cyborg",
+            "hidden": true,
+            "coverage": [
+                "cyborg_rights",
+                "police_brutality",
+                "resistance_activities"
+            ],
+            "tone": "revolutionary"
+        }
+    },
+    "article_templates": {
+        "crime_robbery": {
+            "headlines": [
+                "{perpetrator} Apprehended After {location} Heist",
+                "Robbery at {location}: {value} GEP Stolen",
+                "{district} Residents on Edge After String of Thefts",
+                "Security Concerns Rise After {location} Break-in"
+            ],
+            "bodies": [
+                "Authorities report that {perpetrator} was seen fleeing {location} yesterday at {time}. Witnesses describe a tense scene as {details}. The suspect remains {status}.",
+                "A {severity} robbery occurred at {location} in {district}. According to sources, approximately {value} GEP worth of goods were taken. {faction} security forces are investigating."
+            ]
+        },
+        "crime_hacking": {
+            "headlines": [
+                "Cyberattack Targets {target}: Systems Compromised",
+                "Hacker Breach at {location}: Data Exposed",
+                "Digital Intrusion Rocks {district} Infrastructure",
+                "{target} Network Under Attack: {faction} Suspects Foul Play"
+            ],
+            "bodies": [
+                "A sophisticated cyberattack has left {target} scrambling to restore systems. The breach, discovered at {time}, has exposed {damage_type}. {faction} cyber-security teams are tracing the intrusion.",
+                "Sources within {district} confirm that unknown hackers penetrated {target}'s defenses. The attack lasted {duration} before countermeasures activated. {consequences}."
+            ]
+        },
+        "police_incident": {
+            "headlines": [
+                "Inquisitors Conduct Raid in {district}",
+                "Temple Guard Altercation Leaves {count} Injured",
+                "Police Chase Through {district} Ends in Arrest",
+                "Security Forces Criticized After {district} Crackdown"
+            ],
+            "bodies": [
+                "Temple Inquisitors conducted a {severity} operation in {district} today. Eyewitnesses report {details}. Officials state the action was 'necessary for public safety.'",
+                "An altercation between Temple Guards and {target_group} in {location} has left {count} individuals injured. The incident began when {trigger}. {faction} has issued a statement {response}."
+            ]
+        },
+        "cyborg_rights": {
+            "headlines": [
+                "Cyborg Justice Society Demands Equal Treatment",
+                "Temple Denies Discrimination Claims: 'Synthetics Treated Fairly'",
+                "Underground Report: Cyborg Attacks Up {percent}%",
+                "Human-Cyborg Tensions Flare in {district}"
+            ],
+            "bodies": [
+                "The Cyborg Justice Society released a statement today condemning recent attacks on synthetic citizens. 'These assaults are becoming too common,' said spokesperson {speaker}. 'The Temple does nothing.'",
+                "Tensions between human and cyborg residents of {district} reached a boiling point yesterday when {incident}. Underground sources report that similar incidents have increased {percent}% this month."
+            ]
+        },
+        "fire_emergency": {
+            "headlines": [
+                "Blaze Engulfs {location}: {casualties} Affected",
+                "Fire Crews Battle {severity} Fire in {district}",
+                "Explosion at {location} Sparks Emergency Response",
+                "Arson Suspected in {district} Warehouse Fire"
+            ],
+            "bodies": [
+                "Emergency crews responded to a {severity} fire at {location} in {district}. The blaze, which started at approximately {time}, has affected {casualties} residents. Investigators are {investigation_status}.",
+                "A devastating fire ripped through {location} last night. {faction} fire suppression units arrived within minutes but were unable to prevent {damage}. The cause is currently {cause_status}."
+            ]
+        },
+        "market_news": {
+            "headlines": [
+                "{commodity} Prices Surge After {event}",
+                "Trade Route Disruption Hits {district} Markets",
+                "Black Market Activity Spikes in {district}",
+                "{shop} Closes Doors After {reason}"
+            ],
+            "bodies": [
+                "Market analysts report that {commodity} prices have {direction} by {percent}% following {event}. Merchants in {district} are {reaction}.",
+                "The {commodity} trade has been affected by {event}. Prices at {location} have {direction}, with vendors reporting {impact}."
+            ]
+        },
+        "gossip": {
+            "headlines": [
+                "RUMOR: {npc1} and {npc2} Spotted at {location}",
+                "Whispers in {district}: {rumor}",
+                "Sources Say {npc} May Be {rumor}",
+                "Anonymous Tip: Something Big at {location}"
+            ],
+            "bodies": [
+                "Word on the street suggests that {npc1} has been {activity} with {npc2}. Neither party could be reached for comment, but neighbors in {district} report {details}.",
+                "Rumors are swirling about {topic} in {district}. While unconfirmed, multiple sources indicate that {speculation}. We will update as more information becomes available."
+            ]
+        }
+    },
+    "event_to_article_mapping": {
+        "A05": "crime_robbery",
+        "A04": "crime_hacking",
+        "A03": "police_incident",
+        "A53": "police_incident",
+        "cyborg_attack": "cyborg_rights",
+        "fire_event": "fire_emergency",
+        "A02": "market_news",
+        "EVT_TRADE": "market_news",
+        "A01": "gossip"
+    },
+    "censorship_rules": {
+        "temple_herald": {
+            "remove_topics": [
+                "temple_criticism",
+                "corruption",
+                "resistance",
+                "prophet_secrets"
+            ],
+            "sanitize": {
+                "police_brutality": "justified enforcement",
+                "cyborg_discrimination": "synthetic management",
+                "rebellion": "civil unrest"
+            }
+        }
+    },
+    "generation_frequency": {
+        "major_event": "immediate",
+        "crime": "every_6_ticks",
+        "gossip": "every_24_ticks",
+        "market": "daily"
+    }
+}
