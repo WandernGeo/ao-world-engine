@@ -662,5 +662,170 @@
         "example": "hash('charlie_50_events') % 60 = action_idx, >> 8 % 100 = object_idx, etc.",
         "event_format": "[ACTION]-[TARGET]-[OBJECT/LOCATION]-[TICK]",
         "sample_decoded": "A01-C09-L08-T050 = 'Guard_01 met Aiche in alley at tick 50'"
+    },
+    "wildlife_types": {
+        "_desc": "Animal categories (6 types)",
+        "WT01": "domestic_pet",
+        "WT02": "urban_wildlife",
+        "WT03": "pest",
+        "WT04": "livestock",
+        "WT05": "bird",
+        "WT06": "aquatic"
+    },
+    "animals": {
+        "_desc": "Creatures in the city (20 common)",
+        "AN01": {
+            "n": "stray_cat",
+            "type": "WT02",
+            "habitat": "street"
+        },
+        "AN02": {
+            "n": "stray_dog",
+            "type": "WT02",
+            "habitat": "street"
+        },
+        "AN03": {
+            "n": "cyber_rat",
+            "type": "WT03",
+            "habitat": "sewer"
+        },
+        "AN04": {
+            "n": "neon_pigeon",
+            "type": "WT05",
+            "habitat": "rooftop"
+        },
+        "AN05": {
+            "n": "raven",
+            "type": "WT05",
+            "habitat": "ruins"
+        },
+        "AN06": {
+            "n": "pet_cat",
+            "type": "WT01",
+            "habitat": "home"
+        },
+        "AN07": {
+            "n": "pet_dog",
+            "type": "WT01",
+            "habitat": "home"
+        },
+        "AN08": {
+            "n": "synth_bird",
+            "type": "WT01",
+            "habitat": "home"
+        },
+        "AN09": {
+            "n": "cockroach",
+            "type": "WT03",
+            "habitat": "everywhere"
+        },
+        "AN10": {
+            "n": "sewer_gator",
+            "type": "WT06",
+            "habitat": "sewer"
+        },
+        "AN11": {
+            "n": "bat",
+            "type": "WT02",
+            "habitat": "undercity"
+        },
+        "AN16": {
+            "n": "chicken",
+            "type": "WT04",
+            "habitat": "farm"
+        },
+        "AN17": {
+            "n": "cow",
+            "type": "WT04",
+            "habitat": "farm"
+        },
+        "AN18": {
+            "n": "pig",
+            "type": "WT04",
+            "habitat": "farm"
+        },
+        "AN29": {
+            "n": "bee",
+            "type": "WT02",
+            "habitat": "green_zone"
+        },
+        "AN33": {
+            "n": "hawk",
+            "type": "WT05",
+            "habitat": "rooftop"
+        },
+        "AN43": {
+            "n": "guard_dog",
+            "type": "WT01",
+            "habitat": "security"
+        },
+        "AN44": {
+            "n": "messenger_pigeon",
+            "type": "WT01",
+            "habitat": "rooftop"
+        }
+    },
+    "utilities": {
+        "_desc": "City infrastructure types (4)",
+        "U01": {
+            "n": "power",
+            "operator": "Temple Energy"
+        },
+        "U02": {
+            "n": "water",
+            "operator": "City Aqueduct"
+        },
+        "U03": {
+            "n": "gas",
+            "operator": "Pipeline Corp"
+        },
+        "U04": {
+            "n": "internet",
+            "operator": "ISP"
+        }
+    },
+    "isps": {
+        "_desc": "Internet Service Providers (4)",
+        "I01": {
+            "n": "SacredLink",
+            "faction": "Temple",
+            "censored": true,
+            "price": 50
+        },
+        "I02": {
+            "n": "OmniConnect",
+            "faction": "Corp",
+            "tracks": true,
+            "price": 100
+        },
+        "I03": {
+            "n": "DarkWave",
+            "faction": "Underground",
+            "uptime": 0.7,
+            "price": 0
+        },
+        "I04": {
+            "n": "GhostNet",
+            "faction": "Resistance",
+            "encrypted": true,
+            "price": 25
+        }
+    },
+    "delivery_types": {
+        "_desc": "Delivery methods (5)",
+        "D01": "drone_standard",
+        "D02": "drone_express",
+        "D03": "courier_foot",
+        "D04": "courier_vehicle",
+        "D05": "mail_postal"
+    },
+    "mail_types": {
+        "_desc": "Mail categories (6)",
+        "ML01": "letter",
+        "ML02": "package",
+        "ML03": "bill",
+        "ML04": "summons",
+        "ML05": "propaganda",
+        "ML06": "contraband"
     }
 }
