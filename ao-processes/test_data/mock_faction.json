@@ -1,0 +1,52 @@
+{
+    "_doc": "Mock faction data for testing",
+    "test_faction": {
+        "id": "test_faction",
+        "name": "Test Faction",
+        "type": "neutral",
+        "description": "A faction created for testing purposes",
+        "territories": [
+            "test_district"
+        ],
+        "rivals": [],
+        "allies": [],
+        "markers": [
+            "test_marker",
+            "debug"
+        ]
+    },
+    "mock_underground": {
+        "id": "mock_underground",
+        "name": "Mock Underground",
+        "type": "criminal",
+        "description": "A mock criminal faction for testing",
+        "territories": [
+            "undercity"
+        ],
+        "rivals": [
+            "mock_corporate"
+        ],
+        "allies": [],
+        "markers": [
+            "criminal",
+            "smuggler"
+        ]
+    },
+    "mock_corporate": {
+        "id": "mock_corporate",
+        "name": "Mock Corporation",
+        "type": "corporate",
+        "description": "A mock corporation for testing",
+        "territories": [
+            "corporate_plaza"
+        ],
+        "rivals": [
+            "mock_underground"
+        ],
+        "allies": [],
+        "markers": [
+            "corporate",
+            "wealthy"
+        ]
+    }
+}

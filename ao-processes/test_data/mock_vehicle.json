@@ -1,0 +1,43 @@
+{
+    "_doc": "Mock vehicle data for testing",
+    "test_sedan": {
+        "id": "test_sedan",
+        "name": "Test Sedan",
+        "type": "civilian",
+        "capacity": 4,
+        "speed": 60,
+        "fuel_capacity": 50,
+        "description": "A basic sedan for testing"
+    },
+    "test_bus": {
+        "id": "test_bus",
+        "name": "Test Bus",
+        "type": "public",
+        "capacity": 40,
+        "speed": 40,
+        "fuel_capacity": 100,
+        "route": {
+            "id": "test_route",
+            "stops": [
+                "stop_a",
+                "stop_b",
+                "stop_c"
+            ],
+            "duration_minutes": 30
+        },
+        "description": "A public transit bus for testing"
+    },
+    "test_hover_car": {
+        "id": "test_hover_car",
+        "name": "Test Hover Car",
+        "type": "luxury",
+        "capacity": 2,
+        "speed": 120,
+        "fuel_capacity": 30,
+        "markers": [
+            "wealthy",
+            "tech_enthusiast"
+        ],
+        "description": "A luxury hover car for testing"
+    }
+}
