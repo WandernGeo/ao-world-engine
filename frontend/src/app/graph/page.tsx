@@ -273,6 +273,7 @@ export default function KnowledgeGraphPage() {
     const [isSimulating, setIsSimulating] = useState(false);
     const [controlMode, setControlMode] = useState<'orbit' | 'fly'>('fly');
     const [stats, setStats] = useState({ entities: 0, relationships: 0, npcs: 0 });
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar toggle
 
     // Load data
     useEffect(() => {
@@ -315,11 +316,20 @@ export default function KnowledgeGraphPage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
-                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
+            <header className="fixed top-0 left-0 right-0 h-14 bg-black/80 backdrop-blur border-b border-zinc-800 z-50 flex items-center px-4">
+                {/* Mobile menu button */}
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="lg:hidden mr-3 p-2 text-cyan-400 hover:bg-zinc-800 rounded"
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <Link href="/" className="text-xl font-bold font-mono text-cyan-400 hover:text-white transition-colors truncate">
                     AO WORLD ENGINE
                 </Link>
-                <nav className="ml-8 flex gap-4">
+                <nav className="ml-8 hidden lg:flex gap-4">
                     <Link href="/explore" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Explore
                     </Link>
@@ -333,7 +343,7 @@ export default function KnowledgeGraphPage() {
                         Graph
                     </Link>
                 </nav>
-                <div className="ml-auto text-xs text-cyan-400 font-mono">
+                <div className="ml-auto text-xs text-cyan-400 font-mono hidden md:block">
                     WebGL 3D • Click nodes to select • Drag to rotate
                 </div>
             </header>
@@ -418,8 +428,8 @@ export default function KnowledgeGraphPage() {
                     </div>
                 </div>
 
-                {/* Info Panel */}
-                <div className="w-80 p-4 border-l border-zinc-800 overflow-y-auto bg-zinc-950/80 backdrop-blur">
+                {/* Info Panel - Collapsible on mobile */}
+                <div className={`fixed lg:relative top-14 right-0 bottom-0 w-80 p-4 border-l border-zinc-800 overflow-y-auto bg-zinc-950/95 backdrop-blur z-40 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}>
                     {/* Stats */}
                     <div className="mb-4 p-4 bg-gradient-to-r from-cyan-900/40 to-purple-900/40 rounded-lg border border-cyan-500/30">
                         <div className="text-sm text-cyan-400 font-mono mb-3 font-bold">KNOWLEDGE GRAPH</div>

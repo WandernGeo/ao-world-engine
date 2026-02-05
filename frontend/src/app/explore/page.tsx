@@ -171,6 +171,7 @@ function ExplorePageContent() {
     const [districts, setDistricts] = useState<District[]>([]);
     const [showBlueprint, setShowBlueprint] = useState(false);
     const [expandedNPCList, setExpandedNPCList] = useState(false); // NEW: show all NPCs
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar toggle
 
     // Timeline events
     const [timelineEvents, setTimelineEvents] = useState([
@@ -484,12 +485,21 @@ function ExplorePageContent() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 h-14 bg-zinc-900 z-50 flex items-center px-4 border-b border-zinc-800">
-                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider">
+            <header className="fixed top-0 left-0 right-0 h-14 bg-black/90 backdrop-blur z-50 flex items-center px-4 border-b border-zinc-800">
+                {/* Mobile menu button */}
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="lg:hidden mr-3 p-2 text-cyan-400 hover:bg-zinc-800 rounded"
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <Link href="/" className="font-mono text-lg font-bold text-cyan-400 tracking-wider truncate">
                     AO WORLD ENGINE
                 </Link>
-                <nav className="ml-8 flex gap-4">
-                    <Link href="/explore" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors">
+                <nav className="ml-8 hidden lg:flex gap-4">
+                    <Link href="/explore" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors bg-cyan-600/30">
                         Explore
                     </Link>
                     <Link href="/npcs" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
@@ -634,8 +644,8 @@ function ExplorePageContent() {
                     </div>
                 </div>
 
-                {/* Right Panel */}
-                <div className="w-80 p-4 space-y-4 overflow-y-auto border-l border-zinc-800">
+                {/* Right Panel - Collapsible on mobile */}
+                <div className={`fixed lg:relative top-14 right-0 bottom-0 w-80 p-4 space-y-4 overflow-y-auto border-l border-zinc-800 bg-zinc-950/95 backdrop-blur z-40 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}>
                     {/* Time Controls */}
                     <TimeControls
                         currentTick={currentTick}
