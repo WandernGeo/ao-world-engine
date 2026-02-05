@@ -662,48 +662,43 @@ export default function KnowledgeGraphPage() {
             return;
         }
 
-        // Screen mouse position relative to canvas element
-        const screenX = e.clientX - rect.left;
-        const screenY = e.clientY - rect.top;
+        // Mouse position in screen space (relative to canvas element)
+        const mouseScreenX = e.clientX - rect.left;
+        const mouseScreenY = e.clientY - rect.top;
 
-        // IMPORTANT: Account for CSS scaling of canvas (canvas is 2400x2000 but CSS scales it to fit)
-        const scaleX = width / rect.width;
-        const scaleY = height / rect.height;
-        const canvasX = screenX * scaleX;
-        const canvasY = screenY * scaleY;
+        // CSS scale factor (canvas internal size vs displayed size)
+        const cssScaleX = rect.width / width;
+        const cssScaleY = rect.height / height;
 
-        // Convert canvas coords to world coords (reverse the canvas transform)
-        // IMPORTANT: project3D returns coordinates in canvas space (before zoom/pan)
-        // So we need to compare against canvas coords, not world coords
-        // First, reverse the zoom/pan to get back to canvas space
-        const canvasMouseX = canvasX;  // Already in canvas space
-        const canvasMouseY = canvasY;  // Already in canvas space
-
-        // Check if clicking on a node using PROJECTED coordinates (3D aware)
-        // Sort by depth - front-most nodes (smallest depth/largest scale) first!
+        // Check if clicking on a node
+        // Sort by depth - front-most nodes first
         const sortedEntities = [...data.entities]
             .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
-            .sort((a, b) => a.proj.depth - b.proj.depth); // Smaller depth = closer to viewer
+            .sort((a, b) => a.proj.depth - b.proj.depth);
 
-        // Transform projected coords through zoom/pan to compare with mouse
         for (const { entity, proj } of sortedEntities) {
-            // Apply zoom and pan to projected position (same as canvas rendering)
-            const nodeScreenX = proj.x * zoom + pan.x;
-            const nodeScreenY = proj.y * zoom + pan.y;
-            // Compare with canvas mouse position
-            const dist = Math.sqrt((nodeScreenX - canvasX) ** 2 + (nodeScreenY - canvasY) ** 2);
-            const hitRadius = Math.max(30, 50 * proj.scale * zoom); // Big hit radius for easy clicking
+            // Node position in canvas space (after zoom/pan)
+            const nodeCanvasX = proj.x * zoom + pan.x;
+            const nodeCanvasY = proj.y * zoom + pan.y;
+            // Convert to screen space for comparison with mouse
+            const nodeScreenX = nodeCanvasX * cssScaleX;
+            const nodeScreenY = nodeCanvasY * cssScaleY;
+
+            // Distance in screen pixels
+            const dist = Math.sqrt((nodeScreenX - mouseScreenX) ** 2 + (nodeScreenY - mouseScreenY) ** 2);
+            const hitRadius = Math.max(20, 35 * proj.scale * zoom * cssScaleX); // Hit radius in screen pixels
+
             if (dist < hitRadius) {
                 setDraggedNode(entity.id);
                 setSelectedEntity(entity);
-                setIsSimulating(false); // Pause simulation while dragging
+                setIsSimulating(false);
                 return;
             }
         }
 
         // Not on a node - start panning
         setIsDragging(true);
-        setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+        setDragStart({ x: e.clientX - pan.x * cssScaleX, y: e.clientY - pan.y * cssScaleY });
         setSelectedEntity(null);
     };
 
@@ -711,27 +706,27 @@ export default function KnowledgeGraphPage() {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return;
 
-        // 3D rotation DISABLED - pure 2D mode for reliable clicking
-        // if (isRotating) {
-        //     const dx = e.clientX - rotateStart.x;
-        //     const dy = e.clientY - rotateStart.y;
-        //     setRotationY(prev => prev + dx * 0.005);
-        //     setRotationX(prev => Math.max(-Math.PI / 3, Math.min(Math.PI / 3, prev + dy * 0.005)));
-        //     setRotateStart({ x: e.clientX, y: e.clientY });
-        //     return;
-        // }
+        // CSS scale factor (same as handleMouseDown)
+        const cssScaleX = rect.width / width;
+        const cssScaleY = rect.height / height;
 
-        const mx = (e.clientX - rect.left - pan.x) / zoom;
-        const my = (e.clientY - rect.top - pan.y) / zoom;
+        // Mouse position in screen space
+        const mouseScreenX = e.clientX - rect.left;
+        const mouseScreenY = e.clientY - rect.top;
 
-        // If dragging a node, update its position (no velocity tracking)
+        // Convert screen mouse to world coordinates for node positioning
+        // World coords = (screen - pan_screen) / zoom / cssScale
+        const worldX = (mouseScreenX / cssScaleX - pan.x) / zoom;
+        const worldY = (mouseScreenY / cssScaleY - pan.y) / zoom;
+
+        // If dragging a node, update its position in world space
         if (draggedNode) {
             setData(prev => ({
                 ...prev,
-                entities: prev.entities.map(e =>
-                    e.id === draggedNode
-                        ? { ...e, x: mx, y: my, vx: 0, vy: 0 } // Zero velocity = sticky node
-                        : e
+                entities: prev.entities.map(ent =>
+                    ent.id === draggedNode
+                        ? { ...ent, x: worldX, y: worldY, vx: 0, vy: 0 }
+                        : ent
                 )
             }));
             return;
@@ -739,30 +734,28 @@ export default function KnowledgeGraphPage() {
 
         // If panning the view
         if (isDragging) {
-            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+            // dragStart is in screen space, pan is in canvas space
+            const newPanX = (e.clientX - dragStart.x) / cssScaleX;
+            const newPanY = (e.clientY - dragStart.y) / cssScaleY;
+            setPan({ x: newPanX, y: newPanY });
             return;
         }
 
-        // Hover detection using PROJECTED coordinates (3D aware)
-        // Convert screen coords to canvas coords (accounting for CSS scaling)
-        const hoverScreenX = e.clientX - rect.left;
-        const hoverScreenY = e.clientY - rect.top;
-        const scaleX = width / rect.width;
-        const scaleY = height / rect.height;
-        const hoverCanvasX = hoverScreenX * scaleX;
-        const hoverCanvasY = hoverScreenY * scaleY;
-
-        // Sort by depth - front-most nodes first (same as click detection)
+        // Hover detection - same math as click detection
         const sortedForHover = [...data.entities]
             .map(entity => ({ entity, proj: project3D(entity.x, entity.y, entity.z || 0) }))
             .sort((a, b) => a.proj.depth - b.proj.depth);
 
-        // Transform projected coords through zoom/pan to compare with mouse (same as click)
         for (const { entity, proj } of sortedForHover) {
-            const nodeScreenX = proj.x * zoom + pan.x;
-            const nodeScreenY = proj.y * zoom + pan.y;
-            const dist = Math.sqrt((nodeScreenX - hoverCanvasX) ** 2 + (nodeScreenY - hoverCanvasY) ** 2);
-            const hitRadius = Math.max(30, 50 * proj.scale * zoom); // Big hit radius for easy clicking
+            // Convert node position to screen space
+            const nodeCanvasX = proj.x * zoom + pan.x;
+            const nodeCanvasY = proj.y * zoom + pan.y;
+            const nodeScreenX = nodeCanvasX * cssScaleX;
+            const nodeScreenY = nodeCanvasY * cssScaleY;
+
+            const dist = Math.sqrt((nodeScreenX - mouseScreenX) ** 2 + (nodeScreenY - mouseScreenY) ** 2);
+            const hitRadius = Math.max(20, 35 * proj.scale * zoom * cssScaleX);
+
             if (dist < hitRadius) {
                 setHoveredEntity(entity);
                 if (canvasRef.current) canvasRef.current.style.cursor = 'pointer';
@@ -770,7 +763,7 @@ export default function KnowledgeGraphPage() {
             }
         }
         setHoveredEntity(null);
-        if (canvasRef.current) canvasRef.current.style.cursor = 'grab'; // Grab cursor shows you can pan
+        if (canvasRef.current) canvasRef.current.style.cursor = 'grab';
     };
 
     const handleMouseUp = () => {
