@@ -328,110 +328,134 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
         return
     end
     
-    -- Advance world tick (with time compression if configured)
-    local ticks_to_advance = TIME_COMPRESSION or 1
-    for i = 1, ticks_to_advance do
-        WorldTick = WorldTick + 1
-        
-        -- Day/year advancement
-        if WorldTick % TICKS_PER_DAY == 0 then
-            WorldDay = WorldDay + 1
+    -- Error recovery: wrap tick processing in pcall
+    local success, error_msg = pcall(function()
+        -- Advance world tick (with time compression if configured)
+        local ticks_to_advance = TIME_COMPRESSION or 1
+        for i = 1, ticks_to_advance do
+            WorldTick = WorldTick + 1
             
-            -- Log day transition
-            if log_day_transition then
-                log_day_transition(WorldTick, WorldDay, WorldYear, {
-                    population = PopulationCount,
-                    budget = CityBudget,
-                    active_npcs = ActiveNpcCount
-                })
+            -- Day/year advancement
+            if WorldTick % TICKS_PER_DAY == 0 then
+                WorldDay = WorldDay + 1
+                
+                -- Log day transition
+                if log_day_transition then
+                    log_day_transition(WorldTick, WorldDay, WorldYear, {
+                        population = PopulationCount,
+                        budget = CityBudget,
+                        active_npcs = ActiveNpcCount
+                    })
+                end
+            end
+            if WorldTick % TICKS_PER_YEAR == 0 then
+                WorldYear = WorldYear + 1
             end
         end
-        if WorldTick % TICKS_PER_YEAR == 0 then
-            WorldYear = WorldYear + 1
-        end
-    end
-    
-    local time = get_time_info(WorldTick)
-    
-    -- 1. Check for world events
-    local events = check_world_events(WorldTick)
-    for _, event in ipairs(events) do
-        broadcast_event(event)
-        table.insert(ProcessedEvents, event)
         
-        -- Log world events
-        if log_world_event then
-            log_world_event(WorldTick, event.type, event.type, {}, event)
+        local time = get_time_info(WorldTick)
+        
+        -- 1. Check for world events
+        local events = check_world_events(WorldTick)
+        for _, event in ipairs(events) do
+            broadcast_event(event)
+            table.insert(ProcessedEvents, event)
+            
+            -- Log world events
+            if log_world_event then
+                log_world_event(WorldTick, event.type, event.type, {}, event)
+            end
         end
-    end
-    
-    -- 2. Broadcast tick to all districts
-    for district_id, process_id in pairs(Districts) do
-        ao.send({
-            Target = process_id,
-            Action = "Cron",
-            Tags = {
-                { name = "World-Tick", value = tostring(WorldTick) },
-                { name = "Time-Period", value = time.period }
-            },
-            Data = json.encode({
-                tick = WorldTick,
-                time = time,
-                events = events
+        
+        -- 2. Broadcast tick to all districts
+        for district_id, process_id in pairs(Districts) do
+            ao.send({
+                Target = process_id,
+                Action = "Cron",
+                Tags = {
+                    { name = "World-Tick", value = tostring(WorldTick) },
+                    { name = "Time-Period", value = time.period }
+                },
+                Data = json.encode({
+                    tick = WorldTick,
+                    time = time,
+                    events = events
+                })
             })
-        })
-    end
-    
-    -- 3. Notify AI oracle (may generate dialogue for active NPCs)
-    if AiOracle and WorldTick % 10 == 0 then  -- Every 10 ticks
-        ao.send({
-            Target = AiOracle,
-            Action = "Cron",
-            Data = json.encode({ tick = WorldTick, time = time })
-        })
-    end
-    
-    -- 4. Economy processing (daily)
-    if WorldTick % TAX_COLLECTION_INTERVAL == 0 then
-        local tax_revenue = collect_taxes()
-        local services_paid = pay_city_workers()
-        
-        -- Log economy update
-        if log_budget_change then
-            log_budget_change(WorldTick, "daily_cycle", 
-                CityBudget - tax_revenue + 10000, CityBudget, 
-                "tax_collection_and_expenses")
         end
         
-        -- Broadcast economy update
-        broadcast_event({
-            type = "economy_update",
+        -- 3. Notify AI oracle (may generate dialogue for active NPCs)
+        if AiOracle and WorldTick % 10 == 0 then  -- Every 10 ticks
+            ao.send({
+                Target = AiOracle,
+                Action = "Cron",
+                Data = json.encode({ tick = WorldTick, time = time })
+            })
+        end
+        
+        -- 4. Economy processing (daily)
+        if WorldTick % TAX_COLLECTION_INTERVAL == 0 then
+            local tax_revenue = collect_taxes()
+            local services_paid = pay_city_workers()
+            
+            -- Log economy update
+            if log_budget_change then
+                log_budget_change(WorldTick, "daily_cycle", 
+                    CityBudget - tax_revenue + 10000, CityBudget, 
+                    "tax_collection_and_expenses")
+            end
+            
+            -- Broadcast economy update
+            broadcast_event({
+                type = "economy_update",
+                tick = WorldTick,
+                day = WorldDay,
+                tax_revenue = tax_revenue,
+                budget = CityBudget,
+                services_paid = services_paid
+            })
+        end
+        
+        -- 5. Log system tick
+        if log_tick then
+            log_tick(WorldTick, WorldDay, WorldYear, time.period, {
+                population = PopulationCount,
+                budget = CityBudget,
+                active_npcs = ActiveNpcCount,
+                pending_events = #events
+            })
+        end
+        
+        -- 6. Persist state snapshot every 60 ticks (1 hour in-game)
+        if WorldTick % 60 == 0 then
+            persist_state_snapshot()
+        end
+        
+        -- Trim processed events (keep last 1000)
+        while #ProcessedEvents > 1000 do
+            table.remove(ProcessedEvents, 1)
+        end
+    end)
+    
+    -- Error handling: log error but don't crash
+    if not success then
+        -- Record error for health monitoring
+        LastTickError = {
             tick = WorldTick,
-            day = WorldDay,
-            tax_revenue = tax_revenue,
-            budget = CityBudget,
-            services_paid = services_paid
-        })
-    end
-    
-    -- 5. Log system tick
-    if log_tick then
-        log_tick(WorldTick, WorldDay, WorldYear, time.period, {
-            population = PopulationCount,
-            budget = CityBudget,
-            active_npcs = ActiveNpcCount,
-            pending_events = #events
-        })
-    end
-    
-    -- 6. Persist state snapshot every 60 ticks (1 hour in-game)
-    if WorldTick % 60 == 0 then
-        persist_state_snapshot()
-    end
-    
-    -- Trim processed events (keep last 1000)
-    while #ProcessedEvents > 1000 do
-        table.remove(ProcessedEvents, 1)
+            error = error_msg,
+            timestamp = os.time and os.time() or WorldTick
+        }
+        TickErrorCount = (TickErrorCount or 0) + 1
+        print("⚠️  TICK ERROR at " .. WorldTick .. ": " .. tostring(error_msg))
+        
+        -- If too many consecutive errors, pause for safety
+        if TickErrorCount > 10 then
+            SimulationStatus = "paused"
+            print("🛑 SIMULATION PAUSED due to repeated errors")
+        end
+    else
+        -- Reset error count on success
+        TickErrorCount = 0
     end
 end)
 
@@ -690,6 +714,50 @@ Handlers.add("get-simulation-status", Handlers.utils.hasMatchingTag("Action", "g
             tick = WorldTick,
             day = WorldDay,
             population = PopulationCount
+        })
+    })
+end)
+
+-- Get simulation health (comprehensive monitoring)
+Handlers.add("get-health", Handlers.utils.hasMatchingTag("Action", "get-health"), function(msg)
+    local time = get_time_info(WorldTick)
+    local district_count = 0
+    for _ in pairs(Districts) do district_count = district_count + 1 end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "health-response",
+        Data = json.encode({
+            -- Status
+            status = SimulationStatus,
+            healthy = SimulationStatus == "running" and (TickErrorCount or 0) == 0,
+            
+            -- Timing
+            tick = WorldTick,
+            day = WorldDay,
+            year = WorldYear,
+            time_period = time.period,
+            
+            -- Population
+            population = PopulationCount,
+            active_npcs = ActiveNpcCount,
+            
+            -- Economy
+            city_budget = CityBudget,
+            tax_rate = TaxRate,
+            
+            -- Infrastructure
+            districts_registered = district_count,
+            has_ai_oracle = AiOracle ~= nil,
+            has_event_bus = EventBus ~= nil,
+            
+            -- Errors
+            error_count = TickErrorCount or 0,
+            last_error = LastTickError,
+            
+            -- Events
+            pending_events = #PendingEvents,
+            processed_events = #ProcessedEvents
         })
     })
 end)
