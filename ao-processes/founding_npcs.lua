@@ -46,7 +46,18 @@ FOUNDING_NPCS = {
             "Another case, another alley."
         },
         
-        backstory = "Former detective who lost his arm fighting ECHO forces. Now leads the Resistance."
+        backstory = "Former detective who lost his arm fighting ECHO forces. Now leads the Resistance.",
+        
+        relationships = {
+            kai_vance = { type = "ally", trust = 0.9, history = "Trusted tactical advisor" },
+            zero_chen = { type = "mentor", trust = 0.95, history = "Saved his life, gave him the arm" },
+            felix = { type = "friend", trust = 0.7, history = "Information source at the bar" },
+            nova_chen = { type = "rival", trust = 0.5, history = "Zero's sister, complicated" },
+            city_ai = { type = "contact", trust = 0.6, history = "Mysterious AI ally" },
+            sister_mira = { type = "contact", trust = 0.6, history = "Secret ally in the Temple" },
+            mama_indira = { type = "mentor", trust = 0.85, history = "Fed him when he had nothing" },
+            pixel = { type = "ally", trust = 0.85, history = "Provides tech support for ops" }
+        }
     },
     
     kai_vance = {

@@ -23,7 +23,7 @@ NC='\033[0m' # No Color
 NETWORK=${1:-testnet}
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AO_PROCESSES_DIR="$SCRIPT_DIR/../ao-processes"
-WALLET_PATH="${WALLET_PATH:-./wallet.json}"
+WALLET_PATH="${WALLET_PATH:-/Users/ram/Documents/wandern/wandern-back/arweave-wallet.json}"
 
 echo -e "${BLUE}============================================${NC}"
 echo -e "${BLUE}  AO World Engine - Deployment${NC}"
