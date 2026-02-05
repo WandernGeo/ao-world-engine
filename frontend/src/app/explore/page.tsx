@@ -9,6 +9,7 @@ import { TimelineBar } from '@/components/TimelineBar';
 import { BuildingBlueprint } from '@/components/BuildingBlueprint';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useLiveTick } from '@/hooks/useLiveTick';
 
 // Types
 interface Building {
@@ -162,8 +163,22 @@ function ExplorePageContent() {
 
     // State - initialized as empty/defaults to avoid hydration mismatch
     const [mounted, setMounted] = useState(false);
-    const [currentTick, setCurrentTick] = useState(100);
-    const [isPlaying, setIsPlaying] = useState(false);
+
+    // Use shared live tick hook for synchronization across pages
+    const {
+        currentTick,
+        day,
+        hour,
+        isLive,
+        liveTick,
+        setCurrentTick,
+        goLive,
+        rewind,
+        fastForward,
+        isLoading: tickLoading
+    } = useLiveTick(30000); // Poll every 30s
+
+    const [isPlaying, setIsPlaying] = useState(true); // Default to playing
     const [tickSpeed, setTickSpeed] = useState(1);
     const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
@@ -300,16 +315,19 @@ function ExplorePageContent() {
         }
     }, [npcIdFromUrl, buildingIdFromUrl, npcs, districts, mounted, selectedNPC, selectedBuilding]);
 
-    // Auto-advance tick when playing
+    // Live tick is managed by useLiveTick hook - no local auto-advance needed
+    // The hook polls AO every 30s for live WorldTick
+    // isPlaying controls whether we show live data or stay paused at current tick
     useEffect(() => {
-        if (!isPlaying || !mounted) return;
+        if (!isPlaying || !mounted || isLive) return;
 
+        // Only auto-advance when NOT live (replaying history)
         const interval = setInterval(() => {
-            setCurrentTick(prev => prev + 1);
+            fastForward(1);
         }, 1000 / tickSpeed);
 
         return () => clearInterval(interval);
-    }, [isPlaying, tickSpeed, mounted]);
+    }, [isPlaying, tickSpeed, mounted, isLive, fastForward]);
 
     // Fetch NPC states when tick changes (every 2 ticks = ~12 min game time)
     useEffect(() => {
