@@ -201,7 +201,7 @@ node scripts/verify_ao_state.mjs
 **Tested:** WorldTick successfully advanced from 23 → 27
 
 ## Links
+- [**AO Live Monitor**](https://www.ao.link/#/entity/3KJMDJ81ob8qHUB8Fc-fn9n4pmSBqIh2S1DOM1zkqt0) ← Watch ticks in real-time!
 - [Arweave TX](https://viewblock.io/arweave/tx/3KJMDJ81ob8qHUB8Fc-fn9n4pmSBqIh2S1DOM1zkqt0)
-- [AO Explorer](https://www.ao.link/#/entity/3KJMDJ81ob8qHUB8Fc-fn9n4pmSBqIh2S1DOM1zkqt0)
 - [System Audit](./SYSTEM_AUDIT_REPORT.md) - 545/545 tests passing
 
