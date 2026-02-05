@@ -50,7 +50,7 @@ interface APINPC {
     age?: number;
 }
 
-const CLOUD_API = 'https://ao-world-engine-1071951656531.us-central1.run.app';
+const CLOUD_API = 'https://ao-world-engine-api-1071951656531.us-central1.run.app';
 const LOCAL_API = 'http://localhost:8081';
 
 // Try localhost first, fall back to Cloud
@@ -87,9 +87,9 @@ const TYPE_LABELS: Record<EntityType, string> = {
 async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relationships: Relationship[] } | null> {
     try {
         const API_BASE = await getApiBase();
-        // Fetch NPCs and buildings from API
+        // Fetch NPCs (with full profiles) and buildings from API
         const [npcRes, buildingRes] = await Promise.all([
-            fetch(`${API_BASE}/api/npcs?limit=800`),  // Increased to 800 to show all NPCs
+            fetch(`${API_BASE}/api/npcs/all?limit=200`),  // 200 NPCs for graph visualization
             fetch(`${API_BASE}/api/buildings`),
         ]);
 

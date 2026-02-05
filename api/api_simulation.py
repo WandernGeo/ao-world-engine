@@ -59,6 +59,32 @@ def get_npcs():
     data = load_json("npcs_generated.json")
     return data.get("npcs", []) if data else []
 
+def get_npcs_from_chunks(max_npcs=800):
+    """
+    Get NPCs from the chunked data files (richer profiles).
+    These are the 10k NPCs with full physical descriptions.
+    """
+    if "chunked_npcs" in _cache:
+        return _cache["chunked_npcs"][:max_npcs]
+    
+    chunks_dir = os.path.join(DATA_DIR, "npc_chunks")
+    if not os.path.exists(chunks_dir):
+        return get_npcs()  # Fallback to basic NPCs
+    
+    all_npcs = []
+    chunk_num = 1
+    while len(all_npcs) < max_npcs:
+        chunk_file = os.path.join(chunks_dir, f"npc_chunk_{str(chunk_num).zfill(3)}.json")
+        if not os.path.exists(chunk_file):
+            break
+        with open(chunk_file, 'r') as f:
+            chunk_data = json.load(f)
+            all_npcs.extend(chunk_data.get("npcs", []))
+        chunk_num += 1
+    
+    _cache["chunked_npcs"] = all_npcs
+    return all_npcs[:max_npcs]
+
 def get_buildings():
     """Get all buildings."""
     data = load_json("npcs_generated.json")
@@ -908,6 +934,23 @@ def list_npcs():
         "total": total,
         "limit": limit,
         "offset": offset,
+    })
+
+
+@app.route("/api/npcs/all")
+def list_all_npcs():
+    """
+    Get all NPCs with full profiles (from chunked data).
+    Returns 800 NPCs with physical descriptions, alignment, etc.
+    """
+    limit = min(int(request.args.get("limit", 800)), 10000)
+    npcs = get_npcs_from_chunks(max_npcs=limit)
+    
+    return jsonify({
+        "npcs": npcs,
+        "total": len(npcs),
+        "schema": "full_profile",
+        "version": "2.0.0"
     })
 
 

@@ -2,19 +2,22 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy requirements first for caching
-COPY demo/requirements.txt ./requirements.txt
+# Copy requirements from api directory
+COPY api/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the project structure
+# Copy API code
 COPY api/ ./api/
+
+# Copy data directory (NPC chunks, codec files, etc.)
 COPY data/ ./data/
-COPY scripts/ ./scripts/
-COPY demo/ ./demo/
 
-# Copy hero image to static folder
-COPY assets/hero.png ./demo/static/hero.png
+# Create memories directory for persistence
+RUN mkdir -p /app/data/memories
 
-WORKDIR /app/demo
+# Expose port for Cloud Run
+EXPOSE 8080
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 4 --timeout 120 server:app
+# Change to api directory and run
+WORKDIR /app/api
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 4 --timeout 120 api_simulation:app
