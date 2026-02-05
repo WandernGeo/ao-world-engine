@@ -1,0 +1,368 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Ecosystem",
+        "description": "Food chains, habitats, and ecological interactions"
+    },
+    "habitats": {
+        "urban_street": {
+            "animals": [
+                "AN01",
+                "AN02",
+                "AN04",
+                "AN09",
+                "AN13"
+            ],
+            "conditions": {
+                "pollution": "high",
+                "food_availability": "medium"
+            },
+            "districts": [
+                "neon_district",
+                "market"
+            ]
+        },
+        "park_green": {
+            "animals": [
+                "AN12",
+                "AN23",
+                "AN29",
+                "AN31",
+                "AN35",
+                "AN36",
+                "AN42"
+            ],
+            "conditions": {
+                "pollution": "low",
+                "food_availability": "high"
+            },
+            "districts": [
+                "green_zone",
+                "temple_quarter"
+            ]
+        },
+        "underground": {
+            "animals": [
+                "AN03",
+                "AN11",
+                "AN21",
+                "AN27"
+            ],
+            "conditions": {
+                "pollution": "medium",
+                "light": "none"
+            },
+            "districts": [
+                "undercity",
+                "sewer"
+            ]
+        },
+        "waterfront": {
+            "animals": [
+                "AN10",
+                "AN14",
+                "AN15",
+                "AN24",
+                "AN39",
+                "AN40",
+                "AN41"
+            ],
+            "conditions": {
+                "pollution": "high",
+                "water_quality": "poor"
+            },
+            "districts": [
+                "waterfront_docks",
+                "canal"
+            ]
+        },
+        "rooftop": {
+            "animals": [
+                "AN04",
+                "AN05",
+                "AN33",
+                "AN44"
+            ],
+            "conditions": {
+                "pollution": "low",
+                "wind": "high"
+            },
+            "districts": [
+                "all_elevated"
+            ]
+        },
+        "ruins": {
+            "animals": [
+                "AN05",
+                "AN11",
+                "AN27",
+                "AN34",
+                "AN50"
+            ],
+            "conditions": {
+                "pollution": "low",
+                "danger": "high"
+            },
+            "districts": [
+                "the_ruins",
+                "outzone"
+            ]
+        }
+    },
+    "food_chains": {
+        "urban": {
+            "apex": [
+                "AN01",
+                "AN05",
+                "AN33"
+            ],
+            "secondary": [
+                "AN02",
+                "AN31"
+            ],
+            "primary": [
+                "AN03",
+                "AN04",
+                "AN12",
+                "AN09"
+            ],
+            "decomposers": [
+                "AN48",
+                "AN28"
+            ]
+        },
+        "aquatic": {
+            "apex": [
+                "AN10"
+            ],
+            "secondary": [
+                "AN40",
+                "AN15"
+            ],
+            "primary": [
+                "AN39",
+                "AN42"
+            ],
+            "decomposers": [
+                "AN48"
+            ]
+        }
+    },
+    "population_dynamics": {
+        "breeding_seasons": {
+            "spring": [
+                "AN06",
+                "AN07",
+                "AN12",
+                "AN30",
+                "AN42"
+            ],
+            "summer": [
+                "AN04",
+                "AN16",
+                "AN23",
+                "AN29"
+            ],
+            "fall": [
+                "AN05",
+                "AN13",
+                "AN31"
+            ],
+            "winter": [
+                "AN03",
+                "AN11"
+            ]
+        },
+        "population_checks": {
+            "predation": {
+                "predators": [
+                    "AN01",
+                    "AN33",
+                    "AN10"
+                ],
+                "reduces": [
+                    "AN03",
+                    "AN04",
+                    "AN42"
+                ]
+            },
+            "disease": {
+                "vectors": [
+                    "AN24",
+                    "AN25"
+                ],
+                "affects": [
+                    "all"
+                ]
+            },
+            "human_culling": {
+                "targets": [
+                    "AN03",
+                    "AN09",
+                    "AN24"
+                ],
+                "method": "pest_control"
+            }
+        }
+    },
+    "vegetation": {
+        "trees": {
+            "TR01": {
+                "n": "neon_oak",
+                "habitat": "park",
+                "produces": [
+                    "shade",
+                    "oxygen"
+                ]
+            },
+            "TR02": {
+                "n": "synth_palm",
+                "habitat": "plaza",
+                "produces": [
+                    "aesthetic"
+                ]
+            },
+            "TR03": {
+                "n": "carbon_pine",
+                "habitat": "green_zone",
+                "produces": [
+                    "lumber",
+                    "oxygen"
+                ]
+            }
+        },
+        "plants": {
+            "PL01": {
+                "n": "rooftop_lichen",
+                "habitat": "rooftop",
+                "benefit": "air_filter"
+            },
+            "PL02": {
+                "n": "sewer_moss",
+                "habitat": "underground",
+                "benefit": "bioluminescence"
+            },
+            "PL03": {
+                "n": "temple_flower",
+                "habitat": "temple_quarter",
+                "benefit": "incense"
+            },
+            "PL04": {
+                "n": "market_herb",
+                "habitat": "market",
+                "benefit": "cooking,medicine"
+            }
+        },
+        "crops": {
+            "CR01": {
+                "n": "hydro_rice",
+                "farm": "green_zone",
+                "yield": "high",
+                "water_needs": "high"
+            },
+            "CR02": {
+                "n": "synth_wheat",
+                "farm": "outzone",
+                "yield": "medium",
+                "water_needs": "low"
+            },
+            "CR03": {
+                "n": "vat_vegetables",
+                "farm": "industrial",
+                "yield": "very_high",
+                "water_needs": "none"
+            }
+        }
+    },
+    "environmental_events": {
+        "infestation": {
+            "trigger": {
+                "sanitation_failure": true,
+                "duration": 2
+            },
+            "species": [
+                "AN03",
+                "AN09",
+                "AN24"
+            ],
+            "effects": {
+                "disease_rate": 0.2,
+                "mood_penalty": -0.1
+            }
+        },
+        "migration": {
+            "trigger": {
+                "season_change": true
+            },
+            "species": [
+                "AN14",
+                "AN35",
+                "AN36"
+            ],
+            "effects": {
+                "food_availability": 0.1
+            }
+        },
+        "bloom": {
+            "trigger": {
+                "spring": true,
+                "rain_recent": true
+            },
+            "species": [
+                "AN29",
+                "AN23"
+            ],
+            "effects": {
+                "honey_production": 2.0,
+                "mood_bonus": 0.05
+            }
+        },
+        "plague": {
+            "trigger": {
+                "disease_vectors_high": true,
+                "poor_sanitation": true
+            },
+            "effects": {
+                "npc_health": -0.3,
+                "deaths_possible": true,
+                "livestock_loss": 0.5
+            }
+        }
+    },
+    "bacteria_microbes": {
+        "beneficial": {
+            "BM01": {
+                "n": "gut_flora",
+                "location": "npc_internal",
+                "benefit": "digestion"
+            },
+            "BM02": {
+                "n": "soil_bacteria",
+                "location": "farm",
+                "benefit": "fertility"
+            },
+            "BM03": {
+                "n": "fermenting_yeast",
+                "location": "bar,kitchen",
+                "benefit": "alcohol,bread"
+            }
+        },
+        "harmful": {
+            "BM04": {
+                "n": "waterborne_pathogen",
+                "location": "poor_water",
+                "disease": "cholera_like"
+            },
+            "BM05": {
+                "n": "airborne_virus",
+                "location": "crowded_areas",
+                "disease": "flu_like"
+            },
+            "BM06": {
+                "n": "wound_infection",
+                "location": "untreated_injury",
+                "disease": "sepsis"
+            }
+        }
+    }
+}

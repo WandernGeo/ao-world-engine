@@ -1,0 +1,211 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Delivery System",
+        "description": "Drones, couriers, and package delivery infrastructure"
+    },
+    "delivery_methods": {
+        "D01": {
+            "n": "drone_standard",
+            "speed": 5,
+            "capacity": 2,
+            "cost": 10,
+            "coverage": [
+                "central_spire",
+                "chrome_district",
+                "neon_district"
+            ]
+        },
+        "D02": {
+            "n": "drone_express",
+            "speed": 10,
+            "capacity": 1,
+            "cost": 25,
+            "coverage": [
+                "all_except_ruins"
+            ]
+        },
+        "D03": {
+            "n": "courier_foot",
+            "speed": 2,
+            "capacity": 10,
+            "cost": 5,
+            "coverage": [
+                "all"
+            ]
+        },
+        "D04": {
+            "n": "courier_vehicle",
+            "speed": 4,
+            "capacity": 50,
+            "cost": 15,
+            "coverage": [
+                "main_roads"
+            ]
+        },
+        "D05": {
+            "n": "mail_postal",
+            "speed": 1,
+            "capacity": 100,
+            "cost": 2,
+            "coverage": [
+                "official_routes"
+            ]
+        }
+    },
+    "drone_depots": {
+        "DD01": {
+            "name": "SkyPort Alpha",
+            "district": "central_spire",
+            "drones": 50,
+            "range": 5,
+            "operator": "Corp"
+        },
+        "DD02": {
+            "name": "Market Hub",
+            "district": "market",
+            "drones": 30,
+            "range": 3,
+            "operator": "Corp"
+        },
+        "DD03": {
+            "name": "Industrial Dock",
+            "district": "industrial_ring",
+            "drones": 20,
+            "range": 4,
+            "operator": "Corp"
+        }
+    },
+    "courier_companies": {
+        "CC01": {
+            "name": "Swift Feet",
+            "type": "foot",
+            "couriers": 100,
+            "districts": [
+                "all"
+            ],
+            "fee_base": 5
+        },
+        "CC02": {
+            "name": "Wheel Rush",
+            "type": "vehicle",
+            "couriers": 50,
+            "districts": [
+                "main"
+            ],
+            "fee_base": 15
+        },
+        "CC03": {
+            "name": "Shadow Runners",
+            "type": "foot",
+            "couriers": 30,
+            "districts": [
+                "undercity",
+                "ruins"
+            ],
+            "illegal_ok": true
+        }
+    },
+    "delivery_zones": {
+        "premium": {
+            "districts": [
+                "central_spire",
+                "temple_quarter"
+            ],
+            "methods": [
+                "D01",
+                "D02",
+                "D04"
+            ],
+            "time_multiplier": 0.5,
+            "price_multiplier": 1.5
+        },
+        "standard": {
+            "districts": [
+                "neon_district",
+                "chrome_district",
+                "market",
+                "industrial_ring"
+            ],
+            "methods": [
+                "D01",
+                "D03",
+                "D04"
+            ],
+            "time_multiplier": 1.0,
+            "price_multiplier": 1.0
+        },
+        "limited": {
+            "districts": [
+                "green_zone",
+                "waterfront"
+            ],
+            "methods": [
+                "D03",
+                "D05"
+            ],
+            "time_multiplier": 1.5,
+            "price_multiplier": 0.8
+        },
+        "restricted": {
+            "districts": [
+                "undercity",
+                "the_ruins"
+            ],
+            "methods": [
+                "D03"
+            ],
+            "time_multiplier": 3.0,
+            "price_multiplier": 2.0,
+            "requires_escort": true
+        }
+    },
+    "tracking": {
+        "drone": {
+            "tracked": true,
+            "gps": true,
+            "tamper_alert": true
+        },
+        "courier_official": {
+            "tracked": true,
+            "gps": false,
+            "checkpoints": true
+        },
+        "courier_shadow": {
+            "tracked": false,
+            "anonymous": true
+        }
+    },
+    "events": {
+        "drone_hijack": {
+            "trigger": {
+                "undercity_flight": true,
+                "low_security": true
+            },
+            "effects": {
+                "cargo_lost": true,
+                "drone_damaged": 0.5
+            }
+        },
+        "courier_mugging": {
+            "trigger": {
+                "dangerous_district": true,
+                "night": true
+            },
+            "effects": {
+                "cargo_lost": true,
+                "courier_injured": 0.3
+            }
+        },
+        "delayed_delivery": {
+            "trigger": {
+                "weather_bad": true,
+                "traffic_heavy": true
+            },
+            "effects": {
+                "time_multiplier": 2.0,
+                "customer_unhappy": true
+            }
+        }
+    }
+}

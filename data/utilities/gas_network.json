@@ -1,0 +1,135 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Gas Network",
+        "description": "Gas supply for heating, cooking, and vehicles"
+    },
+    "sources": {
+        "official_pipeline": {
+            "operator": "Temple Energy",
+            "capacity": 500,
+            "price": 10,
+            "quality": 0.95,
+            "regulated": true
+        },
+        "black_market": {
+            "operator": "Underground",
+            "capacity": 100,
+            "price": 25,
+            "quality": 0.70,
+            "regulated": false,
+            "explosion_risk": 0.05
+        },
+        "bio_gas": {
+            "operator": "Green Collective",
+            "capacity": 50,
+            "price": 8,
+            "quality": 0.80,
+            "regulated": true,
+            "renewable": true
+        }
+    },
+    "distribution": {
+        "central_spire": {
+            "source": "official_pipeline",
+            "coverage": 1.0
+        },
+        "temple_quarter": {
+            "source": "official_pipeline",
+            "coverage": 1.0
+        },
+        "neon_district": {
+            "source": "official_pipeline",
+            "coverage": 0.9
+        },
+        "chrome_district": {
+            "source": "official_pipeline",
+            "coverage": 0.95
+        },
+        "market": {
+            "source": "official_pipeline",
+            "coverage": 0.8
+        },
+        "green_zone": {
+            "source": "bio_gas",
+            "coverage": 0.6
+        },
+        "industrial_ring": {
+            "source": "official_pipeline",
+            "coverage": 1.0
+        },
+        "undercity": {
+            "source": "black_market",
+            "coverage": 0.4
+        },
+        "waterfront": {
+            "source": "official_pipeline",
+            "coverage": 0.5
+        },
+        "the_ruins": {
+            "source": "black_market",
+            "coverage": 0.1
+        }
+    },
+    "usage": {
+        "heating": {
+            "consumption": 20,
+            "season": "winter",
+            "essential": true
+        },
+        "cooking": {
+            "consumption": 5,
+            "season": "all",
+            "essential": true
+        },
+        "vehicles": {
+            "consumption": 30,
+            "season": "all",
+            "essential": false
+        },
+        "industrial": {
+            "consumption": 100,
+            "season": "all",
+            "essential": true
+        }
+    },
+    "billing": {
+        "residential_rate": 8,
+        "commercial_rate": 6,
+        "industrial_rate": 4
+    },
+    "events": {
+        "explosion": {
+            "trigger": {
+                "black_market_use": true,
+                "quality": "low"
+            },
+            "effects": {
+                "deaths": "1-10",
+                "building_damage": 0.5,
+                "fire": true
+            }
+        },
+        "shortage": {
+            "trigger": {
+                "winter": true,
+                "demand_exceeds_supply": true
+            },
+            "effects": {
+                "rationing": true,
+                "price_increase": 3.0,
+                "black_market_growth": 0.5
+            }
+        },
+        "leak": {
+            "trigger": {
+                "sabotage": true,
+                "infrastructure_failure": true
+            },
+            "effects": {
+                "explosion_risk": 0.3,
+                "evacuation": true
+            }
+        }
+    }
+}

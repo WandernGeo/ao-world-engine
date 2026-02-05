@@ -1,0 +1,172 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Water System",
+        "description": "Water supply, quality, and distribution"
+    },
+    "reservoirs": {
+        "main": {
+            "capacity": 1000000,
+            "current": 800000,
+            "source": "river",
+            "treatment": "standard"
+        },
+        "recycled": {
+            "capacity": 200000,
+            "current": 150000,
+            "source": "greywater",
+            "treatment": "advanced"
+        },
+        "rainwater": {
+            "capacity": 50000,
+            "current": 30000,
+            "source": "collection",
+            "treatment": "basic"
+        }
+    },
+    "treatment_plants": {
+        "TP01": {
+            "name": "Central Purification",
+            "district": "industrial_ring",
+            "output_quality": 0.95,
+            "operator": "Corp"
+        },
+        "TP02": {
+            "name": "Temple Springs",
+            "district": "temple_quarter",
+            "output_quality": 0.99,
+            "operator": "Temple"
+        },
+        "TP03": {
+            "name": "Reclaim Facility",
+            "district": "green_zone",
+            "output_quality": 0.80,
+            "operator": "Collective"
+        }
+    },
+    "distribution": {
+        "central_spire": {
+            "quality": 0.98,
+            "pressure": "high",
+            "source": "TP02"
+        },
+        "temple_quarter": {
+            "quality": 0.97,
+            "pressure": "high",
+            "source": "TP02"
+        },
+        "neon_district": {
+            "quality": 0.85,
+            "pressure": "medium",
+            "source": "TP01"
+        },
+        "chrome_district": {
+            "quality": 0.88,
+            "pressure": "medium",
+            "source": "TP01"
+        },
+        "market": {
+            "quality": 0.80,
+            "pressure": "medium",
+            "source": "TP01"
+        },
+        "green_zone": {
+            "quality": 0.75,
+            "pressure": "low",
+            "source": "TP03"
+        },
+        "industrial_ring": {
+            "quality": 0.70,
+            "pressure": "high",
+            "source": "TP01"
+        },
+        "undercity": {
+            "quality": 0.40,
+            "pressure": "very_low",
+            "source": "none",
+            "scavenged": true
+        },
+        "waterfront": {
+            "quality": 0.60,
+            "pressure": "low",
+            "source": "TP01"
+        },
+        "the_ruins": {
+            "quality": 0.20,
+            "pressure": "none",
+            "source": "rainwater"
+        }
+    },
+    "billing": {
+        "residential_rate": 2,
+        "commercial_rate": 1.5,
+        "industrial_rate": 1,
+        "disconnect_after_days": 14
+    },
+    "quality_effects": {
+        "excellent": {
+            "range": [
+                0.9,
+                1.0
+            ],
+            "health_bonus": 0.05,
+            "disease_risk": 0.0
+        },
+        "good": {
+            "range": [
+                0.7,
+                0.9
+            ],
+            "health_bonus": 0.0,
+            "disease_risk": 0.02
+        },
+        "poor": {
+            "range": [
+                0.4,
+                0.7
+            ],
+            "health_bonus": -0.05,
+            "disease_risk": 0.1
+        },
+        "dangerous": {
+            "range": [
+                0.0,
+                0.4
+            ],
+            "health_bonus": -0.2,
+            "disease_risk": 0.3
+        }
+    },
+    "events": {
+        "contamination": {
+            "trigger": {
+                "sabotage": true,
+                "industrial_leak": true
+            },
+            "effects": {
+                "quality_drop": 0.5,
+                "disease_outbreak_chance": 0.4
+            }
+        },
+        "drought": {
+            "trigger": {
+                "weather": "drought"
+            },
+            "effects": {
+                "rationing": true,
+                "pressure_drop": 0.5,
+                "price_increase": 2.0
+            }
+        },
+        "pipe_burst": {
+            "trigger": {
+                "infrastructure_age": 0.8,
+                "freeze": true
+            },
+            "effects": {
+                "district_outage": true,
+                "flooding": 0.3
+            }
+        }
+    }
+}

@@ -1,0 +1,739 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Wildlife Pack",
+        "description": "Animals, pets, birds, insects for city ecosystem"
+    },
+    "wildlife_types": {
+        "_desc": "Categories of wildlife (6 types)",
+        "WT01": "domestic_pet",
+        "WT02": "urban_wildlife",
+        "WT03": "pest",
+        "WT04": "livestock",
+        "WT05": "bird",
+        "WT06": "aquatic"
+    },
+    "animals": {
+        "_desc": "All creatures in the city (50 unique)",
+        "AN01": {
+            "n": "stray_cat",
+            "type": "WT02",
+            "habitat": [
+                "alley",
+                "rooftop",
+                "market"
+            ],
+            "behavior": "hunter",
+            "diet": "carnivore",
+            "tameable": true
+        },
+        "AN02": {
+            "n": "stray_dog",
+            "type": "WT02",
+            "habitat": [
+                "street",
+                "junkyard",
+                "park"
+            ],
+            "behavior": "pack",
+            "diet": "omnivore",
+            "tameable": true
+        },
+        "AN03": {
+            "n": "cyber_rat",
+            "type": "WT03",
+            "habitat": [
+                "sewer",
+                "undercity",
+                "warehouse"
+            ],
+            "behavior": "swarm",
+            "diet": "omnivore",
+            "tameable": false
+        },
+        "AN04": {
+            "n": "neon_pigeon",
+            "type": "WT05",
+            "habitat": [
+                "rooftop",
+                "plaza",
+                "temple"
+            ],
+            "behavior": "flock",
+            "diet": "herbivore",
+            "tameable": false
+        },
+        "AN05": {
+            "n": "raven",
+            "type": "WT05",
+            "habitat": [
+                "ruins",
+                "cemetery",
+                "spire"
+            ],
+            "behavior": "solitary",
+            "diet": "omnivore",
+            "tameable": true
+        },
+        "AN06": {
+            "n": "pet_cat",
+            "type": "WT01",
+            "habitat": [
+                "home",
+                "shop"
+            ],
+            "behavior": "companion",
+            "diet": "carnivore",
+            "tameable": true
+        },
+        "AN07": {
+            "n": "pet_dog",
+            "type": "WT01",
+            "habitat": [
+                "home",
+                "security"
+            ],
+            "behavior": "companion",
+            "diet": "omnivore",
+            "tameable": true
+        },
+        "AN08": {
+            "n": "synth_bird",
+            "type": "WT01",
+            "habitat": [
+                "home",
+                "spire"
+            ],
+            "behavior": "songbird",
+            "diet": "none",
+            "tameable": true
+        },
+        "AN09": {
+            "n": "cockroach",
+            "type": "WT03",
+            "habitat": [
+                "everywhere"
+            ],
+            "behavior": "swarm",
+            "diet": "scavenger",
+            "tameable": false
+        },
+        "AN10": {
+            "n": "sewer_gator",
+            "type": "WT06",
+            "habitat": [
+                "sewer",
+                "waterfront"
+            ],
+            "behavior": "ambush",
+            "diet": "carnivore",
+            "tameable": false
+        },
+        "AN11": {
+            "n": "bat",
+            "type": "WT02",
+            "habitat": [
+                "cave",
+                "ruins",
+                "undercity"
+            ],
+            "behavior": "colony",
+            "diet": "insectivore",
+            "tameable": false
+        },
+        "AN12": {
+            "n": "sparrow",
+            "type": "WT05",
+            "habitat": [
+                "park",
+                "market",
+                "green_zone"
+            ],
+            "behavior": "flock",
+            "diet": "herbivore",
+            "tameable": false
+        },
+        "AN13": {
+            "n": "crow",
+            "type": "WT05",
+            "habitat": [
+                "everywhere"
+            ],
+            "behavior": "murders",
+            "diet": "scavenger",
+            "tameable": true
+        },
+        "AN14": {
+            "n": "seagull",
+            "type": "WT05",
+            "habitat": [
+                "waterfront",
+                "market"
+            ],
+            "behavior": "flock",
+            "diet": "scavenger",
+            "tameable": false
+        },
+        "AN15": {
+            "n": "mutant_fish",
+            "type": "WT06",
+            "habitat": [
+                "river",
+                "canal"
+            ],
+            "behavior": "school",
+            "diet": "omnivore",
+            "tameable": false
+        },
+        "AN16": {
+            "n": "chicken",
+            "type": "WT04",
+            "habitat": [
+                "farm",
+                "market"
+            ],
+            "behavior": "flock",
+            "diet": "herbivore",
+            "product": "eggs"
+        },
+        "AN17": {
+            "n": "cow",
+            "type": "WT04",
+            "habitat": [
+                "farm"
+            ],
+            "behavior": "herd",
+            "diet": "herbivore",
+            "product": "meat,milk"
+        },
+        "AN18": {
+            "n": "pig",
+            "type": "WT04",
+            "habitat": [
+                "farm"
+            ],
+            "behavior": "herd",
+            "diet": "omnivore",
+            "product": "meat"
+        },
+        "AN19": {
+            "n": "sheep",
+            "type": "WT04",
+            "habitat": [
+                "farm",
+                "green_zone"
+            ],
+            "behavior": "herd",
+            "diet": "herbivore",
+            "product": "wool,meat"
+        },
+        "AN20": {
+            "n": "goat",
+            "type": "WT04",
+            "habitat": [
+                "farm",
+                "ruins"
+            ],
+            "behavior": "herd",
+            "diet": "herbivore",
+            "product": "milk,meat"
+        },
+        "AN21": {
+            "n": "cyber_snake",
+            "type": "WT03",
+            "habitat": [
+                "sewer",
+                "ruins",
+                "lab"
+            ],
+            "behavior": "ambush",
+            "diet": "carnivore",
+            "tameable": false
+        },
+        "AN22": {
+            "n": "moth",
+            "type": "WT03",
+            "habitat": [
+                "everywhere"
+            ],
+            "behavior": "swarm",
+            "diet": "herbivore",
+            "tameable": false
+        },
+        "AN23": {
+            "n": "firefly",
+            "type": "WT02",
+            "habitat": [
+                "green_zone",
+                "park"
+            ],
+            "behavior": "swarm",
+            "diet": "herbivore",
+            "tameable": false
+        },
+        "AN24": {
+            "n": "mosquito",
+            "type": "WT03",
+            "habitat": [
+                "waterfront",
+                "sewer"
+            ],
+            "behavior": "swarm",
+            "diet": "blood",
+            "disease_vector": true
+        },
+        "AN25": {
+            "n": "fly",
+            "type": "WT03",
+            "habitat": [
+                "market",
+                "waste"
+            ],
+            "behavior": "swarm",
+            "diet": "scavenger",
+            "disease_vector": true
+        },
+        "AN26": {
+            "n": "beetle",
+            "type": "WT02",
+            "habitat": [
+                "everywhere"
+            ],
+            "behavior": "solitary",
+            "diet": "scavenger",
+            "tameable": false
+        },
+        "AN27": {
+            "n": "spider",
+            "type": "WT02",
+            "habitat": [
+                "corners",
+                "ruins",
+                "warehouse"
+            ],
+            "behavior": "solitary",
+            "diet": "insectivore",
+            "tameable": false
+        },
+        "AN28": {
+            "n": "ant",
+            "type": "WT02",
+            "habitat": [
+                "everywhere"
+            ],
+            "behavior": "colony",
+            "diet": "omnivore",
+            "tameable": false
+        },
+        "AN29": {
+            "n": "bee",
+            "type": "WT02",
+            "habitat": [
+                "green_zone",
+                "rooftop_gardens"
+            ],
+            "behavior": "hive",
+            "diet": "herbivore",
+            "product": "honey"
+        },
+        "AN30": {
+            "n": "rabbit",
+            "type": "WT04",
+            "habitat": [
+                "green_zone",
+                "farm"
+            ],
+            "behavior": "warren",
+            "diet": "herbivore",
+            "product": "meat,fur"
+        },
+        "AN31": {
+            "n": "raccoon",
+            "type": "WT02",
+            "habitat": [
+                "alley",
+                "park",
+                "residential"
+            ],
+            "behavior": "solitary",
+            "diet": "omnivore",
+            "tameable": false
+        },
+        "AN32": {
+            "n": "fox",
+            "type": "WT02",
+            "habitat": [
+                "outzone",
+                "park"
+            ],
+            "behavior": "solitary",
+            "diet": "carnivore",
+            "tameable": true
+        },
+        "AN33": {
+            "n": "hawk",
+            "type": "WT05",
+            "habitat": [
+                "rooftop",
+                "spire"
+            ],
+            "behavior": "solitary",
+            "diet": "carnivore",
+            "tameable": true
+        },
+        "AN34": {
+            "n": "owl",
+            "type": "WT05",
+            "habitat": [
+                "ruins",
+                "park",
+                "temple"
+            ],
+            "behavior": "solitary",
+            "diet": "carnivore",
+            "tameable": true
+        },
+        "AN35": {
+            "n": "duck",
+            "type": "WT05",
+            "habitat": [
+                "park",
+                "waterfront"
+            ],
+            "behavior": "flock",
+            "diet": "omnivore",
+            "product": "eggs"
+        },
+        "AN36": {
+            "n": "goose",
+            "type": "WT05",
+            "habitat": [
+                "park",
+                "farm"
+            ],
+            "behavior": "flock",
+            "diet": "herbivore",
+            "tameable": false
+        },
+        "AN37": {
+            "n": "horse",
+            "type": "WT04",
+            "habitat": [
+                "farm",
+                "outzone"
+            ],
+            "behavior": "herd",
+            "diet": "herbivore",
+            "rideable": true
+        },
+        "AN38": {
+            "n": "mule",
+            "type": "WT04",
+            "habitat": [
+                "farm",
+                "market"
+            ],
+            "behavior": "pack_animal",
+            "diet": "herbivore",
+            "cargo": true
+        },
+        "AN39": {
+            "n": "carp",
+            "type": "WT06",
+            "habitat": [
+                "river",
+                "canal",
+                "pond"
+            ],
+            "behavior": "school",
+            "diet": "omnivore",
+            "product": "food"
+        },
+        "AN40": {
+            "n": "eel",
+            "type": "WT06",
+            "habitat": [
+                "sewer",
+                "canal"
+            ],
+            "behavior": "solitary",
+            "diet": "carnivore",
+            "product": "food"
+        },
+        "AN41": {
+            "n": "turtle",
+            "type": "WT06",
+            "habitat": [
+                "pond",
+                "waterfront"
+            ],
+            "behavior": "solitary",
+            "diet": "omnivore",
+            "tameable": true
+        },
+        "AN42": {
+            "n": "frog",
+            "type": "WT06",
+            "habitat": [
+                "pond",
+                "sewer",
+                "green_zone"
+            ],
+            "behavior": "solitary",
+            "diet": "insectivore",
+            "tameable": false
+        },
+        "AN43": {
+            "n": "guard_dog",
+            "type": "WT01",
+            "habitat": [
+                "security",
+                "warehouse"
+            ],
+            "behavior": "guard",
+            "diet": "carnivore",
+            "aggressive": true
+        },
+        "AN44": {
+            "n": "messenger_pigeon",
+            "type": "WT01",
+            "habitat": [
+                "rooftop",
+                "resistance"
+            ],
+            "behavior": "homing",
+            "diet": "herbivore",
+            "utility": "mail"
+        },
+        "AN45": {
+            "n": "lab_rat",
+            "type": "WT04",
+            "habitat": [
+                "lab"
+            ],
+            "behavior": "caged",
+            "diet": "omnivore",
+            "product": "experiments"
+        },
+        "AN46": {
+            "n": "parrot",
+            "type": "WT01",
+            "habitat": [
+                "home",
+                "bar"
+            ],
+            "behavior": "companion",
+            "diet": "herbivore",
+            "speaks": true
+        },
+        "AN47": {
+            "n": "monkey",
+            "type": "WT02",
+            "habitat": [
+                "outzone",
+                "lab"
+            ],
+            "behavior": "troop",
+            "diet": "omnivore",
+            "tameable": true
+        },
+        "AN48": {
+            "n": "worm",
+            "type": "WT02",
+            "habitat": [
+                "soil",
+                "compost"
+            ],
+            "behavior": "colony",
+            "diet": "decomposer",
+            "utility": "composting"
+        },
+        "AN49": {
+            "n": "termite",
+            "type": "WT03",
+            "habitat": [
+                "wood_structures"
+            ],
+            "behavior": "colony",
+            "diet": "wood",
+            "destructive": true
+        },
+        "AN50": {
+            "n": "scorpion",
+            "type": "WT03",
+            "habitat": [
+                "ruins",
+                "outzone"
+            ],
+            "behavior": "solitary",
+            "diet": "carnivore",
+            "venomous": true
+        }
+    },
+    "pet_stores": {
+        "_desc": "Pet shops in the city",
+        "PS01": {
+            "name": "Neon Paws",
+            "district": "neon_district",
+            "sells": [
+                "AN06",
+                "AN07",
+                "AN08",
+                "AN46"
+            ]
+        },
+        "PS02": {
+            "name": "Temple Aviary",
+            "district": "temple_quarter",
+            "sells": [
+                "AN08",
+                "AN44",
+                "AN34"
+            ]
+        },
+        "PS03": {
+            "name": "Undercity Menagerie",
+            "district": "undercity",
+            "sells": [
+                "AN03",
+                "AN21",
+                "AN43"
+            ]
+        }
+    },
+    "farms": {
+        "_desc": "Livestock farms supplying the city",
+        "FM01": {
+            "name": "Green Zone Collective",
+            "district": "green_zone",
+            "produces": [
+                "AN16",
+                "AN17",
+                "AN19",
+                "AN35"
+            ]
+        },
+        "FM02": {
+            "name": "Outzone Ranch",
+            "district": "outzone",
+            "produces": [
+                "AN17",
+                "AN18",
+                "AN37",
+                "AN38"
+            ]
+        },
+        "FM03": {
+            "name": "Temple Gardens",
+            "district": "temple_quarter",
+            "produces": [
+                "AN16",
+                "AN29",
+                "AN30"
+            ]
+        }
+    },
+    "slaughterhouses": {
+        "_desc": "Meat processing facilities",
+        "SH01": {
+            "name": "Industrial Meats",
+            "district": "industrial_ring",
+            "processes": [
+                "AN17",
+                "AN18",
+                "AN19",
+                "AN20"
+            ]
+        },
+        "SH02": {
+            "name": "Underground Butcher",
+            "district": "undercity",
+            "processes": [
+                "AN03",
+                "AN31"
+            ],
+            "illegal": true
+        }
+    },
+    "ecosystem_roles": {
+        "decomposer": {
+            "function": "break_down_waste",
+            "health_benefit": true
+        },
+        "pollinator": {
+            "function": "support_plants",
+            "animals": [
+                "AN29"
+            ]
+        },
+        "predator": {
+            "function": "control_population",
+            "animals": [
+                "AN01",
+                "AN05",
+                "AN33",
+                "AN34"
+            ]
+        },
+        "scavenger": {
+            "function": "clean_waste",
+            "animals": [
+                "AN03",
+                "AN13",
+                "AN25"
+            ]
+        },
+        "disease_vector": {
+            "function": "spread_illness",
+            "animals": [
+                "AN24",
+                "AN25"
+            ],
+            "health_risk": true
+        }
+    },
+    "npc_interactions": {
+        "adopt_pet": {
+            "cost": "50-500 GEP",
+            "happiness_boost": 0.15,
+            "responsibility": "feed,walk"
+        },
+        "hunt": {
+            "targets": [
+                "AN02",
+                "AN31",
+                "AN32"
+            ],
+            "skill": "ranged",
+            "reward": "meat,fur"
+        },
+        "pest_control": {
+            "targets": [
+                "AN03",
+                "AN09",
+                "AN24"
+            ],
+            "skill": "basic",
+            "fee": "20 GEP"
+        },
+        "fish": {
+            "targets": [
+                "AN15",
+                "AN39",
+                "AN40"
+            ],
+            "location": "waterfront",
+            "reward": "food"
+        },
+        "farm_work": {
+            "location": "farm",
+            "income": "30 GEP/day",
+            "produces": "eggs,milk,meat"
+        },
+        "beekeeping": {
+            "animal": "AN29",
+            "location": "rooftop_garden",
+            "produces": "honey"
+        }
+    }
+}

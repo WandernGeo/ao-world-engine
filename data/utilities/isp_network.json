@@ -1,0 +1,193 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO ISP Network",
+        "description": "Internet Service Providers and network infrastructure"
+    },
+    "isps": {
+        "I01": {
+            "name": "SacredLink",
+            "faction": "Temple",
+            "coverage": [
+                "central_spire",
+                "temple_quarter",
+                "chrome_district"
+            ],
+            "bandwidth": 1000,
+            "latency": 5,
+            "price": 50,
+            "censored": true,
+            "censored_topics": [
+                "resistance",
+                "temple_criticism",
+                "corruption",
+                "prophet_secrets"
+            ],
+            "tracks_users": true,
+            "uptime": 0.99
+        },
+        "I02": {
+            "name": "OmniConnect",
+            "faction": "Corp",
+            "coverage": [
+                "neon_district",
+                "market",
+                "chrome_district",
+                "industrial_ring"
+            ],
+            "bandwidth": 800,
+            "latency": 10,
+            "price": 100,
+            "censored": false,
+            "tracks_users": true,
+            "sells_data": true,
+            "uptime": 0.95
+        },
+        "I03": {
+            "name": "DarkWave",
+            "faction": "Underground",
+            "coverage": [
+                "undercity",
+                "the_ruins",
+                "waterfront"
+            ],
+            "bandwidth": 200,
+            "latency": 50,
+            "price": 0,
+            "censored": false,
+            "tracks_users": false,
+            "encrypted": true,
+            "uptime": 0.70
+        },
+        "I04": {
+            "name": "GhostNet",
+            "faction": "Resistance",
+            "coverage": [
+                "all"
+            ],
+            "bandwidth": 100,
+            "latency": 100,
+            "price": 25,
+            "censored": false,
+            "tracks_users": false,
+            "encrypted": true,
+            "hidden": true,
+            "invite_only": true,
+            "uptime": 0.60
+        }
+    },
+    "network_hubs": {
+        "NH01": {
+            "name": "Temple Data Spire",
+            "isp": "I01",
+            "location": "central_spire",
+            "security": 0.95
+        },
+        "NH02": {
+            "name": "OmniCore Exchange",
+            "isp": "I02",
+            "location": "chrome_district",
+            "security": 0.85
+        },
+        "NH03": {
+            "name": "Shadow Mesh Node",
+            "isp": "I03",
+            "location": "sewer",
+            "security": 0.50
+        },
+        "NH04": {
+            "name": "Dead Drop Server",
+            "isp": "I04",
+            "location": "the_ruins",
+            "security": 0.40,
+            "mobile": true
+        }
+    },
+    "hacking_mechanics": {
+        "skill_levels": {
+            "novice": {
+                "range": [
+                    0,
+                    0.3
+                ],
+                "max_target_security": 0.4
+            },
+            "competent": {
+                "range": [
+                    0.3,
+                    0.6
+                ],
+                "max_target_security": 0.7
+            },
+            "expert": {
+                "range": [
+                    0.6,
+                    0.85
+                ],
+                "max_target_security": 0.9
+            },
+            "elite": {
+                "range": [
+                    0.85,
+                    1.0
+                ],
+                "max_target_security": 1.0
+            }
+        },
+        "actions": {
+            "breach": {
+                "base_time": 60,
+                "detection_risk": 0.3
+            },
+            "data_theft": {
+                "base_time": 30,
+                "detection_risk": 0.2
+            },
+            "plant_virus": {
+                "base_time": 45,
+                "detection_risk": 0.4
+            },
+            "ddos": {
+                "base_time": 10,
+                "detection_risk": 0.5
+            },
+            "identity_spoof": {
+                "base_time": 20,
+                "detection_risk": 0.1
+            }
+        },
+        "countermeasures": {
+            "firewall": {
+                "blocks_chance": 0.3,
+                "alert_chance": 0.5
+            },
+            "ice": {
+                "damage_to_hacker": 0.2,
+                "trace_chance": 0.7
+            },
+            "black_ice": {
+                "damage_to_hacker": 0.5,
+                "trace_chance": 0.9,
+                "lethal": true
+            }
+        }
+    },
+    "bandwidth_effects": {
+        "high": {
+            "hack_speed_bonus": 0.3,
+            "download_speed": 1.0
+        },
+        "medium": {
+            "hack_speed_bonus": 0.0,
+            "download_speed": 0.5
+        },
+        "low": {
+            "hack_speed_bonus": -0.3,
+            "download_speed": 0.2
+        },
+        "none": {
+            "hack_speed_bonus": -1.0,
+            "download_speed": 0.0
+        }
+    }
+}

@@ -1,0 +1,175 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Mail System",
+        "description": "Postal infrastructure for letters, packages, and official documents"
+    },
+    "mail_types": {
+        "ML01": {
+            "n": "letter",
+            "weight": 0.1,
+            "delivery_time": 1,
+            "cost": 2
+        },
+        "ML02": {
+            "n": "package",
+            "weight": 5,
+            "delivery_time": 2,
+            "cost": 15
+        },
+        "ML03": {
+            "n": "bill",
+            "weight": 0.1,
+            "delivery_time": 1,
+            "cost": 0,
+            "official": true
+        },
+        "ML04": {
+            "n": "summons",
+            "weight": 0.1,
+            "delivery_time": 1,
+            "cost": 0,
+            "official": true,
+            "requires_signature": true
+        },
+        "ML05": {
+            "n": "propaganda",
+            "weight": 0.2,
+            "delivery_time": 1,
+            "cost": 0,
+            "bulk": true
+        },
+        "ML06": {
+            "n": "contraband",
+            "weight": 2,
+            "delivery_time": 3,
+            "cost": 50,
+            "hidden": true,
+            "illegal": true
+        }
+    },
+    "post_offices": {
+        "PO01": {
+            "name": "Central Post Authority",
+            "district": "central_spire",
+            "operator": "Temple",
+            "capacity": 1000
+        },
+        "PO02": {
+            "name": "Market Depot",
+            "district": "market",
+            "operator": "Corp",
+            "capacity": 500
+        },
+        "PO03": {
+            "name": "Neon Express Hub",
+            "district": "neon_district",
+            "operator": "Corp",
+            "capacity": 400
+        },
+        "PO04": {
+            "name": "Temple Courier House",
+            "district": "temple_quarter",
+            "operator": "Temple",
+            "capacity": 300
+        },
+        "PO05": {
+            "name": "Shadow Drop",
+            "district": "undercity",
+            "operator": "Underground",
+            "capacity": 100,
+            "contraband": true
+        }
+    },
+    "carriers": {
+        "postal_worker": {
+            "archetype": "mail_carrier",
+            "income": 60,
+            "route_size": 50,
+            "speed": "walking"
+        },
+        "courier": {
+            "archetype": "courier",
+            "income": 100,
+            "route_size": 20,
+            "speed": "vehicle"
+        },
+        "messenger_pigeon": {
+            "archetype": "animal",
+            "income": 0,
+            "route_size": 5,
+            "speed": "flying",
+            "uses": [
+                "AN44"
+            ]
+        },
+        "dead_drop": {
+            "archetype": "location",
+            "income": 0,
+            "route_size": 10,
+            "speed": "static",
+            "secret": true
+        }
+    },
+    "routes": {
+        "official": {
+            "coverage": [
+                "central_spire",
+                "temple_quarter",
+                "chrome_district",
+                "neon_district",
+                "market"
+            ],
+            "frequency": 1,
+            "reliability": 0.98,
+            "tracked": true
+        },
+        "standard": {
+            "coverage": [
+                "green_zone",
+                "waterfront",
+                "industrial_ring"
+            ],
+            "frequency": 2,
+            "reliability": 0.90,
+            "tracked": false
+        },
+        "undercity": {
+            "coverage": [
+                "undercity",
+                "the_ruins"
+            ],
+            "frequency": 5,
+            "reliability": 0.60,
+            "tracked": false,
+            "bribes_required": true
+        }
+    },
+    "npc_interactions": {
+        "send_letter": {
+            "cost": 2,
+            "time": 1
+        },
+        "send_package": {
+            "cost": 15,
+            "time": 2
+        },
+        "receive_mail": {
+            "events": [
+                "bill_received",
+                "summons_received",
+                "package_received"
+            ]
+        },
+        "intercept_mail": {
+            "skill": "stealth",
+            "difficulty": 0.6,
+            "illegal": true
+        },
+        "smuggle": {
+            "type": "contraband",
+            "risk": 0.3,
+            "reward": "variable"
+        }
+    }
+}

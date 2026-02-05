@@ -1,0 +1,196 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Food Delivery",
+        "description": "Restaurant and food delivery services"
+    },
+    "restaurants": {
+        "R01": {
+            "name": "Neon Noodles",
+            "district": "neon_district",
+            "cuisine": "asian",
+            "price": "low",
+            "quality": 0.6,
+            "delivery": true
+        },
+        "R02": {
+            "name": "Temple Garden",
+            "district": "temple_quarter",
+            "cuisine": "vegetarian",
+            "price": "high",
+            "quality": 0.9,
+            "delivery": true
+        },
+        "R03": {
+            "name": "The Cascade Lounge",
+            "district": "neon_district",
+            "cuisine": "fusion",
+            "price": "medium",
+            "quality": 0.75,
+            "delivery": false
+        },
+        "R04": {
+            "name": "Street Bites",
+            "district": "market",
+            "cuisine": "street_food",
+            "price": "very_low",
+            "quality": 0.5,
+            "delivery": true
+        },
+        "R05": {
+            "name": "Corp Cafeteria",
+            "district": "chrome_district",
+            "cuisine": "standard",
+            "price": "subsidized",
+            "quality": 0.6,
+            "delivery": false
+        },
+        "R06": {
+            "name": "Mama's Kitchen",
+            "district": "green_zone",
+            "cuisine": "home_cooking",
+            "price": "low",
+            "quality": 0.8,
+            "delivery": true
+        },
+        "R07": {
+            "name": "The Pit",
+            "district": "undercity",
+            "cuisine": "mystery_meat",
+            "price": "very_low",
+            "quality": 0.3,
+            "delivery": false
+        },
+        "R08": {
+            "name": "Spire Dining",
+            "district": "central_spire",
+            "cuisine": "fine_dining",
+            "price": "luxury",
+            "quality": 0.95,
+            "delivery": true
+        },
+        "R09": {
+            "name": "Dock Workers Grill",
+            "district": "waterfront",
+            "cuisine": "seafood",
+            "price": "medium",
+            "quality": 0.7,
+            "delivery": true
+        },
+        "R10": {
+            "name": "Vat Grown Palace",
+            "district": "industrial_ring",
+            "cuisine": "synth_food",
+            "price": "low",
+            "quality": 0.4,
+            "delivery": true
+        }
+    },
+    "food_types": {
+        "cooked_meal": {
+            "satiation": 0.4,
+            "quality_bonus": 0.1,
+            "prep_time": 20
+        },
+        "fast_food": {
+            "satiation": 0.3,
+            "quality_bonus": 0.0,
+            "prep_time": 5
+        },
+        "fine_dining": {
+            "satiation": 0.5,
+            "quality_bonus": 0.2,
+            "prep_time": 45,
+            "mood_bonus": 0.1
+        },
+        "street_food": {
+            "satiation": 0.25,
+            "quality_bonus": -0.05,
+            "prep_time": 2,
+            "disease_risk": 0.05
+        },
+        "synth_rations": {
+            "satiation": 0.35,
+            "quality_bonus": -0.1,
+            "prep_time": 1
+        }
+    },
+    "delivery_platforms": {
+        "FD01": {
+            "name": "QuickBite",
+            "coverage": [
+                "premium",
+                "standard"
+            ],
+            "fee": 5,
+            "speed": 15,
+            "drones": true
+        },
+        "FD02": {
+            "name": "StreetEats",
+            "coverage": [
+                "all"
+            ],
+            "fee": 3,
+            "speed": 30,
+            "drones": false
+        },
+        "FD03": {
+            "name": "Temple Provisions",
+            "coverage": [
+                "temple_quarter",
+                "central_spire"
+            ],
+            "fee": 0,
+            "speed": 20,
+            "temple_only": true
+        }
+    },
+    "supply_chain": {
+        "meat": {
+            "sources": [
+                "FM01",
+                "FM02",
+                "SH01"
+            ],
+            "delivery": "daily",
+            "perishable": true,
+            "cold_chain": true
+        },
+        "vegetables": {
+            "sources": [
+                "FM01",
+                "FM03"
+            ],
+            "delivery": "daily",
+            "perishable": true,
+            "cold_chain": false
+        },
+        "synth_ingredients": {
+            "sources": [
+                "industrial_ring"
+            ],
+            "delivery": "weekly",
+            "perishable": false,
+            "cold_chain": false
+        }
+    },
+    "npc_interactions": {
+        "order_delivery": {
+            "cost": "meal_price + fee",
+            "time": "15-45 min",
+            "hunger_satisfied": true
+        },
+        "eat_at_restaurant": {
+            "cost": "meal_price",
+            "time": "30-90 min",
+            "social": true,
+            "mood_bonus": 0.05
+        },
+        "work_as_delivery": {
+            "income": "2 GEP per delivery",
+            "archetype": "delivery_worker",
+            "vehicle_required": false
+        }
+    }
+}

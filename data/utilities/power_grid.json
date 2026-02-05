@@ -1,0 +1,177 @@
+{
+    "_meta": {
+        "version": "1.0.0",
+        "name": "RE:ECHO Power Grid",
+        "description": "City electrical infrastructure"
+    },
+    "power_plants": {
+        "PP01": {
+            "name": "Central Fusion Core",
+            "type": "fusion",
+            "capacity": 500,
+            "district": "central_spire",
+            "operator": "Temple"
+        },
+        "PP02": {
+            "name": "Industrial Reactor",
+            "type": "nuclear",
+            "capacity": 300,
+            "district": "industrial_ring",
+            "operator": "Corp"
+        },
+        "PP03": {
+            "name": "Solar Array Alpha",
+            "type": "solar",
+            "capacity": 100,
+            "district": "green_zone",
+            "operator": "Collective"
+        },
+        "PP04": {
+            "name": "Undercity Generators",
+            "type": "diesel",
+            "capacity": 50,
+            "district": "undercity",
+            "operator": "Underground"
+        }
+    },
+    "grid_zones": {
+        "central_spire": {
+            "supply": "PP01",
+            "reliability": 0.99,
+            "backup": true,
+            "priority": 1
+        },
+        "temple_quarter": {
+            "supply": "PP01",
+            "reliability": 0.97,
+            "backup": true,
+            "priority": 2
+        },
+        "neon_district": {
+            "supply": "PP01,PP02",
+            "reliability": 0.92,
+            "backup": false,
+            "priority": 3
+        },
+        "chrome_district": {
+            "supply": "PP02",
+            "reliability": 0.90,
+            "backup": false,
+            "priority": 4
+        },
+        "market": {
+            "supply": "PP02",
+            "reliability": 0.85,
+            "backup": false,
+            "priority": 5
+        },
+        "green_zone": {
+            "supply": "PP03",
+            "reliability": 0.80,
+            "backup": false,
+            "priority": 6,
+            "bio_power": 0.3
+        },
+        "industrial_ring": {
+            "supply": "PP02",
+            "reliability": 0.88,
+            "backup": true,
+            "priority": 3
+        },
+        "undercity": {
+            "supply": "PP04",
+            "reliability": 0.55,
+            "backup": false,
+            "priority": 7
+        },
+        "waterfront": {
+            "supply": "PP02",
+            "reliability": 0.75,
+            "backup": false,
+            "priority": 6
+        },
+        "the_ruins": {
+            "supply": null,
+            "reliability": 0.15,
+            "backup": false,
+            "priority": 8,
+            "scavenged": true
+        }
+    },
+    "consumption_rates": {
+        "residential": {
+            "base": 10,
+            "per_appliance": 2,
+            "peak_hours": [
+                18,
+                19,
+                20,
+                21
+            ]
+        },
+        "commercial": {
+            "base": 50,
+            "per_employee": 5,
+            "peak_hours": [
+                9,
+                10,
+                11,
+                14,
+                15,
+                16
+            ]
+        },
+        "industrial": {
+            "base": 200,
+            "per_machine": 20,
+            "peak_hours": [
+                6,
+                7,
+                8,
+                22,
+                23
+            ]
+        }
+    },
+    "billing": {
+        "residential_rate": 5,
+        "commercial_rate": 4,
+        "industrial_rate": 3,
+        "late_fee": 0.1,
+        "disconnect_after_days": 7,
+        "reconnect_fee": 50
+    },
+    "events": {
+        "brownout": {
+            "trigger": {
+                "load_exceeds_capacity": 0.95
+            },
+            "effects": {
+                "crime_increase": 0.2,
+                "hacking_bonus": 0.3,
+                "mood_penalty": -0.1
+            }
+        },
+        "blackout": {
+            "trigger": {
+                "storm": true,
+                "sabotage": true
+            },
+            "effects": {
+                "crime_increase": 0.5,
+                "looting_chance": 0.2,
+                "emergency_mode": true
+            }
+        },
+        "surge": {
+            "trigger": {
+                "lightning_strike": true,
+                "hacker_attack": true
+            },
+            "effects": {
+                "electronics_damage": 0.3,
+                "fire_chance": 0.05
+            }
+        }
+    }
+}
