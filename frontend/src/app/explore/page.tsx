@@ -511,6 +511,9 @@ function ExplorePageContent() {
                     <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Graph
                     </Link>
+                    <Link href="/monitor" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Monitor
+                    </Link>
                 </nav>
             </header>
 

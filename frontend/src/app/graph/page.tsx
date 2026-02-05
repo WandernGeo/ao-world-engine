@@ -342,6 +342,9 @@ export default function KnowledgeGraphPage() {
                     <Link href="/graph" className="text-sm font-medium text-white px-3 py-1.5 rounded transition-colors bg-cyan-600/30">
                         Graph
                     </Link>
+                    <Link href="/monitor" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Monitor
+                    </Link>
                 </nav>
                 <div className="ml-auto text-xs text-cyan-400 font-mono hidden md:block">
                     WebGL 3D • Click nodes to select • Drag to rotate

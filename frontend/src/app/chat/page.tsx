@@ -54,6 +54,58 @@ const FALLBACK_NPCS: NPC[] = [
     { id: 'selene_voss', name: 'Selene Voss', archetype: 'Ghost-Child' },
 ];
 
+// Simple client-side NLU for fallback responses
+const CANNED_RESPONSES: Record<string, { patterns: string[]; responses: string[] }> = {
+    greeting: {
+        patterns: ['hi', 'hello', 'hey', 'greetings', 'yo', 'sup'],
+        responses: ['Hey there.', 'What do you want?', 'Oh, it\'s you.', 'Hello, stranger.', 'You again?']
+    },
+    how_are_you: {
+        patterns: ['how are you', 'how you doing', "how's it going", 'you okay', 'what\'s up'],
+        responses: ['Still breathing.', 'Same as always. Surviving.', 'Could be worse. Usually is.', 'Getting by.', 'Don\'t ask.']
+    },
+    weather: {
+        patterns: ['weather', 'rain', 'raining', 'storm', 'cold', 'hot', 'smog'],
+        responses: ['The smog\'s thick today.', 'Rain again. What else is new.', 'At least it\'s not acid rain.', 'Weather doesn\'t change much down here.']
+    },
+    news: {
+        patterns: ['news', 'happening', 'heard', 'rumors', 'what\'s going on', 'anything new'],
+        responses: ['Word is, Temple\'s cracking down harder.', 'Lots of patrols lately. Something\'s coming.', 'People are scared. More than usual.', 'Same old drama between factions.']
+    },
+    work: {
+        patterns: ['work', 'job', 'busy', 'working'],
+        responses: ['Work\'s work. Pays the bills. Barely.', 'Same grind, different day.', 'I do what I have to do.']
+    },
+    safety: {
+        patterns: ['safe', 'dangerous', 'careful', 'crime', 'attack'],
+        responses: ['Safe is relative in this city.', 'Keep your head down and you\'ll be fine. Probably.', 'Trust no one. Good rule of thumb.']
+    },
+    farewell: {
+        patterns: ['bye', 'goodbye', 'later', 'see you', 'gotta go'],
+        responses: ['Later.', 'Watch yourself out there.', 'Don\'t get dead.', 'Stay safe.']
+    },
+    unknown: {
+        patterns: [],
+        responses: ['Hmm.', 'I see.', '...', 'Interesting.', 'Can\'t help you with that.', 'Not my area of expertise.']
+    }
+};
+
+function getLocalResponse(input: string, npcName: string): string {
+    const inputLower = input.toLowerCase();
+    for (const [intent, data] of Object.entries(CANNED_RESPONSES)) {
+        if (intent === 'unknown') continue;
+        for (const pattern of data.patterns) {
+            if (inputLower.includes(pattern)) {
+                const idx = Math.floor(Math.random() * data.responses.length);
+                return data.responses[idx];
+            }
+        }
+    }
+    // Fall back to unknown responses
+    const unknownResponses = CANNED_RESPONSES.unknown.responses;
+    return unknownResponses[Math.floor(Math.random() * unknownResponses.length)];
+}
+
 function ChatPageContent() {
     const searchParams = useSearchParams();
     const npcIdFromUrl = searchParams.get('npc');
@@ -66,6 +118,7 @@ function ChatPageContent() {
     const [npcs, setNpcs] = useState<NPC[]>(FALLBACK_NPCS);
     const [apiBase, setApiBase] = useState(CLOUD_API);
     const [apiStatus, setApiStatus] = useState<'checking' | 'local' | 'cloud' | 'offline'>('checking');
+    const [llmEnabled, setLlmEnabled] = useState(true);
 
     // Find best API endpoint and load NPCs on mount
     useEffect(() => {
@@ -123,6 +176,14 @@ function ChatPageContent() {
         setMessage('');
         setIsLoading(true);
 
+        // If LLM is disabled, use local canned responses immediately
+        if (!llmEnabled) {
+            const localResponse = getLocalResponse(message, selectedNPC.name);
+            setMessages(prev => [...prev, { role: 'npc', content: localResponse, timestamp: Date.now() }]);
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const res = await fetch(`${apiBase}/api/npc/chat`, {
                 method: 'POST',
@@ -131,7 +192,8 @@ function ChatPageContent() {
                     npc_id: selectedNPC.id,
                     message: message,
                     tick: currentTick,
-                    user_id: 'web_user'
+                    user_id: 'web_user',
+                    use_llm: llmEnabled
                 })
             });
 
@@ -140,10 +202,16 @@ function ChatPageContent() {
                 const npcMsg: Message = { role: 'npc', content: data.response, timestamp: Date.now() };
                 setMessages(prev => [...prev, npcMsg]);
             } else {
-                setMessages(prev => [...prev, { role: 'npc', content: '[Error: Could not reach NPC]', timestamp: Date.now() }]);
+                // API error - fall back to local NLU
+                const localResponse = getLocalResponse(message, selectedNPC.name);
+                setMessages(prev => [...prev, { role: 'npc', content: localResponse, timestamp: Date.now() }]);
+                setApiStatus('offline');
             }
         } catch {
-            setMessages(prev => [...prev, { role: 'npc', content: '[Offline - API unavailable]', timestamp: Date.now() }]);
+            // Network error - fall back to local NLU
+            const localResponse = getLocalResponse(message, selectedNPC.name);
+            setMessages(prev => [...prev, { role: 'npc', content: localResponse, timestamp: Date.now() }]);
+            setApiStatus('offline');
         }
 
         setIsLoading(false);
@@ -175,6 +243,9 @@ function ChatPageContent() {
                     </Link>
                     <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Graph
+                    </Link>
+                    <Link href="/monitor" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
+                        Monitor
                     </Link>
                 </nav>
             </header>
@@ -271,7 +342,7 @@ function ChatPageContent() {
                     )}
                 </div>
 
-                {/* Tick Control */}
+                {/* Tick Control & LLM Status */}
                 <div className="w-48 p-4 border-l border-zinc-800">
                     <h3 className="text-xs text-cyan-400 font-mono mb-2">WORLD TIME</h3>
                     <Card className="bg-zinc-900 border-zinc-700">
@@ -296,6 +367,30 @@ function ChatPageContent() {
                                     +10
                                 </Button>
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* LLM Status & Toggle */}
+                    <h3 className="text-xs text-cyan-400 font-mono mt-4 mb-2">AI STATUS</h3>
+                    <Card className="bg-zinc-900 border-zinc-700">
+                        <CardContent className="p-3">
+                            <div className="flex items-center gap-2 mb-2">
+                                <div className={`w-2.5 h-2.5 rounded-full ${llmEnabled && apiStatus !== 'offline' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                                <span className="text-xs text-zinc-400">
+                                    {!llmEnabled ? 'LLM Off (NLU)' : apiStatus === 'offline' ? 'Offline (NLU)' : apiStatus === 'cloud' ? 'Cloud AI' : apiStatus === 'local' ? 'Local AI' : 'Checking...'}
+                                </span>
+                            </div>
+                            <Button
+                                size="sm"
+                                variant={llmEnabled ? 'outline' : 'default'}
+                                onClick={() => setLlmEnabled(!llmEnabled)}
+                                className={`w-full text-xs ${llmEnabled ? 'border-green-600 text-green-400' : 'bg-zinc-700 text-zinc-300'}`}
+                            >
+                                {llmEnabled ? '🤖 LLM ON' : '📝 NLU Only'}
+                            </Button>
+                            <p className="text-[10px] text-zinc-600 mt-1">
+                                {llmEnabled ? 'Using Vertex AI' : 'Using canned responses'}
+                            </p>
                         </CardContent>
                     </Card>
                 </div>
