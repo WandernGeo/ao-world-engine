@@ -342,8 +342,8 @@ export default function KnowledgeGraphPage() {
     const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
     const [hoveredEntity, setHoveredEntity] = useState<Entity | null>(null);
     const [filter, setFilter] = useState<EntityType | 'all'>('all');
-    const [zoom, setZoom] = useState(2.0); // Start zoomed in large
-    const [pan, setPan] = useState({ x: -1400, y: -1100 }); // Center on the graph cluster
+    const [zoom, setZoom] = useState(1.5); // Start with moderate zoom
+    const [pan, setPan] = useState({ x: 0, y: 0 }); // Will be set after data loads
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [isSimulating, setIsSimulating] = useState(false); // Start paused - no drift
@@ -415,6 +415,46 @@ export default function KnowledgeGraphPage() {
         };
         loadData();
     }, []);
+
+    // Auto-center graph when data loads
+    useEffect(() => {
+        if (data.entities.length === 0) return;
+
+        // Calculate entity bounds
+        const xs = data.entities.map(e => e.x);
+        const ys = data.entities.map(e => e.y);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+
+        // Calculate center of entities
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+
+        // Center view on the graph
+        const viewCenterX = width / 2;
+        const viewCenterY = height / 2;
+        setPan({
+            x: viewCenterX - centerX * zoom,
+            y: viewCenterY - centerY * zoom
+        });
+    }, [data.entities.length > 0 ? 1 : 0]); // Only run once when data loads
+
+    // Function to center graph (for Reset button)
+    const centerGraph = () => {
+        if (data.entities.length === 0) return;
+        const xs = data.entities.map(e => e.x);
+        const ys = data.entities.map(e => e.y);
+        const centerX = (Math.min(...xs) + Math.max(...xs)) / 2;
+        const centerY = (Math.min(...ys) + Math.max(...ys)) / 2;
+        setPan({
+            x: width / 2 - centerX * zoom,
+            y: height / 2 - centerY * zoom
+        });
+        setRotationX(0);
+        setRotationY(0);
+    };
 
     // Force-directed simulation
     useEffect(() => {
@@ -910,7 +950,7 @@ export default function KnowledgeGraphPage() {
                             <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.min(30, z + 0.5))}>+</Button>
                             <Button size="sm" variant="outline" onClick={() => setZoom(z => Math.max(0.1, z - 0.5))}>−</Button>
                         </div>
-                        <Button size="sm" variant="outline" onClick={() => { setPan({ x: -1400, y: -1100 }); setZoom(2.0); setRotationX(0); setRotationY(0); }}>Reset</Button>
+                        <Button size="sm" variant="outline" onClick={centerGraph}>Reset</Button>
                         <Button
                             size="sm"
                             variant={autoRotate ? 'default' : 'outline'}
