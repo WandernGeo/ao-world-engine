@@ -19,7 +19,7 @@ interface Message {
     timestamp: number;
 }
 
-const CLOUD_API = 'https://ao-npc-chat-zdku5kri5a-uc.a.run.app';
+const CLOUD_API = 'https://ao-world-engine-api-1071951656531.us-central1.run.app';
 const LOCAL_API = 'http://localhost:8081';
 
 // Try localhost first, fall back to Cloud
@@ -76,7 +76,7 @@ function ChatPageContent() {
 
             // Try to fetch founding NPCs from API
             try {
-                const response = await fetch(`${base}/api/npcs?limit=50`);
+                const response = await fetch(`${base}/api/npcs/all?limit=800`);
                 if (response.ok) {
                     const data = await response.json();
                     const apiNPCs = data.npcs || data;

@@ -89,7 +89,7 @@ async function fetchKnowledgeGraphFromAPI(): Promise<{ entities: Entity[], relat
         const API_BASE = await getApiBase();
         // Fetch NPCs (with full profiles) and buildings from API
         const [npcRes, buildingRes] = await Promise.all([
-            fetch(`${API_BASE}/api/npcs/all?limit=200`),  // 200 NPCs for graph visualization
+            fetch(`${API_BASE}/api/npcs/all?limit=800`),  // All 800 NPCs with full profiles
             fetch(`${API_BASE}/api/buildings`),
         ]);
 
@@ -357,8 +357,7 @@ export default function KnowledgeGraphPage() {
     const [rotationY, setRotationY] = useState(0); // Rotation around Y axis (spin left/right)
     const [isRotating, setIsRotating] = useState(false); // Right-click drag to rotate
     const [rotateStart, setRotateStart] = useState({ x: 0, y: 0 });
-    // Bouncy drag state - track mouse velocity for throw effect
-    const lastDragPos = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 });
+    // Removed bouncy drag state - no more throw effect
 
     const width = 2400; // Huge canvas for spread
     const height = 2000; // More vertical space
@@ -507,10 +506,10 @@ export default function KnowledgeGraphPage() {
                     e.vy += (height / 2 - e.y) * 0.0003;
                     e.vz += (0 - (e.z || 0)) * 0.0001; // Gentle z centering
 
-                    // Bouncy damping (less friction = more bounce)
-                    e.vx *= 0.92;
-                    e.vy *= 0.92;
-                    e.vz *= 0.92;
+                    // High damping (more friction = less bounce)
+                    e.vx *= 0.75;
+                    e.vy *= 0.75;
+                    e.vz *= 0.75;
 
                     // Update position
                     e.x += e.vx;
@@ -725,20 +724,13 @@ export default function KnowledgeGraphPage() {
         const mx = (e.clientX - rect.left - pan.x) / zoom;
         const my = (e.clientY - rect.top - pan.y) / zoom;
 
-        // If dragging a node, update its position
+        // If dragging a node, update its position (no velocity tracking)
         if (draggedNode) {
-            const now = Date.now();
-            // Track velocity for bouncy throw
-            const dt = Math.max(1, now - lastDragPos.current.time) / 1000;
-            const throwVx = (mx - lastDragPos.current.x) / dt * 0.002; // Very gentle throw
-            const throwVy = (my - lastDragPos.current.y) / dt * 0.002;
-            lastDragPos.current = { x: mx, y: my, time: now };
-
             setData(prev => ({
                 ...prev,
                 entities: prev.entities.map(e =>
                     e.id === draggedNode
-                        ? { ...e, x: mx, y: my, vx: throwVx, vy: throwVy } // Keep velocity for bounce!
+                        ? { ...e, x: mx, y: my, vx: 0, vy: 0 } // Zero velocity = sticky node
                         : e
                 )
             }));
@@ -782,9 +774,10 @@ export default function KnowledgeGraphPage() {
     };
 
     const handleMouseUp = () => {
-        // Apply throw velocity when releasing a dragged node
+        // Keep simulation PAUSED when releasing - no more auto-resume that causes jitter
+        // User can click PLAY if they want physics
         if (draggedNode) {
-            setIsSimulating(true); // Resume simulation to let it bounce!
+            // Node stays where you dropped it - sticky!
         }
         setIsDragging(false);
         setDraggedNode(null);
@@ -835,8 +828,8 @@ export default function KnowledgeGraphPage() {
         const mouseY = e.clientY - rect.top;
 
         // Calculate new zoom
-        const delta = e.deltaY * -0.001;
-        const newZoom = Math.max(0.2, Math.min(3, zoom + delta));
+        const delta = e.deltaY * -0.005; // 5x faster zoom
+        const newZoom = Math.max(0.3, Math.min(4, zoom + delta));
         const zoomRatio = newZoom / zoom;
 
         // Adjust pan so zoom centers on mouse position

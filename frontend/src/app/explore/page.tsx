@@ -46,7 +46,7 @@ interface District {
     buildings: Building[];
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+const API_BASE = 'https://ao-world-engine-api-1071951656531.us-central1.run.app';
 
 // Initial districts data - expanded city
 const INITIAL_DISTRICTS: District[] = [
@@ -234,7 +234,7 @@ function ExplorePageContent() {
         // Try to fetch NPCs from API
         const loadNPCs = async () => {
             try {
-                const response = await fetch(`${API_BASE}/api/npcs?limit=800`);
+                const response = await fetch(`${API_BASE}/api/npcs/all?limit=800`);
                 if (response.ok) {
                     const data = await response.json();
                     const apiNPCs = data.npcs || data;
@@ -370,7 +370,7 @@ function ExplorePageContent() {
     const fetchNPCs = useCallback(async () => {
         if (!mounted) return; // Don't fetch until mounted
         try {
-            const response = await fetch(`${API_BASE}/api/npcs?tick=${currentTick}&limit=800`);
+            const response = await fetch(`${API_BASE}/api/npcs/all?limit=800`);
             if (response.ok) {
                 const data = await response.json();
                 // Only set if we got a valid array
