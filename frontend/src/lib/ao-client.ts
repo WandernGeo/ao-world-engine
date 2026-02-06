@@ -217,6 +217,70 @@ export async function getMovementLog(limit: number = 20): Promise<{
     }
 }
 
+/**
+ * Query NPC wallets (wealth/balance) from AO
+ */
+export interface NPCWallet {
+    npc_id: string;
+    balance: number;
+    income_tick: number;
+    spending_tick: number;
+}
+
+export async function getNPCWallets(limit: number = 800): Promise<{
+    wallets: NPCWallet[];
+    total_economy: number;
+}> {
+    try {
+        const result = await dryrun({
+            process: AO_PROCESS_IDS.world,
+            tags: [{ name: "Action", value: "get-npc-wallets" }],
+            data: JSON.stringify({ limit }),
+        });
+
+        if (result.Messages?.[0]?.Data) {
+            const data = JSON.parse(result.Messages[0].Data);
+            return {
+                wallets: data.wallets || [],
+                total_economy: data.total_economy || 0,
+            };
+        }
+        throw new Error("No response from AO");
+    } catch (error) {
+        console.error("Failed to query NPC wallets:", error);
+        return { wallets: [], total_economy: 0 };
+    }
+}
+
+/**
+ * Query all NPCs basic info from AO
+ */
+export async function getAllNPCs(): Promise<Record<string, unknown>[]> {
+    try {
+        const result = await dryrun({
+            process: AO_PROCESS_IDS.world,
+            tags: [{ name: "Action", value: "get-all-npcs" }],
+            data: "{}",
+        });
+
+        if (result.Messages?.[0]?.Data) {
+            const data = JSON.parse(result.Messages[0].Data);
+            // Convert object to array if needed
+            if (Array.isArray(data.npcs)) {
+                return data.npcs;
+            }
+            if (data.npcs && typeof data.npcs === 'object') {
+                return Object.values(data.npcs);
+            }
+            return [];
+        }
+        throw new Error("No response from AO");
+    } catch (error) {
+        console.error("Failed to query all NPCs:", error);
+        return [];
+    }
+}
+
 // Re-export for convenience
 export type WorldState = Awaited<ReturnType<typeof getWorldState>>;
 export type EconomyState = Awaited<ReturnType<typeof getEconomyState>>;

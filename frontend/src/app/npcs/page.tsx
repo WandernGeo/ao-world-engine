@@ -3,6 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { getNPCLocations, getNPCWallets, getAllNPCs } from '@/lib/ao-client';
+
 interface NPC {
     id: string;
     name: string;
@@ -155,43 +157,68 @@ function NPCsPageContent() {
     // API base URL
     const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ao-world-engine-api-zdku5kri5a-uc.a.run.app';
 
-    // Fetch NPCs from API on mount
+    // Fetch NPCs from AO directly (live data)
     useEffect(() => {
         async function fetchNPCs() {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE}/api/npcs/all?limit=800`);
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-                const data = await response.json();
 
-                // Map API response to NPC interface
-                const mappedNPCs: NPC[] = data.npcs.map((npc: Record<string, unknown>) => ({
-                    id: npc.id || npc.npc_id || '',
-                    name: npc.name || 'Unknown',
-                    role: npc.occupation || npc.role || 'citizen',
-                    job_code: npc.job_code || null,
-                    district: npc.district || 'neon_district',
-                    arweave_tx: npc.arweave_tx || '',
-                    archetype: npc.archetype || 'ARCH001',
-                    faction: npc.faction as string | undefined,
-                    home: npc.home as string | undefined,
-                    workplace: npc.workplace as string | undefined,
-                    state: npc.state || npc.current_activity || 'idle',
-                    location: npc.location || npc.current_location || 'L001',
-                    mood: typeof npc.mood === 'number' ? npc.mood : 0.5,
-                    energy: typeof npc.energy === 'number' ? npc.energy : 0.7,
-                    wealth: typeof npc.wealth === 'number' ? npc.wealth : 100,
-                    trust_network: npc.trust_network as Record<string, number> | undefined,
-                }));
+                // Fetch live data from AO in parallel
+                const [locationsData, walletsData] = await Promise.all([
+                    getNPCLocations(),
+                    getNPCWallets(800)
+                ]);
+
+                // Create wallet lookup map
+                const walletMap = new Map<string, number>();
+                for (const wallet of walletsData.wallets) {
+                    walletMap.set(wallet.npc_id, wallet.balance);
+                }
+
+                // Merge founding NPCs with live AO data
+                const mappedNPCs: NPC[] = FOUNDING_NPCS.map((npc) => {
+                    const liveLocation = locationsData.locations[npc.id];
+                    const liveWealth = walletMap.get(npc.id);
+
+                    return {
+                        ...npc,
+                        // Override with live data if available
+                        state: liveLocation?.state || npc.state,
+                        location: liveLocation?.location || npc.location,
+                        wealth: liveWealth !== undefined ? liveWealth : npc.wealth,
+                        // Energy could be derived from state or time of day
+                        energy: liveLocation?.state === 'resting' ? 0.9 :
+                            liveLocation?.state === 'working' ? 0.5 : 0.7,
+                    };
+                });
+
+                // Add any NPCs from AO locations that aren't in founding list
+                for (const [npcId, locData] of Object.entries(locationsData.locations)) {
+                    if (!FOUNDING_NPCS.find(n => n.id === npcId)) {
+                        mappedNPCs.push({
+                            id: npcId,
+                            name: npcId.replace('Npc_', '').replace(/_/g, ' '),
+                            role: 'citizen',
+                            job_code: null,
+                            district: 'neon_district',
+                            arweave_tx: '',
+                            archetype: 'ARCH001',
+                            state: locData.state || 'idle',
+                            location: locData.location || 'L001',
+                            mood: 0.5,
+                            energy: 0.7,
+                            wealth: walletMap.get(npcId) || 100,
+                        });
+                    }
+                }
 
                 setNpcs(mappedNPCs);
                 setError(null);
+                console.log(`Loaded ${mappedNPCs.length} NPCs with live AO data (tick ${locationsData.tick})`);
             } catch (err) {
-                console.error('Failed to fetch NPCs:', err);
+                console.error('Failed to fetch NPCs from AO:', err);
                 setError(err instanceof Error ? err.message : 'Failed to load NPCs');
-                // Fallback to founding NPCs if API fails
+                // Fallback to founding NPCs if AO query fails
                 setNpcs(FOUNDING_NPCS);
             } finally {
                 setLoading(false);
@@ -199,7 +226,11 @@ function NPCsPageContent() {
         }
 
         fetchNPCs();
-    }, [API_BASE]);
+
+        // Refresh every 60 seconds
+        const interval = setInterval(fetchNPCs, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     // Handle deep linking via query parameter
     useEffect(() => {
