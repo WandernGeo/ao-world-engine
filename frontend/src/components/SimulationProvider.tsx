@@ -28,6 +28,10 @@ interface SimulationState {
     isPlaying: boolean;
     playbackSpeed: number;
 
+    // Demo mode (persisted in localStorage)
+    demoMode: boolean;
+    isLive: boolean;  // True when currentTick matches live tick
+
     // AO Process info
     processId: string;
     layerId: string;
@@ -48,11 +52,16 @@ interface SimulationContextType extends SimulationState {
 
     // Local tick advancement (for when not connected to AO)
     localAdvanceTick: () => void;
+
+    // Demo mode toggle
+    setDemoMode: (demo: boolean) => void;
 }
 
 // =============================================================================
 // DEFAULT STATE
 // =============================================================================
+
+const DEMO_MODE_KEY = 'ao_world_engine_demo_mode';
 
 const defaultState: SimulationState = {
     tick: 0,
@@ -67,6 +76,8 @@ const defaultState: SimulationState = {
     error: null,
     isPlaying: false,
     playbackSpeed: 1,
+    demoMode: false,  // Will be loaded from localStorage
+    isLive: true,
     processId: aoClient.getProcessId(),
     layerId: 'layer_00_testnet'
 };
@@ -129,6 +140,14 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     // Initial load
     useEffect(() => {
         refreshState();
+
+        // Load demoMode from localStorage
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(DEMO_MODE_KEY);
+            if (stored !== null) {
+                setState(prev => ({ ...prev, demoMode: stored === 'true' }));
+            }
+        }
     }, [refreshState]);
 
     // Auto-refresh every 30 seconds when connected
@@ -213,6 +232,14 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         });
     }, []);
 
+    // Demo mode toggle with localStorage persistence
+    const setDemoMode = useCallback((demo: boolean) => {
+        setState(prev => ({ ...prev, demoMode: demo }));
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(DEMO_MODE_KEY, String(demo));
+        }
+    }, []);
+
     const value: SimulationContextType = {
         ...state,
         play,
@@ -221,7 +248,8 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         jumpToTick,
         advanceTick,
         refreshState,
-        localAdvanceTick
+        localAdvanceTick,
+        setDemoMode
     };
 
     return (

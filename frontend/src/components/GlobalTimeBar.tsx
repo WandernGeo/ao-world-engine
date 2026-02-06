@@ -1,32 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSimulation } from './SimulationProvider';
-
-const STORAGE_KEY = 'ao_world_engine_demo_mode';
 
 export function GlobalTimeBar() {
     const pathname = usePathname();
     const simulation = useSimulation();
 
-    // Demo mode with localStorage persistence
-    const [demoMode, setDemoMode] = useState(false);
-
-    // Load from localStorage on mount
-    useEffect(() => {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored !== null) {
-            setDemoMode(stored === 'true');
-        }
-    }, []);
-
-    // Save to localStorage on change
-    const toggleDemoMode = (value: boolean) => {
-        setDemoMode(value);
-        localStorage.setItem(STORAGE_KEY, String(value));
-    };
+    // Use demoMode from shared context (persisted in SimulationProvider via localStorage)
+    const demoMode = simulation.demoMode;
+    const toggleDemoMode = (value: boolean) => simulation.setDemoMode(value);
 
     const navItems = [
         { href: '/explore', label: 'Explore' },
@@ -50,8 +35,8 @@ export function GlobalTimeBar() {
                             key={item.href}
                             href={item.href}
                             className={`text-sm font-medium px-3 py-1.5 rounded transition-colors ${pathname === item.href
-                                    ? 'text-cyan-400 bg-cyan-500/10'
-                                    : 'text-gray-300 hover:text-cyan-400'
+                                ? 'text-cyan-400 bg-cyan-500/10'
+                                : 'text-gray-300 hover:text-cyan-400'
                                 }`}
                         >
                             {item.label}
@@ -66,8 +51,8 @@ export function GlobalTimeBar() {
                         <button
                             onClick={() => toggleDemoMode(false)}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${!demoMode
-                                    ? 'bg-red-500 text-white animate-pulse'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-red-500 text-white animate-pulse'
+                                : 'text-gray-400 hover:text-white'
                                 }`}
                         >
                             ● LIVE
@@ -75,8 +60,8 @@ export function GlobalTimeBar() {
                         <button
                             onClick={() => toggleDemoMode(true)}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${demoMode
-                                    ? 'bg-yellow-500 text-black'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-yellow-500 text-black'
+                                : 'text-gray-400 hover:text-white'
                                 }`}
                         >
                             ◉ DEMO
@@ -125,8 +110,8 @@ export function GlobalTimeBar() {
                             key={s}
                             onClick={() => simulation.setPlaybackSpeed(s)}
                             className={`px-2 py-0.5 text-xs rounded ${simulation.playbackSpeed === s
-                                    ? 'bg-cyan-600 text-white'
-                                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                                ? 'bg-cyan-600 text-white'
+                                : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
                                 }`}
                         >
                             {s}x

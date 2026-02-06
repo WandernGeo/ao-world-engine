@@ -9,7 +9,7 @@ import { TimelineBar } from '@/components/TimelineBar';
 import { BuildingBlueprint } from '@/components/BuildingBlueprint';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useLiveTick } from '@/hooks/useLiveTick';
+import { useSimulation } from '@/components/SimulationProvider';
 
 // Types
 interface Building {
@@ -164,19 +164,11 @@ function ExplorePageContent() {
     // State - initialized as empty/defaults to avoid hydration mismatch
     const [mounted, setMounted] = useState(false);
 
-    // Use shared live tick hook for synchronization across pages
-    const {
-        currentTick,
-        day,
-        hour,
-        isLive,
-        liveTick,
-        setCurrentTick,
-        goLive,
-        rewind,
-        fastForward,
-        isLoading: tickLoading
-    } = useLiveTick(30000); // Poll every 30s
+    // Use shared simulation context for synchronized tick across all pages
+    const simulation = useSimulation();
+    const currentTick = simulation.tick;
+    const day = simulation.day;
+    const hour = simulation.hour;
 
     const [isPlaying, setIsPlaying] = useState(true); // Default to playing
     const [tickSpeed, setTickSpeed] = useState(1);
@@ -315,19 +307,19 @@ function ExplorePageContent() {
         }
     }, [npcIdFromUrl, buildingIdFromUrl, npcs, districts, mounted, selectedNPC, selectedBuilding]);
 
-    // Live tick is managed by useLiveTick hook - no local auto-advance needed
-    // The hook polls AO every 30s for live WorldTick
+    // Live tick is managed by SimulationProvider - no local auto-advance needed
+    // The provider polls AO every 30s for live WorldTick
     // isPlaying controls whether we show live data or stay paused at current tick
     useEffect(() => {
-        if (!isPlaying || !mounted || isLive) return;
+        if (!isPlaying || !mounted) return;
 
-        // Only auto-advance when NOT live (replaying history)
+        // Auto-advance when playing
         const interval = setInterval(() => {
-            fastForward(1);
+            simulation.advanceTick(1);
         }, 1000 / tickSpeed);
 
         return () => clearInterval(interval);
-    }, [isPlaying, tickSpeed, mounted, isLive, fastForward]);
+    }, [isPlaying, tickSpeed, mounted, simulation]);
 
     // Fetch NPC states when tick changes (every 2 ticks = ~12 min game time)
     useEffect(() => {
@@ -670,7 +662,7 @@ function ExplorePageContent() {
                     {/* Time Controls */}
                     <TimeControls
                         currentTick={currentTick}
-                        onTickChange={setCurrentTick}
+                        onTickChange={(tick: number) => simulation.jumpToTick(tick)}
                         isPlaying={isPlaying}
                         onPlayPause={() => setIsPlaying(!isPlaying)}
                         tickSpeed={tickSpeed}
@@ -682,7 +674,7 @@ function ExplorePageContent() {
                         currentTick={currentTick}
                         maxTick={200}
                         events={timelineEvents}
-                        onTickChange={setCurrentTick}
+                        onTickChange={(tick: number) => simulation.jumpToTick(tick)}
                         onEventClick={(event) => console.log('Event clicked:', event)}
                     />
 
