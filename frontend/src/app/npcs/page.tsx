@@ -144,15 +144,68 @@ const getEnergyColor = (energy: number): string => {
 
 function NPCsPageContent() {
     const searchParams = useSearchParams();
+    const [npcs, setNpcs] = useState<NPC[]>([]);
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [filterDistrict, setFilterDistrict] = useState<string>("all");
     const [sortBy, setSortBy] = useState<"name" | "wealth" | "mood">("name");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // API base URL
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ao-world-engine-api-zdku5kri5a-uc.a.run.app';
+
+    // Fetch NPCs from API on mount
+    useEffect(() => {
+        async function fetchNPCs() {
+            try {
+                setLoading(true);
+                const response = await fetch(`${API_BASE}/api/npcs/all?limit=800`);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // Map API response to NPC interface
+                const mappedNPCs: NPC[] = data.npcs.map((npc: Record<string, unknown>) => ({
+                    id: npc.id || npc.npc_id || '',
+                    name: npc.name || 'Unknown',
+                    role: npc.occupation || npc.role || 'citizen',
+                    job_code: npc.job_code || null,
+                    district: npc.district || 'neon_district',
+                    arweave_tx: npc.arweave_tx || '',
+                    archetype: npc.archetype || 'ARCH001',
+                    faction: npc.faction as string | undefined,
+                    home: npc.home as string | undefined,
+                    workplace: npc.workplace as string | undefined,
+                    state: npc.state || npc.current_activity || 'idle',
+                    location: npc.location || npc.current_location || 'L001',
+                    mood: typeof npc.mood === 'number' ? npc.mood : 0.5,
+                    energy: typeof npc.energy === 'number' ? npc.energy : 0.7,
+                    wealth: typeof npc.wealth === 'number' ? npc.wealth : 100,
+                    trust_network: npc.trust_network as Record<string, number> | undefined,
+                }));
+
+                setNpcs(mappedNPCs);
+                setError(null);
+            } catch (err) {
+                console.error('Failed to fetch NPCs:', err);
+                setError(err instanceof Error ? err.message : 'Failed to load NPCs');
+                // Fallback to founding NPCs if API fails
+                setNpcs(FOUNDING_NPCS);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchNPCs();
+    }, [API_BASE]);
 
     // Handle deep linking via query parameter
     useEffect(() => {
         const npcName = searchParams.get('npc');
-        if (npcName) {
-            const npc = FOUNDING_NPCS.find(n =>
+        if (npcName && npcs.length > 0) {
+            const npc = npcs.find(n =>
                 n.name.toLowerCase() === npcName.toLowerCase() ||
                 n.id.toLowerCase() === npcName.toLowerCase()
             );
@@ -160,10 +213,17 @@ function NPCsPageContent() {
                 setSelectedNPC(npc);
             }
         }
-    }, [searchParams]);
+    }, [searchParams, npcs]);
 
-    const filteredNPCs = FOUNDING_NPCS
+    // Filter and sort NPCs
+    const filteredNPCs = npcs
         .filter(npc => filterDistrict === "all" || npc.district === filterDistrict)
+        .filter(npc =>
+            searchQuery === "" ||
+            npc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            npc.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            npc.role.toLowerCase().includes(searchQuery.toLowerCase())
+        )
         .sort((a, b) => {
             if (sortBy === "name") return a.name.localeCompare(b.name);
             if (sortBy === "wealth") return b.wealth - a.wealth;
@@ -198,15 +258,27 @@ function NPCsPageContent() {
 
             <div className="pt-20 px-6 max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-white">
-                            SignalNoir.1 NPCs
+                            RE:ECHO City NPCs
                         </h1>
-                        <p className="text-zinc-400 mt-1">12 Founding Citizens of RE:ECHO City</p>
+                        <p className="text-zinc-400 mt-1">
+                            {loading ? 'Loading...' : `${npcs.length} Citizens • ${filteredNPCs.length} shown`}
+                            {error && <span className="text-yellow-500 ml-2">({error})</span>}
+                        </p>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search by name, ID, or role..."
+                            className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm w-64 focus:outline-none focus:border-cyan-500"
+                        />
+
                         <select
                             value={filterDistrict}
                             onChange={(e) => setFilterDistrict(e.target.value)}
@@ -230,75 +302,85 @@ function NPCsPageContent() {
                     </div>
                 </div>
 
-                {/* NPC Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-                    {filteredNPCs.map((npc) => {
-                        const district = DISTRICTS[npc.district];
+                {/* Loading State */}
+                {loading && (
+                    <div className="flex items-center justify-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400"></div>
+                        <span className="ml-4 text-cyan-400">Loading NPCs from Arweave...</span>
+                    </div>
+                )}
 
-                        return (
-                            <div
-                                key={npc.id}
-                                onClick={() => setSelectedNPC(npc)}
-                                className={`bg-gray-800 rounded-lg border border-gray-700 p-4 cursor-pointer 
+                {/* NPC Grid */}
+                {!loading && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+                        {filteredNPCs.map((npc) => {
+                            const district = DISTRICTS[npc.district];
+
+                            return (
+                                <div
+                                    key={npc.id}
+                                    onClick={() => setSelectedNPC(npc)}
+                                    className={`bg-gray-800 rounded-lg border border-gray-700 p-4 cursor-pointer 
                   hover:border-cyan-500 transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20
                   ${selectedNPC?.id === npc.id ? "border-cyan-500 shadow-lg shadow-cyan-500/30" : ""}`}
-                            >
-                                {/* Header */}
-                                <div className="flex items-start justify-between mb-3">
-                                    <div>
-                                        <h3 className="font-bold text-lg">{npc.name}</h3>
-                                        <p className="text-gray-400 text-sm capitalize">{npc.role.replace(/_/g, " ")}</p>
+                                >
+                                    {/* Header */}
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div>
+                                            <h3 className="font-bold text-lg">{npc.name}</h3>
+                                            <p className="text-gray-400 text-sm capitalize">{npc.role.replace(/_/g, " ")}</p>
+                                        </div>
+                                        <span className="text-2xl">{getMoodEmoji(npc.mood)}</span>
                                     </div>
-                                    <span className="text-2xl">{getMoodEmoji(npc.mood)}</span>
-                                </div>
 
-                                {/* District Badge */}
-                                <div className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-gradient-to-r ${district.color} text-white mb-3`}>
-                                    <span>{district.icon}</span>
-                                    <span>{district.name}</span>
-                                </div>
-
-                                {/* Status */}
-                                <div className="flex items-center justify-between text-sm mb-2">
-                                    <span className="text-gray-400">Status:</span>
-                                    <span className={`capitalize ${STATE_COLORS[npc.state] || "text-gray-400"}`}>
-                                        {npc.state.replace(/_/g, " ")}
-                                    </span>
-                                </div>
-
-                                {/* Energy Bar */}
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-gray-400 text-sm w-16">Energy:</span>
-                                    <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
-                                        <div
-                                            className={`h-full ${getEnergyColor(npc.energy)} transition-all duration-500`}
-                                            style={{ width: `${npc.energy * 100}%` }}
-                                        />
+                                    {/* District Badge */}
+                                    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-gradient-to-r ${district.color} text-white mb-3`}>
+                                        <span>{district.icon}</span>
+                                        <span>{district.name}</span>
                                     </div>
-                                    <span className="text-gray-400 text-xs w-8">{Math.round(npc.energy * 100)}%</span>
-                                </div>
 
-                                {/* Wealth */}
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-400">Wealth:</span>
-                                    <span className="text-yellow-400">◊{npc.wealth}</span>
-                                </div>
-
-                                {/* Faction Badge */}
-                                {npc.faction && (
-                                    <div className="mt-3 pt-2 border-t border-gray-700">
-                                        <span className={`text-xs px-2 py-1 rounded ${npc.faction === "temple" ? "bg-amber-500/20 text-amber-400" :
-                                            npc.faction === "resistance" ? "bg-red-500/20 text-red-400" :
-                                                "bg-gray-500/20 text-gray-400"
-                                            }`}>
-                                            {npc.faction.toUpperCase()}
+                                    {/* Status */}
+                                    <div className="flex items-center justify-between text-sm mb-2">
+                                        <span className="text-gray-400">Status:</span>
+                                        <span className={`capitalize ${STATE_COLORS[npc.state] || "text-gray-400"}`}>
+                                            {npc.state.replace(/_/g, " ")}
                                         </span>
                                     </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
+
+                                    {/* Energy Bar */}
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="text-gray-400 text-sm w-16">Energy:</span>
+                                        <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full ${getEnergyColor(npc.energy)} transition-all duration-500`}
+                                                style={{ width: `${npc.energy * 100}%` }}
+                                            />
+                                        </div>
+                                        <span className="text-gray-400 text-xs w-8">{Math.round(npc.energy * 100)}%</span>
+                                    </div>
+
+                                    {/* Wealth */}
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-400">Wealth:</span>
+                                        <span className="text-yellow-400">◊{npc.wealth}</span>
+                                    </div>
+
+                                    {/* Faction Badge */}
+                                    {npc.faction && (
+                                        <div className="mt-3 pt-2 border-t border-gray-700">
+                                            <span className={`text-xs px-2 py-1 rounded ${npc.faction === "temple" ? "bg-amber-500/20 text-amber-400" :
+                                                npc.faction === "resistance" ? "bg-red-500/20 text-red-400" :
+                                                    "bg-gray-500/20 text-gray-400"
+                                                }`}>
+                                                {npc.faction.toUpperCase()}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
 
                 {/* Right-Side Sliding Panel */}
                 <div
