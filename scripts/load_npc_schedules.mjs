@@ -76,13 +76,26 @@ function loadFromFoundingDir() {
 
         for (const file of files) {
             try {
-                const npc = JSON.parse(readFileSync(join(FOUNDING_DIR, file), 'utf8'));
-                const schedule = extractScheduleFromNPC(npc, npc.code);
+                const data = JSON.parse(readFileSync(join(FOUNDING_DIR, file), 'utf8'));
+                // Handle nested profile structure from founding_npcs format
+                const npc = data.profile || data;
+                const npcId = npc.id || data.key || file.replace('.json', '');
+
+                const schedule = {
+                    id: npcId,
+                    location_home: npc.location_home || 'L001',
+                    location_work: npc.location_work || npc.location_home || 'L001',
+                    location_frequent: npc.location_frequent || [],
+                    archetype: npc.archetype || '',
+                    role: npc.role || '',
+                    shift: null  // Let AO auto-derive from archetype
+                };
 
                 // Only add if not already in list
                 if (!schedules.find(s => s.id === schedule.id)) {
                     schedules.push(schedule);
-                    console.log(`   ✓ ${npc.name || file}: ${schedule.location_home} → ${schedule.location_work} (${schedule.archetype || 'unknown'})`);
+                    const displayArch = schedule.archetype || schedule.role || 'unknown';
+                    console.log(`   ✓ ${npc.name || file}: ${schedule.location_home} (${displayArch})`);
                 }
             } catch (e) {
                 console.log(`   ⚠ Failed to parse ${file}: ${e.message}`);
