@@ -19,6 +19,16 @@ local json = json or require("json")
 local crypto_available, crypto = pcall(require, "crypto")
 if not crypto_available then crypto = nil end
 
+-- Utilities module (optional - handles power, water, internet)
+local utilities_available, Utilities = pcall(require, "utilities")
+if utilities_available then
+    Utilities.init()
+    print("✅ Utilities module loaded")
+else
+    Utilities = nil
+    print("⚠️ Utilities module not available")
+end
+
 -- =============================================================================
 -- GLOBAL STATE (Uppercase = persisted on Arweave)
 -- =============================================================================
@@ -416,7 +426,20 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
-        -- 5. Log system tick
+        -- 5. Process utilities (power, water, internet)
+        if Utilities then
+            local utility_events = Utilities.on_tick(WorldTick, time.weather or "clear", {})
+            if utility_events then
+                for _, event in ipairs(utility_events.power or {}) do
+                    broadcast_event(event)
+                end
+                for _, event in ipairs(utility_events.water or {}) do
+                    broadcast_event(event)
+                end
+            end
+        end
+        
+        -- 6. Log system tick
         if log_tick then
             log_tick(WorldTick, WorldDay, WorldYear, time.period, {
                 population = PopulationCount,
@@ -426,7 +449,7 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
-        -- 6. Persist state snapshot every 60 ticks (1 hour in-game)
+        -- 7. Persist state snapshot every 60 ticks (1 hour in-game)
         if WorldTick % 60 == 0 then
             persist_state_snapshot()
         end
@@ -750,6 +773,22 @@ Handlers.add("get-health", Handlers.utils.hasMatchingTag("Action", "get-health")
             districts_registered = district_count,
             has_ai_oracle = AiOracle ~= nil,
             has_event_bus = EventBus ~= nil,
+            has_utilities = Utilities ~= nil,
+            
+            -- Utilities (if available)
+            utilities = Utilities and {
+                power_load = Utilities.Power.current_load,
+                grid_capacity = Utilities.Power.grid_capacity,
+                water_rationing = Utilities.Water.rationing,
+                water_main = Utilities.Water.reservoirs.main,
+                water_recycled = Utilities.Water.reservoirs.recycled,
+                isps = {
+                    sacredlink = Utilities.Internet.isps.sacredlink.status,
+                    omniconnect = Utilities.Internet.isps.omniconnect.status,
+                    darkwave = Utilities.Internet.isps.darkwave.status,
+                    ghostnet = Utilities.Internet.isps.ghostnet.status
+                }
+            } or nil,
             
             -- Errors
             error_count = TickErrorCount or 0,
