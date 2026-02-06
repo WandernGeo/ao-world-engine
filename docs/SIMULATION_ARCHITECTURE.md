@@ -64,6 +64,48 @@ Daily tax collection happens at tick interval `TAX_COLLECTION_INTERVAL` (default
 
 ---
 
+## Travel Duration System
+
+### Distance Types
+| Distance Type | Walking Ticks | Minutes | Example |
+|---------------|---------------|---------|---------|
+| `same_building` | 0 | 0 | NPC moves within home |
+| `adjacent_building` | 1 | 6 | Neighbor visit |
+| `same_block` | 2 | 12 | Nearby shop |
+| `same_district` | 5 | 30 | Work commute |
+| `cross_district` | 15 | 90 | Temple to Neon District |
+| `cross_city` | 40 | 240 | Undercity to Hab Blocks |
+
+### Travel Modes
+| Mode | Speed Multiplier |
+|------|------------------|
+| walking | 1.0x (base) |
+| bicycle | 0.6x |
+| motorcycle | 0.4x |
+| car | 0.3x |
+| metro | 0.5x |
+
+### Movement Log Entry
+```lua
+{
+    tick = 1234,
+    npc_id = "npc_00001",
+    from = "L001",
+    to = "L003",
+    state = "commuting",
+    hour = 8,
+    shift = "day",
+    -- Travel duration fields
+    mode = "walking",
+    duration_ticks = 5,
+    distance_type = "same_district",
+    estimated_minutes = 30,
+    eta_tick = 1239
+}
+```
+
+---
+
 ## AO Handlers
 
 ### Query State
