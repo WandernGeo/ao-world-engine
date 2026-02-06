@@ -199,6 +199,32 @@
                 "automation_risk"
             ],
             "_scale": "JOB#### encoding supports 10,000 unique jobs"
+        },
+        {
+            "id": "chunk_22_fashion",
+            "file": "world_codec_22_fashion.json",
+            "size_kb": 18,
+            "category": "fashion"
+        },
+        {
+            "id": "chunk_23_vehicles",
+            "file": "world_codec_23_vehicles.json",
+            "size_kb": 11,
+            "category": "vehicles"
+        },
+        {
+            "id": "chunk_24_action_durations",
+            "file": "world_codec_24_action_durations.json",
+            "size_kb": 6,
+            "category": "simulation",
+            "features": [
+                "travel_times_by_distance",
+                "activity_durations",
+                "state_transitions",
+                "event_generation",
+                "schedule_templates"
+            ],
+            "_note": "Ensures NPCs can't teleport - travel takes time based on distance/mode"
         }
     ],
     "totals": {

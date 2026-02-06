@@ -1,0 +1,231 @@
+{
+    "_meta": {
+        "codec_id": "world_codec_24_action_durations",
+        "version": "1.0.0",
+        "description": "Defines how long actions take in simulation ticks. 1 tick = 6 real minutes. 10 ticks = 1 hour. 240 ticks = 1 day."
+    },
+    "time_constants": {
+        "TICKS_PER_HOUR": 10,
+        "TICKS_PER_DAY": 240,
+        "MINUTES_PER_TICK": 6,
+        "_note": "All durations below are in ticks (6 min real time = 1 tick)"
+    },
+    "travel_durations": {
+        "_desc": "Travel time between locations based on district/distance. Walking is default.",
+        "same_building": 0,
+        "adjacent_building": 1,
+        "same_block": 2,
+        "same_district": {
+            "walking": 5,
+            "vehicle": 2,
+            "metro": 3
+        },
+        "cross_district": {
+            "walking": 15,
+            "vehicle": 5,
+            "metro": 8
+        },
+        "cross_city": {
+            "walking": 40,
+            "vehicle": 12,
+            "metro": 20
+        },
+        "by_mode": {
+            "walking": 1.0,
+            "bicycle": 0.6,
+            "motorcycle": 0.4,
+            "car": 0.3,
+            "metro": 0.5,
+            "taxi": 0.35
+        }
+    },
+    "activity_durations": {
+        "_desc": "How long activities take in ticks",
+        "meals": {
+            "quick_snack": 1,
+            "breakfast": 3,
+            "lunch": 4,
+            "dinner": 6,
+            "cooking": 4,
+            "eating_out": 5
+        },
+        "work": {
+            "shift_short": 20,
+            "shift_standard": 40,
+            "shift_long": 60,
+            "meeting": 5,
+            "break": 2,
+            "overtime": 20
+        },
+        "social": {
+            "greeting": 1,
+            "conversation": 3,
+            "deep_talk": 10,
+            "argument": 5,
+            "drinking_session": 15,
+            "party": 30
+        },
+        "errands": {
+            "shopping_quick": 3,
+            "shopping_extended": 10,
+            "banking": 5,
+            "medical_checkup": 15,
+            "waiting_in_line": 3
+        },
+        "leisure": {
+            "watching_news": 2,
+            "reading": 5,
+            "gaming": 10,
+            "exercise": 6,
+            "meditation": 3,
+            "nap": 10,
+            "sleep": 40
+        },
+        "underground": {
+            "drug_deal": 2,
+            "hacking_quick": 5,
+            "hacking_major": 20,
+            "smuggling_run": 30,
+            "surveillance": 15,
+            "meeting_secret": 8
+        },
+        "temple": {
+            "prayer": 3,
+            "service": 10,
+            "confession": 5,
+            "volunteer_work": 20
+        }
+    },
+    "state_transitions": {
+        "_desc": "When NPC changes state, what duration is implied. State machine.",
+        "traveling": {
+            "next_states": [
+                "arrived",
+                "traveling"
+            ],
+            "interruptible": true,
+            "energy_cost_per_tick": 0.02,
+            "generates_events": [
+                "location_change"
+            ]
+        },
+        "working": {
+            "default_duration": 40,
+            "next_states": [
+                "idle",
+                "break",
+                "traveling"
+            ],
+            "interruptible": false,
+            "energy_cost_per_tick": 0.03,
+            "wealth_gain_per_tick": 2
+        },
+        "resting": {
+            "default_duration": 40,
+            "next_states": [
+                "idle",
+                "waking"
+            ],
+            "energy_gain_per_tick": 0.05
+        },
+        "socializing": {
+            "min_duration": 2,
+            "max_duration": 20,
+            "next_states": [
+                "idle",
+                "traveling",
+                "socializing"
+            ],
+            "mood_gain_per_tick": 0.02
+        },
+        "idle": {
+            "default_duration": 1,
+            "next_states": [
+                "traveling",
+                "working",
+                "socializing",
+                "resting",
+                "eating"
+            ],
+            "decides_next_action": true
+        }
+    },
+    "event_generation": {
+        "_desc": "What events to log for each action type (viewable in Monitor)",
+        "travel_start": {
+            "type": "NPC Actions",
+            "format": "{npc_name} started traveling from {origin} to {destination}",
+            "data": [
+                "npc_id",
+                "origin",
+                "destination",
+                "mode",
+                "eta_ticks"
+            ]
+        },
+        "travel_end": {
+            "type": "NPC Actions",
+            "format": "{npc_name} arrived at {destination}",
+            "data": [
+                "npc_id",
+                "destination",
+                "travel_duration"
+            ]
+        },
+        "activity_start": {
+            "type": "NPC Actions",
+            "format": "{npc_name} started {activity} at {location}",
+            "data": [
+                "npc_id",
+                "activity",
+                "location",
+                "expected_duration"
+            ]
+        },
+        "meeting": {
+            "type": "Meetings",
+            "format": "{npc1_name} met {npc2_name} at {location}",
+            "data": [
+                "npc1_id",
+                "npc2_id",
+                "location",
+                "relationship_change"
+            ]
+        }
+    },
+    "schedule_templates": {
+        "_desc": "Typical daily schedules with time slots",
+        "office_worker": {
+            "wake": 60,
+            "commute_to_work": 75,
+            "work_morning": 80,
+            "lunch_break": 120,
+            "work_afternoon": 125,
+            "commute_home": 165,
+            "dinner": 175,
+            "leisure": 185,
+            "sleep": 220
+        },
+        "bartender": {
+            "wake": 100,
+            "leisure": 110,
+            "lunch": 130,
+            "commute_to_work": 150,
+            "work_shift": 160,
+            "commute_home": 220,
+            "dinner": 230,
+            "sleep": 10
+        },
+        "street_vendor": {
+            "wake": 50,
+            "setup_stall": 60,
+            "selling_morning": 65,
+            "break": 120,
+            "selling_afternoon": 125,
+            "pack_up": 180,
+            "dinner": 190,
+            "leisure": 200,
+            "sleep": 220
+        }
+    }
+}
