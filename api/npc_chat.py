@@ -724,9 +724,109 @@ RULES:
         except Exception as e:
             npc_response = f"[Error: {e}]"
     else:
-        # Fallback mock response
+        # ================================================================
+        # SMART OFFLINE NLU - No LLM required
+        # NPCs can answer common questions using their profile data
+        # ================================================================
         import random
-        npc_response = random.choice(catchphrases) if catchphrases else "..."
+        
+        msg_lower = message.lower().strip()
+        npc_name = npc_state_data['name']
+        archetype = npc_state_data.get('archetype', 'citizen')
+        location = npc_state_data.get('location_desc', 'the city')
+        activity = npc_state_data.get('current_activity', 'existing')
+        mood = npc_state_data.get('current_mood', 'neutral')
+        
+        # Intent detection patterns
+        if any(w in msg_lower for w in ['your name', 'who are you', 'what are you called', 'what\'s your name']):
+            # Self-introduction
+            intros = [
+                f"I'm {npc_name}. {archetype.title()} by trade.",
+                f"The name's {npc_name}. And you?",
+                f"They call me {npc_name}. What do you want?",
+                f"{npc_name}. I'm a {archetype.lower()} around here.",
+            ]
+            npc_response = random.choice(intros)
+        
+        elif any(w in msg_lower for w in ['where are', 'what place', 'location', 'where is this']):
+            # Location info
+            npc_response = f"We're at {location}. I'm usually here around this time."
+        
+        elif any(w in msg_lower for w in ['what doing', 'what are you doing', 'busy', 'what\'s up']):
+            # Current activity
+            activity_phrases = {
+                'sleeping': "Trying to rest. Not easy in this city.",
+                'working': "Working. Bills don't pay themselves.",
+                'training': "Training. Have to stay sharp.",
+                'mission': "Can't talk about that. Classified.",
+                'socializing': "Taking some time off. You?",
+                'serving': "Working the bar. Want something?",
+                'readings': "Seeing what the layers reveal...",
+                'patrol_or_sleep': "Keeping watch. Never know who's lurking.",
+            }
+            npc_response = activity_phrases.get(activity, f"Just {activity}. The usual.")
+        
+        elif any(w in msg_lower for w in ['how are', 'how do you feel', 'you okay', 'feeling']):
+            # Mood response
+            mood_phrases = {
+                'peaceful': "Calm, for once. Rare these days.",
+                'focused': "Focused. Got things to do.",
+                'alert': "On edge. Something feels off.",
+                'serious': "Been better. But I'll manage.",
+                'relaxed': "Not bad. Could be worse.",
+                'contemplative': "Thinking about things. The city changes you.",
+                'wary': "Careful. Can't trust easily around here.",
+                'restless': "Restless. Need to move, do something.",
+                'busy': "Busy. Everyone needs something.",
+                'mystical': "Connected to something... beyond.",
+            }
+            npc_response = mood_phrases.get(mood, f"Feeling {mood}. What about you?")
+        
+        elif any(w in msg_lower for w in ['hello', 'hi', 'hey', 'greetings', 'yo']):
+            # Greeting
+            greetings = [
+                f"Hey there. I'm {npc_name}.",
+                f"*nods* What brings you here?",
+                f"Yeah? I'm {npc_name}. You need something?",
+                f"Welcome to {location}. Watch your step.",
+            ]
+            npc_response = random.choice(greetings)
+        
+        elif any(w in msg_lower for w in ['bye', 'goodbye', 'later', 'see you', 'gotta go']):
+            # Farewell
+            farewells = [
+                "Stay safe out there.",
+                "Watch your back.",
+                "Until next time.",
+                "*nods* Later.",
+            ]
+            npc_response = random.choice(farewells)
+        
+        elif any(w in msg_lower for w in ['help', 'need help', 'can you help']):
+            # Help request
+            npc_response = f"Help? That depends on what you need. I'm a {archetype.lower()}, not a miracle worker."
+        
+        elif any(w in msg_lower for w in ['tell me about', 'what do you know', 'heard anything']):
+            # Generic lore/info
+            npc_response = f"*{npc_name} glances around* Information costs. What specifically?"
+        
+        elif user_name and any(w in msg_lower for w in ['my name', 'remember me', 'who am i']):
+            # User memory
+            npc_response = f"You're {user_name}. I remember faces."
+        
+        else:
+            # Default fallback with personality
+            if catchphrases:
+                npc_response = random.choice(catchphrases)
+            else:
+                defaults = [
+                    f"*{npc_name} considers your words*",
+                    "Interesting... go on.",
+                    "I see. And?",
+                    f"*gives you a {mood} look*",
+                    "Hmm. Not my area of expertise.",
+                ]
+                npc_response = random.choice(defaults)
     
     # Store NPC response in memory
     add_to_conversation(user_id, npc_id, "npc", npc_response, tick)

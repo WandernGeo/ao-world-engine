@@ -33,7 +33,10 @@ CORS(app)
 # DATA LOADING
 # =============================================================================
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+# Support both local dev (relative to api/) and Docker (/app/data/)
+_local_data = os.path.join(os.path.dirname(__file__), "..", "data")
+_docker_data = "/app/data"
+DATA_DIR = _docker_data if os.path.exists(_docker_data) else _local_data
 CODEC_DIR = os.path.join(DATA_DIR, "codec_chunks")
 
 # Cache for loaded data
