@@ -114,6 +114,45 @@ NPCSocialHistory = NPCSocialHistory or {}
 InteractionLog = InteractionLog or {}
 MAX_INTERACTION_LOG = 500
 
+-- =============================================================================
+-- NPC ECONOMY (Persisted - tracks NPC wealth and transactions)
+-- =============================================================================
+
+-- NPC wallets: { npc_id: { balance: 1000, income_tick: 0, spending_tick: 0 } }
+NPCWallets = NPCWallets or {}
+
+-- NPC economic transactions log
+NPCTransactionLog = NPCTransactionLog or {}
+MAX_TRANSACTION_LOG = 500
+
+-- Base wages per shift (paid once per day at shift end)
+-- Values in GEP (game currency)
+ARCHETYPE_WAGES = {
+    -- High earners
+    ["doctor"] = 500,
+    ["executive"] = 600,
+    ["manager"] = 400,
+    ["biotech scientist"] = 550,
+    ["faction leader"] = 700,
+    
+    -- Medium earners
+    ["security guard"] = 200,
+    ["noir detective"] = 250,
+    ["bartender"] = 180,
+    ["street medic"] = 300,
+    ["pilot/explorer"] = 350,
+    
+    -- Low earners
+    ["artist/performer"] = 150,
+    ["hacker"] = 200,
+    ["street oracle"] = 100,
+    ["matriarch/healer"] = 120,
+    ["religious oracle"] = 80,
+    
+    -- Default
+    ["default"] = 150
+}
+
 -- Archetype-to-shift mapping for auto-assignment
 -- When loading schedules without explicit shift, derive from archetype/role
 ARCHETYPE_SHIFTS = {
@@ -554,6 +593,98 @@ function process_social_interactions(tick)
 end
 
 -- =============================================================================
+-- NPC ECONOMY PROCESSING
+-- =============================================================================
+
+-- Get wage for an archetype (case-insensitive lookup)
+function get_wage_for_archetype(archetype)
+    if not archetype then return ARCHETYPE_WAGES["default"] end
+    local lower = string.lower(archetype)
+    return ARCHETYPE_WAGES[lower] or ARCHETYPE_WAGES["default"]
+end
+
+-- Process NPC economy: wages at shift end, spending at social locations
+function process_npc_economy(tick)
+    local time = get_time_info(tick)
+    local hour = time.hour
+    local transactions = 0
+    
+    for npc_id, loc_data in pairs(NPCLocations) do
+        local schedule = NPCSchedules[npc_id]
+        if not schedule then goto continue end
+        
+        -- Initialize wallet if needed
+        if not NPCWallets[npc_id] then
+            NPCWallets[npc_id] = {
+                balance = 500,  -- Starting balance
+                income_tick = 0,
+                spending_tick = 0
+            }
+        end
+        
+        local wallet = NPCWallets[npc_id]
+        local shift_type = schedule.shift or "day"
+        local shift = SHIFT_DEFINITIONS[shift_type]
+        
+        -- Pay wages at shift end (only once per day)
+        local wage_hour = shift.finish or 17
+        if hour == wage_hour and tick - wallet.income_tick >= TICKS_PER_DAY then
+            local archetype = schedule.archetype or schedule.role or ""
+            local wage = get_wage_for_archetype(archetype)
+            
+            wallet.balance = wallet.balance + wage
+            wallet.income_tick = tick
+            
+            table.insert(NPCTransactionLog, {
+                tick = tick,
+                npc_id = npc_id,
+                type = "wage",
+                amount = wage,
+                balance = wallet.balance
+            })
+            transactions = transactions + 1
+        end
+        
+        -- Spend at social locations (30% chance when socializing)
+        if loc_data.state == "socializing" and tick - wallet.spending_tick >= 10 then
+            if seeded_chance(0.3, npc_id .. tostring(tick)) then
+                local spending = math.min(wallet.balance, math.floor(20 + math.random() * 30))
+                if spending > 0 then
+                    wallet.balance = wallet.balance - spending
+                    wallet.spending_tick = tick
+                    
+                    -- Add to city budget (businesses pay taxes)
+                    CityBudget = CityBudget + math.floor(spending * TaxRate)
+                    
+                    table.insert(NPCTransactionLog, {
+                        tick = tick,
+                        npc_id = npc_id,
+                        type = "spending",
+                        amount = -spending,
+                        location = loc_data.location,
+                        balance = wallet.balance
+                    })
+                    transactions = transactions + 1
+                end
+            end
+        end
+        
+        ::continue::
+    end
+    
+    -- Trim transaction log
+    while #NPCTransactionLog > MAX_TRANSACTION_LOG do
+        table.remove(NPCTransactionLog, 1)
+    end
+    
+    if transactions > 0 then
+        print("💰 Processed " .. transactions .. " NPC economic transactions at tick " .. tick)
+    end
+    
+    return transactions
+end
+
+-- =============================================================================
 -- ECONOMY FUNCTIONS
 -- =============================================================================
 
@@ -890,6 +1021,16 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
+        -- 9. Process NPC economy (wages and spending)
+        local npc_transactions = process_npc_economy(WorldTick)
+        if npc_transactions > 0 then
+            broadcast_event({
+                type = "npc_economy",
+                tick = WorldTick,
+                transactions = npc_transactions
+            })
+        end
+        
         -- 7. Persist state snapshot every 60 ticks (1 hour in-game)
         if WorldTick % 60 == 0 then
             persist_state_snapshot()
@@ -1025,6 +1166,8 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
         process_npc_movements(WorldTick)
         -- Process social interactions
         process_social_interactions(WorldTick)
+        -- Process NPC economy
+        process_npc_economy(WorldTick)
     end
     
     local time = get_time_info(WorldTick)
@@ -1094,6 +1237,51 @@ Handlers.add("get-movement-log", Handlers.utils.hasMatchingTag("Action", "get-mo
         Data = json.encode({
             count = #result,
             movements = result
+        })
+    })
+end)
+
+-- Get NPC wallets and transaction log
+Handlers.add("get-npc-wallets", Handlers.utils.hasMatchingTag("Action", "get-npc-wallets"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local limit = data.limit or 20
+    
+    -- Get recent transactions
+    local recent_transactions = {}
+    local start_idx = math.max(1, #NPCTransactionLog - limit + 1)
+    for i = start_idx, #NPCTransactionLog do
+        table.insert(recent_transactions, NPCTransactionLog[i])
+    end
+    
+    -- Get top wallets by balance
+    local wallets = {}
+    for npc_id, wallet in pairs(NPCWallets) do
+        table.insert(wallets, {
+            npc_id = npc_id,
+            balance = wallet.balance,
+            income_tick = wallet.income_tick,
+            spending_tick = wallet.spending_tick
+        })
+    end
+    
+    -- Sort by balance (descending)
+    table.sort(wallets, function(a, b) return a.balance > b.balance end)
+    
+    -- Return top 20
+    local top_wallets = {}
+    for i = 1, math.min(20, #wallets) do
+        table.insert(top_wallets, wallets[i])
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "npc-wallets-response",
+        Data = json.encode({
+            tick = WorldTick,
+            total_wallets = table_length(NPCWallets),
+            total_transactions = #NPCTransactionLog,
+            top_wallets = top_wallets,
+            recent_transactions = recent_transactions
         })
     })
 end)
