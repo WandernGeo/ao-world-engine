@@ -262,7 +262,7 @@ const PLAYBACK_SPEEDS = [
 export default function MonitorPage() {
     // Connection state
     const [processId, setProcessId] = useState<string>('');
-    const [demoMode, setDemoMode] = useState(true);
+    const [demoMode, setDemoMode] = useState(false); // Default to LIVE mode
     const [connected, setConnected] = useState(false);
 
     // Time machine state
@@ -484,46 +484,36 @@ export default function MonitorPage() {
 
                 setConnected(live);
 
-                // Create snapshot from AO data
-                const aoSnapshot: WorldSnapshot = {
-                    tick: state.tick,
-                    day: state.day,
-                    year: state.year,
-                    time_period: state.time?.period || 'T01',
-                    population: state.population,
-                    active_npcs: Math.floor(state.population * 0.8),
-                    budget: state.budget,
-                    economy: {
-                        gdp: economy.budget * 0.9,
-                        inflation: 0.025,
-                        unemployment_rate: 0.14,
-                        gini_coefficient: 0.73,
-                        black_market_share: 0.22,
-                        crisis_level: state.budget > 800000 ? 'healthy' : 'strained',
-                        service_levels: { law_enforcement: 0.85, infrastructure: 0.88, healthcare: 0.80, sanitation: 0.75 },
-                    },
-                    npcs: Object.entries(NPCS).map(([id, info]) => ({
-                        id,
-                        name: info.name,
-                        location: 'L001',
-                        state: 'working',
-                        mood: 0.7,
-                        energy: 0.8,
-                        wealth: 200,
-                    })),
-                    logs: [{
-                        tick: state.tick,
-                        type: 'world_event',
-                        timestamp: state.tick,
-                        data: { event_type: 'ao_sync', scope: 'city', severity: 'minor' }
-                    }],
-                };
+                // Use the same rich snapshot generation but seeded by AO tick
+                // This gives deterministic NPC activities based on actual AO state
+                const aoTick = state.tick || 0;
+
+                // Generate a full snapshot with NPC activities for this specific tick
+                const fullSnapshot = generateSnapshot(aoTick);
+
+                // Override with real AO values
+                fullSnapshot.year = state.year || 2087;
+                fullSnapshot.budget = state.budget || 1000000;
+                fullSnapshot.population = state.population || 800;
+
+                // Add AO sync indicator to logs
+                fullSnapshot.logs.unshift({
+                    tick: aoTick,
+                    type: 'world_event',
+                    timestamp: aoTick,
+                    data: { event_type: 'ao_live_sync', scope: 'city', severity: 'minor', source: 'arweave' }
+                });
 
                 setHistory(prev => {
-                    const updated = [...prev.slice(-199), aoSnapshot];
+                    // Avoid duplicates - only add if tick is new
+                    if (prev.length > 0 && prev[prev.length - 1].tick === aoTick) {
+                        return prev;
+                    }
+                    const updated = [...prev.slice(-199), fullSnapshot];
                     return updated;
                 });
                 setCurrentIndex(prev => prev + 1);
+
 
             } catch (error) {
                 console.error('Failed to fetch AO state:', error);
@@ -684,30 +674,34 @@ export default function MonitorPage() {
 
                 {/* Live/Mode indicators */}
                 <div className="ml-auto flex items-center gap-4">
-                    <span className={`px-2 py-1 text-xs rounded ${isLive ? 'bg-red-500 animate-pulse' : 'bg-yellow-500'}`}>
-                        {isLive ? '● LIVE' : `◉ T${currentSnapshot.tick}`}
-                    </span>
-
-                    <div className="flex items-center gap-4">
-                        {/* Mode Toggle */}
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={demoMode}
-                                onChange={(e) => setDemoMode(e.target.checked)}
-                                className="w-4 h-4 rounded"
-                            />
-                            <span className="text-sm text-white">Demo</span>
-                        </label>
-
-                        {/* Help */}
+                    {/* Mode Toggle - Clear LIVE/DEMO switch */}
+                    <div className="flex items-center bg-gray-800 rounded-full p-0.5">
                         <button
-                            onClick={() => setShowHelp(!showHelp)}
-                            className="text-gray-400 hover:text-white"
+                            onClick={() => setDemoMode(false)}
+                            className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${!demoMode ? 'bg-red-500 text-white animate-pulse' : 'text-gray-400 hover:text-white'}`}
                         >
-                            ?
+                            ● LIVE
+                        </button>
+                        <button
+                            onClick={() => setDemoMode(true)}
+                            className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${demoMode ? 'bg-yellow-500 text-black' : 'text-gray-400 hover:text-white'}`}
+                        >
+                            ◉ DEMO
                         </button>
                     </div>
+
+                    {/* Current Tick */}
+                    <span className="text-xs text-gray-400">
+                        T{currentSnapshot.tick}
+                    </span>
+
+                    {/* Help */}
+                    <button
+                        onClick={() => setShowHelp(!showHelp)}
+                        className="text-gray-400 hover:text-white w-6 h-6 rounded-full border border-gray-600 flex items-center justify-center text-xs"
+                    >
+                        ?
+                    </button>
                 </div>
             </header>
 
