@@ -125,6 +125,60 @@ NPCWallets = NPCWallets or {}
 NPCTransactionLog = NPCTransactionLog or {}
 MAX_TRANSACTION_LOG = 500
 
+-- =============================================================================
+-- NPC INVENTORY & PROPERTY (Persisted - tracks items, property, possessions)
+-- =============================================================================
+
+-- NPC inventory: { npc_id: { items: {item_id: quantity}, food: 0-100, clothing: [...] } }
+NPCInventory = NPCInventory or {}
+
+-- NPC property ownership: { npc_id: { home: "L001", vehicle: nil, valuables: [...] } }
+NPCProperty = NPCProperty or {}
+
+-- Item transaction log (purchases, trades, gifts)
+ItemTransactionLog = ItemTransactionLog or {}
+MAX_ITEM_TRANSACTION_LOG = 500
+
+-- Available items in shops (prices in GEP)
+SHOP_ITEMS = {
+    -- Food and consumables
+    food = {
+        ["street_noodles"] = { price = 15, category = "food", nutrition = 20 },
+        ["synth_burger"] = { price = 25, category = "food", nutrition = 35 },
+        ["premium_steak"] = { price = 80, category = "food", nutrition = 50 },
+        ["energy_drink"] = { price = 10, category = "food", nutrition = 10 },
+        ["coffee"] = { price = 8, category = "food", nutrition = 5 },
+    },
+    -- Clothing and accessories
+    clothing = {
+        ["basic_jacket"] = { price = 50, category = "clothing", style = 1 },
+        ["tech_coat"] = { price = 150, category = "clothing", style = 3 },
+        ["designer_outfit"] = { price = 400, category = "clothing", style = 5 },
+        ["neon_glasses"] = { price = 35, category = "accessory", style = 1 },
+    },
+    -- Tech and tools
+    tech = {
+        ["comm_device"] = { price = 100, category = "tech", utility = 2 },
+        ["hacking_kit"] = { price = 300, category = "tech", utility = 4 },
+        ["med_kit"] = { price = 75, category = "tech", utility = 3 },
+    },
+    -- Vehicles (expensive, one-time purchase)
+    vehicles = {
+        ["hoverbike"] = { price = 5000, category = "vehicle", speed = 2 },
+        ["compact_car"] = { price = 8000, category = "vehicle", speed = 1 },
+        ["luxury_cruiser"] = { price = 25000, category = "vehicle", speed = 3 },
+    }
+}
+
+-- Location types for shopping
+SHOP_LOCATIONS = {
+    ["L002"] = "food",      -- Street market
+    ["L003"] = "food",      -- Bar/cafe
+    ["L005"] = "clothing",  -- Shop
+    ["L042"] = "tech",      -- Tech district
+}
+
+
 -- Base wages per shift (paid once per day at shift end)
 -- Values in GEP (game currency)
 ARCHETYPE_WAGES = {
@@ -684,6 +738,108 @@ function process_npc_economy(tick)
     return transactions
 end
 
+-- Process NPC shopping: purchase items based on location and needs
+function process_npc_shopping(tick)
+    local time = get_time_info(tick)
+    local purchases = 0
+    
+    for npc_id, loc_data in pairs(NPCLocations) do
+        local wallet = NPCWallets[npc_id]
+        if not wallet or wallet.balance < 10 then goto continue_shop end
+        
+        -- Initialize inventory if needed
+        if not NPCInventory[npc_id] then
+            NPCInventory[npc_id] = {
+                items = {},
+                food_level = 50,  -- 0-100 hunger meter
+                clothing = {},
+                last_purchase_tick = 0
+            }
+        end
+        
+        local inventory = NPCInventory[npc_id]
+        local location = loc_data.location
+        local shop_type = SHOP_LOCATIONS[location]
+        
+        -- Only shop at shop locations, max once per 24 ticks (1 day)
+        if not shop_type then goto continue_shop end
+        if tick - inventory.last_purchase_tick < 24 then goto continue_shop end
+        
+        -- 40% chance to make a purchase when at shop
+        if not seeded_chance(0.4, npc_id .. tostring(tick) .. "shop") then goto continue_shop end
+        
+        local shop_category = SHOP_ITEMS[shop_type]
+        if not shop_category then goto continue_shop end
+        
+        -- Find affordable item
+        local affordable_items = {}
+        for item_name, item_data in pairs(shop_category) do
+            if item_data.price <= wallet.balance then
+                table.insert(affordable_items, { name = item_name, data = item_data })
+            end
+        end
+        
+        if #affordable_items == 0 then goto continue_shop end
+        
+        -- Pick random affordable item
+        local choice = affordable_items[math.random(1, #affordable_items)]
+        local item_name = choice.name
+        local item_data = choice.data
+        
+        -- Make purchase
+        wallet.balance = wallet.balance - item_data.price
+        inventory.items[item_name] = (inventory.items[item_name] or 0) + 1
+        inventory.last_purchase_tick = tick
+        
+        -- Apply item effects
+        if item_data.nutrition then
+            inventory.food_level = math.min(100, inventory.food_level + item_data.nutrition)
+        end
+        if item_data.category == "clothing" or item_data.category == "accessory" then
+            table.insert(inventory.clothing, item_name)
+        end
+        if item_data.category == "vehicle" then
+            -- Update property with vehicle
+            if not NPCProperty[npc_id] then
+                NPCProperty[npc_id] = { home = nil, vehicle = nil, valuables = {} }
+            end
+            NPCProperty[npc_id].vehicle = item_name
+        end
+        
+        -- Log transaction
+        table.insert(ItemTransactionLog, {
+            tick = tick,
+            npc_id = npc_id,
+            type = "purchase",
+            item = item_name,
+            price = item_data.price,
+            location = location,
+            balance = wallet.balance
+        })
+        purchases = purchases + 1
+        
+        ::continue_shop::
+    end
+    
+    -- Trim item transaction log
+    while #ItemTransactionLog > MAX_ITEM_TRANSACTION_LOG do
+        table.remove(ItemTransactionLog, 1)
+    end
+    
+    -- Decay food levels over time (hunger)
+    if tick % 6 == 0 then  -- Every 6 ticks (6 hours)
+        for npc_id, inventory in pairs(NPCInventory) do
+            inventory.food_level = math.max(0, inventory.food_level - 5)
+        end
+    end
+    
+    if purchases > 0 then
+        print("🛒 Processed " .. purchases .. " NPC purchases at tick " .. tick)
+    end
+    
+    return purchases
+end
+
 -- =============================================================================
 -- ECONOMY FUNCTIONS
 -- =============================================================================
@@ -1031,6 +1187,16 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
+        -- 10. Process NPC shopping (item purchases)
+        local npc_purchases = process_npc_shopping(WorldTick)
+        if npc_purchases > 0 then
+            broadcast_event({
+                type = "npc_shopping",
+                tick = WorldTick,
+                purchases = npc_purchases
+            })
+        end
+        
         -- 7. Persist state snapshot every 60 ticks (1 hour in-game)
         if WorldTick % 60 == 0 then
             persist_state_snapshot()
@@ -1168,6 +1334,8 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
         process_social_interactions(WorldTick)
         -- Process NPC economy
         process_npc_economy(WorldTick)
+        -- Process NPC shopping
+        process_npc_shopping(WorldTick)
     end
     
     local time = get_time_info(WorldTick)
@@ -1282,6 +1450,77 @@ Handlers.add("get-npc-wallets", Handlers.utils.hasMatchingTag("Action", "get-npc
             total_transactions = #NPCTransactionLog,
             top_wallets = top_wallets,
             recent_transactions = recent_transactions
+        })
+    })
+end)
+
+-- Get NPC inventory and property
+Handlers.add("get-npc-inventory", Handlers.utils.hasMatchingTag("Action", "get-npc-inventory"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local npc_filter = data.npc_id
+    local limit = data.limit or 20
+    
+    -- Get specific NPC inventory
+    if npc_filter then
+        local inventory = NPCInventory[npc_filter] or { items = {}, food_level = 50, clothing = {} }
+        local property = NPCProperty[npc_filter] or { home = nil, vehicle = nil, valuables = {} }
+        local schedule = NPCSchedules[npc_filter]
+        
+        -- Get purchase history for this NPC
+        local purchases = {}
+        for i = #ItemTransactionLog, math.max(1, #ItemTransactionLog - 20), -1 do
+            if ItemTransactionLog[i].npc_id == npc_filter then
+                table.insert(purchases, ItemTransactionLog[i])
+            end
+        end
+        
+        ao.send({
+            Target = msg.From,
+            Action = "npc-inventory-response",
+            Data = json.encode({
+                npc_id = npc_filter,
+                inventory = inventory,
+                property = property,
+                home_location = schedule and schedule.home or nil,
+                recent_purchases = purchases
+            })
+        })
+        return
+    end
+    
+    -- Get all inventories summary
+    local inventories = {}
+    for npc_id, inv in pairs(NPCInventory) do
+        local item_count = 0
+        for _, qty in pairs(inv.items or {}) do
+            item_count = item_count + qty
+        end
+        table.insert(inventories, {
+            npc_id = npc_id,
+            item_count = item_count,
+            food_level = inv.food_level or 50,
+            clothing_count = #(inv.clothing or {}),
+            has_vehicle = NPCProperty[npc_id] and NPCProperty[npc_id].vehicle ~= nil
+        })
+    end
+    
+    -- Get recent item purchases
+    local recent_purchases = {}
+    local start_idx = math.max(1, #ItemTransactionLog - limit + 1)
+    for i = start_idx, #ItemTransactionLog do
+        table.insert(recent_purchases, ItemTransactionLog[i])
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "npc-inventory-response",
+        Data = json.encode({
+            tick = WorldTick,
+            total_inventories = table_length(NPCInventory),
+            total_properties = table_length(NPCProperty),
+            total_transactions = #ItemTransactionLog,
+            inventories = inventories,
+            recent_purchases = recent_purchases
         })
     })
 end)
