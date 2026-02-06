@@ -545,7 +545,7 @@ function NPCsPageContent() {
 
                 {/* Footer */}
                 <div className="mt-8 text-center text-gray-500 text-sm">
-                    <p>SignalNoir.1 - 12 NPCs • 3 Districts • Year 2087</p>
+                    <p>RE:ECHO City • {npcs.length} NPCs • {Object.keys(DISTRICTS).length} Districts • Year 2087</p>
                 </div>
             </div>
         </div>
