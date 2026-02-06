@@ -407,6 +407,83 @@ function get_time_info(tick)
 end
 
 -- =============================================================================
+-- TRAVEL DURATION CALCULATION (from codec_24_action_durations)
+-- =============================================================================
+
+-- Travel durations in ticks (1 tick = 6 minutes)
+TRAVEL_DURATIONS = {
+    same_building = 0,
+    adjacent_building = 1,
+    same_block = 2,
+    same_district = { walking = 5, vehicle = 2, metro = 3 },
+    cross_district = { walking = 15, vehicle = 5, metro = 8 },
+    cross_city = { walking = 40, vehicle = 12, metro = 20 }
+}
+
+-- Location to district mapping (L001-L019: neon, L020-L039: temple, etc.)
+function get_district_for_location(location)
+    if not location then return "unknown" end
+    local num = tonumber(string.match(location, "%d+") or "0")
+    if num <= 19 then return "neon_district"
+    elseif num <= 39 then return "temple_district"
+    elseif num <= 59 then return "undercity"
+    else return "hab_blocks"
+    end
+end
+
+-- Calculate travel duration between two locations
+-- Returns: { duration_ticks, distance_type, estimated_minutes }
+function calculate_travel_duration(from_loc, to_loc, mode)
+    mode = mode or "walking"
+    
+    if not from_loc or not to_loc then
+        return { duration_ticks = 5, distance_type = "unknown", estimated_minutes = 30 }
+    end
+    
+    -- Same building
+    if from_loc == to_loc then
+        return { duration_ticks = 0, distance_type = "same_building", estimated_minutes = 0 }
+    end
+    
+    local from_num = tonumber(string.match(from_loc, "%d+") or "0")
+    local to_num = tonumber(string.match(to_loc, "%d+") or "0")
+    local diff = math.abs(from_num - to_num)
+    
+    local from_district = get_district_for_location(from_loc)
+    local to_district = get_district_for_location(to_loc)
+    
+    local distance_type
+    local base_duration
+    
+    if diff == 1 then
+        distance_type = "adjacent_building"
+        base_duration = TRAVEL_DURATIONS.adjacent_building
+    elseif diff <= 5 then
+        distance_type = "same_block"
+        base_duration = TRAVEL_DURATIONS.same_block
+    elseif from_district == to_district then
+        distance_type = "same_district"
+        base_duration = TRAVEL_DURATIONS.same_district[mode] or TRAVEL_DURATIONS.same_district.walking
+    elseif from_district ~= to_district and diff <= 30 then
+        distance_type = "cross_district"
+        base_duration = TRAVEL_DURATIONS.cross_district[mode] or TRAVEL_DURATIONS.cross_district.walking
+    else
+        distance_type = "cross_city"
+        base_duration = TRAVEL_DURATIONS.cross_city[mode] or TRAVEL_DURATIONS.cross_city.walking
+    end
+    
+    -- Add small variance (±1 tick) for realism
+    local variance = (hash_to_number(from_loc .. to_loc, 3) - 1)  -- -1, 0, or +1
+    local duration = math.max(0, base_duration + variance)
+    
+    return {
+        duration_ticks = duration,
+        distance_type = distance_type,
+        estimated_minutes = duration * 6  -- 1 tick = 6 minutes
+    }
+end
+
+-- =============================================================================
 -- NPC MOVEMENT BEHAVIORS
 -- =============================================================================
 
@@ -540,7 +617,11 @@ function process_npc_movements(tick)
         
         -- Check if movement occurred
         if target_location and target_location ~= current.location then
-            -- Log the movement
+            -- Calculate travel duration
+            local travel_mode = "walking"  -- Default, could be based on NPC property
+            local travel = calculate_travel_duration(current.location, target_location, travel_mode)
+            
+            -- Log the movement with duration info
             table.insert(MovementLog, {
                 tick = tick,
                 npc_id = npc_id,
@@ -548,7 +629,13 @@ function process_npc_movements(tick)
                 to = target_location,
                 state = new_state,
                 hour = hour,
-                shift = shift_type
+                shift = shift_type,
+                -- Travel duration fields (from codec_24)
+                mode = travel_mode,
+                duration_ticks = travel.duration_ticks,
+                distance_type = travel.distance_type,
+                estimated_minutes = travel.estimated_minutes,
+                eta_tick = tick + travel.duration_ticks
             })
             movements = movements + 1
             
