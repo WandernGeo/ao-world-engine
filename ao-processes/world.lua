@@ -103,6 +103,104 @@ SOCIAL_LOCATIONS = SOCIAL_LOCATIONS or {
     "L001", "L003", "L050", "L051", "L032", "L033", "L026" 
 }
 
+-- Archetype-to-shift mapping for auto-assignment
+-- When loading schedules without explicit shift, derive from archetype/role
+ARCHETYPE_SHIFTS = {
+    -- Day shift (9-17)
+    ["office worker"] = "day",
+    ["manager"] = "day",
+    ["executive"] = "day",
+    ["teacher"] = "day",
+    ["accountant"] = "day",
+    ["lawyer"] = "day",
+    ["banker"] = "day",
+    ["clerk"] = "day",
+    ["receptionist"] = "day",
+    
+    -- Night shift (22-6)  
+    ["security guard"] = "night",
+    ["night watchman"] = "night",
+    ["club owner"] = "night",
+    ["bouncer"] = "night",
+    ["dj"] = "night",
+    ["bartender night"] = "night",
+    ["prostitute"] = "night",
+    ["smuggler"] = "night",
+    
+    -- Graveyard shift (0-8)
+    ["night nurse"] = "graveyard",
+    ["hospital orderly"] = "graveyard",
+    ["24h store clerk"] = "graveyard",
+    ["factory night shift"] = "graveyard",
+    ["security overnight"] = "graveyard",
+    
+    -- Evening shift (16-24)
+    ["waiter"] = "evening",
+    ["waitress"] = "evening",
+    ["bartender"] = "evening",
+    ["host"] = "evening",
+    ["server"] = "evening",
+    ["cook"] = "evening",
+    ["performer"] = "evening",
+    ["musician"] = "evening",
+    ["dancer"] = "evening",
+    
+    -- Morning shift (4-12)
+    ["baker"] = "morning",
+    ["garbage collector"] = "morning",
+    ["delivery driver"] = "morning",
+    ["newspaper vendor"] = "morning",
+    ["breakfast cook"] = "morning",
+    ["milk delivery"] = "morning",
+    ["street cleaner"] = "morning",
+    
+    -- Flexible (10-18)
+    ["artist"] = "flexible",
+    ["writer"] = "flexible",
+    ["freelancer"] = "flexible",
+    ["hacker"] = "flexible",
+    ["netrunner"] = "flexible",
+    ["fixer"] = "flexible",
+    ["information broker"] = "flexible",
+    
+    -- Always on / rotating (emergency services)
+    ["doctor"] = "always_on",
+    ["nurse"] = "always_on",
+    ["paramedic"] = "always_on",
+    ["firefighter"] = "always_on",
+    ["emergency responder"] = "always_on",
+    ["police officer"] = "always_on",
+    
+    -- Split shift (restaurant)
+    ["restaurant manager"] = "split",
+    ["chef"] = "split",
+    ["maitre d"] = "split"
+}
+
+-- Helper to derive shift from archetype/role
+function get_shift_for_archetype(archetype, role)
+    local lower_archetype = string.lower(archetype or "")
+    local lower_role = string.lower(role or "")
+    
+    -- Check direct matches first
+    if ARCHETYPE_SHIFTS[lower_archetype] then
+        return ARCHETYPE_SHIFTS[lower_archetype]
+    end
+    if ARCHETYPE_SHIFTS[lower_role] then
+        return ARCHETYPE_SHIFTS[lower_role]
+    end
+    
+    -- Check partial matches
+    for pattern, shift in pairs(ARCHETYPE_SHIFTS) do
+        if string.find(lower_archetype, pattern) or string.find(lower_role, pattern) then
+            return shift
+        end
+    end
+    
+    -- Default to day shift
+    return "day"
+end
+
 -- =============================================================================
 -- DETERMINISTIC UTILITIES
 -- =============================================================================
@@ -168,6 +266,49 @@ end
 -- NPC MOVEMENT BEHAVIORS
 -- =============================================================================
 
+-- Shift definitions: each shift defines work hours
+-- Shift types: day, night, graveyard, evening, flexible, always_on
+SHIFT_DEFINITIONS = {
+    day = { start = 9, finish = 17 },           -- Standard office hours
+    night = { start = 22, finish = 6 },          -- Night security, bars
+    graveyard = { start = 0, finish = 8 },       -- Hospital night, 24h stores
+    evening = { start = 16, finish = 24 },       -- Restaurants, entertainment
+    morning = { start = 4, finish = 12 },        -- Bakery, garbage, delivery
+    flexible = { start = 10, finish = 18 },      -- Creative, freelance
+    always_on = { start = 0, finish = 24 },      -- Emergency services
+    split = { start = 11, finish = 14, start2 = 18, finish2 = 23 }  -- Restaurant
+}
+
+function is_work_hours(hour, shift_type)
+    local shift = SHIFT_DEFINITIONS[shift_type or "day"]
+    if not shift then return false end
+    
+    -- Handle split shifts
+    if shift.start2 then
+        return (hour >= shift.start and hour < shift.finish) or
+               (hour >= shift.start2 and hour < shift.finish2)
+    end
+    
+    -- Handle overnight shifts (night, graveyard)
+    if shift.start > shift.finish then
+        return hour >= shift.start or hour < shift.finish
+    end
+    
+    -- Normal daytime shifts
+    return hour >= shift.start and hour < shift.finish
+end
+
+function get_commute_hour(shift_type, is_going_to_work)
+    local shift = SHIFT_DEFINITIONS[shift_type or "day"]
+    if not shift then return 8 end  -- default
+    
+    if is_going_to_work then
+        return shift.start - 1  -- commute 1 hour before work
+    else
+        return shift.finish     -- commute right after work
+    end
+end
+
 function process_npc_movements(tick)
     local time = get_time_info(tick)
     local hour = time.hour
@@ -179,41 +320,78 @@ function process_npc_movements(tick)
         local target_location = nil
         local new_state = nil
         
-        -- Time-based location decisions
-        if hour >= 0 and hour < 6 then
-            -- Night (0-6): Home sleeping
-            target_location = schedule.home
-            new_state = "sleeping"
-        elseif hour >= 6 and hour < 8 then
-            -- Early morning (6-8): Wake up, prepare for work
-            target_location = schedule.home
-            new_state = "waking"
-        elseif hour >= 8 and hour < 9 then
-            -- Commute to work (8-9)
-            target_location = schedule.work or schedule.home
-            new_state = "commuting"
-        elseif hour >= 9 and hour < 17 then
-            -- Work hours (9-17)
+        local shift_type = schedule.shift or "day"
+        local is_working = is_work_hours(hour, shift_type)
+        local commute_to_work = get_commute_hour(shift_type, true)
+        local commute_from_work = get_commute_hour(shift_type, false)
+        
+        -- Determine what this NPC should be doing based on their shift
+        if is_working then
+            -- Working hours for this NPC
             target_location = schedule.work or schedule.home
             new_state = "working"
-        elseif hour >= 17 and hour < 18 then
-            -- Commute from work (17-18)
+        elseif hour == commute_to_work then
+            -- Commuting to work
+            target_location = schedule.work or schedule.home
+            new_state = "commuting_to_work"
+        elseif hour == commute_from_work or hour == (commute_from_work % 24) then
+            -- Commuting from work
             target_location = schedule.home
-            new_state = "commuting"
-        elseif hour >= 18 and hour < 22 then
-            -- Evening (18-22): Home or social
-            -- 30% chance to go to a social location
-            if seeded_chance(0.3, npc_id .. tostring(WorldDay)) then
-                target_location = seeded_choice(SOCIAL_LOCATIONS, npc_id .. tostring(tick))
-                new_state = "socializing"
-            else
-                target_location = schedule.home
-                new_state = "relaxing"
-            end
+            new_state = "commuting_home"
         else
-            -- Late night (22-24): Head home
-            target_location = schedule.home
-            new_state = "going_home"
+            -- Off work - determine activity based on time of day
+            local off_work_hour = hour
+            
+            -- Adjust for night workers (their "evening" is morning)
+            local is_night_worker = (shift_type == "night" or shift_type == "graveyard")
+            
+            if is_night_worker then
+                -- Night workers sleep during the day
+                if hour >= 8 and hour < 16 then
+                    target_location = schedule.home
+                    new_state = "sleeping"
+                elseif hour >= 16 and hour < 20 then
+                    -- Their "evening" - wake up, socialize
+                    if seeded_chance(0.3, npc_id .. tostring(WorldDay)) then
+                        target_location = seeded_choice(SOCIAL_LOCATIONS, npc_id .. tostring(tick))
+                        new_state = "socializing"
+                    else
+                        target_location = schedule.home
+                        new_state = "relaxing"
+                    end
+                elseif hour >= 20 and hour < commute_to_work then
+                    -- Getting ready for work
+                    target_location = schedule.home
+                    new_state = "preparing"
+                else
+                    target_location = schedule.home
+                    new_state = "resting"
+                end
+            else
+                -- Day workers - normal pattern
+                if hour >= 0 and hour < 6 then
+                    -- Night: sleeping
+                    target_location = schedule.home
+                    new_state = "sleeping"
+                elseif hour >= 6 and hour < commute_to_work then
+                    -- Morning: waking up
+                    target_location = schedule.home
+                    new_state = "waking"
+                elseif hour >= commute_from_work and hour < 22 then
+                    -- Evening: home or social
+                    if seeded_chance(0.3, npc_id .. tostring(WorldDay)) then
+                        target_location = seeded_choice(SOCIAL_LOCATIONS, npc_id .. tostring(tick))
+                        new_state = "socializing"
+                    else
+                        target_location = schedule.home
+                        new_state = "relaxing"
+                    end
+                else
+                    -- Late night: going to sleep
+                    target_location = schedule.home
+                    new_state = "going_home"
+                end
+            end
         end
         
         -- Check if movement occurred
@@ -225,7 +403,8 @@ function process_npc_movements(tick)
                 from = current.location,
                 to = target_location,
                 state = new_state,
-                hour = hour
+                hour = hour,
+                shift = shift_type
             })
             movements = movements + 1
             
@@ -798,15 +977,22 @@ Handlers.add("load-npc-schedules", Handlers.utils.hasMatchingTag("Action", "load
     
     for _, npc in ipairs(schedules) do
         if npc.id then
+            -- Auto-derive shift from archetype/role if not provided
+            local derived_shift = npc.shift
+            if not derived_shift and (npc.archetype or npc.role) then
+                derived_shift = get_shift_for_archetype(npc.archetype, npc.role)
+            end
+            
             NPCSchedules[npc.id] = {
-                home = npc.home or "L001",
-                work = npc.work or npc.workplace or npc.home or "L001",
-                social = npc.social or {}
+                home = npc.home or npc.location_home or "L001",
+                work = npc.work or npc.workplace or npc.location_work or npc.home or "L001",
+                social = npc.social or npc.location_frequent or {},
+                shift = derived_shift or "day"  -- day, night, graveyard, evening, morning, flexible, always_on, split
             }
             -- Initialize location if not set
             if not NPCLocations[npc.id] then
                 NPCLocations[npc.id] = {
-                    location = npc.home or "L001",
+                    location = npc.home or npc.location_home or "L001",
                     state = "idle",
                     since_tick = WorldTick
                 }
