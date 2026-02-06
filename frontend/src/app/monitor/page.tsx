@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { getWorldState, getEconomyState, isAOLive } from '@/lib/ao-client';
+import { getWorldState, getEconomyState, isAOLive, getNPCLocations, type NPCLocation } from '@/lib/ao-client';
 
 // ============================================================================
 // TYPES
@@ -294,6 +294,15 @@ export default function MonitorPage() {
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Auto-advance timer for faster simulation
+    const [autoAdvance, setAutoAdvance] = useState(false);
+    const [autoAdvanceInterval, setAutoAdvanceInterval] = useState(10); // seconds
+    const autoAdvanceRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Live NPC locations from AO
+    const [liveNPCLocations, setLiveNPCLocations] = useState<Record<string, NPCLocation>>({});
+    const [liveNPCCount, setLiveNPCCount] = useState(0);
+
     // Load 800 NPCs from public folder
     useEffect(() => {
         fetch('/data/npcs.json')
@@ -478,15 +487,20 @@ export default function MonitorPage() {
 
         async function fetchAOState() {
             try {
-                const [state, economy, live] = await Promise.all([
+                const [state, economy, live, npcLocations] = await Promise.all([
                     getWorldState(),
                     getEconomyState(),
-                    isAOLive()
+                    isAOLive(),
+                    getNPCLocations()
                 ]);
 
                 if (!isMounted) return;
 
                 setConnected(live);
+
+                // Update live NPC locations
+                setLiveNPCLocations(npcLocations.locations);
+                setLiveNPCCount(npcLocations.count);
 
                 // Use the same rich snapshot generation but seeded by AO tick
                 // This gives deterministic NPC activities based on actual AO state
@@ -505,7 +519,7 @@ export default function MonitorPage() {
                     tick: aoTick,
                     type: 'world_event',
                     timestamp: aoTick,
-                    data: { event_type: 'ao_live_sync', scope: 'city', severity: 'minor', source: 'arweave' }
+                    data: { event_type: 'ao_live_sync', scope: 'city', severity: 'minor', source: 'arweave', npcs_tracked: npcLocations.count }
                 });
 
                 setHistory(prev => {
@@ -814,10 +828,10 @@ export default function MonitorPage() {
                                 onClick={advanceLiveTicks}
                                 disabled={isAdvancing || demoMode}
                                 className={`px-3 py-1 rounded text-sm font-medium transition-colors ${demoMode
-                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                        : isAdvancing
-                                            ? 'bg-yellow-600 animate-pulse'
-                                            : 'bg-green-600 hover:bg-green-700'
+                                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                    : isAdvancing
+                                        ? 'bg-yellow-600 animate-pulse'
+                                        : 'bg-green-600 hover:bg-green-700'
                                     }`}
                                 title={demoMode ? 'Disable Demo Mode to advance live simulation' : `Advance AO simulation by ${ticksToAdvance} ticks`}
                             >
@@ -938,6 +952,46 @@ export default function MonitorPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Live NPC Locations from AO (FREE dryrun) */}
+                        {liveNPCCount > 0 && (
+                            <div className="bg-gray-800 rounded-lg p-4 border border-cyan-600/50">
+                                <h3 className="text-gray-200 text-sm mb-3 font-semibold flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></span>
+                                    Live NPC Locations
+                                    <span className="text-cyan-400 text-xs ml-auto">{liveNPCCount} tracked</span>
+                                </h3>
+
+                                <div className="space-y-2 max-h-48 overflow-y-auto">
+                                    {Object.entries(
+                                        // Group by state
+                                        Object.entries(liveNPCLocations).reduce((acc, [npcId, loc]) => {
+                                            const state = loc.state || 'unknown';
+                                            if (!acc[state]) acc[state] = [];
+                                            acc[state].push({ id: npcId, ...loc });
+                                            return acc;
+                                        }, {} as Record<string, Array<{ id: string } & NPCLocation>>)
+                                    ).map(([state, npcs]) => (
+                                        <div key={state} className="text-xs">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className={`w-2 h-2 rounded-full ${state === 'working' ? 'bg-green-500' :
+                                                        state === 'sleeping' ? 'bg-blue-500' :
+                                                            state === 'socializing' ? 'bg-purple-500' :
+                                                                state === 'commuting_to_work' || state === 'commuting_home' ? 'bg-yellow-500' :
+                                                                    'bg-gray-500'
+                                                    }`}></span>
+                                                <span className="text-gray-300 capitalize">{state.replace(/_/g, ' ')}</span>
+                                                <span className="text-gray-500">({npcs.length})</span>
+                                            </div>
+                                            <div className="pl-4 text-gray-500">
+                                                {npcs.slice(0, 3).map(npc => npc.location).join(', ')}
+                                                {npcs.length > 3 && ` +${npcs.length - 3} more`}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Active NPCs - Clickable */}
                         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">

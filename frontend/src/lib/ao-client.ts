@@ -143,7 +143,83 @@ export async function isAOLive(): Promise<boolean> {
     }
 }
 
+/**
+ * Query NPC locations from AO
+ */
+export interface NPCLocation {
+    location: string;
+    state: string;
+    since_tick: number;
+}
+
+export async function getNPCLocations(): Promise<{
+    count: number;
+    tick: number;
+    locations: Record<string, NPCLocation>;
+}> {
+    try {
+        const result = await dryrun({
+            process: AO_PROCESS_IDS.world,
+            tags: [{ name: "Action", value: "get-npc-locations" }],
+            data: "{}",
+        });
+
+        if (result.Messages?.[0]?.Data) {
+            const data = JSON.parse(result.Messages[0].Data);
+            return {
+                count: data.count || 0,
+                tick: data.tick || 0,
+                locations: data.locations || {},
+            };
+        }
+        throw new Error("No response from AO");
+    } catch (error) {
+        console.error("Failed to query NPC locations:", error);
+        return { count: 0, tick: 0, locations: {} };
+    }
+}
+
+/**
+ * Query NPC movement log from AO
+ */
+export interface MovementLogEntry {
+    tick: number;
+    npc_id: string;
+    from: string;
+    to: string;
+    state: string;
+    hour: number;
+    shift?: string;
+}
+
+export async function getMovementLog(limit: number = 20): Promise<{
+    count: number;
+    entries: MovementLogEntry[];
+}> {
+    try {
+        const result = await dryrun({
+            process: AO_PROCESS_IDS.world,
+            tags: [{ name: "Action", value: "get-movement-log" }],
+            data: JSON.stringify({ limit }),
+        });
+
+        if (result.Messages?.[0]?.Data) {
+            const data = JSON.parse(result.Messages[0].Data);
+            return {
+                count: data.count || 0,
+                entries: data.log || [],
+            };
+        }
+        throw new Error("No response from AO");
+    } catch (error) {
+        console.error("Failed to query movement log:", error);
+        return { count: 0, entries: [] };
+    }
+}
+
 // Re-export for convenience
 export type WorldState = Awaited<ReturnType<typeof getWorldState>>;
 export type EconomyState = Awaited<ReturnType<typeof getEconomyState>>;
 export type TimeState = Awaited<ReturnType<typeof getTimeState>>;
+export type NPCLocationsState = Awaited<ReturnType<typeof getNPCLocations>>;
+export type MovementLogState = Awaited<ReturnType<typeof getMovementLog>>;
