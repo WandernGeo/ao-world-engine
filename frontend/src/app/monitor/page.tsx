@@ -276,6 +276,10 @@ export default function MonitorPage() {
     const [detailPanel, setDetailPanel] = useState<DetailPanel>({ type: null, data: null });
     const [showHelp, setShowHelp] = useState(false);
 
+    // Manual tick advance
+    const [ticksToAdvance, setTicksToAdvance] = useState(10);
+    const [isAdvancing, setIsAdvancing] = useState(false);
+
     // Loaded NPCs from JSON (800 NPCs)
     const [loadedNpcs, setLoadedNpcs] = useState<Array<{
         id: string;
@@ -567,6 +571,35 @@ export default function MonitorPage() {
         setIsPlaying(true);
     };
 
+    // Advance live simulation (calls AO process)
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ao-world-engine-api-zdku5kri5a-uc.a.run.app';
+    const advanceLiveTicks = async () => {
+        if (isAdvancing) return;
+        setIsAdvancing(true);
+        try {
+            const response = await fetch(`${API_BASE}/api/advance-tick`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ticks: ticksToAdvance })
+            });
+            const data = await response.json();
+            if (data.success) {
+                console.log(`✅ Advanced ${ticksToAdvance} ticks:`, data);
+                // Trigger a refresh of live data
+                if (!demoMode) {
+                    // Force re-fetch of world state
+                    window.location.reload();
+                }
+            } else {
+                console.error('Failed to advance:', data.error);
+            }
+        } catch (error) {
+            console.error('Error advancing ticks:', error);
+        } finally {
+            setIsAdvancing(false);
+        }
+    };
+
     // Current snapshot
     const currentSnapshot = history[Math.min(currentIndex, history.length - 1)];
     const isLive = currentIndex >= history.length - 1;
@@ -765,6 +798,32 @@ export default function MonitorPage() {
                                 Jump to Live
                             </button>
                         )}
+
+                        {/* LIVE SIMULATION ADVANCE */}
+                        <div className="ml-4 flex items-center gap-2 border-l border-gray-600 pl-4">
+                            <span className="text-xs text-gray-400">Advance Sim:</span>
+                            <input
+                                type="number"
+                                min={1}
+                                max={100}
+                                value={ticksToAdvance}
+                                onChange={(e) => setTicksToAdvance(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
+                                className="w-16 px-2 py-1 bg-gray-700 border border-gray-600 rounded text-sm text-center"
+                            />
+                            <button
+                                onClick={advanceLiveTicks}
+                                disabled={isAdvancing || demoMode}
+                                className={`px-3 py-1 rounded text-sm font-medium transition-colors ${demoMode
+                                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                        : isAdvancing
+                                            ? 'bg-yellow-600 animate-pulse'
+                                            : 'bg-green-600 hover:bg-green-700'
+                                    }`}
+                                title={demoMode ? 'Disable Demo Mode to advance live simulation' : `Advance AO simulation by ${ticksToAdvance} ticks`}
+                            >
+                                {isAdvancing ? '⏳ Advancing...' : `⏩ +${ticksToAdvance} Ticks`}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Timeline Scrubber */}

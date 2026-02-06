@@ -537,6 +537,75 @@ Handlers.add("get-time", Handlers.utils.hasMatchingTag("Action", "get-time"), fu
     })
 end)
 
+-- =============================================================================
+-- MANUAL TICK ADVANCE (For Testing & Fast-Forward)
+-- =============================================================================
+
+Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-tick"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local ticks = tonumber(data.ticks) or 1
+    
+    -- Safety limits: owner can advance 1000+, others limited to 100
+    local is_owner = (msg.From == OwnerAddress)
+    local max_ticks = is_owner and 10000 or 100
+    
+    if ticks < 1 then ticks = 1 end
+    if ticks > max_ticks then ticks = max_ticks end
+    
+    -- Skip if paused (unless owner)
+    if SimulationStatus ~= "running" and not is_owner then
+        ao.send({
+            Target = msg.From,
+            Action = "advance-response",
+            Data = json.encode({
+                success = false,
+                error = "Simulation is " .. SimulationStatus,
+                tick = WorldTick
+            })
+        })
+        return
+    end
+    
+    local start_tick = WorldTick
+    local start_day = WorldDay
+    
+    -- Fast-forward simulation
+    for i = 1, ticks do
+        WorldTick = WorldTick + 1
+        
+        -- Day/year transitions
+        if WorldTick % TICKS_PER_DAY == 0 then
+            WorldDay = WorldDay + 1
+        end
+        if WorldTick % TICKS_PER_YEAR == 0 then
+            WorldYear = WorldYear + 1
+        end
+        
+        -- TODO: Process NPC movements when implemented
+        -- if process_npc_movements then
+        --     process_npc_movements(WorldTick)
+        -- end
+    end
+    
+    local time = get_time_info(WorldTick)
+    
+    ao.send({
+        Target = msg.From,
+        Action = "advance-response",
+        Data = json.encode({
+            success = true,
+            previous_tick = start_tick,
+            new_tick = WorldTick,
+            advanced = ticks,
+            previous_day = start_day,
+            new_day = WorldDay,
+            time = time
+        })
+    })
+    
+    print("⏩ Advanced " .. ticks .. " ticks: " .. start_tick .. " -> " .. WorldTick)
+end)
+
 -- Get all NPCs
 Handlers.add("get-all-npcs", Handlers.utils.hasMatchingTag("Action", "get-all-npcs"), function(msg)
     ao.send({

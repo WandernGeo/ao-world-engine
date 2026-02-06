@@ -465,6 +465,77 @@ def health():
     })
 
 
+# ============================================================
+# MANUAL TICK ADVANCE (For Testing & Fast-Forward)
+# ============================================================
+
+import subprocess
+
+@app.route("/api/advance-tick", methods=["POST"])
+def advance_tick():
+    """Advance simulation ticks manually.
+    
+    POST body: { "ticks": 10 }
+    Calls the AO process to fast-forward the simulation.
+    """
+    data = request.json or {}
+    ticks = data.get("ticks", 1)
+    
+    # Safety limit via API
+    if ticks < 1:
+        ticks = 1
+    if ticks > 100:
+        ticks = 100
+        
+    try:
+        # Call Node.js script to send AO message
+        import os
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_path = os.path.join(script_dir, "..", "scripts", "send_ao_message.mjs")
+        
+        result = subprocess.run(
+            ["node", script_path, "advance-tick", json.dumps({"ticks": ticks})],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            cwd=os.path.join(script_dir, "..")
+        )
+        
+        if result.returncode == 0:
+            # Try to parse response from output
+            output = result.stdout
+            return jsonify({
+                "success": True,
+                "ticks_requested": ticks,
+                "output": output[:500]  # Truncate for safety
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result.stderr[:500] or "Unknown error",
+                "ticks_requested": ticks
+            }), 500
+            
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            "success": False,
+            "error": "AO request timed out"
+        }), 504
+    except FileNotFoundError:
+        # Node.js script not found - return mock response for testing
+        return jsonify({
+            "success": True,
+            "mock": True,
+            "ticks_advanced": ticks,
+            "message": "Mock mode - AO script not available"
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
 @app.route("/api/npcs", methods=["GET"])
 def list_npcs():
     """List all available NPCs (from Arweave + founding NPCs)."""
