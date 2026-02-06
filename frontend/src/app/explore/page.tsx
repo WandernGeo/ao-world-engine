@@ -170,9 +170,8 @@ function ExplorePageContent() {
     const currentTick = simulation.tick;
     const day = simulation.day;
     const hour = simulation.hour;
-
-    const [isPlaying, setIsPlaying] = useState(true); // Default to playing
-    const [tickSpeed, setTickSpeed] = useState(1);
+    const isPlaying = simulation.isPlaying;
+    const tickSpeed = simulation.playbackSpeed;
     const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
     const [selectedNPC, setSelectedNPC] = useState<NPC | null>(null);
     const [npcs, setNpcs] = useState<NPC[]>([]);
@@ -708,9 +707,9 @@ function ExplorePageContent() {
                         currentTick={currentTick}
                         onTickChange={(tick: number) => simulation.jumpToTick(tick)}
                         isPlaying={isPlaying}
-                        onPlayPause={() => setIsPlaying(!isPlaying)}
+                        onPlayPause={() => isPlaying ? simulation.pause() : simulation.play()}
                         tickSpeed={tickSpeed}
-                        onSpeedChange={setTickSpeed}
+                        onSpeedChange={simulation.setPlaybackSpeed}
                     />
 
                     {/* Timeline Visualizer */}

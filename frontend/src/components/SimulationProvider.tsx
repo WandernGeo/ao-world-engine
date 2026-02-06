@@ -74,7 +74,7 @@ const defaultState: SimulationState = {
     isConnectedToAO: false,
     isLoading: true,
     error: null,
-    isPlaying: false,
+    isPlaying: true,  // Auto-play by default for continuous simulation
     playbackSpeed: 1,
     demoMode: false,  // Will be loaded from localStorage
     isLive: true,
