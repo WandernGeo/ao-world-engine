@@ -322,47 +322,97 @@ function ExplorePageContent() {
         return () => clearInterval(interval);
     }, [isPlaying, tickSpeed, mounted, simulation]);
 
-    // Fetch NPC states from live AO data
+    // Local NPC movement simulation - moves NPCs between buildings based on time of day
     useEffect(() => {
-        if (!mounted) return;
+        if (!mounted || !isPlaying) return;
 
-        // Update every 2 ticks for smoother movement
-        if (currentTick % 2 !== 0) return;
+        // Simulate NPC movement based on hour of day
+        const simulateMovement = () => {
+            const allBuildings = districts.flatMap(d => d.buildings);
+            if (allBuildings.length === 0) return;
 
-        const fetchNPCStates = async () => {
-            try {
-                // Fetch live NPC locations directly from AO
-                const locationsData = await getNPCLocations();
+            setNpcs(prevNpcs => {
+                return prevNpcs.map(npc => {
+                    // Calculate movement probability - some NPCs move each tick
+                    const moveChance = Math.random();
 
-                if (locationsData && Object.keys(locationsData.locations).length > 0) {
-                    setNpcs(prevNpcs => {
-                        let updatedCount = 0;
-                        const updated = prevNpcs.map(npc => {
-                            const liveState = locationsData.locations[npc.id];
-                            if (liveState) {
-                                updatedCount++;
-                                return {
-                                    ...npc,
-                                    location: liveState.location || npc.location,
-                                    activity: liveState.state || npc.activity,
-                                    // Derive mood from state
-                                    mood: liveState.state === 'resting' ? 'calm' :
-                                        liveState.state === 'working' ? 'busy' : 'friendly'
-                                };
+                    // Determine target location based on time of day
+                    let targetLocation = npc.location;
+                    let newActivity = npc.activity;
+
+                    // Hour-based schedule simulation
+                    if (hour >= 6 && hour < 9) {
+                        // Morning: Wake up, go to work
+                        if (moveChance < 0.3) {
+                            targetLocation = npc.workplace || npc.location;
+                            newActivity = 'walking';
+                        }
+                    } else if (hour >= 9 && hour < 12) {
+                        // Work hours morning
+                        if (moveChance < 0.1) {
+                            targetLocation = npc.workplace || npc.location;
+                            newActivity = 'working';
+                        }
+                    } else if (hour >= 12 && hour < 14) {
+                        // Lunch break - move to commercial areas
+                        if (moveChance < 0.2) {
+                            const commercialBuildings = allBuildings.filter(b => b.type === 'commercial');
+                            if (commercialBuildings.length > 0) {
+                                targetLocation = commercialBuildings[Math.floor(Math.random() * commercialBuildings.length)].id;
+                                newActivity = 'eating';
                             }
-                            return npc;
-                        });
-                        console.log(`AO Tick ${locationsData.tick}: Updated ${updatedCount} NPC states from live AO data`);
-                        return updated;
-                    });
-                }
-            } catch (error) {
-                console.log('Failed to fetch NPC states from AO:', error);
-            }
+                        }
+                    } else if (hour >= 14 && hour < 18) {
+                        // Work hours afternoon
+                        if (moveChance < 0.15) {
+                            // Some go back to work, some visit shops
+                            if (Math.random() < 0.7) {
+                                targetLocation = npc.workplace || npc.location;
+                                newActivity = 'working';
+                            } else {
+                                const commercialBuildings = allBuildings.filter(b => b.type === 'commercial');
+                                if (commercialBuildings.length > 0) {
+                                    targetLocation = commercialBuildings[Math.floor(Math.random() * commercialBuildings.length)].id;
+                                    newActivity = 'shopping';
+                                }
+                            }
+                        }
+                    } else if (hour >= 18 && hour < 22) {
+                        // Evening - social time, bars, restaurants
+                        if (moveChance < 0.25) {
+                            const socialBuildings = allBuildings.filter(b =>
+                                b.type === 'commercial' || b.name.toLowerCase().includes('bar')
+                            );
+                            if (socialBuildings.length > 0) {
+                                targetLocation = socialBuildings[Math.floor(Math.random() * socialBuildings.length)].id;
+                                newActivity = Math.random() < 0.5 ? 'drinking' : 'talking';
+                            }
+                        }
+                    } else if (hour >= 22 || hour < 6) {
+                        // Night - go home
+                        if (moveChance < 0.3) {
+                            targetLocation = npc.home || npc.location;
+                            newActivity = hour < 4 ? 'sleeping' : 'resting';
+                        }
+                    }
+
+                    // Only update if actually moving
+                    if (targetLocation !== npc.location) {
+                        return {
+                            ...npc,
+                            location: targetLocation,
+                            activity: newActivity,
+                            mood: MOODS[Math.floor(Math.random() * MOODS.length)]
+                        };
+                    }
+                    return npc;
+                });
+            });
         };
 
-        fetchNPCStates();
-    }, [currentTick, mounted]);
+        // Run simulation
+        simulateMovement();
+    }, [currentTick, hour, mounted, isPlaying, districts]);
 
     // Fetch NPCs - only fetch if API available, otherwise use mock data
     const fetchNPCs = useCallback(async () => {
