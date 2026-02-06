@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { formatTickTime } from '@/lib/aoClient';
 
 interface TimelineEvent {
     tick: number;
@@ -30,10 +31,10 @@ export function TimelineBar({
 
     const tickToPercent = (tick: number) => (tick / maxTick) * 100;
 
+    // Use standard formatTickTime from aoClient (10 ticks/hour, 240 ticks/day)
     const formatTick = (tick: number) => {
-        const hour = tick % 24;
-        const day = Math.floor(tick / 24) + 1;
-        return `Day ${day}, ${hour.toString().padStart(2, '0')}:00`;
+        const time = formatTickTime(tick);
+        return `Day ${time.day}, ${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}`;
     };
 
     const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {

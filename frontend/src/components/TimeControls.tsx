@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { formatTickTime } from '@/lib/aoClient';
 
 interface TimeControlsProps {
     currentTick: number;
@@ -15,6 +16,10 @@ interface TimeControlsProps {
     tickSpeed: number;
     onSpeedChange: (speed: number) => void;
 }
+
+// Standard: 10 ticks/hour, 24 hours/day = 240 ticks/day
+const TICKS_PER_HOUR = 10;
+const TICKS_PER_DAY = 240;
 
 export function TimeControls({
     currentTick,
@@ -26,12 +31,12 @@ export function TimeControls({
 }: TimeControlsProps) {
     const [manualTick, setManualTick] = useState(currentTick.toString());
 
-    // Convert tick to readable time
-    const ticksPerHour = 100 / 24; // ~4.17 ticks per hour
-    const day = Math.floor(currentTick / 100) + 1;
-    const tickInDay = currentTick % 100;
-    const hour = Math.floor(tickInDay / ticksPerHour);
-    const minute = Math.floor((tickInDay % ticksPerHour) / ticksPerHour * 60);
+    // Use standard time conversion from aoClient
+    const time = formatTickTime(currentTick);
+    const day = time.day;
+    const hour = time.hour;
+    const minute = time.minute;
+    const tickInDay = currentTick % TICKS_PER_DAY;
 
     const handleManualSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -86,9 +91,9 @@ export function TimeControls({
                     <Label className="text-xs text-zinc-500">Scrub Time</Label>
                     <Slider
                         value={[tickInDay]}
-                        onValueChange={([v]) => onTickChange((day - 1) * 100 + v)}
+                        onValueChange={([v]) => onTickChange((day - 1) * TICKS_PER_DAY + v)}
                         min={0}
-                        max={99}
+                        max={TICKS_PER_DAY - 1}
                         step={1}
                         className="mt-1"
                     />
@@ -118,7 +123,7 @@ export function TimeControls({
                     </Button>
                 </form>
 
-                {/* Quick Jump Buttons */}
+                {/* Quick Jump Buttons - 10 ticks/hour, 240 ticks/day */}
                 <div className="grid grid-cols-4 gap-1">
                     {['+1 Hour', '+6 Hours', '+1 Day', '+1 Week'].map((label, i) => (
                         <Button
@@ -127,7 +132,8 @@ export function TimeControls({
                             size="sm"
                             className="text-xs"
                             onClick={() => {
-                                const ticks = [4, 25, 100, 700][i];
+                                // 10 ticks/hour, 240 ticks/day, 1680 ticks/week
+                                const ticks = [TICKS_PER_HOUR, TICKS_PER_HOUR * 6, TICKS_PER_DAY, TICKS_PER_DAY * 7][i];
                                 onTickChange(currentTick + ticks);
                             }}
                         >
