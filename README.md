@@ -170,6 +170,11 @@ ao-world-engine/
 │   ├── district.lua        # District simulation
 │   ├── global_event_bus.lua # World-level events
 │   └── canon_validator.lua # Content validation
+├── viewer/                 # Open source viewer (HTML/CSS/JS)
+│   ├── index.html          # Basic world state viewer
+│   ├── style.css           # Minimal styling
+│   └── app.js              # AO query client
+├── demo/                   # Python demo server + API tester
 ├── schemas/                # JSON schemas
 │   ├── action_dictionary.json
 │   ├── factions.json
@@ -180,6 +185,8 @@ ao-world-engine/
 └── examples/               # Example implementations
     └── generic_city/       # Starter template
 ```
+
+> **Note**: Premium visualization tools (StudioRam) are available separately for commercial projects.
 
 ---
 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AO World Engine Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>🌐 AO World Engine Viewer</h1>
+        <div class="status">
+            <span id="connection-status" class="offline">● Offline</span>
+            <span id="tick-display">Tick: --</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>World State</h2>
+            <div id="world-state" class="data-grid">
+                <div class="stat">
+                    <span class="label">Population</span>
+                    <span id="population" class="value">--</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Budget</span>
+                    <span id="budget" class="value">--</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Day</span>
+                    <span id="day" class="value">--</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Time</span>
+                    <span id="time" class="value">--</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>NPCs (<span id="npc-count">0</span>)</h2>
+            <div id="npc-list" class="npc-grid">
+                <p class="loading">Loading NPCs...</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Districts</h2>
+            <div id="district-list" class="district-grid">
+                <p class="loading">Loading districts...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>
+            <a href="https://github.com/WandernGeo/ao-world-engine" target="_blank">GitHub</a> |
+            AO Process: <code id="process-id">--</code> |
+            Open Source Viewer
+        </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

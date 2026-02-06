@@ -1,0 +1,166 @@
+/* AO World Engine Viewer - Open Source */
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-panel: #1a1a24;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --accent-cyan: #00d4ff;
+    --accent-purple: #a855f7;
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+    --border: #2a2a3a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+header {
+    background: var(--bg-secondary);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    color: var(--accent-cyan);
+}
+
+.status {
+    display: flex;
+    gap: 2rem;
+    font-family: monospace;
+}
+
+.status .online {
+    color: var(--accent-green);
+}
+
+.status .offline {
+    color: var(--accent-red);
+}
+
+main {
+    padding: 2rem;
+    display: grid;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.panel h2 {
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.stat {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.stat .label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat .value {
+    display: block;
+    font-size: 1.5rem;
+    font-family: monospace;
+    color: var(--accent-cyan);
+}
+
+.npc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.npc-card {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent-purple);
+}
+
+.npc-card .name {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.npc-card .info {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.district-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.district-card {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent-green);
+}
+
+.loading {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+footer {
+    background: var(--bg-secondary);
+    padding: 1rem 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+}
+
+footer a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+}
+
+footer code {
+    background: var(--bg-panel);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
