@@ -809,7 +809,7 @@ export default function MonitorPage() {
             </div>
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto p-6">
+            <div className="max-w-7xl mx-auto pt-32 pb-6 px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
                     {/* Left Panel - World Status */}
