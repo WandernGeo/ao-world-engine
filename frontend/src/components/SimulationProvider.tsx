@@ -150,10 +150,10 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         }
     }, [refreshState]);
 
-    // Auto-refresh every 30 seconds when connected
+    // Auto-refresh every 60 seconds when connected (reduced from 30s to avoid rate limits)
     useEffect(() => {
         if (state.isConnectedToAO) {
-            const interval = setInterval(refreshState, 30000);
+            const interval = setInterval(refreshState, 60000);
             return () => clearInterval(interval);
         }
     }, [state.isConnectedToAO, refreshState]);
