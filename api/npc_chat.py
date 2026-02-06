@@ -729,6 +729,7 @@ RULES:
         # NPCs can answer common questions using their profile data
         # ================================================================
         import random
+        import re
         
         msg_lower = message.lower().strip()
         npc_name = npc_state_data['name']
@@ -737,8 +738,50 @@ RULES:
         activity = npc_state_data.get('current_activity', 'existing')
         mood = npc_state_data.get('current_mood', 'neutral')
         
+        # IMMEDIATE name extraction from current message (before checking history)
+        extracted_name = None
+        if "my name is" in msg_lower:
+            name_part = msg_lower.split("my name is")[-1].strip()
+            words = name_part.split()
+            if words and len(words[0]) > 1:
+                extracted_name = words[0].title()
+                remember_user(user_id, extracted_name, tick)
+                user_name = extracted_name
+        elif "i'm " in msg_lower:
+            name_part = msg_lower.split("i'm ")[-1].strip()
+            words = name_part.split()
+            if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
+                extracted_name = words[0].title()
+                remember_user(user_id, extracted_name, tick)
+                user_name = extracted_name
+        elif "i am " in msg_lower:
+            name_part = msg_lower.split("i am ")[-1].strip()
+            words = name_part.split()
+            if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
+                extracted_name = words[0].title()
+                remember_user(user_id, extracted_name, tick)
+                user_name = extracted_name
+        elif "call me " in msg_lower:
+            name_part = msg_lower.split("call me ")[-1].strip()
+            words = name_part.split()
+            if words and len(words[0]) > 1:
+                extracted_name = words[0].title()
+                remember_user(user_id, extracted_name, tick)
+                user_name = extracted_name
+        
+        # If user just introduced themselves, acknowledge it!
+        if extracted_name:
+            intros = [
+                f"{extracted_name}, huh? I'll remember that.",
+                f"*nods* {extracted_name}. Got it.",
+                f"{extracted_name}. Not a name you hear often around here.",
+                f"Alright, {extracted_name}. I'm {npc_name}. What brings you here?",
+                f"Nice to meet you, {extracted_name}. I'm {npc_name}.",
+            ]
+            npc_response = random.choice(intros)
+        
         # Intent detection patterns
-        if any(w in msg_lower for w in ['your name', 'who are you', 'what are you called', 'what\'s your name']):
+        elif any(w in msg_lower for w in ['your name', 'who are you', 'what are you called', 'what\'s your name']):
             # Self-introduction
             intros = [
                 f"I'm {npc_name}. {archetype.title()} by trade.",
@@ -810,9 +853,18 @@ RULES:
             # Generic lore/info
             npc_response = f"*{npc_name} glances around* Information costs. What specifically?"
         
-        elif user_name and any(w in msg_lower for w in ['my name', 'remember me', 'who am i']):
-            # User memory
-            npc_response = f"You're {user_name}. I remember faces."
+        elif any(w in msg_lower for w in ['my name', 'remember me', 'who am i', 'do you know me', 'what\'s my name']):
+            # User memory - check if we know them
+            if user_name:
+                responses = [
+                    f"You're {user_name}. I remember faces.",
+                    f"{user_name}, right? I don't forget.",
+                    f"*nods* {user_name}. We've talked before.",
+                    f"You're {user_name}. What, thought I'd forget?"
+                ]
+                npc_response = random.choice(responses)
+            else:
+                npc_response = "I don't think you've told me your name yet."
         
         else:
             # Default fallback with personality
