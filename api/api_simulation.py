@@ -23,6 +23,7 @@ from flask_cors import CORS
 import json
 import hashlib
 import os
+import random
 import requests
 
 app = Flask(__name__)
@@ -1081,6 +1082,272 @@ def simulation_tick():
         "events": events,
         "npc_states": npc_states,
         "npc_states_truncated": truncated,
+    })
+
+
+# =============================================================================
+# NEWS GENERATION
+# =============================================================================
+
+# News outlet definitions with biases
+NEWS_OUTLETS = {
+    "temple_herald": {
+        "id": "NO01",
+        "name": "Temple Herald",
+        "bias": "pro_temple",
+        "censored": True,
+        "tone": "authoritative"
+    },
+    "chrome_wire": {
+        "id": "NO02",
+        "name": "Chrome Wire",
+        "bias": "pro_business",
+        "censored": False,
+        "tone": "professional"
+    },
+    "neon_underground": {
+        "id": "NO03",
+        "name": "Neon Underground",
+        "bias": "anti_authority",
+        "censored": False,
+        "tone": "gritty"
+    },
+    "undercity_voice": {
+        "id": "NO04",
+        "name": "The Undercity Voice",
+        "bias": "pro_cyborg",
+        "hidden": True,
+        "tone": "revolutionary"
+    }
+}
+
+# Article templates by type
+NEWS_TEMPLATES = {
+    "robbery": {
+        "headlines": [
+            "Break-in at {location}: {value} GEP Stolen",
+            "{district} Residents Report Theft Wave",
+            "Security Breach at {location} Leaves Merchants Shaken"
+        ],
+        "bodies": {
+            "neutral": "Authorities report a break-in at {location} in the {district} district. Approximately {value} GEP worth of goods were stolen. Temple Guard forces are investigating.",
+            "pro_temple": "Swift action by Temple security forces prevented a major theft at {location}. Citizens are reminded that the Temple protects all.",
+            "anti_authority": "Another robbery rocks {location}, and once again Temple security arrives too late. 'They only protect the Spire,' said one witness."
+        }
+    },
+    "hacking": {
+        "headlines": [
+            "Cyberattack Targets {location} Systems",
+            "Hacker Breach at {location}: Data Exposed",
+            "Digital Intrusion Rocks {district} Infrastructure"
+        ],
+        "bodies": {
+            "neutral": "A cyberattack targeting {location} systems was detected. Technical teams are assessing the damage.",
+            "pro_temple": "An attempted cyber-intrusion against {location} was quickly neutralized by Temple cybersecurity protocols.",
+            "anti_authority": "Sources confirm that {location} was breached. Data exposure is likely significant. As usual, official statements downplay the severity."
+        }
+    },
+    "police": {
+        "headlines": [
+            "Temple Guard Conducts Raid in {district}",
+            "Inquisitors Apprehend Suspect in {district}",
+            "Police Chase Through {district} Streets"
+        ],
+        "bodies": {
+            "neutral": "Temple Guard units conducted an operation in {district} today. Officials cite ongoing investigations.",
+            "pro_temple": "In a decisive action against criminal elements, Temple Inquisitors swept through {district}, apprehending suspects linked to illegal activities.",
+            "anti_authority": "Witnesses describe a violent crackdown in {district} as Temple forces stormed buildings. The Cyborg Justice Society is demanding an investigation."
+        }
+    },
+    "cyborg_attack": {
+        "headlines": [
+            "Cyborg Resident Attacked in {district}",
+            "Tensions Rise as Synthetic Citizen Assaulted",
+            "Cyborg Justice Society Condemns {district} Incident"
+        ],
+        "bodies": {
+            "neutral": "An incident involving a synthetic citizen occurred in {district}. Details remain unclear.",
+            "pro_temple": "An altercation in {district} involving a synthetic individual has been resolved. Authorities remind all residents that proper identification protocols apply equally.",
+            "anti_authority": "BREAKING: Another brutal attack on a cyborg citizen in {district}. The victim was set upon by humans. Temple Guards arrived but made NO ARRESTS. These attacks are epidemic and the Temple does NOTHING."
+        }
+    },
+    "fire": {
+        "headlines": [
+            "Blaze Engulfs {location} Building",
+            "Fire Crews Battle {district} Inferno",
+            "Emergency Response to {district} Fire"
+        ],
+        "bodies": {
+            "neutral": "Fire crews responded to a blaze at {location} in {district} district. The fire has been contained.",
+            "pro_temple": "Thanks to rapid response by Temple emergency services, a fire at {location} was quickly contained. No casualties reported.",
+            "anti_authority": "Fire ravaged {location} overnight. Residents report waiting ages for emergency response. Infrastructure in {district} continues to deteriorate while Temple resources flow upward."
+        }
+    },
+    "market": {
+        "headlines": [
+            "{district} Market Sees Price Surge",
+            "Trade Disruption Affects {district} Vendors",
+            "Economic Tensions in {district} District"
+        ],
+        "bodies": {
+            "neutral": "Market analysts report price fluctuations in {district}. Merchants are adjusting to changes.",
+            "pro_temple": "The Temple's economic stability measures continue to benefit {district} residents. Markets remain orderly.",
+            "anti_authority": "Another day, another price hike in {district}. While corporations profit, working families struggle. The gap between Spire and Undercity widens."
+        }
+    }
+}
+
+
+def generate_news_article(event_type: str, tick: int, outlet_key: str, **kwargs) -> dict:
+    """Generate a procedural news article."""
+    outlet = NEWS_OUTLETS.get(outlet_key, NEWS_OUTLETS["neon_underground"])
+    templates = NEWS_TEMPLATES.get(event_type, NEWS_TEMPLATES["market"])
+    
+    # Pick headline deterministically
+    headline_idx = hash(f"{event_type}_{tick}") % len(templates["headlines"])
+    headline_template = templates["headlines"][headline_idx]
+    
+    # Format with provided kwargs
+    district = kwargs.get("district", "the district")
+    location = kwargs.get("location", "an undisclosed location")
+    value = kwargs.get("value", random.randint(100, 5000))
+    
+    headline = headline_template.format(
+        district=district.replace("_", " ").title(),
+        location=location,
+        value=value
+    )
+    
+    # Get body based on outlet bias
+    bias = outlet.get("bias", "neutral")
+    if bias == "pro_temple":
+        body_key = "pro_temple"
+    elif bias in ["anti_authority", "pro_cyborg"]:
+        body_key = "anti_authority"
+    else:
+        body_key = "neutral"
+    
+    body_template = templates["bodies"].get(body_key, templates["bodies"]["neutral"])
+    body = body_template.format(
+        district=district.replace("_", " ").title(),
+        location=location,
+        value=value
+    )
+    
+    # Apply censorship for Temple Herald
+    if outlet.get("censored"):
+        censorship = {
+            "brutal": "",
+            "violence": "disturbance",
+            "attack": "incident",
+            "NO ARRESTS": "investigation ongoing",
+            "does NOTHING": "is investigating"
+        }
+        for term, replacement in censorship.items():
+            headline = headline.replace(term, replacement)
+            body = body.replace(term, replacement)
+    
+    time_info = get_time_info(tick)
+    
+    return {
+        "id": f"NEWS_{tick}_{outlet['id']}_{event_type[:3].upper()}",
+        "tick": tick,
+        "day": time_info["day"],
+        "time": f"{time_info['hour']:02d}:{time_info['minute']:02d}",
+        "outlet": outlet["name"],
+        "outlet_id": outlet["id"],
+        "headline": headline,
+        "body": body,
+        "event_type": event_type,
+        "district": district,
+        "bias": bias
+    }
+
+
+@app.route("/api/news")
+def get_news():
+    """
+    Get procedural news for a given tick.
+    
+    Query params:
+    - tick: simulation tick (default: 100)
+    - outlet: filter by outlet (temple_herald, chrome_wire, neon_underground, undercity_voice)
+    - count: number of articles (default: 10, max: 50)
+    """
+    tick = int(request.args.get("tick", 100))
+    outlet_filter = request.args.get("outlet")
+    count = min(int(request.args.get("count", 10)), 50)
+    
+    articles = []
+    
+    # Generate news based on tick-seeded events
+    event_types = ["robbery", "hacking", "police", "cyborg_attack", "fire", "market"]
+    districts = ["undercity", "market_district", "temple_district", "hab_blocks", "industrial_ring"]
+    locations = ["Market Hall", "Rusty Anchor", "Jade Tower", "Hab Block 7", "AutoFab Plant", "Drone Depot"]
+    
+    outlets_to_use = list(NEWS_OUTLETS.keys())
+    if outlet_filter and outlet_filter in NEWS_OUTLETS:
+        outlets_to_use = [outlet_filter]
+    
+    for i in range(count):
+        # Deterministic selection based on tick
+        seed = f"news_{tick}_{i}"
+        event_idx = hash(seed) % len(event_types)
+        district_idx = hash(f"{seed}_d") % len(districts)
+        location_idx = hash(f"{seed}_l") % len(locations)
+        outlet_idx = hash(f"{seed}_o") % len(outlets_to_use)
+        
+        event_type = event_types[event_idx]
+        district = districts[district_idx]
+        location = locations[location_idx]
+        outlet_key = outlets_to_use[outlet_idx]
+        
+        # Undercity Voice only covers cyborg-related news
+        if outlet_key == "undercity_voice" and event_type != "cyborg_attack":
+            event_type = "cyborg_attack"
+        
+        article = generate_news_article(
+            event_type,
+            tick - i,  # Spread across recent ticks
+            outlet_key,
+            district=district,
+            location=location,
+            value=100 + (hash(f"{seed}_v") % 4900)
+        )
+        articles.append(article)
+    
+    return jsonify({
+        "tick": tick,
+        "time": get_time_info(tick),
+        "articles": articles,
+        "outlets": list(NEWS_OUTLETS.keys()),
+        "count": len(articles)
+    })
+
+
+@app.route("/api/news/headlines")
+def get_headlines():
+    """Get latest headlines only."""
+    tick = int(request.args.get("tick", 100))
+    count = min(int(request.args.get("count", 5)), 20)
+    
+    headlines = []
+    for i in range(count):
+        seed = f"headline_{tick}_{i}"
+        event_types = ["robbery", "hacking", "police", "cyborg_attack", "fire", "market"]
+        event_type = event_types[hash(seed) % len(event_types)]
+        outlet_key = list(NEWS_OUTLETS.keys())[hash(f"{seed}_o") % 4]
+        
+        article = generate_news_article(event_type, tick - i, outlet_key, district="undercity")
+        headlines.append({
+            "headline": article["headline"],
+            "outlet": article["outlet"],
+            "time": article["time"]
+        })
+    
+    return jsonify({
+        "tick": tick,
+        "headlines": headlines
     })
 
 
