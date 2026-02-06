@@ -72,6 +72,19 @@ PendingEvents = PendingEvents or {}
 ProcessedEvents = ProcessedEvents or {}
 
 -- =============================================================================
+-- CHAT MEMORY (Persisted on Arweave - survives restarts!)
+-- =============================================================================
+
+-- User memory: { user_id: { name: string, first_seen_tick: number } }
+UserMemory = UserMemory or {}
+
+-- NPC conversations: { npc_id: { user_id: { messages: [...], last_tick: number } } }
+NPCConversations = NPCConversations or {}
+
+-- Conversation limit per NPC-user pair (older messages trimmed)
+MAX_MESSAGES_PER_CONVERSATION = 50
+
+-- =============================================================================
 -- DETERMINISTIC UTILITIES
 -- =============================================================================
 
@@ -604,6 +617,156 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
     })
     
     print("⏩ Advanced " .. ticks .. " ticks: " .. start_tick .. " -> " .. WorldTick)
+end)
+
+-- =============================================================================
+-- CHAT MEMORY HANDLERS (Persisted)
+-- =============================================================================
+
+-- Store a chat message
+Handlers.add("store-chat", Handlers.utils.hasMatchingTag("Action", "store-chat"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local user_id = data.user_id
+    local npc_id = data.npc_id
+    local message = data.message or ""
+    local response = data.response or ""
+    
+    if not user_id or not npc_id then
+        ao.send({
+            Target = msg.From,
+            Action = "store-chat-response",
+            Data = json.encode({ success = false, error = "Missing user_id or npc_id" })
+        })
+        return
+    end
+    
+    -- Initialize conversation storage
+    NPCConversations[npc_id] = NPCConversations[npc_id] or {}
+    NPCConversations[npc_id][user_id] = NPCConversations[npc_id][user_id] or { messages = {} }
+    
+    -- Store the message
+    table.insert(NPCConversations[npc_id][user_id].messages, {
+        tick = WorldTick,
+        user = message,
+        npc = response,
+        timestamp = os.time and os.time() or WorldTick
+    })
+    
+    -- Trim old messages if over limit
+    local conv = NPCConversations[npc_id][user_id].messages
+    while #conv > MAX_MESSAGES_PER_CONVERSATION do
+        table.remove(conv, 1)
+    end
+    
+    NPCConversations[npc_id][user_id].last_tick = WorldTick
+    
+    -- Remember user name if provided
+    if data.user_name and data.user_name ~= "" then
+        UserMemory[user_id] = UserMemory[user_id] or {}
+        UserMemory[user_id].name = data.user_name
+        UserMemory[user_id].last_seen = WorldTick
+        if not UserMemory[user_id].first_seen then
+            UserMemory[user_id].first_seen = WorldTick
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "store-chat-response",
+        Data = json.encode({ 
+            success = true, 
+            messages_stored = #NPCConversations[npc_id][user_id].messages,
+            tick = WorldTick
+        })
+    })
+    
+    print("💬 Stored chat: " .. npc_id .. " <-> " .. user_id)
+end)
+
+-- Get chat history for a user-NPC pair
+Handlers.add("get-chat-history", Handlers.utils.hasMatchingTag("Action", "get-chat-history"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local user_id = data.user_id
+    local npc_id = data.npc_id
+    
+    local history = {}
+    local user_name = nil
+    
+    if user_id and npc_id and NPCConversations[npc_id] and NPCConversations[npc_id][user_id] then
+        history = NPCConversations[npc_id][user_id].messages or {}
+    end
+    
+    if user_id and UserMemory[user_id] then
+        user_name = UserMemory[user_id].name
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "chat-history-response",
+        Data = json.encode({
+            npc_id = npc_id,
+            user_id = user_id,
+            user_name = user_name,
+            message_count = #history,
+            messages = history
+        })
+    })
+end)
+
+-- Remember user name
+Handlers.add("remember-user", Handlers.utils.hasMatchingTag("Action", "remember-user"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local user_id = data.user_id
+    local user_name = data.name
+    
+    if not user_id then
+        ao.send({
+            Target = msg.From,
+            Action = "remember-user-response",
+            Data = json.encode({ success = false, error = "Missing user_id" })
+        })
+        return
+    end
+    
+    UserMemory[user_id] = UserMemory[user_id] or {}
+    if user_name and user_name ~= "" then
+        UserMemory[user_id].name = user_name
+    end
+    UserMemory[user_id].last_seen = WorldTick
+    if not UserMemory[user_id].first_seen then
+        UserMemory[user_id].first_seen = WorldTick
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "remember-user-response",
+        Data = json.encode({ 
+            success = true, 
+            user_id = user_id,
+            name = UserMemory[user_id].name,
+            first_seen = UserMemory[user_id].first_seen
+        })
+    })
+end)
+
+-- Get user info
+Handlers.add("get-user", Handlers.utils.hasMatchingTag("Action", "get-user"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local user_id = data.user_id
+    
+    local user_info = UserMemory[user_id] or {}
+    
+    ao.send({
+        Target = msg.From,
+        Action = "user-response",
+        Data = json.encode({
+            user_id = user_id,
+            name = user_info.name,
+            first_seen = user_info.first_seen,
+            last_seen = user_info.last_seen,
+            known = (user_info.name ~= nil)
+        })
+    })
 end)
 
 -- Get all NPCs

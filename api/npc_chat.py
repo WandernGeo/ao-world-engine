@@ -536,6 +536,57 @@ def advance_tick():
         }), 500
 
 
+# ============================================================
+# STORE CHAT IN AO (Persistent Memory)
+# ============================================================
+
+def store_chat_in_ao(user_id: str, npc_id: str, message: str, response: str, user_name: str = None):
+    """Store chat in AO process for permanent persistence.
+    
+    This is called asynchronously after each chat response.
+    If it fails, it's logged but doesn't affect the user experience.
+    """
+    try:
+        import os
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_path = os.path.join(script_dir, "..", "scripts", "send_ao_message.mjs")
+        
+        data = {
+            "user_id": user_id,
+            "npc_id": npc_id,
+            "message": message,
+            "response": response
+        }
+        if user_name:
+            data["user_name"] = user_name
+        
+        result = subprocess.run(
+            ["node", script_path, "store-chat", json.dumps(data)],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            cwd=os.path.join(script_dir, "..")
+        )
+        
+        if result.returncode == 0:
+            print(f"✅ Chat stored in AO: {npc_id} <-> {user_id}")
+            return True
+        else:
+            print(f"⚠️ Failed to store chat in AO: {result.stderr[:200]}")
+            return False
+            
+    except subprocess.TimeoutExpired:
+        print("⚠️ AO chat storage timed out")
+        return False
+    except FileNotFoundError:
+        # Node.js script not available - expected in some environments
+        print("⚠️ AO script not found - chat stored in memory only")
+        return False
+    except Exception as e:
+        print(f"⚠️ AO chat storage error: {e}")
+        return False
+
+
 @app.route("/api/npcs", methods=["GET"])
 def list_npcs():
     """List all available NPCs (from Arweave + founding NPCs)."""
@@ -953,6 +1004,14 @@ RULES:
     
     # Store NPC response in memory
     add_to_conversation(user_id, npc_id, "npc", npc_response, tick)
+    
+    # Also store in AO for permanent persistence (async, non-blocking)
+    import threading
+    threading.Thread(
+        target=store_chat_in_ao,
+        args=(user_id, npc_id, message, npc_response, user_name),
+        daemon=True
+    ).start()
     
     return jsonify({
         "npc": npc_state_data["name"],
