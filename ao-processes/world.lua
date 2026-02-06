@@ -178,6 +178,34 @@ SHOP_LOCATIONS = {
     ["L042"] = "tech",      -- Tech district
 }
 
+-- =============================================================================
+-- GEOECHOES INTEGRATION (Links virtual locations to real GPS)
+-- =============================================================================
+
+-- Location → GPS mapping: { location_code: { lat, lng, arweave_tx, real_name } }
+LocationGeoLinks = LocationGeoLinks or {}
+
+-- GeoEcho messages left in the simulation (temporary AR-style messages)
+GeoEchoMessages = GeoEchoMessages or {}
+MAX_GEOECHO_MESSAGES = 200
+
+-- =============================================================================
+-- NPC STATS (D&D-style attributes for behavior)
+-- =============================================================================
+
+-- NPC stats: { npc_id: { int, cha, con, str, dex, wis } }
+NPCStats = NPCStats or {}
+
+-- Stat definitions
+STAT_DEFINITIONS = {
+    intelligence = { min = 3, max = 18, desc = "Problem solving, hacking" },
+    charisma = { min = 3, max = 18, desc = "Social skills, persuasion" },
+    constitution = { min = 3, max = 18, desc = "Stamina, work duration" },
+    strength = { min = 3, max = 18, desc = "Physical jobs, combat" },
+    dexterity = { min = 3, max = 18, desc = "Stealth, reflexes" },
+    wisdom = { min = 3, max = 18, desc = "Decision making, spending" }
+}
+
 
 -- Base wages per shift (paid once per day at shift end)
 -- Values in GEP (game currency)
@@ -1521,6 +1549,247 @@ Handlers.add("get-npc-inventory", Handlers.utils.hasMatchingTag("Action", "get-n
             total_transactions = #ItemTransactionLog,
             inventories = inventories,
             recent_purchases = recent_purchases
+        })
+    })
+end)
+
+-- =============================================================================
+-- GEOECHOES HANDLERS
+-- =============================================================================
+
+-- Link a virtual location to real GPS coordinates
+Handlers.add("link-geoecho", Handlers.utils.hasMatchingTag("Action", "link-geoecho"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local location = data.location
+    local gps = data.gps
+    
+    if not location or not gps or not gps.lat or not gps.lng then
+        ao.send({
+            Target = msg.From,
+            Action = "link-geoecho-response",
+            Data = json.encode({ success = false, error = "Missing location or gps coordinates" })
+        })
+        return
+    end
+    
+    LocationGeoLinks[location] = {
+        lat = gps.lat,
+        lng = gps.lng,
+        arweave_tx = data.arweave_tx,
+        real_name = data.real_name or "Unknown",
+        linked_by = msg.From,
+        linked_tick = WorldTick
+    }
+    
+    ao.send({
+        Target = msg.From,
+        Action = "link-geoecho-response",
+        Data = json.encode({
+            success = true,
+            location = location,
+            gps = gps,
+            message = "Location linked to GPS"
+        })
+    })
+end)
+
+-- Leave a temporary message in the simulation (AR-style)
+Handlers.add("leave-message", Handlers.utils.hasMatchingTag("Action", "leave-message"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local location = data.location
+    local message = data.message
+    
+    if not location or not message then
+        ao.send({
+            Target = msg.From,
+            Action = "leave-message-response",
+            Data = json.encode({ success = false, error = "Missing location or message" })
+        })
+        return
+    end
+    
+    local echo_id = "ECHO_" .. WorldTick .. "_" .. #GeoEchoMessages
+    local expires = data.expires_tick or (WorldTick + 1000)  -- Default 1000 ticks
+    
+    table.insert(GeoEchoMessages, {
+        id = echo_id,
+        location = location,
+        message = message,
+        gps = data.gps,
+        author = msg.From,
+        tick = WorldTick,
+        expires = expires
+    })
+    
+    -- Trim old messages
+    while #GeoEchoMessages > MAX_GEOECHO_MESSAGES do
+        table.remove(GeoEchoMessages, 1)
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "leave-message-response",
+        Data = json.encode({
+            success = true,
+            echo_id = echo_id,
+            expires = expires
+        })
+    })
+end)
+
+-- Get all GeoEchoes (GPS links and messages)
+Handlers.add("get-geoechoes", Handlers.utils.hasMatchingTag("Action", "get-geoechoes"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local location_filter = data.location
+    
+    -- Filter expired messages
+    local active_messages = {}
+    for _, echo in ipairs(GeoEchoMessages) do
+        if echo.expires > WorldTick then
+            if not location_filter or echo.location == location_filter then
+                table.insert(active_messages, echo)
+            end
+        end
+    end
+    
+    -- Filter links by location if specified
+    local links = {}
+    for loc, link_data in pairs(LocationGeoLinks) do
+        if not location_filter or loc == location_filter then
+            links[loc] = link_data
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "geoechoes-response",
+        Data = json.encode({
+            tick = WorldTick,
+            total_links = table_length(LocationGeoLinks),
+            total_messages = #active_messages,
+            links = links,
+            messages = active_messages
+        })
+    })
+end)
+
+-- =============================================================================
+-- NPC STAT GENERATION (D&D-style)
+-- =============================================================================
+
+-- Roll D&D-style stats for an NPC (seeded for determinism)
+function roll_npc_stats(seed)
+    math.randomseed(seed)
+    return {
+        intelligence = math.random(3, 18),
+        charisma = math.random(3, 18),
+        constitution = math.random(3, 18),
+        strength = math.random(3, 18),
+        dexterity = math.random(3, 18),
+        wisdom = math.random(3, 18)
+    }
+end
+
+-- Derive archetype from highest stat
+function derive_archetype_from_stats(stats)
+    local highest_stat = "intelligence"
+    local highest_val = 0
+    for stat, val in pairs(stats) do
+        if val > highest_val then
+            highest_val = val
+            highest_stat = stat
+        end
+    end
+    
+    local archetype_map = {
+        intelligence = { "scientist", "hacker", "doctor", "engineer" },
+        charisma = { "leader", "bartender", "merchant", "performer" },
+        constitution = { "laborer", "security guard", "athlete", "explorer" },
+        strength = { "enforcer", "bouncer", "soldier", "mechanic" },
+        dexterity = { "thief", "pilot", "courier", "assassin" },
+        wisdom = { "advisor", "priest", "detective", "judge" }
+    }
+    
+    local options = archetype_map[highest_stat] or { "citizen" }
+    return options[math.random(1, #options)]
+end
+
+-- Generate a random NPC with stats
+Handlers.add("generate-npc", Handlers.utils.hasMatchingTag("Action", "generate-npc"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local seed = data.seed or os.time()
+    local count = data.count or 1
+    local generated = {}
+    
+    for i = 1, math.min(count, 50) do  -- Max 50 at once
+        local npc_seed = seed + i
+        local stats = roll_npc_stats(npc_seed)
+        local archetype = derive_archetype_from_stats(stats)
+        
+        local npc_id = data.id_prefix and (data.id_prefix .. i) or ("GEN_" .. npc_seed)
+        
+        -- Store stats
+        NPCStats[npc_id] = stats
+        
+        -- Initialize other systems
+        NPCWallets[npc_id] = { balance = 100 + stats.wisdom * 20, income_tick = 0, spending_tick = 0 }
+        NPCInventory[npc_id] = { items = {}, food_level = 50, clothing = {} }
+        
+        table.insert(generated, {
+            id = npc_id,
+            stats = stats,
+            archetype = archetype,
+            seed = npc_seed
+        })
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "generate-npc-response",
+        Data = json.encode({
+            success = true,
+            count = #generated,
+            npcs = generated
+        })
+    })
+end)
+
+-- Get NPC stats
+Handlers.add("get-npc-stats", Handlers.utils.hasMatchingTag("Action", "get-npc-stats"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local npc_filter = data.npc_id
+    
+    if npc_filter then
+        local stats = NPCStats[npc_filter]
+        ao.send({
+            Target = msg.From,
+            Action = "npc-stats-response",
+            Data = json.encode({
+                npc_id = npc_filter,
+                stats = stats or "NPC not found",
+                archetype = stats and derive_archetype_from_stats(stats) or nil
+            })
+        })
+        return
+    end
+    
+    -- Return all stats summary
+    local stats_list = {}
+    for npc_id, stats in pairs(NPCStats) do
+        table.insert(stats_list, {
+            npc_id = npc_id,
+            stats = stats,
+            archetype = derive_archetype_from_stats(stats)
+        })
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "npc-stats-response",
+        Data = json.encode({
+            tick = WorldTick,
+            total = table_length(NPCStats),
+            npcs = stats_list
         })
     })
 end)
