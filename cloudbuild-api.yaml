@@ -1,0 +1,28 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/ao-world-engine-api', '-f', 'Dockerfile.api', '.']
+  
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/ao-world-engine-api']
+  
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'ao-world-engine-api'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/ao-world-engine-api'
+      - '--region'
+      - 'us-central1'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--timeout'
+      - '120'
+
+images:
+  - 'gcr.io/$PROJECT_ID/ao-world-engine-api'
