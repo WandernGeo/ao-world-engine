@@ -383,14 +383,26 @@ function get_time_info(tick)
     elseif day_tick < 230 then period = "T08"   -- 21:00-23:00
     else period = "T09" end                      -- 23:00-00:00
     
+    -- EST Time Sync: Map simulation to Brooklyn EST
+    -- Anchor: tick 0 of each day = 6:00 AM EST
+    -- 1 tick = 6 minutes real time
+    -- Example: tick 60 = 12:00 PM EST (noon)
+    local est_hour = (6 + hour) % 24  -- Offset by 6AM anchor
+    local est_minutes_since_midnight = (est_hour * 60) + minute
+    
     return {
         tick = tick,
         day = WorldDay,
         year = WorldYear,
-        hour = hour,
+        hour = hour,  -- Simulation hour (0-23)
         minute = minute,
         period = period,
-        is_night = period == "T01" or period == "T02" or period == "T09"
+        is_night = period == "T01" or period == "T02" or period == "T09",
+        -- EST Brooklyn sync fields
+        est_hour = est_hour,
+        est_minute = minute,
+        est_anchor = "tick 0 = 6:00 AM EST",
+        timezone = "America/New_York"
     }
 end
 
