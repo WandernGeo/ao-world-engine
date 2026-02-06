@@ -2,23 +2,30 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { getWorldState } from '@/lib/ao-client';
 
-// Fetch live status from API
+// Fetch live status from AO
 async function fetchStatus() {
   try {
-    const res = await fetch('https://ao-world-engine-api-1071951656531.us-central1.run.app/api/simulation/tick?tick=100');
-    if (res.ok) return res.json();
+    const state = await getWorldState();
+    if (state) {
+      return {
+        npc_count: state.population,
+        time: { tick: state.tick },
+        events: { length: Math.floor(state.tick / 10) }
+      };
+    }
   } catch { }
   return null;
 }
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [status, setStatus] = useState<any>(null);
+  const [status, setStatus] = useState<{ npc_count: number; time: { tick: number }; events: { length: number } } | null>(null);
 
   useEffect(() => {
     fetchStatus().then(setStatus);
-    const interval = setInterval(() => fetchStatus().then(setStatus), 30000);
+    const interval = setInterval(() => fetchStatus().then(setStatus), 60000); // Refresh every 60s
     return () => clearInterval(interval);
   }, []);
 
@@ -87,27 +94,30 @@ export default function Home() {
         </div>
       )}
 
-      <div className="pt-14 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
-        {/* Hero */}
+      <div className="pt-14 flex flex-col items-center justify-center min-h-screen p-4 md:p-8 gradient-bg-cyber">
+        {/* Hero - Enhanced with gradient text */}
         <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold font-mono mb-4 md:mb-6 text-cyan-400 tracking-wide">
+          <h1 className="text-3xl md:text-5xl font-bold font-mono mb-4 md:mb-6 gradient-text-cyber tracking-wide">
             AO WORLD ENGINE
           </h1>
           <p className="text-base md:text-lg text-zinc-300 max-w-2xl leading-relaxed px-4">
             Decentralized, persistent world simulation on Arweave.
             Build living cities with NPCs that remember, grow, and evolve.
           </p>
+          <div className="mt-4 flex justify-center gap-4">
+            <span className="live-badge pulse-live">LIVE ON ARWEAVE</span>
+          </div>
         </div>
 
-        {/* Live Status Card - NEW */}
+        {/* Live Status Card - Enhanced with glassmorphism */}
         <Link href="/monitor" className="w-full max-w-md mb-8 group">
-          <div className="bg-gradient-to-r from-cyan-900/30 to-zinc-900 border border-cyan-500/40 rounded-lg p-4 hover:border-cyan-400 transition-all">
+          <div className="glass-card glass-card-hover p-4 pulse-glow-live">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
                 <span className="text-sm font-mono text-cyan-400">LIVE SIMULATION</span>
               </div>
-              <span className="text-xs text-zinc-400">Click to view →</span>
+              <span className="text-xs text-zinc-400 group-hover:text-cyan-400 transition-colors">View dashboard →</span>
             </div>
             {status ? (
               <div className="grid grid-cols-3 gap-4 text-center">

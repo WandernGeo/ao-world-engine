@@ -10,6 +10,7 @@ import { BuildingBlueprint } from '@/components/BuildingBlueprint';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useSimulation } from '@/components/SimulationProvider';
+import { getNPCLocations, getNPCWallets, getWorldState } from '@/lib/ao-client';
 
 // Types
 interface Building {
@@ -321,56 +322,42 @@ function ExplorePageContent() {
         return () => clearInterval(interval);
     }, [isPlaying, tickSpeed, mounted, simulation]);
 
-    // Fetch NPC states when tick changes (every 2 ticks = ~12 min game time)
+    // Fetch NPC states from live AO data
     useEffect(() => {
         if (!mounted) return;
 
-        // Update every 2 ticks for smoother movement (~12 min game time between updates)
+        // Update every 2 ticks for smoother movement
         if (currentTick % 2 !== 0) return;
 
         const fetchNPCStates = async () => {
             try {
-                // Request full=true to get ALL 800 NPC states
-                const response = await fetch(`${API_BASE}/api/simulation/tick?tick=${currentTick}&full=true`);
-                if (response.ok) {
-                    const data = await response.json();
-                    const npcStates = data.npc_states || [];
+                // Fetch live NPC locations directly from AO
+                const locationsData = await getNPCLocations();
 
-                    if (Array.isArray(npcStates) && npcStates.length > 0) {
-                        // Update NPC locations and activities from API
-                        setNpcs(prevNpcs => {
-                            // Create a map of API states by ID
-                            const stateMap = new Map<string, { location: string; activity: string; mood: string }>();
-                            npcStates.forEach((s: { npc_id: string; location: string; activity: string; mood: string }) => {
-                                stateMap.set(s.npc_id, {
-                                    location: s.location,
-                                    activity: s.activity,
-                                    mood: s.mood
-                                });
-                            });
-
-                            // Update existing NPCs with new states
-                            let updatedCount = 0;
-                            const updated = prevNpcs.map(npc => {
-                                const apiState = stateMap.get(npc.id);
-                                if (apiState) {
-                                    updatedCount++;
-                                    return {
-                                        ...npc,
-                                        location: apiState.location,
-                                        activity: apiState.activity,
-                                        mood: apiState.mood
-                                    };
-                                }
-                                return npc;
-                            });
-                            console.log(`Tick ${currentTick}: Updated ${updatedCount}/${npcStates.length} NPC states`);
-                            return updated;
+                if (locationsData && Object.keys(locationsData.locations).length > 0) {
+                    setNpcs(prevNpcs => {
+                        let updatedCount = 0;
+                        const updated = prevNpcs.map(npc => {
+                            const liveState = locationsData.locations[npc.id];
+                            if (liveState) {
+                                updatedCount++;
+                                return {
+                                    ...npc,
+                                    location: liveState.location || npc.location,
+                                    activity: liveState.state || npc.activity,
+                                    // Derive mood from state
+                                    mood: liveState.state === 'resting' ? 'calm' :
+                                        liveState.state === 'working' ? 'busy' : 'friendly'
+                                };
+                            }
+                            return npc;
                         });
-                    }
+                        console.log(`AO Tick ${locationsData.tick}: Updated ${updatedCount} NPC states from live AO data`);
+                        return updated;
+                    });
                 }
             } catch (error) {
-                console.log('Failed to fetch NPC states:', error);
+                console.log('Failed to fetch NPC states from AO:', error);
             }
         };
 
@@ -635,9 +622,16 @@ function ExplorePageContent() {
                         </Button>
                     </div>
 
-                    {/* Stats Overlay */}
-                    <div className="absolute top-4 right-4 bg-black/70 px-3 py-2 rounded border border-cyan-500/30 font-mono text-xs">
-                        <div className="text-cyan-400">NPCs: {npcs.length}</div>
+                    {/* Stats Overlay - Enhanced with Live Badge */}
+                    <div className="absolute top-4 right-4 glass-card px-4 py-3 font-mono text-xs space-y-1">
+                        <div className="flex items-center gap-2 mb-2">
+                            <span className="live-badge">LIVE</span>
+                            <span className="text-zinc-500">Tick {currentTick}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="status-dot status-dot-active"></span>
+                            <span className="text-cyan-400 font-medium">NPCs: {npcs.length}</span>
+                        </div>
                         <div className="text-purple-400">Buildings: {districts.reduce((sum, d) => sum + d.buildings.length, 0)}</div>
                         <div className="text-zinc-500">Zoom: {Math.round(zoom * 100)}%</div>
                     </div>

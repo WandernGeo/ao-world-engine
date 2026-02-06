@@ -435,7 +435,10 @@ export default function KnowledgeGraphPage() {
                 <div className={`fixed lg:relative top-14 right-0 bottom-0 w-80 p-4 border-l border-zinc-800 overflow-y-auto bg-zinc-950/95 backdrop-blur z-40 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}>
                     {/* Stats */}
                     <div className="mb-4 p-4 bg-gradient-to-r from-cyan-900/40 to-purple-900/40 rounded-lg border border-cyan-500/30">
-                        <div className="text-sm text-cyan-400 font-mono mb-3 font-bold">KNOWLEDGE GRAPH</div>
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm text-cyan-400 font-mono font-bold">KNOWLEDGE GRAPH</span>
+                            <span className="live-badge">LIVE</span>
+                        </div>
                         <div className="grid grid-cols-3 gap-3 text-center">
                             <div>
                                 <div className="text-3xl font-bold text-white">{stats.entities}</div>

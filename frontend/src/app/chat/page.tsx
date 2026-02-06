@@ -281,10 +281,18 @@ function ChatPageContent() {
                 <div className="flex-1 flex flex-col">
                     {selectedNPC ? (
                         <>
-                            {/* NPC Header */}
-                            <div className="p-4 border-b border-zinc-800 bg-zinc-900/50">
-                                <h2 className="text-xl font-bold text-cyan-400">{selectedNPC.name}</h2>
-                                <p className="text-sm text-zinc-500">{selectedNPC.archetype} • Tick {currentTick}</p>
+                            {/* NPC Header - Enhanced with glassmorphism */}
+                            <div className="p-4 border-b border-cyan-500/20 glass-card rounded-none">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center text-xl font-bold">
+                                        {selectedNPC.name.charAt(0)}
+                                    </div>
+                                    <div className="flex-1">
+                                        <h2 className="text-xl font-bold text-cyan-400">{selectedNPC.name}</h2>
+                                        <p className="text-sm text-zinc-500">{selectedNPC.archetype}</p>
+                                    </div>
+                                    <span className="live-badge">LIVE</span>
+                                </div>
                             </div>
 
                             {/* Messages */}
@@ -299,18 +307,28 @@ function ChatPageContent() {
                                         key={i}
                                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                     >
-                                        <div className={`max-w-[70%] p-3 rounded-lg ${msg.role === 'user'
-                                            ? 'bg-cyan-600/30 text-cyan-100'
-                                            : 'bg-zinc-800 text-zinc-100'
+                                        {msg.role === 'npc' && (
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-xs font-bold mr-2 flex-shrink-0">
+                                                {selectedNPC?.name.charAt(0)}
+                                            </div>
+                                        )}
+                                        <div className={`max-w-[70%] p-3 ${msg.role === 'user'
+                                            ? 'bg-gradient-to-r from-cyan-600/40 to-cyan-500/30 text-cyan-100 rounded-2xl rounded-br-sm'
+                                            : 'bg-zinc-800/80 text-zinc-100 rounded-2xl rounded-bl-sm border border-zinc-700/50'
                                             }`}>
                                             {msg.content}
+                                            <div className="text-[10px] text-zinc-500 mt-1 text-right">
+                                                {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                                 {isLoading && (
                                     <div className="flex justify-start">
-                                        <div className="bg-zinc-800 p-3 rounded-lg text-zinc-400">
-                                            <span className="animate-pulse">...</span>
+                                        <div className="bg-zinc-800 p-4 rounded-2xl rounded-bl-sm text-zinc-400 flex gap-1">
+                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                                         </div>
                                     </div>
                                 )}
@@ -394,8 +412,8 @@ function ChatPageContent() {
                                 <button
                                     onClick={() => setLlmEnabled(true)}
                                     className={`flex-1 py-1.5 px-2 text-xs font-medium rounded transition-all ${llmEnabled
-                                            ? 'bg-green-600 text-white shadow-sm'
-                                            : 'text-zinc-400 hover:text-white'
+                                        ? 'bg-green-600 text-white shadow-sm'
+                                        : 'text-zinc-400 hover:text-white'
                                         }`}
                                 >
                                     🤖 LLM
@@ -403,8 +421,8 @@ function ChatPageContent() {
                                 <button
                                     onClick={() => setLlmEnabled(false)}
                                     className={`flex-1 py-1.5 px-2 text-xs font-medium rounded transition-all ${!llmEnabled
-                                            ? 'bg-yellow-600 text-white shadow-sm'
-                                            : 'text-zinc-400 hover:text-white'
+                                        ? 'bg-yellow-600 text-white shadow-sm'
+                                        : 'text-zinc-400 hover:text-white'
                                         }`}
                                 >
                                     📝 NLU
