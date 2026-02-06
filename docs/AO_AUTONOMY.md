@@ -123,6 +123,70 @@ CRON message → WorldTick++ → Events checked → Districts notified
 
 ---
 
+## Time Compression
+
+The simulation runs **slower than real time** by design:
+
+| Real Time | Simulation Time |
+|-----------|-----------------|
+| 10 minutes | 1 tick (= 6 in-game minutes) |
+| 1 hour | 6 ticks (= 36 in-game minutes) |
+| 24 hours | 144 ticks (= 14.4 in-game hours) |
+
+This is configurable. Current settings:
+- **CRON interval**: 10 minutes (real time between ticks)
+- **Ticks per in-game hour**: 10
+- **Ticks per in-game day**: 240
+
+To speed up for testing, either:
+1. Respawn with faster CRON (see below)
+2. Manually advance ticks (instant, no waiting)
+
+---
+
+## CRON Interval Configuration
+
+### Supported Intervals
+
+| Interval | Use Case |
+|----------|----------|
+| `1-minute` | Testing, real-time feel |
+| `5-minutes` | Faster simulation |
+| `10-minutes` | Production (current) |
+| `1-hour` | Slow progression |
+
+### Changing the Interval
+
+To change CRON speed, you must **respawn the process**:
+
+```lua
+ao.spawn("xU9zFkq3X2ZQ6olwNVvr1vUWIjc3kXTWr7xKQD6dh10", {
+    Tags = {
+        { name = "Cron-Interval", value = "1-minute" },  -- Change here
+        { name = "Cron-Tag-Action", value = "Cron" }
+    }
+})
+```
+
+### Manual Tick Advance (For Testing)
+
+Skip waiting - advance ticks instantly:
+
+```bash
+# Advance 1 tick immediately
+node scripts/send_ao_message.mjs advance-tick '{}'
+
+# Advance 100 ticks at once
+node scripts/send_ao_message.mjs advance-tick '{"ticks": 100}'
+```
+
+This is useful for:
+- Testing NPC behaviors at different times of day
+- Fast-forwarding to specific events
+- Debugging time-dependent logic
+
+---
+
 ## Verification Tests
 
 ### Test Script
