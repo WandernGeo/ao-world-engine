@@ -103,6 +103,17 @@ SOCIAL_LOCATIONS = SOCIAL_LOCATIONS or {
     "L001", "L003", "L050", "L051", "L032", "L033", "L026" 
 }
 
+-- =============================================================================
+-- NPC SOCIAL INTERACTIONS (Persisted - tracks NPC relationships)
+-- =============================================================================
+
+-- Social interaction history: { "npc1_npc2": { met_count: 5, last_tick: 100, relationship: 0.5 } }
+NPCSocialHistory = NPCSocialHistory or {}
+
+-- Recent interaction log: [ { tick, npc1, npc2, location, type, mood_delta } ]
+InteractionLog = InteractionLog or {}
+MAX_INTERACTION_LOG = 500
+
 -- Archetype-to-shift mapping for auto-assignment
 -- When loading schedules without explicit shift, derive from archetype/role
 ARCHETYPE_SHIFTS = {
@@ -437,6 +448,112 @@ function process_npc_movements(tick)
 end
 
 -- =============================================================================
+-- NPC SOCIAL INTERACTIONS
+-- =============================================================================
+
+-- Create a unique key for NPC pairs (always alphabetically ordered)
+function get_social_key(npc1, npc2)
+    if npc1 < npc2 then
+        return npc1 .. "_" .. npc2
+    else
+        return npc2 .. "_" .. npc1
+    end
+end
+
+-- Process social interactions between NPCs at same location
+function process_social_interactions(tick)
+    local interactions = 0
+    local time = get_time_info(tick)
+    
+    -- Group NPCs by location
+    local location_groups = {}
+    for npc_id, loc_data in pairs(NPCLocations) do
+        local location = loc_data.location
+        if not location_groups[location] then
+            location_groups[location] = {}
+        end
+        table.insert(location_groups[location], {
+            id = npc_id,
+            state = loc_data.state
+        })
+    end
+    
+    -- Find interactions where 2+ NPCs are at same location
+    for location, npcs in pairs(location_groups) do
+        if #npcs >= 2 then
+            -- Create interactions between each pair (limited to first 5 NPCs per location)
+            local max_npcs = math.min(#npcs, 5)
+            for i = 1, max_npcs do
+                for j = i + 1, max_npcs do
+                    local npc1 = npcs[i]
+                    local npc2 = npcs[j]
+                    
+                    -- Only interact if both are in active states (not sleeping)
+                    if npc1.state ~= "sleeping" and npc2.state ~= "sleeping" then
+                        local social_key = get_social_key(npc1.id, npc2.id)
+                        
+                        -- Get or create relationship history
+                        local history = NPCSocialHistory[social_key] or {
+                            met_count = 0,
+                            last_tick = 0,
+                            relationship = 0.5  -- Neutral starting point
+                        }
+                        
+                        -- Only process if haven't met recently (cooldown of 10 ticks)
+                        if tick - history.last_tick >= 10 then
+                            history.met_count = history.met_count + 1
+                            history.last_tick = tick
+                            
+                            -- Determine interaction type based on states
+                            local interaction_type = "casual"
+                            local mood_delta = 0.01  -- Small positive by default
+                            
+                            if npc1.state == "socializing" or npc2.state == "socializing" then
+                                interaction_type = "social"
+                                mood_delta = 0.03
+                            elseif npc1.state == "working" and npc2.state == "working" then
+                                interaction_type = "professional"
+                                mood_delta = 0.01
+                            end
+                            
+                            -- Update relationship (bounded 0-1)
+                            history.relationship = math.min(1.0, math.max(0, history.relationship + mood_delta))
+                            
+                            -- Store updated history
+                            NPCSocialHistory[social_key] = history
+                            
+                            -- Log the interaction
+                            table.insert(InteractionLog, {
+                                tick = tick,
+                                npc1 = npc1.id,
+                                npc2 = npc2.id,
+                                location = location,
+                                type = interaction_type,
+                                relationship = history.relationship,
+                                met_count = history.met_count
+                            })
+                            
+                            interactions = interactions + 1
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    -- Trim interaction log
+    while #InteractionLog > MAX_INTERACTION_LOG do
+        table.remove(InteractionLog, 1)
+    end
+    
+    if interactions > 0 then
+        print("💬 Processed " .. interactions .. " NPC interactions at tick " .. tick)
+    end
+    
+    return interactions
+end
+
+-- =============================================================================
 -- ECONOMY FUNCTIONS
 -- =============================================================================
 
@@ -763,6 +880,16 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
+        -- 8. Process NPC social interactions (when 2+ NPCs at same location)
+        local npc_interactions = process_social_interactions(WorldTick)
+        if npc_interactions > 0 then
+            broadcast_event({
+                type = "npc_interactions",
+                tick = WorldTick,
+                interactions = npc_interactions
+            })
+        end
+        
         -- 7. Persist state snapshot every 60 ticks (1 hour in-game)
         if WorldTick % 60 == 0 then
             persist_state_snapshot()
@@ -896,6 +1023,8 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
         end
         -- Process NPC movements
         process_npc_movements(WorldTick)
+        -- Process social interactions
+        process_social_interactions(WorldTick)
     end
     
     local time = get_time_info(WorldTick)
@@ -1012,6 +1141,51 @@ Handlers.add("load-npc-schedules", Handlers.utils.hasMatchingTag("Action", "load
     })
     
     print("📋 Loaded " .. loaded .. " NPC schedules")
+end)
+
+-- Get NPC social interactions and relationships
+Handlers.add("get-interactions", Handlers.utils.hasMatchingTag("Action", "get-interactions"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local limit = data.limit or 50
+    
+    -- Get recent interactions
+    local recent = {}
+    local start_idx = math.max(1, #InteractionLog - limit + 1)
+    for i = start_idx, #InteractionLog do
+        table.insert(recent, InteractionLog[i])
+    end
+    
+    -- Get top relationships (sorted by relationship strength)
+    local relationships = {}
+    for key, history in pairs(NPCSocialHistory) do
+        table.insert(relationships, {
+            key = key,
+            met_count = history.met_count,
+            relationship = history.relationship,
+            last_tick = history.last_tick
+        })
+    end
+    
+    -- Sort by relationship strength (descending)
+    table.sort(relationships, function(a, b) return a.relationship > b.relationship end)
+    
+    -- Return top 20 relationships
+    local top_relationships = {}
+    for i = 1, math.min(20, #relationships) do
+        table.insert(top_relationships, relationships[i])
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "interactions-response",
+        Data = json.encode({
+            tick = WorldTick,
+            total_relationships = table_length(NPCSocialHistory),
+            total_interactions = #InteractionLog,
+            recent_interactions = recent,
+            top_relationships = top_relationships
+        })
+    })
 end)
 
 -- =============================================================================
