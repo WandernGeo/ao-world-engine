@@ -85,6 +85,25 @@ NPCConversations = NPCConversations or {}
 MAX_MESSAGES_PER_CONVERSATION = 50
 
 -- =============================================================================
+-- NPC LOCATIONS & SCHEDULES (Persisted - enables movement behaviors)
+-- =============================================================================
+
+-- NPC schedules: { npc_id: { home: "B001", work: "B002", social: ["B010"] } }
+NPCSchedules = NPCSchedules or {}
+
+-- Current NPC locations: { npc_id: { location: "B001", state: "working", since_tick: 100 } }
+NPCLocations = NPCLocations or {}
+
+-- Movement log for the last day (240 ticks)
+MovementLog = MovementLog or {}
+MAX_MOVEMENT_LOG = 1000
+
+-- Social locations for evening hangouts
+SOCIAL_LOCATIONS = SOCIAL_LOCATIONS or { 
+    "L001", "L003", "L050", "L051", "L032", "L033", "L026" 
+}
+
+-- =============================================================================
 -- DETERMINISTIC UTILITIES
 -- =============================================================================
 
@@ -143,6 +162,99 @@ function get_time_info(tick)
         period = period,
         is_night = period == "T01" or period == "T02" or period == "T09"
     }
+end
+
+-- =============================================================================
+-- NPC MOVEMENT BEHAVIORS
+-- =============================================================================
+
+function process_npc_movements(tick)
+    local time = get_time_info(tick)
+    local hour = time.hour
+    local movements = 0
+    
+    -- Process each NPC with a schedule
+    for npc_id, schedule in pairs(NPCSchedules) do
+        local current = NPCLocations[npc_id] or { location = schedule.home, state = "idle", since_tick = 0 }
+        local target_location = nil
+        local new_state = nil
+        
+        -- Time-based location decisions
+        if hour >= 0 and hour < 6 then
+            -- Night (0-6): Home sleeping
+            target_location = schedule.home
+            new_state = "sleeping"
+        elseif hour >= 6 and hour < 8 then
+            -- Early morning (6-8): Wake up, prepare for work
+            target_location = schedule.home
+            new_state = "waking"
+        elseif hour >= 8 and hour < 9 then
+            -- Commute to work (8-9)
+            target_location = schedule.work or schedule.home
+            new_state = "commuting"
+        elseif hour >= 9 and hour < 17 then
+            -- Work hours (9-17)
+            target_location = schedule.work or schedule.home
+            new_state = "working"
+        elseif hour >= 17 and hour < 18 then
+            -- Commute from work (17-18)
+            target_location = schedule.home
+            new_state = "commuting"
+        elseif hour >= 18 and hour < 22 then
+            -- Evening (18-22): Home or social
+            -- 30% chance to go to a social location
+            if seeded_chance(0.3, npc_id .. tostring(WorldDay)) then
+                target_location = seeded_choice(SOCIAL_LOCATIONS, npc_id .. tostring(tick))
+                new_state = "socializing"
+            else
+                target_location = schedule.home
+                new_state = "relaxing"
+            end
+        else
+            -- Late night (22-24): Head home
+            target_location = schedule.home
+            new_state = "going_home"
+        end
+        
+        -- Check if movement occurred
+        if target_location and target_location ~= current.location then
+            -- Log the movement
+            table.insert(MovementLog, {
+                tick = tick,
+                npc_id = npc_id,
+                from = current.location,
+                to = target_location,
+                state = new_state,
+                hour = hour
+            })
+            movements = movements + 1
+            
+            -- Update location
+            NPCLocations[npc_id] = {
+                location = target_location,
+                state = new_state,
+                since_tick = tick
+            }
+        elseif new_state and new_state ~= current.state then
+            -- State change without location change
+            NPCLocations[npc_id] = {
+                location = current.location,
+                state = new_state,
+                since_tick = current.since_tick
+            }
+        end
+    end
+    
+    -- Trim movement log to keep it manageable
+    while #MovementLog > MAX_MOVEMENT_LOG do
+        table.remove(MovementLog, 1)
+    end
+    
+    if movements > 0 then
+        print("🚶 Processed " .. movements .. " NPC movements at tick " .. tick)
+    end
+    
+    return movements
 end
 
 -- =============================================================================
@@ -462,6 +574,16 @@ Handlers.add("cron-tick", Handlers.utils.hasMatchingTag("Action", "Cron"), funct
             })
         end
         
+        -- 7. Process NPC movements based on time of day
+        local npc_movements = process_npc_movements(WorldTick)
+        if npc_movements > 0 then
+            broadcast_event({
+                type = "npc_movements",
+                tick = WorldTick,
+                movements = npc_movements
+            })
+        end
+        
         -- 7. Persist state snapshot every 60 ticks (1 hour in-game)
         if WorldTick % 60 == 0 then
             persist_state_snapshot()
@@ -593,11 +715,8 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
         if WorldTick % TICKS_PER_YEAR == 0 then
             WorldYear = WorldYear + 1
         end
-        
-        -- TODO: Process NPC movements when implemented
-        -- if process_npc_movements then
-        --     process_npc_movements(WorldTick)
-        -- end
+        -- Process NPC movements
+        process_npc_movements(WorldTick)
     end
     
     local time = get_time_info(WorldTick)
@@ -617,6 +736,96 @@ Handlers.add("advance-tick", Handlers.utils.hasMatchingTag("Action", "advance-ti
     })
     
     print("⏩ Advanced " .. ticks .. " ticks: " .. start_tick .. " -> " .. WorldTick)
+end)
+
+-- =============================================================================
+-- NPC LOCATION HANDLERS
+-- =============================================================================
+
+-- Get current NPC locations
+Handlers.add("get-npc-locations", Handlers.utils.hasMatchingTag("Action", "get-npc-locations"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local location_filter = data.location
+    
+    local result = {}
+    for npc_id, loc_data in pairs(NPCLocations) do
+        if not location_filter or loc_data.location == location_filter then
+            result[npc_id] = loc_data
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "npc-locations-response",
+        Data = json.encode({
+            count = table_length(result),
+            locations = result,
+            tick = WorldTick,
+            time = get_time_info(WorldTick)
+        })
+    })
+end)
+
+-- Get movement log
+Handlers.add("get-movement-log", Handlers.utils.hasMatchingTag("Action", "get-movement-log"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local limit = data.limit or 50
+    local npc_filter = data.npc_id
+    
+    local result = {}
+    for i = #MovementLog, math.max(1, #MovementLog - limit + 1), -1 do
+        local entry = MovementLog[i]
+        if not npc_filter or entry.npc_id == npc_filter then
+            table.insert(result, entry)
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "movement-log-response",
+        Data = json.encode({
+            count = #result,
+            movements = result
+        })
+    })
+end)
+
+-- Load NPC schedules (call once to initialize from codec)
+Handlers.add("load-npc-schedules", Handlers.utils.hasMatchingTag("Action", "load-npc-schedules"), function(msg)
+    local data = json.decode(msg.Data or "{}")
+    local schedules = data.schedules or {}
+    local loaded = 0
+    
+    for _, npc in ipairs(schedules) do
+        if npc.id then
+            NPCSchedules[npc.id] = {
+                home = npc.home or "L001",
+                work = npc.work or npc.workplace or npc.home or "L001",
+                social = npc.social or {}
+            }
+            -- Initialize location if not set
+            if not NPCLocations[npc.id] then
+                NPCLocations[npc.id] = {
+                    location = npc.home or "L001",
+                    state = "idle",
+                    since_tick = WorldTick
+                }
+            end
+            loaded = loaded + 1
+        end
+    end
+    
+    ao.send({
+        Target = msg.From,
+        Action = "load-schedules-response",
+        Data = json.encode({
+            success = true,
+            loaded = loaded,
+            total_scheduled = table_length(NPCSchedules)
+        })
+    })
+    
+    print("📋 Loaded " .. loaded .. " NPC schedules")
 end)
 
 -- =============================================================================
