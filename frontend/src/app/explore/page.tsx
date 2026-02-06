@@ -529,8 +529,8 @@ function ExplorePageContent() {
                     <Link href="/graph" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
                         Graph
                     </Link>
-                    <Link href="/monitor" className="text-sm font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded transition-colors">
-                        Monitor
+                    <Link href="/monitor" className="text-sm font-medium text-cyan-400 hover:text-white px-3 py-1.5 rounded transition-colors border border-cyan-500/30">
+                        📊 Monitor
                     </Link>
                 </nav>
             </header>
