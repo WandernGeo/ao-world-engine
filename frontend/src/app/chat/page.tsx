@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -119,6 +119,12 @@ function ChatPageContent() {
     const [apiBase, setApiBase] = useState(CLOUD_API);
     const [apiStatus, setApiStatus] = useState<'checking' | 'local' | 'cloud' | 'offline'>('checking');
     const [llmEnabled, setLlmEnabled] = useState(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll to bottom when messages change
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages, isLoading]);
 
     // Find best API endpoint and load NPCs on mount
     useEffect(() => {
@@ -308,6 +314,8 @@ function ChatPageContent() {
                                         </div>
                                     </div>
                                 )}
+                                {/* Invisible element to scroll to */}
+                                <div ref={messagesEndRef} />
                             </div>
 
                             {/* Input */}
@@ -374,22 +382,37 @@ function ChatPageContent() {
                     <h3 className="text-xs text-cyan-400 font-mono mt-4 mb-2">AI STATUS</h3>
                     <Card className="bg-zinc-900 border-zinc-700">
                         <CardContent className="p-3">
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 mb-3">
                                 <div className={`w-2.5 h-2.5 rounded-full ${llmEnabled && apiStatus !== 'offline' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
                                 <span className="text-xs text-zinc-400">
                                     {!llmEnabled ? 'LLM Off (NLU)' : apiStatus === 'offline' ? 'Offline (NLU)' : apiStatus === 'cloud' ? 'Cloud AI' : apiStatus === 'local' ? 'Local AI' : 'Checking...'}
                                 </span>
                             </div>
-                            <Button
-                                size="sm"
-                                variant={llmEnabled ? 'outline' : 'default'}
-                                onClick={() => setLlmEnabled(!llmEnabled)}
-                                className={`w-full text-xs ${llmEnabled ? 'border-green-600 text-green-400' : 'bg-zinc-700 text-zinc-300'}`}
-                            >
-                                {llmEnabled ? '🤖 LLM ON' : '📝 NLU Only'}
-                            </Button>
-                            <p className="text-[10px] text-zinc-600 mt-1">
-                                {llmEnabled ? 'Using Vertex AI' : 'Using canned responses'}
+
+                            {/* Clear segmented toggle */}
+                            <div className="flex bg-zinc-800 rounded-lg p-1 gap-1">
+                                <button
+                                    onClick={() => setLlmEnabled(true)}
+                                    className={`flex-1 py-1.5 px-2 text-xs font-medium rounded transition-all ${llmEnabled
+                                            ? 'bg-green-600 text-white shadow-sm'
+                                            : 'text-zinc-400 hover:text-white'
+                                        }`}
+                                >
+                                    🤖 LLM
+                                </button>
+                                <button
+                                    onClick={() => setLlmEnabled(false)}
+                                    className={`flex-1 py-1.5 px-2 text-xs font-medium rounded transition-all ${!llmEnabled
+                                            ? 'bg-yellow-600 text-white shadow-sm'
+                                            : 'text-zinc-400 hover:text-white'
+                                        }`}
+                                >
+                                    📝 NLU
+                                </button>
+                            </div>
+
+                            <p className="text-[10px] text-zinc-500 mt-2 text-center">
+                                {llmEnabled ? 'Vertex AI (smart responses)' : 'Offline NLU (canned responses)'}
                             </p>
                         </CardContent>
                     </Card>
