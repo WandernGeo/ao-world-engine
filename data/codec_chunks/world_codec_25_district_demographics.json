@@ -1,0 +1,670 @@
+{
+    "_meta": {
+        "id": "district_demographics",
+        "version": "1.0.0",
+        "description": "Ethnic and demographic distribution by district for NPC generation"
+    },
+    "districts": {
+        "neon_district": {
+            "name": "Neon District",
+            "code": "D01",
+            "description": "Downtown core. Cosmopolitan, high-rise, corporate. The beating heart of the city.",
+            "real_world_analog": "Manhattan Midtown / Times Square",
+            "population_target": 400,
+            "building_range": [
+                "B001",
+                "B020"
+            ],
+            "ethnicity_weights": {
+                "mixed_asian": 0.20,
+                "mixed_european": 0.20,
+                "african_american": 0.15,
+                "latino_mixed": 0.15,
+                "east_asian_chinese": 0.10,
+                "south_asian_indian": 0.10,
+                "middle_eastern": 0.05,
+                "other": 0.05
+            },
+            "income_distribution": {
+                "upper": 0.30,
+                "upper_middle": 0.35,
+                "middle": 0.25,
+                "lower": 0.10
+            },
+            "job_types": [
+                "corporate_exec",
+                "tech_worker",
+                "finance",
+                "media",
+                "service_worker",
+                "security"
+            ],
+            "vibe": "Sleek, fast-paced, neon-lit. Money and ambition."
+        },
+        "harbor_quarter": {
+            "name": "Harbor Quarter",
+            "code": "D02",
+            "description": "Waterfront community. Working-class, vibrant, multicultural. Strong community bonds.",
+            "real_world_analog": "Brooklyn Crown Heights / Flatbush",
+            "population_target": 450,
+            "building_range": [
+                "B021",
+                "B050"
+            ],
+            "ethnicity_weights": {
+                "west_african_nigerian": 0.15,
+                "west_african_ghanaian": 0.10,
+                "caribbean_jamaican": 0.15,
+                "caribbean_trinidadian": 0.10,
+                "african_american": 0.15,
+                "south_asian_bangladeshi": 0.10,
+                "latino_dominican": 0.10,
+                "mixed_european": 0.10,
+                "other": 0.05
+            },
+            "income_distribution": {
+                "upper": 0.05,
+                "upper_middle": 0.15,
+                "middle": 0.40,
+                "lower": 0.40
+            },
+            "job_types": [
+                "dock_worker",
+                "fisherman",
+                "mechanic",
+                "nurse",
+                "teacher",
+                "shop_owner",
+                "cook",
+                "artist"
+            ],
+            "vibe": "Colorful, loud, authentic. Food smells, music from windows, kids on stoops."
+        },
+        "temple_heights": {
+            "name": "Temple Heights",
+            "code": "D03",
+            "description": "Elevated district. Religious center, traditional values, ancient architecture.",
+            "real_world_analog": "Flushing / Sunset Park",
+            "population_target": 350,
+            "building_range": [
+                "B051",
+                "B075"
+            ],
+            "ethnicity_weights": {
+                "east_asian_chinese": 0.20,
+                "east_asian_korean": 0.15,
+                "southeast_asian_vietnamese": 0.10,
+                "southeast_asian_filipino": 0.10,
+                "south_asian_indian": 0.10,
+                "japanese": 0.10,
+                "mixed_european": 0.10,
+                "mixed_other": 0.15
+            },
+            "income_distribution": {
+                "upper": 0.10,
+                "upper_middle": 0.25,
+                "middle": 0.40,
+                "lower": 0.25
+            },
+            "job_types": [
+                "priest",
+                "monk",
+                "healer",
+                "herbalist",
+                "teacher",
+                "calligrapher",
+                "martial_artist",
+                "merchant"
+            ],
+            "vibe": "Incense, chanting, paper lanterns. Ancient rituals in a cyberpunk shell."
+        },
+        "old_town": {
+            "name": "Old Town",
+            "code": "D04",
+            "description": "Historic quarter. Multi-generational families, old-world charm, practical resilience.",
+            "real_world_analog": "Bay Ridge / Bensonhurst / Carroll Gardens",
+            "population_target": 400,
+            "building_range": [
+                "B076",
+                "B100"
+            ],
+            "ethnicity_weights": {
+                "italian_american": 0.20,
+                "irish_american": 0.15,
+                "polish_american": 0.10,
+                "russian": 0.10,
+                "greek": 0.10,
+                "african_american": 0.10,
+                "latino_puerto_rican": 0.10,
+                "mixed_other": 0.15
+            },
+            "income_distribution": {
+                "upper": 0.05,
+                "upper_middle": 0.20,
+                "middle": 0.45,
+                "lower": 0.30
+            },
+            "job_types": [
+                "carpenter",
+                "plumber",
+                "electrician",
+                "baker",
+                "barber",
+                "tavern_owner",
+                "retired_military",
+                "factory_worker"
+            ],
+            "vibe": "Brick buildings, fire escapes, corner delis. Everyone knows everyone."
+        },
+        "industrial_zone": {
+            "name": "Industrial Zone",
+            "code": "D05",
+            "description": "Factory district. Hard labor, tight-knit communities, resistance stronghold.",
+            "real_world_analog": "Bushwick / Red Hook / Sunset Park industrial",
+            "population_target": 350,
+            "building_range": [
+                "B101",
+                "B125"
+            ],
+            "ethnicity_weights": {
+                "latino_mexican": 0.20,
+                "latino_ecuadorian": 0.10,
+                "latino_guatemalan": 0.10,
+                "african_american": 0.15,
+                "caribbean_haitian": 0.10,
+                "southeast_asian_cambodian": 0.05,
+                "mixed_european": 0.15,
+                "mixed_other": 0.15
+            },
+            "income_distribution": {
+                "upper": 0.02,
+                "upper_middle": 0.08,
+                "middle": 0.30,
+                "lower": 0.60
+            },
+            "job_types": [
+                "factory_worker",
+                "welder",
+                "machinist",
+                "truck_driver",
+                "mechanic",
+                "warehouse_worker",
+                "union_organizer"
+            ],
+            "vibe": "Smoke stacks, welding sparks, union halls. Pride in hard work."
+        },
+        "the_gardens": {
+            "name": "The Gardens",
+            "code": "D06",
+            "description": "Green residential district. Families, parks, markets. Quiet but politically active.",
+            "real_world_analog": "Bay Ridge / Atlantic Ave / Cobble Hill",
+            "population_target": 380,
+            "building_range": [
+                "B126",
+                "B155"
+            ],
+            "ethnicity_weights": {
+                "arab_lebanese": 0.15,
+                "arab_syrian": 0.10,
+                "north_african_moroccan": 0.10,
+                "arab_yemeni": 0.05,
+                "turkish": 0.10,
+                "south_asian_pakistani": 0.10,
+                "african_american": 0.10,
+                "mixed_european": 0.15,
+                "mixed_other": 0.15
+            },
+            "income_distribution": {
+                "upper": 0.10,
+                "upper_middle": 0.25,
+                "middle": 0.40,
+                "lower": 0.25
+            },
+            "job_types": [
+                "shopkeeper",
+                "restaurant_owner",
+                "pharmacist",
+                "teacher",
+                "imam",
+                "doctor",
+                "taxi_driver",
+                "tailor"
+            ],
+            "vibe": "Spice markets, community gardens, Arabic coffee shops. Family first."
+        },
+        "tech_quarter": {
+            "name": "Tech Quarter",
+            "code": "D07",
+            "description": "Innovation hub. Startups, labs, universities. Young, ambitious, always connected.",
+            "real_world_analog": "Jersey City tech / DUMBO",
+            "population_target": 300,
+            "building_range": [
+                "B156",
+                "B180"
+            ],
+            "ethnicity_weights": {
+                "south_asian_indian": 0.20,
+                "east_asian_chinese": 0.15,
+                "east_asian_korean": 0.10,
+                "mixed_european": 0.15,
+                "african_american": 0.10,
+                "latino_mixed": 0.10,
+                "southeast_asian_filipino": 0.05,
+                "mixed_other": 0.15
+            },
+            "income_distribution": {
+                "upper": 0.20,
+                "upper_middle": 0.40,
+                "middle": 0.30,
+                "lower": 0.10
+            },
+            "job_types": [
+                "programmer",
+                "data_scientist",
+                "cybernetics_engineer",
+                "professor",
+                "student",
+                "lab_tech",
+                "startup_founder"
+            ],
+            "vibe": "Holographic displays, coworking spaces, ramen joints. Move fast, build things."
+        },
+        "outskirts": {
+            "name": "The Outskirts",
+            "code": "D08",
+            "description": "Edge of the city. Refugees, displaced, the forgotten. But also: freedom, community gardens, DIY culture.",
+            "real_world_analog": "Coney Island / Far Rockaway",
+            "population_target": 200,
+            "building_range": [
+                "B181",
+                "B200"
+            ],
+            "ethnicity_weights": {
+                "mixed_refugee": 0.25,
+                "african_somali": 0.10,
+                "african_eritrean": 0.05,
+                "southeast_asian_myanmar": 0.10,
+                "latino_venezuelan": 0.10,
+                "afghan": 0.05,
+                "african_american": 0.15,
+                "mixed_other": 0.20
+            },
+            "income_distribution": {
+                "upper": 0.01,
+                "upper_middle": 0.04,
+                "middle": 0.15,
+                "lower": 0.80
+            },
+            "job_types": [
+                "scavenger",
+                "street_vendor",
+                "community_garden",
+                "aid_worker",
+                "informal_mechanic",
+                "survivor",
+                "artist"
+            ],
+            "vibe": "Salvaged shelters, community fires, resilience. The city forgot them; they built their own."
+        }
+    },
+    "governance": {
+        "mayor": {
+            "title": "Mayor of Example City",
+            "election_cycle_days": 30,
+            "powers": [
+                "set_tax_rate",
+                "allocate_budget",
+                "declare_emergency",
+                "appoint_chief_of_police"
+            ],
+            "term_limit": 2
+        },
+        "city_council": {
+            "seats": 7,
+            "representation": "one_per_district_plus_at_large",
+            "districts_with_seats": [
+                "D01",
+                "D02",
+                "D03",
+                "D04",
+                "D05",
+                "D06",
+                "D07"
+            ],
+            "at_large": 0,
+            "election_cycle_days": 30,
+            "powers": [
+                "vote_on_budget",
+                "propose_ordinances",
+                "override_mayor_veto"
+            ]
+        },
+        "judiciary": {
+            "chief_judge": 1,
+            "district_judges": 3,
+            "appointed_by": "mayor",
+            "confirmed_by": "city_council"
+        },
+        "departments": [
+            {
+                "name": "Police",
+                "head": "Chief of Police",
+                "employees": 30
+            },
+            {
+                "name": "Fire & Rescue",
+                "head": "Fire Chief",
+                "employees": 20
+            },
+            {
+                "name": "Public Health",
+                "head": "Health Commissioner",
+                "employees": 15
+            },
+            {
+                "name": "Education",
+                "head": "Schools Chancellor",
+                "employees": 25
+            },
+            {
+                "name": "Infrastructure",
+                "head": "City Engineer",
+                "employees": 20
+            },
+            {
+                "name": "Sanitation",
+                "head": "Sanitation Director",
+                "employees": 15
+            }
+        ]
+    },
+    "name_pools": {
+        "_note": "First/last names by ethnicity for generation. Gemini will use these as guidance.",
+        "east_asian_chinese": {
+            "first": [
+                "Wei",
+                "Lin",
+                "Mei",
+                "Jian",
+                "Xia",
+                "Chen",
+                "Hui",
+                "Tao"
+            ],
+            "last": [
+                "Zhang",
+                "Wang",
+                "Li",
+                "Chen",
+                "Liu",
+                "Yang",
+                "Huang",
+                "Wu"
+            ]
+        },
+        "east_asian_korean": {
+            "first": [
+                "Joon",
+                "Soo",
+                "Min",
+                "Hana",
+                "Yuna",
+                "Dae",
+                "Ji",
+                "Kyung"
+            ],
+            "last": [
+                "Kim",
+                "Park",
+                "Lee",
+                "Choi",
+                "Jung",
+                "Kang",
+                "Yoon",
+                "Han"
+            ]
+        },
+        "japanese": {
+            "first": [
+                "Kenji",
+                "Yuki",
+                "Haruto",
+                "Sakura",
+                "Ren",
+                "Aoi",
+                "Sota",
+                "Hina"
+            ],
+            "last": [
+                "Tanaka",
+                "Sato",
+                "Suzuki",
+                "Watanabe",
+                "Ito",
+                "Yamamoto",
+                "Nakamura",
+                "Kobayashi"
+            ]
+        },
+        "south_asian_indian": {
+            "first": [
+                "Raj",
+                "Priya",
+                "Arjun",
+                "Anita",
+                "Dev",
+                "Meera",
+                "Vikram",
+                "Sunita"
+            ],
+            "last": [
+                "Patel",
+                "Sharma",
+                "Singh",
+                "Kumar",
+                "Reddy",
+                "Gupta",
+                "Mehta",
+                "Shah"
+            ]
+        },
+        "west_african_nigerian": {
+            "first": [
+                "Amara",
+                "Chidi",
+                "Ngozi",
+                "Emeka",
+                "Adaeze",
+                "Obinna",
+                "Chioma",
+                "Ikenna"
+            ],
+            "last": [
+                "Okafor",
+                "Obi",
+                "Nwosu",
+                "Adeyemi",
+                "Eze",
+                "Ukwu",
+                "Nnamdi",
+                "Chukwu"
+            ]
+        },
+        "caribbean_jamaican": {
+            "first": [
+                "Shawn",
+                "Keisha",
+                "Desmond",
+                "Patrice",
+                "Marlon",
+                "Tanya",
+                "Winston",
+                "Nadine"
+            ],
+            "last": [
+                "Campbell",
+                "Brown",
+                "Williams",
+                "Thompson",
+                "Morrison",
+                "Clarke",
+                "Stewart",
+                "Anderson"
+            ]
+        },
+        "italian_american": {
+            "first": [
+                "Marco",
+                "Sofia",
+                "Luca",
+                "Valentina",
+                "Nico",
+                "Isabella",
+                "Dante",
+                "Lucia"
+            ],
+            "last": [
+                "Russo",
+                "Moretti",
+                "DeLuca",
+                "Conti",
+                "Ricci",
+                "Mancini",
+                "Ferrara",
+                "Bianchi"
+            ]
+        },
+        "irish_american": {
+            "first": [
+                "Liam",
+                "Siobhan",
+                "Declan",
+                "Brianna",
+                "Ronan",
+                "Aisling",
+                "Conor",
+                "Maeve"
+            ],
+            "last": [
+                "O'Brien",
+                "Murphy",
+                "Kelly",
+                "Sullivan",
+                "Walsh",
+                "McCarthy",
+                "Byrne",
+                "Gallagher"
+            ]
+        },
+        "latino_mexican": {
+            "first": [
+                "Carlos",
+                "Maria",
+                "Alejandro",
+                "Rosa",
+                "Diego",
+                "Elena",
+                "Miguel",
+                "Camila"
+            ],
+            "last": [
+                "Garcia",
+                "Rodriguez",
+                "Martinez",
+                "Lopez",
+                "Hernandez",
+                "Gonzalez",
+                "Perez",
+                "Ramirez"
+            ]
+        },
+        "arab_lebanese": {
+            "first": [
+                "Hassan",
+                "Layla",
+                "Omar",
+                "Fatima",
+                "Karim",
+                "Nour",
+                "Samir",
+                "Yasmin"
+            ],
+            "last": [
+                "Khoury",
+                "Haddad",
+                "Mansour",
+                "Nassif",
+                "Saad",
+                "Boutros",
+                "Azar",
+                "Farah"
+            ]
+        },
+        "african_american": {
+            "first": [
+                "Marcus",
+                "Aaliyah",
+                "Jamal",
+                "Imani",
+                "DeShawn",
+                "Tiana",
+                "Andre",
+                "Zara"
+            ],
+            "last": [
+                "Johnson",
+                "Washington",
+                "Harris",
+                "Jackson",
+                "Robinson",
+                "Taylor",
+                "Moore",
+                "Davis"
+            ]
+        },
+        "polish_american": {
+            "first": [
+                "Tomasz",
+                "Katarzyna",
+                "Marek",
+                "Agnieszka",
+                "Jakub",
+                "Zofia",
+                "Piotr",
+                "Wanda"
+            ],
+            "last": [
+                "Kowalski",
+                "Nowak",
+                "Wiśniewski",
+                "Wójcik",
+                "Kamiński",
+                "Zielinski",
+                "Szymanski",
+                "Dąbrowski"
+            ]
+        },
+        "turkish": {
+            "first": [
+                "Emre",
+                "Elif",
+                "Baris",
+                "Defne",
+                "Can",
+                "Zeynep",
+                "Mert",
+                "Selin"
+            ],
+            "last": [
+                "Yilmaz",
+                "Demir",
+                "Kaya",
+                "Çelik",
+                "Öztürk",
+                "Arslan",
+                "Doğan",
+                "Aydın"
+            ]
+        }
+    }
+}
