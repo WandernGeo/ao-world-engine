@@ -144,6 +144,91 @@ FACTION_WEIGHTS = {
     "outskirts": {"Underground": 0.30, "Resistance": 0.25, "Neutral": 0.25, "Mystics": 0.10, "Temple": 0.05, "Corps": 0.05},
 }
 
+# Explicit mapping from demographic ethnicity keys to name pool keys
+ETHNICITY_TO_POOL = {
+    # East Asian
+    "east_asian_chinese": "east_asian_chinese",
+    "east_asian_korean": "east_asian_korean",
+    "japanese": "japanese",
+    "mixed_asian": "east_asian_chinese",  # fallback
+    # South Asian
+    "south_asian_indian": "south_asian_indian",
+    "south_asian_bangladeshi": "south_asian_indian",  # shared pool
+    "south_asian_pakistani": "south_asian_pakistani",
+    # Southeast Asian
+    "southeast_asian_vietnamese": "southeast_asian_vietnamese",
+    "southeast_asian_filipino": "southeast_asian_filipino",
+    "southeast_asian_cambodian": "southeast_asian_cambodian",
+    "southeast_asian_myanmar": "southeast_asian_myanmar",
+    # West African
+    "west_african_nigerian": "west_african_nigerian",
+    "west_african_ghanaian": "west_african_ghanaian",
+    # Caribbean
+    "caribbean_jamaican": "caribbean_jamaican",
+    "caribbean_trinidadian": "caribbean_trinidadian",
+    "caribbean_haitian": "caribbean_haitian",
+    # European
+    "mixed_european": "mixed_european",
+    "italian_american": "italian_american",
+    "irish_american": "irish_american",
+    "polish_american": "polish_american",
+    "russian": "russian",
+    "greek": "greek",
+    # Latino
+    "latino_mixed": "latino_mexican",  # fallback
+    "latino_mexican": "latino_mexican",
+    "latino_ecuadorian": "latino_ecuadorian",
+    "latino_guatemalan": "latino_guatemalan",
+    "latino_dominican": "latino_dominican",
+    "latino_puerto_rican": "latino_puerto_rican",
+    "latino_venezuelan": "latino_venezuelan",
+    # African American
+    "african_american": "african_american",
+    # African
+    "african_somali": "african_somali",
+    "african_eritrean": "african_eritrean",
+    # Arab / Middle Eastern / North African
+    "arab_lebanese": "arab_lebanese",
+    "arab_syrian": "arab_syrian",
+    "arab_yemeni": "arab_yemeni",
+    "north_african_moroccan": "north_african_moroccan",
+    "middle_eastern": "arab_lebanese",  # fallback
+    # Turkish
+    "turkish": "turkish",
+    # Afghan
+    "afghan": "afghan",
+    # Catch-all
+    "mixed_other": "mixed_european",
+    "mixed_refugee": "african_somali",
+    "other": "mixed_european",
+}
+
+# Extended name pools for ethnicities not in the demographics JSON
+EXTENDED_NAME_POOLS = {
+    "south_asian_pakistani": {"first": ["Ali", "Fatima", "Hassan", "Ayesha", "Usman", "Sana", "Bilal", "Zainab"], "last": ["Khan", "Ahmed", "Malik", "Hussain", "Chaudhry", "Butt", "Sheikh", "Iqbal"]},
+    "southeast_asian_vietnamese": {"first": ["Minh", "Linh", "Duc", "Thao", "Hung", "Mai", "Tuan", "Lan"], "last": ["Nguyen", "Tran", "Le", "Pham", "Vo", "Dang", "Bui", "Do"]},
+    "southeast_asian_filipino": {"first": ["Miguel", "Maria", "Juan", "Rosa", "Angelo", "Grace", "Jose", "Lita"], "last": ["Santos", "Reyes", "Cruz", "Bautista", "Del Rosario", "Ramos", "Aquino", "Mendoza"]},
+    "southeast_asian_cambodian": {"first": ["Sokha", "Chenda", "Dara", "Sophea", "Vanna", "Bopha", "Thy", "Keo"], "last": ["Sok", "Chan", "Chea", "Hem", "Khim", "Phan", "Seng", "Tan"]},
+    "southeast_asian_myanmar": {"first": ["Aung", "Thida", "Ko", "Ma", "Win", "Zaw", "Thiha", "Soe"], "last": ["Aung", "Win", "Htun", "Oo", "Myint", "Tun", "Lwin", "Kyaw"]},
+    "west_african_ghanaian": {"first": ["Kwame", "Abena", "Kofi", "Ama", "Yaw", "Efua", "Kwesi", "Akua"], "last": ["Mensah", "Owusu", "Boateng", "Asante", "Adjei", "Ofori", "Appiah", "Agyeman"]},
+    "caribbean_trinidadian": {"first": ["Kiran", "Tricia", "Ravi", "Camille", "Stefan", "Anika", "Joel", "Priya"], "last": ["Ramkissoon", "Persad", "Mohammed", "Singh", "Ali", "Joseph", "Baptiste", "Charles"]},
+    "caribbean_haitian": {"first": ["Jean", "Marie", "Pierre", "Rose", "Jacques", "Fabiola", "Frantz", "Guerline"], "last": ["Jean-Baptiste", "Joseph", "Pierre", "Louis", "Augustin", "Celestin", "Desir", "Etienne"]},
+    "russian": {"first": ["Alexei", "Natasha", "Dmitri", "Olga", "Ivan", "Yelena", "Sergei", "Tatiana"], "last": ["Volkov", "Petrov", "Kuznetsov", "Ivanova", "Sokolov", "Popov", "Lebedev", "Morozov"]},
+    "greek": {"first": ["Nikos", "Elena", "Dimitris", "Maria", "Yannis", "Sophia", "Kostas", "Athena"], "last": ["Papadopoulos", "Georgiou", "Nikolaou", "Vasileiou", "Pappas", "Konstantinou", "Alexiou", "Demetriou"]},
+    "mixed_european": {"first": ["James", "Sarah", "Michael", "Emma", "David", "Olivia", "Daniel", "Laura"], "last": ["Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "White", "Martin"]},
+    "latino_ecuadorian": {"first": ["Luis", "Ana", "Jorge", "Carmen", "Pablo", "Lucia", "Fernando", "Gabriela"], "last": ["Morales", "Vega", "Flores", "Espinoza", "Cordero", "Jaramillo", "Salazar", "Reyes"]},
+    "latino_guatemalan": {"first": ["Oscar", "Isabel", "Marco", "Luisa", "Roberto", "Silvia", "Pedro", "Teresa"], "last": ["Lopez", "Morales", "Garcia", "Hernandez", "Castillo", "Ramirez", "Perez", "Mendez"]},
+    "latino_dominican": {"first": ["Juan", "Yolanda", "Ramon", "Altagracia", "Pedro", "Milagros", "Luis", "Juana"], "last": ["Rodriguez", "Martinez", "Perez", "Sanchez", "De La Cruz", "Medina", "Rosario", "Diaz"]},
+    "latino_puerto_rican": {"first": ["Angel", "Carmen", "Jose", "Luz", "Carlos", "Maria", "Rafael", "Sonia"], "last": ["Rivera", "Torres", "Ortiz", "Santiago", "Colon", "Vargas", "Soto", "Diaz"]},
+    "latino_venezuelan": {"first": ["Andres", "Valentina", "Sebastian", "Daniela", "Alejandro", "Isabella", "Gabriel", "Mariana"], "last": ["Gonzalez", "Rodriguez", "Martinez", "Garcia", "Hernandez", "Diaz", "Moreno", "Romero"]},
+    "arab_syrian": {"first": ["Khalil", "Rania", "Tariq", "Hala", "Faisal", "Dima", "Bashar", "Lina"], "last": ["Al-Assad", "Ibrahim", "Habib", "Khalil", "Darwish", "Nader", "Salim", "Hanna"]},
+    "arab_yemeni": {"first": ["Mohammed", "Aisha", "Abdullah", "Salma", "Ahmed", "Khadija", "Saleh", "Muna"], "last": ["Al-Houthi", "Al-Sanea", "Noman", "Qasim", "Saleh", "Hamid", "Antar", "Badr"]},
+    "north_african_moroccan": {"first": ["Youssef", "Amina", "Rachid", "Fatima", "Mehdi", "Zineb", "Hamza", "Kenza"], "last": ["Benali", "El Amrani", "Tahiri", "Bouazza", "Idrissi", "Fassi", "Chaoui", "Benchekroun"]},
+    "african_somali": {"first": ["Abdi", "Halima", "Mohamed", "Amina", "Hassan", "Asha", "Omar", "Sahra"], "last": ["Aden", "Ali", "Hassan", "Hussein", "Ibrahim", "Jama", "Mohamed", "Omar"]},
+    "african_eritrean": {"first": ["Bereket", "Tsehay", "Dawit", "Rahel", "Yonas", "Feven", "Samuel", "Meron"], "last": ["Tesfai", "Gebremedhin", "Haile", "Berhe", "Amanuel", "Kebede", "Wolde", "Tekle"]},
+    "afghan": {"first": ["Ahmad", "Mariam", "Farid", "Zahra", "Hamid", "Soraya", "Rashid", "Nasreen"], "last": ["Ahmadi", "Rahimi", "Karimi", "Mohammadi", "Hosseini", "Nazari", "Rezaei", "Hashemi"]},
+}
+
 
 def get_skin_tone(ethnicity_key: str) -> str:
     """Get appropriate skin tone based on ethnicity."""
@@ -202,26 +287,28 @@ def generate_big_five() -> dict:
 
 
 def pick_name(ethnicity: str, gender: str, name_pools: dict, used_names: set) -> tuple:
-    """Pick a unique name from the appropriate pool."""
-    # Filter to only actual name pools (skip _note and other non-dict entries)
-    valid_pools = {k: v for k, v in name_pools.items() if isinstance(v, dict) and "first" in v}
+    """Pick a unique name from the appropriate pool using explicit ethnicity mapping."""
+    # Merge base pools with extended pools
+    all_pools = {}
+    for k, v in name_pools.items():
+        if isinstance(v, dict) and "first" in v:
+            all_pools[k] = v
+    all_pools.update(EXTENDED_NAME_POOLS)
     
-    if not valid_pools:
-        valid_pools = {"fallback": {"first": ["Alex", "Sam", "Jordan", "Casey", "Morgan", "Riley", "Avery", "Quinn"], 
-                                     "last": ["Smith", "Jones", "Lee", "Kim", "Brown", "Davis", "Wilson", "Chen"]}}
+    # Use explicit mapping to find the right pool
+    pool_key = ETHNICITY_TO_POOL.get(ethnicity)
     
-    # Map ethnicity to pool key
-    pool_key = None
-    for key in valid_pools:
-        if key in ethnicity or ethnicity in key:
-            pool_key = key
-            break
+    if not pool_key or pool_key not in all_pools:
+        # Try fuzzy match as last resort
+        for key in all_pools:
+            if key in ethnicity or ethnicity in key:
+                pool_key = key
+                break
     
-    if not pool_key:
-        # Fallback: use a random valid pool
-        pool_key = random.choice(list(valid_pools.keys()))
+    if not pool_key or pool_key not in all_pools:
+        pool_key = "mixed_european"  # final fallback
     
-    pool = valid_pools[pool_key]
+    pool = all_pools.get(pool_key, EXTENDED_NAME_POOLS["mixed_european"])
     first_names = pool.get("first", ["Alex", "Sam", "Jordan", "Casey"])
     last_names = pool.get("last", ["Smith", "Jones", "Lee", "Kim"])
     
@@ -458,6 +545,19 @@ def generate_governance_npcs(demographics: dict, name_pools: dict, used_names: s
         "campaign_promises": random.sample(VOTING_ISSUES, 3)
     }
     mayor["age"] = random.randint(42, 65)  # Mayors tend to be older
+    # Regenerate schedule for correct age + role
+    mayor["life"]["daily_schedule"] = {
+        "06:00": "wake, morning briefing",
+        "07:00": "breakfast, review agenda",
+        "08:00": "arrive at City Hall",
+        "08:30-12:00": "meetings, constituent calls, policy work",
+        "12:00": "lunch (often working)",
+        "13:00-17:00": "council sessions, public appearances, negotiations",
+        "17:30": "commute home",
+        "18:30": "dinner",
+        "20:00": "evening reading, strategy calls",
+        "23:00": "sleep"
+    }
     npcs.append(mayor)
     current_id += 1
     
@@ -481,6 +581,19 @@ def generate_governance_npcs(demographics: dict, name_pools: dict, used_names: s
             "term_start_tick": 0
         }
         council["age"] = random.randint(35, 65)
+        council["life"]["daily_schedule"] = {
+            "07:00": "wake, morning routine",
+            "08:00": "breakfast, review district reports",
+            "09:00": "travel to City Hall",
+            "09:30-12:00": "committee meetings, constituent work",
+            "12:00": "lunch with colleagues or constituents",
+            "13:00-16:00": "council session or district office hours",
+            "16:30": "return to district",
+            "17:00": "community events or meetings",
+            "19:00": "dinner",
+            "21:00": "personal time",
+            "23:00": "sleep"
+        }
         npcs.append(council)
         current_id += 1
     
@@ -495,6 +608,19 @@ def generate_governance_npcs(demographics: dict, name_pools: dict, used_names: s
     }
     police_chief["governance"] = {"position": "chief_of_police", "appointed_by": "mayor", "elected": False}
     police_chief["age"] = random.randint(45, 60)
+    police_chief["life"]["daily_schedule"] = {
+        "05:30": "wake, morning fitness",
+        "06:30": "review overnight reports",
+        "07:30": "arrive at HQ, morning briefing",
+        "08:00-12:00": "operations management, meetings",
+        "12:00": "lunch",
+        "13:00-17:00": "investigations oversight, interagency meetings",
+        "17:30": "evening briefing",
+        "18:30": "commute home",
+        "19:30": "dinner",
+        "21:00": "on-call review",
+        "23:00": "sleep"
+    }
     npcs.append(police_chief)
     current_id += 1
     
@@ -516,6 +642,19 @@ def generate_governance_npcs(demographics: dict, name_pools: dict, used_names: s
             "elected": False
         }
         judge["age"] = random.randint(45, 70)
+        judge["life"]["daily_schedule"] = {
+            "06:30": "wake, morning routine",
+            "07:30": "review case files",
+            "08:30": "arrive at courthouse",
+            "09:00-12:00": "court proceedings",
+            "12:00": "lunch in chambers",
+            "13:00-16:00": "rulings, case review, legal research",
+            "16:30": "end of court day",
+            "17:00": "commute home",
+            "18:00": "dinner",
+            "20:00": "reading, personal time",
+            "22:00": "sleep"
+        }
         npcs.append(judge)
         current_id += 1
     
@@ -539,6 +678,7 @@ def generate_governance_npcs(demographics: dict, name_pools: dict, used_names: s
         }
         head["governance"] = {"position": key, "appointed_by": "mayor", "elected": False}
         head["age"] = random.randint(40, 60)
+        head["life"]["daily_schedule"] = generate_schedule(key, head["age"])
         npcs.append(head)
         current_id += 1
     
