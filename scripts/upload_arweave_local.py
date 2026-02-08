@@ -13,7 +13,7 @@ Usage:
 
 Requires:
     pip install arweave-python-client
-    Wallet at wandern-back/arweave-wallet.json
+    Wallet at $ARWEAVE_WALLET_PATH
 """
 import os
 import sys
@@ -24,7 +24,7 @@ import tempfile
 from datetime import datetime
 
 # Configuration
-WALLET_PATH = os.path.join(os.path.dirname(__file__), "../../wandern-back/arweave-wallet.json")
+WALLET_PATH = os.path.join(os.path.dirname(__file__), "../../$ARWEAVE_WALLET_PATH")
 DATA_DIR = os.path.join(os.path.dirname(__file__), "../data")
 RESULTS_FILE = os.path.join(os.path.dirname(__file__), "../data/arweave_uploads.json")
 

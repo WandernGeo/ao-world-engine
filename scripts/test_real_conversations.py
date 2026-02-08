@@ -33,7 +33,7 @@ try:
     import vertexai
     from vertexai.generative_models import GenerativeModel
     
-    project = os.environ.get("GCP_PROJECT", "wandern-project-startup")
+    project = os.environ.get("GCP_PROJECT", "your-gcp-project")
     location = os.environ.get("GCP_LOCATION", "us-central1")
     
     vertexai.init(project=project, location=location)

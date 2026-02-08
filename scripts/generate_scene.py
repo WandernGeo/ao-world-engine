@@ -132,7 +132,7 @@ def generate_with_vertex_imagen(prompt: str, output_path: str):
         import vertexai
         from vertexai.vision_models import ImageGenerationModel
         
-        project = os.environ.get("GCP_PROJECT", "wandern-project-startup")
+        project = os.environ.get("GCP_PROJECT", "your-gcp-project")
         location = os.environ.get("GCP_LOCATION", "us-central1")
         
         vertexai.init(project=project, location=location)
@@ -204,7 +204,7 @@ def generate_with_gemini_flash_description(prompt: str):
         import vertexai
         from vertexai.generative_models import GenerativeModel
         
-        project = os.environ.get("GCP_PROJECT", "wandern-project-startup")
+        project = os.environ.get("GCP_PROJECT", "your-gcp-project")
         location = os.environ.get("GCP_LOCATION", "us-central1")
         
         vertexai.init(project=project, location=location)

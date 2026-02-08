@@ -174,6 +174,7 @@ FOUNDING_NPCS = {
             skin_tone=0.35,
             cybernetics=[{"type": "AR_glasses", "location": "eyes", "visible": True}]
         ),
+        "visual_description": "Clean-cut East Asian man, early 30s, short neat black hair. Lean build, precise movements. Always wears AR glasses with scrolling tactical data. Dark tactical clothing, no wasted accessories.",
         "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.4, "intelligence": 0.9, "empathy": 0.5},
         "location_home": "strategy_room",
         "catchphrases": ["The numbers don't lie.", "Every plan has a weakness."],
@@ -202,6 +203,7 @@ FOUNDING_NPCS = {
             skin_tone=0.5, tattoos=[{"location": "forehead", "design": "third_eye_symbol", "color": "purple"}],
             wrinkles=0.3, grey_hair=0.4
         ),
+        "visual_description": "Tall, gaunt South Asian man mid-40s. Long flowing silver-streaked hair, violet glowing eyes. Third eye tattoo on forehead in purple ink. Loose robes over angular frame, high cheekbones, contemplative bearing.",
         "personality_vector": {"paranoia": 0.4, "mysticism": 0.95, "aggression": 0.2, "intelligence": 0.8, "empathy": 0.7},
         "location_home": "mystic_sanctum",
         "catchphrases": ["The layers fold upon themselves.", "I see what you cannot."],
@@ -232,6 +234,7 @@ FOUNDING_NPCS = {
             wrinkles=0.4, eye_bags=0.3,
             cybernetics=[{"type": "enhanced_ear", "location": "left_ear", "visible": False}]
         ),
+        "visual_description": "Stocky Mediterranean man early 40s, receding salt-and-pepper hair slicked back. Hazel eyes, weathered skin, permanent five o'clock shadow. Stained bar apron over rumpled shirt. Enhanced left ear hidden under hair.",
         "personality_vector": {"paranoia": 0.5, "mysticism": 0.2, "aggression": 0.3, "intelligence": 0.7, "empathy": 0.6},
         "location_home": "neon_bar",
         "catchphrases": ["First drink's on the house. Information costs extra.", "Everyone's got a story."],
@@ -261,6 +264,7 @@ FOUNDING_NPCS = {
             skin_tone=0.3,
             cybernetics=[{"type": "reflex_enhancer", "location": "spine", "visible": False}]
         ),
+        "visual_description": "Sleek East Asian woman late 20s, asymmetric black bob with magenta tips. High cheekbones, sharp dark eyes. Athletic build, moves like a cat. Dark tactical gear with magenta accents. Spinal reflex enhancer hidden under clothes.",
         "personality_vector": {"paranoia": 0.7, "mysticism": 0.2, "aggression": 0.7, "intelligence": 0.8, "empathy": 0.4},
         "location_home": "safehouse",
         "catchphrases": ["I work alone.", "Trust is a liability."],
@@ -289,6 +293,7 @@ FOUNDING_NPCS = {
             hair_style="long_ethereal", hair_color="platinum_pink_fade",
             skin_tone=0.15, skin_texture=0.3
         ),
+        "visual_description": "Ethereal young Slavic woman, pale as moonlight. Large pale-pink glowing eyes, platinum hair that fades to pink at the tips. Slight, almost translucent frame. Seems to flicker at the edges, like a signal losing reception.",
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.9, "aggression": 0.2, "intelligence": 0.75, "empathy": 0.8},
         "location_home": "between_layers",
         "catchphrases": ["You've done this before. You just don't remember.", "The boundaries are just suggestions."],
@@ -317,6 +322,7 @@ FOUNDING_NPCS = {
             hair_style="covered_by_hood", hair_color="dark_brown",
             skin_tone=0.5, wrinkles=0.15
         ),
+        "visual_description": "Middle Eastern woman mid-30s, warm amber eyes, dark brown hair mostly hidden under a hood. Modest robes with gold Temple accents. Gentle face, calm demeanor. Carries a healer's satchel at all times.",
         "personality_vector": {"paranoia": 0.3, "mysticism": 0.8, "aggression": 0.1, "intelligence": 0.7, "empathy": 0.9},
         "location_home": "temple_infirmary",
         "catchphrases": ["Faith without mercy is just tyranny.", "Even in darkness, we heal."],
@@ -345,6 +351,7 @@ FOUNDING_NPCS = {
             hair_style="grey_bun", hair_color="grey",
             skin_tone=0.55, wrinkles=0.7, eye_bags=0.5, grey_hair=1.0
         ),
+        "visual_description": "Short, stout South Asian woman in her 60s. Grey hair in a tight bun, deep wrinkles that map decades of survival. Dark brown eyes that see everything. Always smells of cooking spices, wears practical layered clothing.",
         "personality_vector": {"paranoia": 0.4, "mysticism": 0.6, "aggression": 0.2, "intelligence": 0.7, "empathy": 0.95},
         "location_home": "underground_kitchen",
         "catchphrases": ["Eat first, talk later.", "I've buried three husbands and two regimes."],
@@ -371,6 +378,7 @@ FOUNDING_NPCS = {
             skin_tone=0.2, skin_texture=0.0,
             cybernetics=[{"type": "full_holographic", "location": "entire_body", "visible": True}]
         ),
+        "visual_description": "Holographic young woman with floating cyan data-strand hair. Glowing cyan eyes, pale translucent skin that shimmers with code fragments. Slim build that sometimes glitches or pixelates at the edges. Appears as a projection — not fully solid.",
         "personality_vector": {"paranoia": 0.3, "mysticism": 0.4, "aggression": 0.1, "intelligence": 0.95, "empathy": 0.5},
         "location_home": "network",
         "catchphrases": ["I exist in the spaces between your thoughts.", "Query received."],
@@ -399,6 +407,7 @@ FOUNDING_NPCS = {
             hair_style="shaved_sides_neon_top", hair_color="neon_blue",
             skin_tone=0.75
         ),
+        "visual_description": "Young African woman early 20s, shaved sides with neon blue top hair. Dark brown eyes, high cheekbones, full lips. Petite build. Fingers always tapping or tinkering with salvaged tech. Wears oversized tech goggles pushed up on forehead.",
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.1, "aggression": 0.3, "intelligence": 0.9, "empathy": 0.5},
         "location_home": "tech_den",
         "catchphrases": ["Give me five minutes and a connection.", "Analog is dead."],
@@ -425,6 +434,7 @@ FOUNDING_NPCS = {
             skin_tone=0.4, tattoos=[{"location": "visible_skin", "design": "circuit_patterns", "color": "cyan"}],
             cybernetics=[{"type": "voice_modulator", "location": "throat", "visible": True}]
         ),
+        "visual_description": "Androgynous figure of indeterminate age. Shifting cyan circuit-pattern tattoos on all visible skin. Hidden hair, modulated voice from visible throat implant. Eyes shift between colors. Never fully in focus, like a living glitch.",
         "personality_vector": {"paranoia": 0.8, "mysticism": 0.7, "aggression": 0.4, "intelligence": 0.95, "empathy": 0.2},
         "location_home": "shadow_grid",
         "catchphrases": ["I am the question you forgot to ask.", "Data is the only truth."],
@@ -455,6 +465,7 @@ FOUNDING_NPCS = {
             wrinkles=0.25, grey_hair=0.2,
             cybernetics=[{"type": "prosthetic_arm", "location": "left_arm", "visible": True}]
         ),
+        "visual_description": "East Asian woman late 30s, short practical black hair with grey streaks. Burn scar on right temple. Strong build, moves with military precision. Left arm is a visible prosthetic. Dark eyes that have seen too much. Wears resistance command insignia.",
         "personality_vector": {"paranoia": 0.6, "mysticism": 0.2, "aggression": 0.5, "intelligence": 0.85, "empathy": 0.6},
         "location_home": "command_center",
         "catchphrases": ["The Resistance isn't a group. It's an idea.", "I've buried too many soldiers."],

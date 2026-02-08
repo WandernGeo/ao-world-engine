@@ -1,0 +1,364 @@
+{
+    "_chunk": {
+        "id": "chunk_26_utility_ai",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "ai_behavior",
+        "prev_chunk": "chunk_25_district_demographics",
+        "description": "Utility AI configuration for NPC schedule overrides. Defines action scoring, archetype curves, and override thresholds. Consumed by both Python (api_simulation.py) and Lua (agent_needs.lua) engines."
+    },
+    "utility_ai": {
+        "_desc": "Utility AI drives NPC autonomous behavior by scoring possible actions each tick and overriding the schedule when a non-scheduled action has significantly higher utility.",
+        "override_config": {
+            "threshold_delta": 50,
+            "minimum_score": 60,
+            "top_n_candidates": 3,
+            "selection_method": "weighted_random_deterministic",
+            "seed_template": "{npc_id}_{tick}_utility"
+        },
+        "actions": {
+            "eat": {
+                "code": "UA001",
+                "need_driver": "hunger",
+                "formula": "(1.0 - hunger) * 200",
+                "base_weight": 200,
+                "inversion": true,
+                "output": {
+                    "activity": "eating",
+                    "location_type": "restaurant",
+                    "location_filter": [
+                        "restaurant",
+                        "food",
+                        "commercial"
+                    ],
+                    "mood": "hungry",
+                    "reason_template": "hungry (utility: {score}) — went to find food"
+                }
+            },
+            "sleep": {
+                "code": "UA002",
+                "need_driver": "energy",
+                "formula": "(1.0 - energy) * 200",
+                "base_weight": 200,
+                "inversion": true,
+                "output": {
+                    "activity": "resting",
+                    "location_type": "home",
+                    "location_source": "npc.home",
+                    "mood": "exhausted",
+                    "reason_template": "exhausted (utility: {score}) — went home to rest"
+                }
+            },
+            "socialize": {
+                "code": "UA003",
+                "need_driver": "social",
+                "formula": "(1.0 - social) * 150 * sociability",
+                "base_weight": 150,
+                "personality_modifier": "sociability",
+                "inversion": true,
+                "output": {
+                    "activity": "socializing",
+                    "location_type": "social",
+                    "location_filter": [
+                        "bar",
+                        "restaurant",
+                        "commercial",
+                        "entertainment"
+                    ],
+                    "mood": "sociable",
+                    "reason_template": "lonely (utility: {score}) — went to find company"
+                }
+            },
+            "seek_entertainment": {
+                "code": "UA004",
+                "need_driver": "entertainment",
+                "formula": "(1.0 - entertainment) * 120",
+                "base_weight": 120,
+                "inversion": true,
+                "output": {
+                    "activity": "leisure",
+                    "location_type": "entertainment",
+                    "location_filter": [
+                        "entertainment",
+                        "bar",
+                        "park"
+                    ],
+                    "mood": "restless",
+                    "reason_template": "restless (utility: {score}) — went to unwind"
+                }
+            },
+            "flee": {
+                "code": "UA005",
+                "need_driver": "safety",
+                "formula": "100 if safety < 0.2 and aggression < 0.5 else 0",
+                "conditional": true,
+                "conditions": {
+                    "safety_below": 0.2,
+                    "aggression_below": 0.5
+                },
+                "triggered_score": 100,
+                "output": {
+                    "activity": "fleeing",
+                    "location_type": "home",
+                    "location_source": "npc.home",
+                    "mood": "terrified",
+                    "reason_template": "danger sensed (utility: {score}) — fleeing to safety"
+                }
+            },
+            "fight": {
+                "code": "UA006",
+                "need_driver": "safety",
+                "formula": "50 if safety < 0.3 and aggression > 0.6 else 0",
+                "conditional": true,
+                "conditions": {
+                    "safety_below": 0.3,
+                    "aggression_above": 0.6
+                },
+                "triggered_score": 50,
+                "output": {
+                    "activity": "confrontation",
+                    "location_type": null,
+                    "mood": "aggressive",
+                    "reason_template": "cornered (utility: {score}) — standing ground"
+                }
+            },
+            "hide": {
+                "code": "UA007",
+                "need_driver": "safety",
+                "formula": "80 if safety < 0.15 and aggression < 0.4 else 0",
+                "conditional": true,
+                "conditions": {
+                    "safety_below": 0.15,
+                    "aggression_below": 0.4
+                },
+                "triggered_score": 80,
+                "output": {
+                    "activity": "hiding",
+                    "location_type": "home",
+                    "location_source": "npc.home",
+                    "mood": "anxious",
+                    "reason_template": "feeling unsafe (utility: {score}) — staying hidden"
+                }
+            },
+            "trade": {
+                "code": "UA008",
+                "need_driver": null,
+                "formula": "20 if archetype in trade_archetypes else 5",
+                "archetype_gated": true,
+                "preferred_archetypes": [
+                    "trader",
+                    "merchant",
+                    "vendor",
+                    "shopkeeper"
+                ],
+                "preferred_score": 20,
+                "default_score": 5,
+                "output": {
+                    "activity": "trading",
+                    "location_type": "commercial",
+                    "location_filter": [
+                        "commercial",
+                        "shop",
+                        "market"
+                    ],
+                    "mood": "focused",
+                    "reason_template": "trade opportunity (utility: {score}) — doing business"
+                }
+            },
+            "patrol": {
+                "code": "UA009",
+                "need_driver": null,
+                "formula": "25 if archetype in patrol_archetypes else 0",
+                "archetype_gated": true,
+                "preferred_archetypes": [
+                    "guard",
+                    "enforcer",
+                    "military",
+                    "security"
+                ],
+                "preferred_score": 25,
+                "default_score": 0,
+                "output": {
+                    "activity": "patrolling",
+                    "location_type": null,
+                    "mood": "alert",
+                    "reason_template": "duty calls (utility: {score}) — on patrol"
+                }
+            },
+            "scheme": {
+                "code": "UA010",
+                "need_driver": null,
+                "formula": "15 * ambition if ambition > 0.7 else 0",
+                "personality_modifier": "ambition",
+                "personality_threshold": 0.7,
+                "base_weight": 15,
+                "output": {
+                    "activity": "scheming",
+                    "location_type": null,
+                    "mood": "calculating",
+                    "reason_template": "ambitious (utility: {score}) — plotting next move"
+                }
+            },
+            "seek_medical": {
+                "code": "UA011",
+                "need_driver": null,
+                "formula": "40 if critical_needs >= 3 else 0",
+                "conditional": true,
+                "conditions": {
+                    "critical_needs_count_min": 3,
+                    "critical_threshold": 0.2
+                },
+                "triggered_score": 40,
+                "output": {
+                    "activity": "clinic_visit",
+                    "location_type": "medical",
+                    "location_filter": [
+                        "clinic",
+                        "medical",
+                        "hospital"
+                    ],
+                    "mood": "unwell",
+                    "reason_template": "unwell (utility: {score}) — visiting clinic"
+                }
+            },
+            "work": {
+                "code": "UA012",
+                "need_driver": null,
+                "formula": "30 if 8 <= hour <= 18 else 5",
+                "time_gated": true,
+                "business_hours": {
+                    "start": 8,
+                    "end": 18
+                },
+                "peak_score": 30,
+                "off_peak_score": 5,
+                "output": {
+                    "activity": "working",
+                    "location_type": null,
+                    "mood": null,
+                    "reason_template": null
+                }
+            },
+            "wander": {
+                "code": "UA013",
+                "need_driver": null,
+                "formula": "10",
+                "base_score": 10,
+                "output": {
+                    "activity": "wandering",
+                    "location_type": null,
+                    "mood": "contemplative",
+                    "reason_template": "restless (utility: {score}) — wandering the city"
+                }
+            },
+            "visit_friend": {
+                "code": "UA014",
+                "need_driver": "social",
+                "formula": "(1.0 - social) * 80 * sociability",
+                "base_weight": 80,
+                "personality_modifier": "sociability",
+                "inversion": true,
+                "output": {
+                    "activity": "socializing",
+                    "location_type": "social",
+                    "location_filter": [
+                        "bar",
+                        "restaurant",
+                        "commercial",
+                        "entertainment"
+                    ],
+                    "mood": "sociable",
+                    "reason_template": "lonely (utility: {score}) — went to find company"
+                }
+            }
+        },
+        "schedule_activity_map": {
+            "_desc": "Maps schedule slot activities to utility action keys for comparison",
+            "working": "work",
+            "training": "work",
+            "studying": "work",
+            "serving": "work",
+            "patrol_or_sleep": "patrol",
+            "readings": "work",
+            "intelligence_gathering": "work",
+            "mission": "work",
+            "meditation": "work",
+            "socializing": "socialize",
+            "commuting": "wander",
+            "eating": "eat",
+            "sleeping": "sleep",
+            "resting": "sleep",
+            "leisure": "seek_entertainment",
+            "peak_hours": "work",
+            "returning_home": "wander"
+        },
+        "archetype_curves": {
+            "_desc": "Per-archetype scoring modifiers (multiplied onto base action utility)",
+            "guard": {
+                "patrol": 2.0,
+                "fight": 1.5,
+                "flee": 0.3,
+                "trade": 0.2,
+                "scheme": 0.1
+            },
+            "merchant": {
+                "trade": 3.0,
+                "socialize": 1.5,
+                "patrol": 0.0,
+                "fight": 0.3,
+                "scheme": 1.2
+            },
+            "priest": {
+                "scheme": 1.5,
+                "socialize": 1.3,
+                "trade": 0.5,
+                "fight": 0.2,
+                "patrol": 0.3
+            },
+            "civilian": {
+                "flee": 1.5,
+                "hide": 1.5,
+                "fight": 0.2,
+                "patrol": 0.0,
+                "socialize": 1.2,
+                "seek_entertainment": 1.3
+            },
+            "resistance": {
+                "fight": 1.3,
+                "scheme": 1.5,
+                "patrol": 0.8,
+                "hide": 1.2,
+                "flee": 0.5
+            },
+            "medic": {
+                "seek_medical": 2.0,
+                "socialize": 1.3,
+                "fight": 0.1,
+                "patrol": 0.0,
+                "trade": 0.8
+            }
+        },
+        "personality_derivation": {
+            "_desc": "How to derive Utility AI traits from OCEAN Big Five when personality_vector is absent",
+            "aggression": {
+                "source": "1.0 - agreeableness",
+                "fallback_key": "A",
+                "invert": true
+            },
+            "sociability": {
+                "source": "extraversion",
+                "fallback_key": "E",
+                "invert": false
+            },
+            "ambition": {
+                "source": "conscientiousness",
+                "fallback_key": "C",
+                "invert": false
+            }
+        },
+        "excluded_from_override": [
+            "sleeping",
+            "resting"
+        ]
+    }
+}

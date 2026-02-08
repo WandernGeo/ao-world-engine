@@ -23,7 +23,7 @@ except ImportError:
     sys.exit(1)
 
 # Paths
-WALLET_PATH = "/Users/ram/Documents/wandern/wandern-back/arweave-wallet.json"
+WALLET_PATH = "$ARWEAVE_WALLET_PATH"
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # Files to deploy (all under 100KB)

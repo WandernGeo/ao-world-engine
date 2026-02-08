@@ -10,7 +10,7 @@ import arweave
 import tempfile
 from datetime import datetime
 
-WALLET_PATH = "/Users/ram/Documents/wandern/wandern-back/arweave-wallet.json"
+WALLET_PATH = "$ARWEAVE_WALLET_PATH"
 CHUNKS_DIR = "/Users/ram/Documents/wandern/ao-world-engine/data/codec_chunks"
 RESULTS_FILE = "/Users/ram/Documents/wandern/ao-world-engine/data/world_codec_arweave_results.json"
 

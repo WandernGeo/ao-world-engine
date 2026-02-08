@@ -13,7 +13,7 @@ import os
 from datetime import datetime
 
 # Cloud Function URL
-UPLOADER_URL = "https://us-central1-wandern-project-startup.cloudfunctions.net/wandern-arweave-uploader"
+UPLOADER_URL = "$ARWEAVE_UPLOADER_URL"
 
 # Import the corrected NPC data
 import sys

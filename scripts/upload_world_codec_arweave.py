@@ -11,7 +11,7 @@ Usage:
     python3 scripts/upload_world_codec_arweave.py
 
 Requires:
-    - Arweave wallet at wandern-back/arweave-wallet.json
+    - Arweave wallet at $ARWEAVE_WALLET_PATH
     - arweave-uploader service running or use bundlr/turbo
 """
 import os
@@ -23,7 +23,7 @@ import requests
 from datetime import datetime
 
 # Configuration
-WALLET_PATH = os.path.join(os.path.dirname(__file__), "../../wandern-back/arweave-wallet.json")
+WALLET_PATH = os.path.join(os.path.dirname(__file__), "../../$ARWEAVE_WALLET_PATH")
 UPLOADER_URL = "https://arweave-uploader-zdku5kri5a-uc.a.run.app/upload"
 CHUNKS_DIR = os.path.join(os.path.dirname(__file__), "../data/codec_chunks")
 TRANSACTION_LOG = os.path.join(os.path.dirname(__file__), "../docs/ARWEAVE_TRANSACTION_LOG.md")

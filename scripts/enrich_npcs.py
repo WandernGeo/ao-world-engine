@@ -33,7 +33,7 @@ INPUT_DIR = DATA_DIR / "generated_npcs"
 OUTPUT_DIR = DATA_DIR / "enriched_npcs"
 
 # Vertex AI config
-PROJECT_ID = "wandern-project-startup"
+PROJECT_ID = "${GCP_PROJECT:-your-gcp-project}"
 LOCATION = "us-central1"
 MODEL_ID = "gemini-2.0-flash"
 

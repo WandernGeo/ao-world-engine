@@ -203,26 +203,35 @@ def should_do_today(activity: str, frequency: str, npc_id: str, day: int) -> boo
 # NPCs have needs that decay over time and get satisfied by activities
 
 NEEDS = {
-    "hunger":  {"decay_rate": 0.02,  "critical": 0.2},
-    "sleep":   {"decay_rate": 0.015, "critical": 0.15},
-    "social":  {"decay_rate": 0.01,  "critical": 0.25},
-    "hygiene": {"decay_rate": 0.008, "critical": 0.3},
-    "safety":  {"decay_rate": 0.005, "critical": 0.1},
-    "income":  {"decay_rate": 0.01,  "critical": 0.2},
+    "hunger":        {"decay_rate": 0.02,  "critical": 0.2},
+    "sleep":         {"decay_rate": 0.015, "critical": 0.15},
+    "energy":        {"decay_rate": 0.025, "critical": 0.2},
+    "social":        {"decay_rate": 0.01,  "critical": 0.25},
+    "hygiene":       {"decay_rate": 0.008, "critical": 0.3},
+    "safety":        {"decay_rate": 0.005, "critical": 0.1},
+    "income":        {"decay_rate": 0.01,  "critical": 0.2},
+    "entertainment": {"decay_rate": 0.012, "critical": 0.25},  # Boredom builds over time
 }
 
 # Activities that satisfy needs
 ACTIVITY_SATISFIES = {
-    "eating": {"hunger": 0.8},
-    "sleeping": {"sleep": 0.1, "hygiene": -0.02},  # Sleep restores slowly
-    "waking": {"sleep": 0.05},
-    "socializing": {"social": 0.3},
-    "dancing": {"social": 0.2},
-    "drinking": {"social": 0.15},
-    "working": {"income": 0.1, "social": 0.05},
-    "patrol": {"income": 0.1, "safety": 0.1},
-    "bathing": {"hygiene": 0.6},
-    "leisure": {"social": 0.1},
+    "eating": {"hunger": 0.8, "energy": 0.1},
+    "sleeping": {"sleep": 0.1, "energy": 0.15, "hygiene": -0.02},  # Sleep restores energy
+    "waking": {"sleep": 0.05, "energy": 0.05},
+    "socializing": {"social": 0.3, "entertainment": 0.15},
+    "dancing": {"social": 0.2, "energy": -0.1, "entertainment": 0.3},
+    "drinking": {"social": 0.15, "energy": -0.05, "entertainment": 0.1},
+    "working": {"income": 0.1, "social": 0.05, "energy": -0.08},  # Working drains energy
+    "patrol": {"income": 0.1, "safety": 0.1, "energy": -0.1},  # Patrol is tiring
+    "training": {"energy": -0.12, "safety": 0.05},  # Training is exhausting
+    "bathing": {"hygiene": 0.6, "energy": 0.05},
+    "leisure": {"social": 0.1, "energy": 0.08, "entertainment": 0.4},  # Primary entertainment
+    "meditation": {"energy": 0.1},  # Meditation restores energy
+    "resting": {"energy": 0.2, "sleep": 0.05},  # Explicit resting
+    "gambling": {"entertainment": 0.3, "income": -0.05},
+    "bowling": {"entertainment": 0.35, "social": 0.15, "energy": -0.05},
+    "reading": {"entertainment": 0.2, "energy": 0.05},
+    "fishing": {"entertainment": 0.25, "energy": 0.05},
 }
 
 def calculate_needs(npc: dict, tick: int) -> dict:
@@ -234,6 +243,7 @@ def calculate_needs(npc: dict, tick: int) -> dict:
     base_needs = npc.get("needs_state", {
         "hunger": 0.8,
         "sleep": 0.8,
+        "energy": 0.85,
         "social": 0.7,
         "hygiene": 0.9,
         "safety": 0.7,
@@ -859,6 +869,182 @@ def get_npc_state(npc: dict, tick: int) -> dict:
     # Calculate needs state (deterministic decay based on tick)
     needs_state = calculate_needs(npc, tick)
     
+    # =========================================================================
+    # UTILITY AI — SCHEDULE OVERRIDES (Emergent Behavior)
+    # =========================================================================
+    # Config loaded from world_codec_26_utility_ai.json; scoring logic in Python.
+    # All decisions are seeded-random for deterministic Arweave replay.
+    _uai_codec = load_json("world_codec_26_utility_ai.json") or {}
+    _uai_cfg = (_uai_codec.get("utility_ai") or {}).get("override_config", {})
+    _uai_threshold = _uai_cfg.get("threshold_delta", 50)
+    _uai_min_score = _uai_cfg.get("minimum_score", 60)
+    _uai_top_n = _uai_cfg.get("top_n_candidates", 3)
+    _uai_excluded = (_uai_codec.get("utility_ai") or {}).get("excluded_from_override", ["sleeping", "resting"])
+    override_reason = None
+    hour = (tick % 240) // 10  # 0-23 hour of day (matches get_tick_state)
+    
+    # Don't override excluded activities (e.g. sleeping)
+    if activity not in _uai_excluded:
+        energy_val = needs_state.get("energy", 0.8)
+        hunger_val = needs_state.get("hunger", 0.8)
+        social_val = needs_state.get("social", 0.8)
+        safety_val = needs_state.get("safety", 0.8)
+        entertainment_val = needs_state.get("entertainment", 0.8)
+        
+        # Personality: read from personality_vector (generated NPCs) or personality (founding)
+        # Falls back to OCEAN derivation if neither has the field
+        pv = npc.get("personality_vector", {})
+        personality = npc.get("personality", {})
+        big_five = personality.get("big_five", {})
+        
+        aggression = pv.get("aggression", personality.get("aggression",
+            1.0 - big_five.get("A", personality.get("agreeableness", 0.5))))  # Low agreeableness = high aggression
+        sociability = pv.get("sociability", personality.get("sociability",
+            big_five.get("E", personality.get("extraversion", 0.5))))  # Extraversion = sociability
+        ambition = personality.get("ambition",
+            big_five.get("C", personality.get("conscientiousness", 0.5)))  # Conscientiousness ≈ ambition
+        
+        # Score all possible actions (utility = how badly NPC wants to do this)
+        # Higher score = stronger urge. We use the 0-1 needs (inverted: low need = high urgency)
+        utility_scores = {
+            "eat":              max(0, (1.0 - hunger_val) * 200),   # 0→0, 0.1→180, 0.5→100
+            "sleep":            max(0, (1.0 - energy_val) * 200),
+            "socialize":        max(0, (1.0 - social_val) * 150 * sociability),
+            "seek_entertainment": max(0, (1.0 - entertainment_val) * 120),
+            "flee":             100 if safety_val < 0.2 and aggression < 0.5 else 0,
+            "fight":            50 if safety_val < 0.3 and aggression > 0.6 else 0,
+            "hide":             80 if safety_val < 0.15 and aggression < 0.4 else 0,
+            "trade":            20 if npc.get("archetype", "") in ["trader", "merchant", "vendor", "shopkeeper"] else 5,
+            "patrol":           25 if npc.get("archetype", "") in ["guard", "enforcer", "military", "security"] else 0,
+            "scheme":           15 * ambition if ambition > 0.7 else 0,
+            "seek_medical":     40 if sum(1 for v in needs_state.values() if v < 0.2) >= 3 else 0,
+            "work":             30 if 8 <= hour <= 18 else 5,  # Business hours preference
+            "wander":           10,  # Baseline—always slightly attractive
+            "visit_friend":     max(0, (1.0 - social_val) * 80 * sociability),
+        }
+        
+        # Map schedule activity → utility key (loaded from codec)
+        _uai_schedule_map = (_uai_codec.get("utility_ai") or {}).get("schedule_activity_map", {})
+        # Remove _desc key if present
+        schedule_activity_map = {k: v for k, v in _uai_schedule_map.items() if k != "_desc"} if _uai_schedule_map else {
+            "working": "work", "training": "work", "studying": "work",
+            "serving": "work", "patrol_or_sleep": "patrol", "readings": "work",
+            "intelligence_gathering": "work", "mission": "work", "meditation": "work",
+            "socializing": "socialize", "commuting": "wander", "eating": "eat",
+            "sleeping": "sleep", "resting": "sleep", "leisure": "seek_entertainment",
+            "peak_hours": "work", "returning_home": "wander",
+        }
+        scheduled_utility_key = schedule_activity_map.get(activity, "work")
+        scheduled_score = utility_scores.get(scheduled_utility_key, 20)
+        
+        # Find top-3 actions by utility (deterministic weighted selection)
+        sorted_actions = sorted(utility_scores.items(), key=lambda x: x[1], reverse=True)
+        top_n = sorted_actions[:_uai_top_n]
+        total_utility = sum(s for _, s in top_n)
+        
+        best_action = top_n[0][0]
+        best_score = top_n[0][1]
+        
+        # Override only if best action scores SIGNIFICANTLY higher than schedule
+        # (threshold + min score loaded from codec)
+        if best_score > scheduled_score + _uai_threshold and best_score > _uai_min_score:
+            # Weighted random from top N for variety (deterministic)
+            if total_utility > 0:
+                roll = int(hashlib.md5(f"{npc.get('id', '')}_{tick}_utility".encode()).hexdigest(), 16) % int(total_utility + 1)
+                cumulative = 0
+                chosen_action = best_action
+                for act, score in top_n:
+                    cumulative += score
+                    if roll <= cumulative:
+                        chosen_action = act
+                        break
+            else:
+                chosen_action = best_action
+            
+            # Map chosen action to activity/location/mood/reason
+            buildings = get_buildings()
+            
+            if chosen_action == "eat":
+                activity = "eating"
+                food_buildings = [b for b in buildings if b.get("type") in ["restaurant", "food", "commercial"]]
+                location = seeded_choice([b["id"] for b in food_buildings], f"{npc['id']}_{tick}_food") if food_buildings else npc.get("home", "B001")
+                location_type = "restaurant"
+                mood = "hungry"
+                override_reason = f"hungry (utility: {int(best_score)}) — went to find food"
+            
+            elif chosen_action == "sleep":
+                activity = "resting"
+                location = npc.get("home", "B001")
+                location_type = "home"
+                mood = "exhausted"
+                override_reason = f"exhausted (utility: {int(best_score)}) — went home to rest"
+            
+            elif chosen_action == "socialize" or chosen_action == "visit_friend":
+                activity = "socializing"
+                social_buildings = [b for b in buildings if b.get("type") in ["bar", "restaurant", "commercial", "entertainment"]]
+                location = seeded_choice([b["id"] for b in social_buildings], f"{npc['id']}_{tick}_social") if social_buildings else npc.get("home", "B001")
+                location_type = "social"
+                mood = "sociable"
+                override_reason = f"lonely (utility: {int(best_score)}) — went to find company"
+            
+            elif chosen_action == "seek_entertainment":
+                activity = "leisure"
+                ent_buildings = [b for b in buildings if b.get("type") in ["entertainment", "bar", "park"]]
+                location = seeded_choice([b["id"] for b in ent_buildings], f"{npc['id']}_{tick}_ent") if ent_buildings else npc.get("home", "B001")
+                location_type = "entertainment"
+                mood = "restless"
+                override_reason = f"restless (utility: {int(best_score)}) — went to unwind"
+            
+            elif chosen_action == "flee":
+                activity = "fleeing"
+                location = npc.get("home", "B001")
+                location_type = "home"
+                mood = "terrified"
+                override_reason = f"danger sensed (utility: {int(best_score)}) — fleeing to safety"
+            
+            elif chosen_action == "fight":
+                activity = "confrontation"
+                mood = "aggressive"
+                override_reason = f"cornered (utility: {int(best_score)}) — standing ground"
+            
+            elif chosen_action == "hide":
+                activity = "hiding"
+                location = npc.get("home", "B001")
+                location_type = "home"
+                mood = "anxious"
+                override_reason = f"feeling unsafe (utility: {int(best_score)}) — staying hidden"
+            
+            elif chosen_action == "seek_medical":
+                activity = "clinic_visit"
+                clinics = [b for b in buildings if b.get("type") in ["clinic", "medical", "hospital"]]
+                location = seeded_choice([b["id"] for b in clinics], f"{npc['id']}_{tick}_clinic") if clinics else npc.get("home", "B001")
+                location_type = "medical"
+                mood = "unwell"
+                override_reason = f"unwell (utility: {int(best_score)}) — visiting clinic"
+            
+            elif chosen_action == "scheme":
+                activity = "scheming"
+                mood = "calculating"
+                override_reason = f"ambitious (utility: {int(best_score)}) — plotting next move"
+            
+            elif chosen_action == "patrol":
+                activity = "patrolling"
+                mood = "alert"
+                override_reason = f"duty calls (utility: {int(best_score)}) — on patrol"
+            
+            elif chosen_action == "trade":
+                activity = "trading"
+                shops = [b for b in buildings if b.get("type") in ["commercial", "shop", "market"]]
+                location = seeded_choice([b["id"] for b in shops], f"{npc['id']}_{tick}_trade") if shops else npc.get("home", "B001")
+                location_type = "commercial"
+                mood = "focused"
+                override_reason = f"trade opportunity (utility: {int(best_score)}) — doing business"
+            
+            elif chosen_action == "wander":
+                activity = "wandering"
+                mood = "contemplative"
+                override_reason = f"restless (utility: {int(best_score)}) — wandering the city"
+    
     return {
         "npc_id": npc["id"],
         "name": npc["name"],
@@ -875,6 +1061,7 @@ def get_npc_state(npc: dict, tick: int) -> dict:
         "family": npc.get("family"),
         "appearance": npc.get("appearance"),
         "needs": needs_state,
+        "schedule_override": override_reason,  # None if following normal schedule
     }
 
 
@@ -1971,6 +2158,61 @@ def generate_scene():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# =============================================================================
+# CHAT PROXY — Forward to ao-npc-chat Cloud Run service
+# =============================================================================
+# The frontend calls THIS service for /api/npc/chat, but the actual chat
+# handler lives in npc_chat.py on the ao-npc-chat service. Proxy the requests.
+
+CHAT_SERVICE_URL = os.environ.get(
+    "CHAT_SERVICE_URL",
+    "https://ao-npc-chat-1071951656531.us-central1.run.app"
+)
+
+@app.route("/api/npc/chat", methods=["POST", "OPTIONS"])
+def proxy_npc_chat():
+    """Proxy chat requests to the ao-npc-chat service."""
+    if request.method == "OPTIONS":
+        return "", 200
+    try:
+        resp = requests.post(
+            f"{CHAT_SERVICE_URL}/api/npc/chat",
+            json=request.get_json(silent=True),
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        return (resp.text, resp.status_code, {"Content-Type": "application/json"})
+    except Exception as e:
+        return jsonify({"error": f"Chat service unavailable: {e}"}), 503
+
+@app.route("/api/npc/state/<npc_id>/<int:tick>", methods=["GET"])
+def proxy_npc_state_chat(npc_id, tick):
+    """Proxy NPC state requests (chat-style URL) to ao-npc-chat."""
+    try:
+        resp = requests.get(
+            f"{CHAT_SERVICE_URL}/api/npc/state/{npc_id}/{tick}",
+            timeout=10
+        )
+        return (resp.text, resp.status_code, {"Content-Type": "application/json"})
+    except Exception as e:
+        return jsonify({"error": f"Chat service unavailable: {e}"}), 503
+
+@app.route("/api/health", methods=["GET"])
+def proxy_health():
+    """Health check — also proxies to chat service health."""
+    try:
+        resp = requests.get(f"{CHAT_SERVICE_URL}/api/health", timeout=5)
+        remote = resp.json() if resp.ok else {}
+    except Exception:
+        remote = {"chat_service": "unreachable"}
+    return jsonify({
+        "status": "ok",
+        "simulation_api": True,
+        "chat_proxy": remote,
+        "total_npcs": len(get_npcs()),
+    })
 
 
 # =============================================================================

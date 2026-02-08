@@ -423,5 +423,5 @@ Query at: https://arweave.net/graphql
 
 ## Wallet Info
 
-- **Address**: `1sq5dtoU38758TrCw-67-_LHbdBI3thFaZX97I0Rvb8`
-- **Keyfile**: `wandern-back/arweave-wallet.json`
+- **Address**: `REDACTED_WALLET_ADDRESS`
+- **Keyfile**: `$ARWEAVE_WALLET_PATH`

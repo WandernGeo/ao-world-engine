@@ -405,7 +405,7 @@ def narrate_with_llm(chain_log: List[Dict]) -> str:
     try:
         import vertexai
         from vertexai.generative_models import GenerativeModel
-        vertexai.init(project="wandern-project-startup", location="us-central1")
+        vertexai.init(project="${GCP_PROJECT:-your-gcp-project}", location="us-central1")
         model = GenerativeModel("gemini-2.0-flash")
         
         prompt = f"""
