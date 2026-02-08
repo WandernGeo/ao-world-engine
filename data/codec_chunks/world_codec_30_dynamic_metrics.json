@@ -1,0 +1,404 @@
+{
+    "_chunk": {
+        "id": "chunk_30_dynamic_metrics",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "simulation",
+        "prev_chunk": "chunk_29_commuting",
+        "next_chunk": "chunk_31_crime_justice",
+        "description": "Per-district dynamic metrics (happiness, productivity, stability) that evolve each tick. 8-factor weighted happiness, morale/stress system, and emotional thought memory."
+    },
+    "district_metrics": {
+        "_desc": "Aggregate metrics computed per district per tick. Each factor tracks a [0.0, 1.0] value with weight for final happiness score. Consumed by agent_needs.lua mood calculation and economy.lua productivity.",
+        "happiness_factors": {
+            "food_access": {
+                "weight": 0.15,
+                "decay_per_tick": 0.001,
+                "recovery_per_satisfaction": 0.05,
+                "satisfaction_check": "percentage of NPCs with hunger need > 0.5",
+                "location_types": [
+                    "restaurant",
+                    "food",
+                    "commercial"
+                ],
+                "_note": "Food and shopping is one of 8 happiness factors. Demand picked randomly per citizen."
+            },
+            "safety": {
+                "weight": 0.20,
+                "decay_per_tick": 0.002,
+                "recovery_per_satisfaction": 0.03,
+                "satisfaction_check": "1.0 - crime_rate - unsolved_crime_count * 0.01",
+                "_note": "Unsolved crimes increase area crime rate, reducing safety. Crime nearby reduces happiness AND health."
+            },
+            "culture": {
+                "weight": 0.08,
+                "decay_per_tick": 0.0005,
+                "recovery_via": "entertainment_venue",
+                "recovery_amount": 0.02,
+                "_note": "Culture demand frequency slightly decreases when unavailable but never goes away."
+            },
+            "health": {
+                "weight": 0.15,
+                "decay_per_tick": 0.001,
+                "recovery_via": "medical_proximity",
+                "recovery_amount": 0.03,
+                "pollution_modifier": "health -= pollution_level * 0.05",
+                "_note": "Pollution and radiation affect health → happiness. Health < 33 → severe wounds, reduced athletics."
+            },
+            "social": {
+                "weight": 0.10,
+                "decay_per_tick": 0.001,
+                "recovery_via": "social_interaction",
+                "recovery_amount": 0.04,
+                "_note": "Overcrowding and no personal space cause stress. Social interactions at tavern → positive thought."
+            },
+            "environment": {
+                "weight": 0.10,
+                "source_formula": "air_quality * (1.0 - pollution_level) * park_access_bonus",
+                "park_access_bonus": 1.15,
+                "_note": "Average environment decor of last cycle gives -1 to +12 morale. Maps to environment quality."
+            },
+            "economic": {
+                "weight": 0.12,
+                "source_formula": "employment_rate * wage_satisfaction * (1.0 - inflation_impact)",
+                "wage_satisfaction": "1.0 if wage >= district_median else wage / district_median",
+                "_note": "Revenue primarily from trade. High unemployment → high crime."
+            },
+            "governance": {
+                "weight": 0.10,
+                "source_formula": "service_levels_avg * (1.0 - corruption_level)",
+                "service_levels_avg": "mean of all city service efficiencies for this district",
+                "_note": "Budget efficiency maps service funding to output (50% budget = 25% efficiency)."
+            }
+        },
+        "aggregate_happiness": {
+            "formula": "sum(factor.value * factor.weight) for all factors → clamped [0.0, 1.0]",
+            "thresholds": {
+                "ecstatic": {
+                    "range": [
+                        0.85,
+                        1.0
+                    ],
+                    "effects": {
+                        "productivity_bonus": 0.15,
+                        "crime_reduction": 0.5
+                    }
+                },
+                "happy": {
+                    "range": [
+                        0.65,
+                        0.85
+                    ],
+                    "effects": {
+                        "productivity_bonus": 0.05
+                    }
+                },
+                "content": {
+                    "range": [
+                        0.45,
+                        0.65
+                    ],
+                    "effects": {}
+                },
+                "unhappy": {
+                    "range": [
+                        0.25,
+                        0.45
+                    ],
+                    "effects": {
+                        "productivity_penalty": -0.10,
+                        "crime_increase": 0.3
+                    }
+                },
+                "miserable": {
+                    "range": [
+                        0.0,
+                        0.25
+                    ],
+                    "effects": {
+                        "productivity_penalty": -0.25,
+                        "crime_increase": 0.8,
+                        "escape_risk": true
+                    }
+                }
+            }
+        },
+        "productivity": {
+            "floor": 0.30,
+            "formula": "max(0.30, happiness * skill_match * health_factor)",
+            "skill_match": {
+                "perfect": 1.2,
+                "adequate": 1.0,
+                "overqualified": 0.9,
+                "underqualified": 0.6
+            },
+            "_note": "Minimum productivity = 30%. Happiness has largest impact. Health/satiety/loyalty also factor in."
+        }
+    },
+    "npc_escape": {
+        "_desc": "Critically unhappy citizens may flee the city. High loyalty + satiety can prevent escapes.",
+        "check_frequency_ticks": 240,
+        "conditions": {
+            "happiness_below": 0.15,
+            "loyalty_below": 0.30
+        },
+        "escape_probability": 0.05,
+        "prevention": {
+            "high_satiety": {
+                "threshold": 0.8,
+                "escape_reduction": 0.5
+            },
+            "high_loyalty": {
+                "threshold": 0.7,
+                "escape_reduction": 0.8
+            }
+        },
+        "on_escape": {
+            "action": "NPC removed from district, population_count decremented",
+            "event_type": "npc_escaped",
+            "nearby_npcs_mood_impact": -0.05
+        }
+    },
+    "thought_system": {
+        "_desc": "Emotional memory system. NPCs accumulate positive/negative thoughts from events, affecting mood beyond raw need satisfaction.",
+        "categories": {
+            "accommodation": {
+                "positive_triggers": [
+                    "quality_home",
+                    "private_bedroom"
+                ],
+                "negative_triggers": [
+                    "no_bed",
+                    "overcrowded_home",
+                    "noise_disturbance"
+                ],
+                "mood_range": [
+                    -0.10,
+                    0.08
+                ]
+            },
+            "nourishment": {
+                "positive_triggers": [
+                    "preferred_food",
+                    "good_meal",
+                    "variety"
+                ],
+                "negative_triggers": [
+                    "same_food_streak",
+                    "hunger",
+                    "no_alcohol"
+                ],
+                "mood_range": [
+                    -0.12,
+                    0.06
+                ]
+            },
+            "amenity": {
+                "positive_triggers": [
+                    "fine_furniture",
+                    "waterfall_mist",
+                    "clean_bath"
+                ],
+                "negative_triggers": [
+                    "vermin",
+                    "miasma",
+                    "no_table"
+                ],
+                "mood_range": [
+                    -0.08,
+                    0.10
+                ]
+            },
+            "relation": {
+                "positive_triggers": [
+                    "made_friend",
+                    "social_event",
+                    "reunion"
+                ],
+                "negative_triggers": [
+                    "lost_friend",
+                    "argument",
+                    "betrayal"
+                ],
+                "mood_range": [
+                    -0.15,
+                    0.10
+                ]
+            },
+            "job_satisfaction": {
+                "positive_triggers": [
+                    "completed_project",
+                    "quality_work",
+                    "promotion"
+                ],
+                "negative_triggers": [
+                    "tedious_work",
+                    "overqualified",
+                    "no_purpose"
+                ],
+                "mood_range": [
+                    -0.08,
+                    0.12
+                ]
+            },
+            "clothing": {
+                "positive_triggers": [
+                    "new_clothes",
+                    "quality_outfit"
+                ],
+                "negative_triggers": [
+                    "worn_clothes",
+                    "no_clothing"
+                ],
+                "mood_range": [
+                    -0.06,
+                    0.04
+                ]
+            },
+            "justice": {
+                "positive_triggers": [
+                    "criminal_caught",
+                    "fair_trial"
+                ],
+                "negative_triggers": [
+                    "witnessed_crime",
+                    "unjust_punishment",
+                    "victim_of_crime"
+                ],
+                "mood_range": [
+                    -0.12,
+                    0.05
+                ]
+            },
+            "environment": {
+                "positive_triggers": [
+                    "nice_weather",
+                    "park_visit",
+                    "clean_air"
+                ],
+                "negative_triggers": [
+                    "pollution",
+                    "acid_rain",
+                    "smog"
+                ],
+                "mood_range": [
+                    -0.08,
+                    0.06
+                ]
+            }
+        },
+        "thought_mechanics": {
+            "duration_ticks": 240,
+            "max_active_thoughts": 5,
+            "thought_decay": "linear: impact reduces to 0 over duration_ticks",
+            "selection_when_full": "replace weakest thought if new thought has higher |impact|",
+            "seed_template": "{npc_id}_{tick}_thought"
+        },
+        "cascade": {
+            "_desc": "Tantrum cascade: one NPC's negative event affects nearby NPCs",
+            "trigger_threshold": -0.10,
+            "cascade_radius": "same_location",
+            "cascade_impact_ratio": 0.30,
+            "cascade_thought_category": "relation",
+            "_note": "Witnessing a fight or breakdown gives nearby NPCs a 'witnessed_disturbance' thought at 30% of original impact."
+        }
+    },
+    "morale_system": {
+        "_desc": "Higher-skilled NPCs need better living conditions to stay productive. Morale surplus prevents stress, deficit causes it.",
+        "morale_sources": {
+            "food_quality": {
+                "range": [
+                    -1,
+                    8
+                ],
+                "source": "meal_quality_tier"
+            },
+            "environment": {
+                "range": [
+                    -1,
+                    6
+                ],
+                "source": "average_environment_quality"
+            },
+            "housing": {
+                "range": [
+                    -2,
+                    4
+                ],
+                "source": "accommodation_tier"
+            },
+            "downtime": {
+                "range": [
+                    0,
+                    4
+                ],
+                "source": "downtime_blocks - 1 (capped at 4)"
+            },
+            "recreation": {
+                "range": [
+                    0,
+                    3
+                ],
+                "source": "recreation_buildings_used"
+            },
+            "job_interest": {
+                "range": [
+                    0,
+                    2
+                ],
+                "source": "1 per skill matching interest"
+            },
+            "social": {
+                "range": [
+                    -1,
+                    2
+                ],
+                "source": "social_interactions_today"
+            }
+        },
+        "morale_requirement": {
+            "formula": "sum of morale_cost for each trained skill",
+            "per_skill_cost": {
+                "basic": 1,
+                "advanced": 2,
+                "expert": 3,
+                "master": 5
+            }
+        },
+        "stress_rate_table": {
+            "_desc": "Stress change per cycle based on morale vs requirement delta",
+            "delta_plus_3_or_more": -0.20,
+            "delta_plus_2": -0.10,
+            "delta_plus_1": -0.05,
+            "delta_0": -0.02,
+            "delta_minus_1": 0.03,
+            "delta_minus_2": 0.05,
+            "delta_minus_3_or_less": 0.08
+        },
+        "stress_breakdown": {
+            "threshold": 1.0,
+            "recovery_to": 0.60,
+            "responses": [
+                "destructive",
+                "binge_eating",
+                "ugly_crying",
+                "vomiting"
+            ],
+            "response_selection": "hash(npc_id + 'stress_response') % 4",
+            "duration_ticks": 20,
+            "_note": "At 100% stress, NPC is unresponsive until stress drops to 60%. Cannot be overridden."
+        },
+        "overjoyed": {
+            "threshold_excess": 8,
+            "chance_formula": "0.02 + (excess_morale - 8) * 0.0015",
+            "max_chance": 0.05,
+            "check_on": "waking_block",
+            "effects": [
+                "productivity_boost_0.3",
+                "inspire_nearby_npc",
+                "create_quality_item"
+            ],
+            "_note": "2% chance at +8 excess, scaling linearly to 5% at +20 excess morale."
+        }
+    }
+}

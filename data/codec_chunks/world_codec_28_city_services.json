@@ -1,0 +1,648 @@
+{
+    "_chunk": {
+        "id": "chunk_28_city_services",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "infrastructure",
+        "prev_chunk": "chunk_27_city_finance",
+        "next_chunk": null,
+        "_inspiration": "Municipal services simulation with budget-efficiency curves — adapted to cyberpunk-noir setting"
+    },
+    "city_services": {
+        "_desc": "All municipal services in RE:ECHO City — each affects citizen happiness, company efficiency, and district land value",
+        "budget_system": {
+            "_desc": "Service budgets are set as % of baseline. Budget affects efficiency non-linearly.",
+            "min_budget_pct": 50,
+            "max_budget_pct": 150,
+            "efficiency_curve": {
+                "50": 0.25,
+                "75": 0.60,
+                "100": 1.00,
+                "125": 1.15,
+                "150": 1.25
+            },
+            "_note": "At 50% budget, services run at only 25% efficiency. Megacorps can lobby to defund public services."
+        },
+        "service_fees": {
+            "_desc": "Fees charged to citizens/companies for service usage. Adjustable per district.",
+            "fee_effects_per_pct_below_100": {
+                "electricity_consumption": "+0.2%",
+                "company_efficiency": "+0.2%",
+                "citizen_happiness": "+0.05"
+            },
+            "fee_effects_per_pct_above_100": {
+                "electricity_consumption": "-0.4%",
+                "company_efficiency": "-0.4%",
+                "citizen_happiness": "-0.1"
+            },
+            "fee_services": [
+                "roads_parking",
+                "electricity",
+                "water_sewage",
+                "healthcare",
+                "garbage",
+                "education",
+                "transport"
+            ]
+        },
+        "electricity": {
+            "_desc": "Power grid — most buildings require electricity. Citizens will leave if prolonged outages occur.",
+            "effects": {
+                "no_power": {
+                    "business_efficiency": -0.85,
+                    "citizen_happiness": -0.4,
+                    "service_effectiveness": -0.7,
+                    "crime_modifier": 1.3,
+                    "_note": "Businesses lose almost all efficiency. Citizens won't tolerate it long."
+                }
+            },
+            "power_sources": {
+                "wind_turbine": {
+                    "type": "renewable",
+                    "output_mw": 8,
+                    "pollution": 0,
+                    "cost": "high",
+                    "reliability": "weather_dependent"
+                },
+                "solar_array": {
+                    "type": "renewable",
+                    "output_mw": 15,
+                    "pollution": 0,
+                    "cost": "high",
+                    "reliability": "daytime_only"
+                },
+                "geothermal_plant": {
+                    "type": "renewable",
+                    "output_mw": 40,
+                    "pollution": 0.05,
+                    "cost": "very_high",
+                    "reliability": "constant"
+                },
+                "coal_plant": {
+                    "type": "fossil",
+                    "output_mw": 100,
+                    "pollution": 0.6,
+                    "cost": "low",
+                    "_noir": "Megacorp-owned. Cheap but the districts downwind pay the price in lung cancer."
+                },
+                "gas_plant": {
+                    "type": "fossil",
+                    "output_mw": 80,
+                    "pollution": 0.35,
+                    "cost": "medium"
+                },
+                "nuclear_plant": {
+                    "type": "nuclear",
+                    "output_mw": 500,
+                    "pollution": 0.02,
+                    "cost": "extreme",
+                    "risk": "meltdown_low",
+                    "_noir": "The NexGen reactor. Powers half the city. Nobody talks about what happens if it fails."
+                },
+                "fusion_reactor": {
+                    "type": "experimental",
+                    "output_mw": 1200,
+                    "pollution": 0,
+                    "cost": "astronomical",
+                    "_noir": "ECHO Coalition's crown jewel. Classified location. Rumored to draw power from the layers."
+                }
+            },
+            "distribution": {
+                "_desc": "Power distributed through cables under roads. Transformer stations step down for local grid.",
+                "grid_segments": [
+                    "upper_grid",
+                    "lower_grid",
+                    "industrial_grid",
+                    "emergency_grid"
+                ],
+                "blackout_cascade_risk": 0.15,
+                "_noir": "The upper districts get priority power. The warrens? They get what's left."
+            },
+            "trade": {
+                "can_import": true,
+                "can_export": true,
+                "_desc": "Cities can buy/sell electricity through power line outside connections"
+            }
+        },
+        "water_sewage": {
+            "_desc": "Clean water and sewage treatment — essential for citizen health and business function.",
+            "water": {
+                "sources": {
+                    "surface_pump": {
+                        "capacity_m3": 5000,
+                        "quality_affected_by": "pollution",
+                        "_desc": "Pumps from rivers/lakes. Polluted water = sick citizens."
+                    },
+                    "groundwater_pump": {
+                        "capacity_m3": 3000,
+                        "quality_affected_by": "ground_pollution",
+                        "refresh_rate": "limited",
+                        "_desc": "Deep wells. Susceptible to industrial contamination."
+                    },
+                    "desalination_plant": {
+                        "capacity_m3": 8000,
+                        "quality": "high",
+                        "cost": "very_high",
+                        "_noir": "ECHO-controlled. They meter every drop."
+                    }
+                },
+                "effects_no_water": {
+                    "citizen_happiness": -0.5,
+                    "company_efficiency": -0.6,
+                    "service_effectiveness": -0.4,
+                    "disease_risk": 0.3
+                }
+            },
+            "sewage": {
+                "treatment_options": {
+                    "sewage_outlet": {
+                        "capacity_m3": 8000,
+                        "pollution": 0.8,
+                        "_desc": "Dumps raw sewage into water. Cheap but contaminates downstream water sources."
+                    },
+                    "treatment_plant": {
+                        "capacity_m3": 5000,
+                        "pollution": 0.1,
+                        "_desc": "Purifies water, recycles back into supply. Solid waste goes to garbage management."
+                    },
+                    "nexgen_recycler": {
+                        "capacity_m3": 12000,
+                        "pollution": 0.02,
+                        "_noir": "Extracts trace chrome particles from wastewater. Valuable to the right buyer."
+                    }
+                }
+            }
+        },
+        "healthcare": {
+            "_desc": "Medical services for sick/injured. Passive health bonus in surrounding area.",
+            "facilities": {
+                "medical_clinic": {
+                    "capacity": 50,
+                    "ambulances": 3,
+                    "range": "local",
+                    "_desc": "Basic care. Handles common illness and minor injuries."
+                },
+                "hospital": {
+                    "capacity": 200,
+                    "ambulances": 10,
+                    "range": "district",
+                    "_desc": "Full service. Surgery, ICU, specialist departments."
+                },
+                "trauma_center": {
+                    "capacity": 100,
+                    "ambulances": 15,
+                    "range": "city",
+                    "_noir": "Chrome rejection cases. Implant failures. The real cost of augmentation."
+                },
+                "underground_clinic": {
+                    "capacity": 20,
+                    "ambulances": 0,
+                    "range": "none",
+                    "legality": "black_market",
+                    "_noir": "No questions asked. No records. Resistance members use these."
+                }
+            },
+            "health_factors": {
+                "positive": [
+                    "resource_availability",
+                    "healthcare_proximity",
+                    "park_access",
+                    "clean_air"
+                ],
+                "negative": [
+                    "air_pollution",
+                    "ground_pollution",
+                    "water_pollution",
+                    "uncollected_garbage",
+                    "prior_illness",
+                    "chrome_rejection"
+                ],
+                "_desc": "Sick citizens can't work, reducing company efficiency. Healthcare is investment in productivity."
+            },
+            "fees": {
+                "_desc": "Citizens pay per visit. Higher fees = citizens avoid treatment = worse outcomes."
+            },
+            "trade": {
+                "can_import": true,
+                "_desc": "Without local facilities, citizens travel to outside connections for treatment. Ambulances sent from outside if too sick."
+            }
+        },
+        "deathcare": {
+            "_desc": "Processes the deceased. Citizens die of: old age, low health, traffic accidents, building collapse, violence.",
+            "facilities": {
+                "cemetery": {
+                    "capacity": 500,
+                    "hearses": 5,
+                    "_desc": "Traditional burial. Takes up land."
+                },
+                "crematorium": {
+                    "capacity": "unlimited",
+                    "hearses": 8,
+                    "_desc": "Burns remains. Faster throughput. Minimal air pollution."
+                },
+                "recycling_facility": {
+                    "_noir": "ECHO-sponsored. 'Reclaims' cybernetic implants from the deceased. Citizens find this disturbing."
+                }
+            },
+            "effects_no_deathcare": {
+                "citizen_happiness": -0.3,
+                "disease_risk": 0.15,
+                "_desc": "Uncollected bodies reduce property values and increase disease."
+            }
+        },
+        "garbage_management": {
+            "_desc": "Every building generates waste. Uncollected garbage = pollution + decreased happiness + crime.",
+            "generation_factors": [
+                "building_type_and_zone",
+                "building_level",
+                "citizen_education_level"
+            ],
+            "_note": "Higher-level buildings and better-educated citizens generate LESS garbage.",
+            "facilities": {
+                "landfill": {
+                    "capacity": 10000,
+                    "trucks": 10,
+                    "pollution": 0.5,
+                    "processing": "slow",
+                    "_desc": "Stores and slowly decomposes garbage."
+                },
+                "incineration_plant": {
+                    "capacity": "continuous",
+                    "trucks": 15,
+                    "pollution": 0.7,
+                    "output": "electricity",
+                    "_desc": "Burns waste into power. Heavy air pollution."
+                },
+                "recycling_center": {
+                    "capacity": "continuous",
+                    "trucks": 12,
+                    "pollution": 0.1,
+                    "output": "resources",
+                    "_desc": "Converts waste into manufacturing materials."
+                },
+                "nano_decomposer": {
+                    "capacity": "continuous",
+                    "trucks": 8,
+                    "pollution": 0.01,
+                    "output": "raw_materials",
+                    "_noir": "NexGen tech. Breaks down waste at molecular level. Very expensive. Very clean."
+                }
+            },
+            "effects_uncollected": {
+                "ground_pollution": 0.3,
+                "citizen_happiness": -0.2,
+                "citizen_health": -0.15,
+                "crime_modifier": 1.1,
+                "land_value_modifier": 0.7
+            }
+        },
+        "education": {
+            "_desc": "Citizens choose between school and work based on financial calculation. 5 education levels.",
+            "education_levels": [
+                "uneducated",
+                "poorly_educated",
+                "educated",
+                "well_educated",
+                "highly_educated"
+            ],
+            "facilities": {
+                "elementary_school": {
+                    "age_group": "children",
+                    "fee": "low",
+                    "wellbeing_bonus": true,
+                    "_desc": "Also gives Well-being to nearby families. Attracts family settlement."
+                },
+                "high_school": {
+                    "age_group": "teens",
+                    "fee": "medium",
+                    "_desc": "Teens choose between this and working."
+                },
+                "college": {
+                    "age_group": "adults",
+                    "fee": "high",
+                    "_desc": "Trade skills. Practical education."
+                },
+                "university": {
+                    "age_group": "adults",
+                    "fee": "very_high",
+                    "_desc": "Research-focused. Produces highly educated workers."
+                },
+                "nexgen_academy": {
+                    "age_group": "all",
+                    "fee": "extreme",
+                    "_noir": "Corporate training. Neural-download accelerated learning. Graduates are... different."
+                }
+            },
+            "job_matching": {
+                "_desc": "Companies need specific education levels for positions. Mismatched workers reduce efficiency.",
+                "higher_level_companies_need": "higher_educated_workers",
+                "education_deficit_effect": "reduced_production_output"
+            },
+            "citizen_choice_logic": {
+                "_desc": "Citizens calculate: earn now at lower position OR study for higher position with more earnings later.",
+                "factors": [
+                    "current_income_potential",
+                    "future_income_with_education",
+                    "personal_interests",
+                    "available_schools"
+                ]
+            }
+        },
+        "fire_rescue": {
+            "_desc": "Fire prevention, suppression, and disaster response. Presence reduces fire hazard in area.",
+            "facilities": {
+                "fire_house": {
+                    "engines": 3,
+                    "range": "local",
+                    "_desc": "Small neighborhood station."
+                },
+                "fire_station": {
+                    "engines": 8,
+                    "range": "district",
+                    "_desc": "Full station with advanced equipment."
+                },
+                "firewatch_tower": {
+                    "range": "wilderness",
+                    "_desc": "Monitors forest fire risk in surrounding area."
+                },
+                "fire_helicopter_depot": {
+                    "helicopters": 4,
+                    "range": "city",
+                    "_desc": "Aerial firefighting for forest and building fires."
+                },
+                "disaster_warning_system": {
+                    "range": "city",
+                    "_desc": "Detects natural disasters early. Sends evacuation notifications."
+                },
+                "emergency_shelter": {
+                    "capacity": 500,
+                    "_desc": "Citizens take refuge during disasters."
+                }
+            },
+            "fire_mechanics": {
+                "spread_rate": "fast",
+                "causes": [
+                    "electrical_fault",
+                    "industrial_accident",
+                    "arson",
+                    "weather_lightning"
+                ],
+                "effects_no_service": {
+                    "fire_hazard": "high",
+                    "building_collapse_risk": 0.3,
+                    "citizen_panic": true
+                }
+            }
+        },
+        "police": {
+            "_desc": "Crime prevention and response. Presence reduces crime accumulation. Patrol routes decrease crime probability.",
+            "facilities": {
+                "police_station": {
+                    "officers": 20,
+                    "patrol_cars": 6,
+                    "range": "local",
+                    "_desc": "Standard neighborhood presence."
+                },
+                "police_hq": {
+                    "officers": 80,
+                    "patrol_cars": 20,
+                    "range": "district",
+                    "_desc": "Full operations center."
+                },
+                "prison": {
+                    "capacity": 200,
+                    "_desc": "Holds convicted criminals. Can produce resources (prison labor)."
+                },
+                "surveillance_center": {
+                    "range": "city",
+                    "_noir": "ECHO Coalition's eyes. Every camera, every sensor. Privacy is a luxury the city can't afford."
+                }
+            },
+            "crime_mechanics": {
+                "_desc": "Every building has a crime probability based on services, well-being, and environment.",
+                "crime_factors_positive": [
+                    "police_presence",
+                    "patrol_coverage",
+                    "citizen_wellbeing",
+                    "lighting",
+                    "employment"
+                ],
+                "crime_factors_negative": [
+                    "no_electricity",
+                    "no_water",
+                    "pollution",
+                    "garbage",
+                    "unemployment",
+                    "no_leisure"
+                ],
+                "response_flow": [
+                    "crime_detected",
+                    "patrol_dispatched",
+                    "criminal_captured",
+                    "jail",
+                    "prison_sentence",
+                    "release_and_reset"
+                ]
+            }
+        },
+        "transport": {
+            "_desc": "Public and cargo transportation. Each type has depots, vehicles, routes.",
+            "passenger_types": {
+                "bus": {
+                    "depot_required": true,
+                    "capacity": 40,
+                    "cost": "low",
+                    "speed": "slow"
+                },
+                "tram": {
+                    "depot_required": true,
+                    "capacity": 60,
+                    "cost": "medium",
+                    "speed": "medium"
+                },
+                "subway": {
+                    "depot_required": true,
+                    "capacity": 200,
+                    "cost": "high",
+                    "speed": "fast",
+                    "_noir": "The lower levels have 'unofficial' stops."
+                },
+                "train": {
+                    "depot_required": true,
+                    "capacity": 300,
+                    "cost": "high",
+                    "speed": "fast"
+                },
+                "taxi": {
+                    "depot_required": true,
+                    "capacity": 4,
+                    "cost": "variable",
+                    "speed": "fast"
+                },
+                "ferry": {
+                    "depot_required": false,
+                    "capacity": 100,
+                    "cost": "medium",
+                    "speed": "slow"
+                },
+                "aero_shuttle": {
+                    "depot_required": false,
+                    "capacity": 20,
+                    "cost": "extreme",
+                    "_noir": "Upper district only. Board scan required."
+                }
+            },
+            "cargo_types": [
+                "road_delivery",
+                "rail_cargo",
+                "water_cargo",
+                "air_cargo"
+            ],
+            "ticket_fees": {
+                "_desc": "Adjustable per line. Affects citizen pathfinding — higher cost = fewer riders = more cars = more traffic.",
+                "price_sensitivity": 0.7
+            }
+        },
+        "communications": {
+            "post": {
+                "_desc": "Mail collection and delivery. Affects citizen wellbeing and company efficiency.",
+                "facilities": {
+                    "post_office": {
+                        "vans": 5,
+                        "_desc": "Collects mail from mailboxes, delivers to citizens and companies."
+                    },
+                    "sorting_facility": {
+                        "_desc": "Sorts local vs long-distance. Without it, all mail routes through outside connections."
+                    }
+                },
+                "effects": {
+                    "wellbeing_with_post": "+0.1",
+                    "company_efficiency_with_post": "+0.05"
+                }
+            },
+            "telecom": {
+                "_desc": "Internet connectivity. Bandwidth is shared resource. Coverage based on distance from towers.",
+                "facilities": {
+                    "cell_tower": {
+                        "bandwidth_gbps": 10,
+                        "range": "medium"
+                    },
+                    "fiber_hub": {
+                        "bandwidth_gbps": 100,
+                        "range": "large"
+                    },
+                    "nexgen_mesh": {
+                        "bandwidth_gbps": 1000,
+                        "range": "district",
+                        "_noir": "Neural-link compatible. ECHO monitors all traffic."
+                    }
+                },
+                "effects": {
+                    "citizen_wellbeing": "+0.15",
+                    "commercial_sales": "+0.1",
+                    "industrial_costs": "-0.05",
+                    "_desc": "Internet access boosts leisure and commercial activity. Industrial companies get better deals."
+                }
+            }
+        },
+        "parks_recreation": {
+            "_desc": "Places for citizen leisure. Affects land value through citizen satisfaction.",
+            "facility_types": [
+                "park",
+                "plaza",
+                "sports_venue",
+                "tourist_attraction",
+                "landmark",
+                "restaurant",
+                "shopping"
+            ],
+            "mechanics": {
+                "leisure_demand": {
+                    "_desc": "Citizens seek leisure activities. Fulfilled leisure = wellbeing boost.",
+                    "weather_effects": {
+                        "warm_sunny": "prefer_outdoor_parks",
+                        "rainy_cold": "prefer_indoor_shopping",
+                        "_noir": "In the perma-fog, indoor entertainment always wins."
+                    }
+                },
+                "attractiveness": {
+                    "_desc": "Each facility has an Attractiveness value. Higher = more tourists. Tourists weigh attractiveness vs distance.",
+                    "city_attractiveness": "sum_of_all_facility_attractiveness"
+                },
+                "tourism": {
+                    "_desc": "Tourists stay at hotels, visit attractions based on net attractiveness/distance calculation.",
+                    "tourist_preferences": [
+                        "landmarks",
+                        "tourist_attractions",
+                        "unique_buildings"
+                    ]
+                }
+            }
+        },
+        "administration": {
+            "_desc": "City management services with city-wide effects.",
+            "facilities": {
+                "welfare_office": {
+                    "effect": "boosts_wellbeing_for_unhappy_citizens",
+                    "_desc": "Targets citizens with happiness below 50%."
+                },
+                "city_hall": {
+                    "effects": [
+                        "lower_loan_interest",
+                        "lower_import_costs",
+                        "reduce_crime",
+                        "reduce_building_costs"
+                    ]
+                },
+                "central_bank": {
+                    "effects": [
+                        "lower_loans",
+                        "lower_import_costs",
+                        "higher_export_profits"
+                    ]
+                },
+                "echo_command": {
+                    "_noir": "Not officially listed as a city service. But it runs everything.",
+                    "effects": [
+                        "surveillance_bonus",
+                        "dissent_suppression",
+                        "resource_allocation_override"
+                    ]
+                }
+            }
+        },
+        "service_trade": {
+            "_desc": "Services can be imported/exported through outside connections. Useful when starting out or selling excess.",
+            "tradeable_services": {
+                "electricity": {
+                    "method": "power_lines_to_transformer_station"
+                },
+                "water": {
+                    "method": "pipe_to_edge_of_city"
+                },
+                "sewage": {
+                    "method": "pipe_to_edge_of_city"
+                },
+                "healthcare": {
+                    "method": "citizens_travel_to_outside_connections"
+                },
+                "deathcare": {
+                    "method": "hearses_from_outside_connections"
+                },
+                "police": {
+                    "method": "slow_response_from_outside",
+                    "_note": "No passive coverage from imported police."
+                },
+                "fire": {
+                    "method": "slow_response_from_outside",
+                    "_note": "No passive fire hazard reduction from imported service."
+                },
+                "education": {
+                    "method": "citizens_travel_for_college_university",
+                    "_note": "Citizens might move away permanently for education."
+                }
+            },
+            "_noir_note": "Outside connections are controlled by ECHO. Nothing comes in or leaves without them knowing."
+        }
+    }
+}

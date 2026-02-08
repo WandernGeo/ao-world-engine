@@ -1,0 +1,234 @@
+{
+    "_chunk": {
+        "id": "chunk_34_schedules_enhanced",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "simulation",
+        "prev_chunk": "chunk_33_pollution",
+        "next_chunk": "chunk_35_trade_diplomacy",
+        "description": "24-block per day schedule system with block types, staggering, morale-from-downtime, and stamina recovery. Replaces the simpler T01-T10 mapping."
+    },
+    "enhanced_schedules": {
+        "_desc": "Granular 24-block per day schedule. Each block = 10 ticks = 1 hour. Block types drive need decay rates, XP gain, and morale. NPCs are staggered into shift groups to avoid facility congestion.",
+        "blocks_per_day": 24,
+        "ticks_per_block": 10,
+        "block_types": {
+            "work": {
+                "code": "BLK_W",
+                "needs_decay_multiplier": {
+                    "energy": 2.0,
+                    "hunger": 1.5,
+                    "social": 0.5,
+                    "hygiene": 0.8
+                },
+                "xp_gain": true,
+                "stress_gain": 0.01,
+                "_note": "Work blocks accelerate energy/hunger decay but grant skill XP."
+            },
+            "bathtime": {
+                "code": "BLK_B",
+                "priority_needs": [
+                    "hygiene"
+                ],
+                "fallback": "work",
+                "needs_recovery": {
+                    "hygiene": 5.0
+                },
+                "_note": "If hygiene above threshold, this block falls back to work."
+            },
+            "downtime": {
+                "code": "BLK_D",
+                "priority_needs": [
+                    "hunger",
+                    "social",
+                    "comfort"
+                ],
+                "morale_bonus_per_block": 1,
+                "max_morale_from_downtime": 4,
+                "needs_recovery": {
+                    "hunger": 3.0,
+                    "social": 2.0,
+                    "comfort": 2.0,
+                    "entertainment": 2.0
+                },
+                "_note": "Free time. NPCs choose activities based on lowest need. Each downtime block grants +1 morale (cap +4)."
+            },
+            "sleep": {
+                "code": "BLK_S",
+                "recovery_rates": {
+                    "no_bed": 3.0,
+                    "cot": 4.0,
+                    "basic_bed": 5.0,
+                    "quality_bed": 6.5,
+                    "luxury_bed": 8.0
+                },
+                "interruptible_by": [
+                    "critical_need",
+                    "combat",
+                    "danger_nearby"
+                ],
+                "stamina_formula": "energy += recovery_rate * sleep_quality",
+                "_note": "Sleep quality varies by bed type. Higher quality = faster recovery = fewer blocks needed."
+            }
+        },
+        "default_allocations": {
+            "_desc": "Default block allocation per archetype category (24 blocks total)",
+            "worker": {
+                "sleep": 7,
+                "bathtime": 1,
+                "work": 12,
+                "downtime": 4,
+                "_note": "Standard working NPC. 12h work, 7h sleep, 4h free."
+            },
+            "student": {
+                "sleep": 8,
+                "bathtime": 1,
+                "work": 8,
+                "downtime": 7,
+                "_note": "Learning NPC. 'Work' blocks are study at educational facility."
+            },
+            "guard": {
+                "sleep": 6,
+                "bathtime": 1,
+                "work": 14,
+                "downtime": 3,
+                "_note": "Extended hours. Less downtime → lower morale cap."
+            },
+            "elder": {
+                "sleep": 9,
+                "bathtime": 1,
+                "work": 4,
+                "downtime": 10,
+                "_note": "Retired/elderly. Minimal work, high downtime → high morale potential."
+            },
+            "executive": {
+                "sleep": 6,
+                "bathtime": 1,
+                "work": 14,
+                "downtime": 3,
+                "_note": "High-powered position. Long hours offset by high wages."
+            },
+            "criminal": {
+                "sleep": 8,
+                "bathtime": 0,
+                "work": 8,
+                "downtime": 8,
+                "_note": "Irregular schedule. 'Work' blocks are criminal activity."
+            },
+            "prisoner": {
+                "sleep": 8,
+                "bathtime": 1,
+                "work": 12,
+                "downtime": 3,
+                "_note": "Restricted schedule. Work is prison labor, minimal downtime."
+            },
+            "tourist": {
+                "sleep": 8,
+                "bathtime": 1,
+                "work": 0,
+                "downtime": 15,
+                "_note": "All downtime. Shopping, sightseeing, eating."
+            }
+        },
+        "schedule_staggering": {
+            "_desc": "Stagger NPC shift starts to prevent all NPCs commuting/eating at the same time. Reduces facility congestion.",
+            "stagger_groups": 3,
+            "offset_blocks": [
+                0,
+                3,
+                6
+            ],
+            "group_assignment": "hash(npc_id) % stagger_groups",
+            "_note": "Group 0 starts work at block 8, Group 1 at block 11, Group 2 at block 14."
+        },
+        "morale_from_downtime": {
+            "_desc": "More free time = happier NPCs. But skilled NPCs require more morale to stay productive.",
+            "formula": "morale_bonus = max(0, downtime_blocks - 1), capped at max_morale_from_downtime",
+            "overjoyed_threshold": 8,
+            "overjoyed_chance_formula": "0.02 + (excess_morale * 0.0015)",
+            "overjoyed_max_chance": 0.05,
+            "overjoyed_effects": [
+                "productivity_boost_30pct",
+                "inspire_nearby_npc",
+                "create_quality_item"
+            ]
+        },
+        "t_period_mapping": {
+            "_desc": "Maps 24-block schedule back to legacy T01-T10 periods for backward compatibility",
+            "T01_deep_night": {
+                "blocks": [
+                    0,
+                    1
+                ],
+                "hours": "00:00-02:00"
+            },
+            "T02_early_morning": {
+                "blocks": [
+                    2,
+                    3,
+                    4
+                ],
+                "hours": "02:00-05:00"
+            },
+            "T03_morning": {
+                "blocks": [
+                    5,
+                    6,
+                    7
+                ],
+                "hours": "05:00-08:00"
+            },
+            "T04_noon": {
+                "blocks": [
+                    8,
+                    9,
+                    10
+                ],
+                "hours": "08:00-11:00"
+            },
+            "T05_afternoon": {
+                "blocks": [
+                    11,
+                    12,
+                    13
+                ],
+                "hours": "11:00-14:00"
+            },
+            "T06_dusk": {
+                "blocks": [
+                    14,
+                    15
+                ],
+                "hours": "14:00-16:00"
+            },
+            "T07_evening": {
+                "blocks": [
+                    16,
+                    17,
+                    18
+                ],
+                "hours": "16:00-19:00"
+            },
+            "T08_night": {
+                "blocks": [
+                    19,
+                    20
+                ],
+                "hours": "19:00-21:00"
+            },
+            "T09_late_night": {
+                "blocks": [
+                    21,
+                    22
+                ],
+                "hours": "21:00-23:00"
+            },
+            "T10_dead_hour": {
+                "blocks": [
+                    23
+                ],
+                "hours": "23:00-00:00"
+            }
+        }
+    }
+}

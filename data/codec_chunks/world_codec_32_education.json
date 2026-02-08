@@ -1,0 +1,175 @@
+{
+    "_chunk": {
+        "id": "chunk_32_education",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "progression",
+        "prev_chunk": "chunk_31_crime_justice",
+        "next_chunk": "chunk_33_pollution",
+        "description": "Education levels, skill progression, career pipeline, and job-quality matching. Drives the education.lua plugin."
+    },
+    "education_system": {
+        "_desc": "Multi-tier education system. NPCs gain education through facilities and gain skill XP through work. Education gates job access; skill level affects output quality.",
+        "levels": {
+            "none": {
+                "code": "EDU0",
+                "range": [
+                    0.0,
+                    0.99
+                ],
+                "job_access": "unskilled",
+                "facility": null,
+                "eligible_jobs": [
+                    "laborer",
+                    "street_vendor",
+                    "cleaner",
+                    "scavenger"
+                ],
+                "_note": "No formal education. Limited to manual/unskilled labor."
+            },
+            "basic": {
+                "code": "EDU1",
+                "range": [
+                    1.0,
+                    1.99
+                ],
+                "job_access": "low_skill",
+                "facility": "school",
+                "duration_ticks": 4800,
+                "eligible_jobs": [
+                    "factory_worker",
+                    "shop_clerk",
+                    "driver",
+                    "cook",
+                    "guard"
+                ],
+                "_note": "Basic literacy and numeracy. Opens trade jobs."
+            },
+            "university": {
+                "code": "EDU2",
+                "range": [
+                    2.0,
+                    2.99
+                ],
+                "job_access": "mid_skill",
+                "facility": "university",
+                "duration_ticks": 9600,
+                "eligible_jobs": [
+                    "engineer",
+                    "nurse",
+                    "accountant",
+                    "reporter",
+                    "teacher"
+                ],
+                "_note": "Professional degree. Opens white-collar positions."
+            },
+            "graduate": {
+                "code": "EDU3",
+                "range": [
+                    3.0,
+                    4.0
+                ],
+                "job_access": "high_skill",
+                "facility": "research_lab",
+                "duration_ticks": 14400,
+                "eligible_jobs": [
+                    "doctor",
+                    "scientist",
+                    "executive",
+                    "lawyer",
+                    "architect"
+                ],
+                "_note": "Advanced specialization. Opens elite positions."
+            }
+        },
+        "xp_rates": {
+            "per_study_tick": 0.01,
+            "per_work_tick": 0.001,
+            "interest_bonus_multiplier": 1.5,
+            "_desc": "Study XP is 10x work XP. Interest bonus applies when NPC works in a field matching their personality interests."
+        },
+        "education_to_job_matching": {
+            "_desc": "How well NPC education matches their current job's requirements. Affects productivity and morale.",
+            "perfect_match": {
+                "productivity_mult": 1.2,
+                "morale_bonus": 0.05,
+                "_desc": "NPC education level matches job requirement exactly"
+            },
+            "overqualified": {
+                "productivity_mult": 1.0,
+                "morale_penalty": -0.03,
+                "_desc": "NPC has higher education than job requires. Bored/frustrated."
+            },
+            "underqualified": {
+                "productivity_mult": 0.6,
+                "morale_penalty": -0.05,
+                "_desc": "NPC lacks required education. Struggling, errors."
+            }
+        },
+        "facility_capacity": {
+            "school": {
+                "students_per_facility": 200,
+                "teachers_required": 10
+            },
+            "university": {
+                "students_per_facility": 500,
+                "teachers_required": 30
+            },
+            "research_lab": {
+                "students_per_facility": 50,
+                "teachers_required": 10
+            }
+        }
+    },
+    "skill_growth": {
+        "_desc": "NPCs grow skill through practice. Skill level determines output quality tier, affecting economic value.",
+        "formula": "skill += xp_per_tick * (1 + interest_bonus_if_matching)",
+        "quality_tiers": {
+            "poor": {
+                "skill_range": [
+                    0.0,
+                    0.2
+                ],
+                "output_mult": 0.5,
+                "label": "Shoddy work, frequent errors"
+            },
+            "basic": {
+                "skill_range": [
+                    0.2,
+                    0.4
+                ],
+                "output_mult": 0.8,
+                "label": "Functional but unremarkable"
+            },
+            "good": {
+                "skill_range": [
+                    0.4,
+                    0.6
+                ],
+                "output_mult": 1.0,
+                "label": "Competent, meets expectations"
+            },
+            "excellent": {
+                "skill_range": [
+                    0.6,
+                    0.8
+                ],
+                "output_mult": 1.3,
+                "label": "Superior quality, sought after"
+            },
+            "masterwork": {
+                "skill_range": [
+                    0.8,
+                    1.0
+                ],
+                "output_mult": 1.8,
+                "label": "Exceptional, legendary quality"
+            }
+        },
+        "skill_decay": {
+            "inactive_decay_per_tick": 0.0001,
+            "minimum_skill": 0.1,
+            "_desc": "Skills slowly decay when not practiced, but never below 10% of max."
+        }
+    }
+}

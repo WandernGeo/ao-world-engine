@@ -1,0 +1,142 @@
+{
+    "_chunk": {
+        "id": "chunk_29_commuting",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "infrastructure",
+        "prev_chunk": "chunk_28_city_services",
+        "next_chunk": "chunk_30_dynamic_metrics",
+        "description": "Commute cost calculations, transport mode selection, and congestion modeling for NPC travel between districts."
+    },
+    "commuting": {
+        "_desc": "NPC commute system — transport mode selection, travel time, and mood impact. Consumed by district.lua during T03/T06 schedule slots and utility AI action UA015.",
+        "transport_modes": {
+            "walk": {
+                "code": "TM01",
+                "speed_factor": 1.0,
+                "cost_gep": 0,
+                "mood_impact_per_trip": -0.02,
+                "max_distance_km": 2,
+                "weather_sensitivity": 0.8,
+                "_note": "Default fallback. Weather reduces speed via Weather.get_npc_modifiers().movement_speed"
+            },
+            "bicycle": {
+                "code": "TM02",
+                "speed_factor": 2.5,
+                "cost_gep": 0,
+                "mood_impact_per_trip": 0.01,
+                "max_distance_km": 8,
+                "weather_sensitivity": 0.6,
+                "requires_ownership": true,
+                "purchase_cost_gep": 200,
+                "_note": "Positive mood (exercise). Impractical in storm/acid_rain."
+            },
+            "bus": {
+                "code": "TM03",
+                "speed_factor": 3.0,
+                "cost_gep": 5,
+                "mood_impact_per_trip": -0.01,
+                "max_distance_km": 20,
+                "weather_sensitivity": 0.1,
+                "requires": "bus_route_exists",
+                "capacity_per_vehicle": 40,
+                "frequency_ticks": 5,
+                "_note": "Cheap mass transit. Overcrowding during peak subtracts additional -0.02 mood."
+            },
+            "train": {
+                "code": "TM04",
+                "speed_factor": 5.0,
+                "cost_gep": 10,
+                "mood_impact_per_trip": 0.0,
+                "max_distance_km": 50,
+                "weather_sensitivity": 0.0,
+                "requires": "train_station_nearby",
+                "capacity_per_vehicle": 200,
+                "frequency_ticks": 10,
+                "_note": "Fastest for long distances. Mood-neutral. Heavy rail for intercity."
+            },
+            "car": {
+                "code": "TM05",
+                "speed_factor": 4.0,
+                "cost_gep": 15,
+                "mood_impact_per_trip": 0.02,
+                "max_distance_km": 30,
+                "weather_sensitivity": 0.05,
+                "requires_ownership": true,
+                "purchase_cost_gep": 8000,
+                "fuel_cost_per_km": 0.5,
+                "_note": "Private car. Speed reduced by congestion_multiplier during peak_hours."
+            },
+            "taxi": {
+                "code": "TM06",
+                "speed_factor": 4.5,
+                "cost_gep": 40,
+                "mood_impact_per_trip": 0.03,
+                "max_distance_km": 30,
+                "weather_sensitivity": 0.05,
+                "_note": "Most comfortable. Expensive. Same congestion as car but no ownership needed."
+            }
+        },
+        "mode_selection": {
+            "_desc": "NPC picks transport mode deterministically based on resources and distance",
+            "algorithm": "filter by max_distance >= actual_distance AND affordability, then pick highest utility",
+            "utility_formula": "speed_factor * (1 + mood_impact_per_trip) * affordability_weight",
+            "affordability_weight": {
+                "_desc": "How much cost matters, based on NPC income bracket",
+                "low_income": 2.0,
+                "mid_income": 1.0,
+                "high_income": 0.3
+            },
+            "seed_template": "{npc_id}_{tick}_transport",
+            "_note": "Deterministic: same NPC at same tick always picks the same mode."
+        },
+        "commute_time": {
+            "formula_ticks": "ceil(distance_km / speed_factor * base_ticks_per_km)",
+            "base_ticks_per_km": 5,
+            "minimum_ticks": 1,
+            "maximum_ticks": 20,
+            "_examples": {
+                "2km_walk": "ceil(2 / 1.0 * 5) = 10 ticks (1 hour)",
+                "5km_bus": "ceil(5 / 3.0 * 5) = 9 ticks (~54 min)",
+                "10km_train": "ceil(10 / 5.0 * 5) = 10 ticks (1 hour)",
+                "8km_car": "ceil(8 / 4.0 * 5) = 10 ticks (1 hour)",
+                "3km_bicycle": "ceil(3 / 2.5 * 5) = 6 ticks (36 min)"
+            }
+        },
+        "congestion": {
+            "peak_hours": [
+                7,
+                8,
+                9,
+                17,
+                18
+            ],
+            "congestion_multiplier": 1.4,
+            "affects_modes": [
+                "car",
+                "taxi",
+                "bus"
+            ],
+            "not_affected": [
+                "train",
+                "walk",
+                "bicycle"
+            ],
+            "seed_template": "{district}_{tick}_congestion",
+            "_note": "During peak hours, car/taxi/bus travel time *= congestion_multiplier. Vehicles seek 'fastest route allowed'."
+        },
+        "long_commute": {
+            "threshold_ticks": 8,
+            "mood_penalty_per_trip": -0.05,
+            "productivity_penalty": -0.10,
+            "_note": "Long commutes reduce happiness AND productivity. NPCs may seek closer housing or jobs."
+        },
+        "district_distance_matrix": {
+            "_desc": "Approximate distances between district pairs in km. Overridden by geospatial codec_12 when available.",
+            "default_intra_district_km": 1.5,
+            "default_inter_district_km": 5.0,
+            "adjacent_district_km": 3.0,
+            "far_district_km": 10.0
+        }
+    }
+}

@@ -1,0 +1,1133 @@
+{
+    "_chunk": {
+        "id": "chunk_27_city_finance",
+        "version": "2.0.0",
+        "type": "world_codec_chunk",
+        "category": "economy",
+        "prev_chunk": "chunk_26_utility_ai",
+        "next_chunk": null,
+        "_inspiration": "Real-world municipal finance systems adapted to cyberpunk-noir setting"
+    },
+    "city_finance": {
+        "_desc": "Intricate municipal finance system — how RE:ECHO City makes and spends money",
+        "currency": "GEP (◊)",
+        "fiscal_calendar": {
+            "_desc": "Calendar-based budget cycles — fiscal year runs Jan 1 to Dec 31",
+            "fiscal_year_start_day": 1,
+            "fiscal_year_days": 365,
+            "quarters": {
+                "Q1": {
+                    "days": [
+                        1,
+                        91
+                    ],
+                    "label": "Winter Quarter",
+                    "budget_modifier": 1.15,
+                    "_note": "Higher heating costs, holiday overtime, snow/storm cleanup"
+                },
+                "Q2": {
+                    "days": [
+                        92,
+                        182
+                    ],
+                    "label": "Spring Quarter",
+                    "budget_modifier": 0.95,
+                    "_note": "Standard operations, road repair season begins"
+                },
+                "Q3": {
+                    "days": [
+                        183,
+                        274
+                    ],
+                    "label": "Summer Quarter",
+                    "budget_modifier": 1.05,
+                    "_note": "Increased transit ridership, more outdoor policing, infrastructure projects"
+                },
+                "Q4": {
+                    "days": [
+                        275,
+                        365
+                    ],
+                    "label": "Autumn Quarter",
+                    "budget_modifier": 1.00,
+                    "_note": "Budget reconciliation, fiscal year-end spending rush"
+                }
+            },
+            "tax_collection_schedule": {
+                "income_tax": {
+                    "frequency": "biweekly",
+                    "collection_day": "every_14_days",
+                    "method": "payroll_withholding",
+                    "annual_reconciliation": "day_90",
+                    "_note": "Employers withhold and remit; self-employed file quarterly"
+                },
+                "property_tax": {
+                    "frequency": "quarterly",
+                    "due_days": [
+                        45,
+                        136,
+                        227,
+                        318
+                    ],
+                    "late_penalty_pct": 0.02,
+                    "lien_after_days": 180,
+                    "_note": "25% due each quarter; liens placed on delinquent properties"
+                },
+                "sales_tax": {
+                    "frequency": "daily",
+                    "remittance": "monthly_by_day_15",
+                    "_note": "Collected at point of sale, businesses remit monthly"
+                },
+                "corporate_tax": {
+                    "frequency": "quarterly",
+                    "due_days": [
+                        90,
+                        181,
+                        273,
+                        365
+                    ],
+                    "estimated_payments": true,
+                    "penalty_for_underpayment": 0.05,
+                    "_note": "Quarterly estimated payments with annual true-up"
+                },
+                "commercial_license": {
+                    "frequency": "annual",
+                    "renewal_window": [
+                        1,
+                        30
+                    ],
+                    "late_fee": 50,
+                    "_note": "Must renew in first 30 days of fiscal year"
+                },
+                "industrial_permits": {
+                    "frequency": "annual",
+                    "inspection_required": true,
+                    "inspection_cost": 200,
+                    "_note": "Permits require passing environmental inspection"
+                }
+            },
+            "payroll_schedule": {
+                "city_employees": {
+                    "frequency": "biweekly",
+                    "pay_days": "every_14_days",
+                    "_note": "26 pay periods per year"
+                },
+                "contractors": {
+                    "frequency": "monthly",
+                    "net_30": true,
+                    "_note": "Invoiced monthly, paid net 30"
+                },
+                "overtime_rules": {
+                    "standard_hours": 8,
+                    "overtime_multiplier": 1.5,
+                    "holiday_multiplier": 2.0,
+                    "shift_differential_night": 1.15,
+                    "_note": "Night shift patrol gets 15% premium"
+                }
+            },
+            "budget_approval_process": {
+                "proposal_deadline": "day_300",
+                "council_review": "day_310_to_340",
+                "public_comment_period": "day_340_to_350",
+                "final_vote": "day_355",
+                "emergency_amendments": "requires_supermajority",
+                "_note": "City council must approve next year's budget by day 355"
+            }
+        },
+        "revenue_streams": {
+            "_desc": "12+ ways the city generates revenue",
+            "income_tax": {
+                "type": "progressive",
+                "brackets": [
+                    {
+                        "min": 0,
+                        "max": 500,
+                        "rate": 0.00,
+                        "_note": "Poverty exemption — protects destitute"
+                    },
+                    {
+                        "min": 500,
+                        "max": 2000,
+                        "rate": 0.05,
+                        "_note": "Working class bracket"
+                    },
+                    {
+                        "min": 2000,
+                        "max": 10000,
+                        "rate": 0.10,
+                        "_note": "Middle class bracket"
+                    },
+                    {
+                        "min": 10000,
+                        "max": 50000,
+                        "rate": 0.15,
+                        "_note": "Upper bracket"
+                    },
+                    {
+                        "min": 50000,
+                        "max": null,
+                        "rate": 0.20,
+                        "_note": "Elite bracket — few pay this"
+                    }
+                ],
+                "applies_to": "all_registered_citizens",
+                "exempt": [
+                    "temple_employees (tithe replaces)",
+                    "megacorp_enclave_workers"
+                ],
+                "withholding": true,
+                "seasonal_bonus_taxed": true
+            },
+            "property_tax": {
+                "rate": 0.02,
+                "assessed_on": "land_value × zone_multiplier × building_condition × modifiers",
+                "exemptions": [
+                    "temple_property",
+                    "corp_enclave",
+                    "undercity (no title)"
+                ],
+                "collection": "quarterly",
+                "reassessment_cycle_years": 3,
+                "homestead_exemption": 500,
+                "appeal_process": true
+            },
+            "commercial_license_fees": {
+                "base_fee": 500,
+                "period": "annual",
+                "per": "registered_business",
+                "late_renewal_surcharge": 50,
+                "temple_blessing_fee": 100,
+                "_note": "Temple blessing required since Year 2083 decree"
+            },
+            "industrial_permits": {
+                "by_zone": {
+                    "ZONE_I1_light": {
+                        "permit_cost": 2000,
+                        "inspection_frequency": "annual"
+                    },
+                    "ZONE_I2_heavy": {
+                        "permit_cost": 5000,
+                        "inspection_frequency": "biannual"
+                    },
+                    "ZONE_I3_hazardous": {
+                        "permit_cost": 8000,
+                        "inspection_frequency": "quarterly",
+                        "bond_required": 50000
+                    },
+                    "ZONE_IT_tech_park": {
+                        "permit_cost": 3000,
+                        "inspection_frequency": "annual"
+                    }
+                },
+                "violation_fines": {
+                    "operating_without_permit": 10000,
+                    "environmental_breach": 25000,
+                    "worker_safety_violation": 5000
+                }
+            },
+            "sales_tax": {
+                "rate": 0.05,
+                "exempt_categories": [
+                    "food_basic",
+                    "medicine_essential",
+                    "water",
+                    "educational_materials"
+                ],
+                "luxury_surcharge": 0.03,
+                "applies_to": "all_transactions_in_formal_economy",
+                "_note": "Luxury goods (jewelry, vanity chrome, imported alcohol) pay 8% total"
+            },
+            "corporate_tax": {
+                "nominal_rate": 0.12,
+                "effective_megacorp_rate": 0.03,
+                "small_business_rate": 0.08,
+                "loopholes": [
+                    {
+                        "name": "offshore_arweave",
+                        "savings_pct": 0.04,
+                        "legality": "grey_area"
+                    },
+                    {
+                        "name": "temple_partnership",
+                        "savings_pct": 0.03,
+                        "legality": "legal"
+                    },
+                    {
+                        "name": "r_and_d_credits",
+                        "savings_pct": 0.02,
+                        "legality": "legal"
+                    },
+                    {
+                        "name": "transfer_pricing",
+                        "savings_pct": 0.03,
+                        "legality": "grey_area"
+                    }
+                ],
+                "_lore": "Megacorps negotiate sweetheart deals — small businesses pay more"
+            },
+            "parking_meters": {
+                "rates_per_hour_gep": {
+                    "ZONE_C3": {
+                        "rate": 2.0,
+                        "metered_spots": 200,
+                        "enforcement": "drone_automated"
+                    },
+                    "ZONE_C2": {
+                        "rate": 1.5,
+                        "metered_spots": 300,
+                        "enforcement": "drone_automated"
+                    },
+                    "ZONE_C1": {
+                        "rate": 0.8,
+                        "metered_spots": 150,
+                        "enforcement": "patrol_officer"
+                    },
+                    "ZONE_R4": {
+                        "rate": 1.0,
+                        "metered_spots": 50,
+                        "enforcement": "building_security"
+                    },
+                    "ZONE_IT": {
+                        "rate": 0.8,
+                        "metered_spots": 100,
+                        "enforcement": "drone_automated"
+                    },
+                    "ZONE_R2": {
+                        "rate": 0.4,
+                        "metered_spots": 80,
+                        "enforcement": "patrol_officer"
+                    },
+                    "ZONE_R3": {
+                        "rate": 0.3,
+                        "metered_spots": 60,
+                        "enforcement": "none"
+                    }
+                },
+                "enforcement_hours": "06:00-22:00",
+                "free_on_holidays": true,
+                "disabled_exemption": true,
+                "time_limit_hours": 2,
+                "violation_fine": 40,
+                "tow_fee": 150,
+                "boot_fee": 100
+            },
+            "transit_fares": {
+                "_desc": "Revenue side of public transit — expenses under transit_system",
+                "base_fare": 3,
+                "peak_multiplier": 1.5,
+                "peak_hours": [
+                    "07:00-09:00",
+                    "17:00-19:00"
+                ],
+                "discounts": {
+                    "student": {
+                        "pct": 0.50,
+                        "requires": "student_id"
+                    },
+                    "elderly": {
+                        "pct": 0.50,
+                        "requires": "age_65_plus"
+                    },
+                    "ubi_recipient": {
+                        "pct": 0.75,
+                        "requires": "ubi_card"
+                    },
+                    "monthly_pass": {
+                        "price": 65,
+                        "savings_vs_daily": 0.30
+                    },
+                    "weekly_pass": {
+                        "price": 20,
+                        "savings_vs_daily": 0.20
+                    }
+                },
+                "operator": "Omnicorp_transit_division",
+                "fare_evasion_fine": 100,
+                "farewell_evasion_rate": 0.08
+            },
+            "import_tariffs": {
+                "rates": {
+                    "food": {
+                        "rate": 0.10,
+                        "seasonal_adjustment": true
+                    },
+                    "raw_materials": {
+                        "rate": 0.12,
+                        "bulk_discount_threshold": 10000
+                    },
+                    "luxury_goods": {
+                        "rate": 0.25,
+                        "additional_temple_fee": 0.05
+                    },
+                    "tech_components": {
+                        "rate": 0.08,
+                        "domestic_preference": true
+                    },
+                    "weapons": {
+                        "rate": 0.30,
+                        "requires_special_license": true
+                    },
+                    "pharmaceuticals": {
+                        "rate": 0.05,
+                        "emergency_waiver": true
+                    }
+                },
+                "collected_at": "harbor_quarter_customs",
+                "customs_officers": 8,
+                "smuggling_loss_rate": 0.12
+            },
+            "temple_tithe_share": {
+                "gross_rate": 0.05,
+                "city_share": 0.40,
+                "_desc": "Temple collects 5% from all citizens; city gets 40% as municipal contribution",
+                "remaining_60pct_allocation": {
+                    "temple_operations": 0.30,
+                    "temple_guard": 0.15,
+                    "blessing_services": 0.10,
+                    "temple_schools": 0.05
+                }
+            },
+            "fines_and_penalties": {
+                "types": {
+                    "traffic_violation": {
+                        "fine": 50,
+                        "points": 2
+                    },
+                    "curfew_violation": {
+                        "fine": 100,
+                        "escalation": "arrest_on_3rd"
+                    },
+                    "petty_crime": {
+                        "fine": 200,
+                        "community_service_hours": 40
+                    },
+                    "noise_complaint": {
+                        "fine": 30,
+                        "warning_first": true
+                    },
+                    "illegal_parking": {
+                        "fine": 40,
+                        "tow_after": 2
+                    },
+                    "littering": {
+                        "fine": 20
+                    },
+                    "unauthorized_street_vending": {
+                        "fine": 75,
+                        "confiscation": true
+                    },
+                    "unlicensed_cybernetics": {
+                        "fine": 500,
+                        "mandatory_removal": true
+                    },
+                    "data_privacy_violation": {
+                        "fine": 1000
+                    }
+                }
+            },
+            "sin_taxes": {
+                "alcohol": {
+                    "rate": 0.15,
+                    "applies_to": "all_sales"
+                },
+                "recreational_drugs": {
+                    "rate": 0.25,
+                    "_note": "Only Temple-approved substances"
+                },
+                "gambling": {
+                    "rate": 0.20,
+                    "online_rate": 0.25
+                },
+                "cybernetic_vanity": {
+                    "rate": 0.10,
+                    "_note": "Non-medical cosmetic chrome"
+                },
+                "_lore": "Temple-pushed morality taxes — revenue goes to 'rehabilitation' programs"
+            },
+            "utility_surcharges": {
+                "_desc": "Levies on utility usage — collected by Omnicorp, shared with city",
+                "power": {
+                    "rate_per_kwh": 0.02,
+                    "city_share": 0.15
+                },
+                "water": {
+                    "rate_per_liter": 0.01,
+                    "city_share": 0.20
+                },
+                "waste_disposal": {
+                    "flat_monthly": 15,
+                    "city_share": 0.30
+                },
+                "data_network": {
+                    "rate_per_gb": 0.005,
+                    "city_share": 0.10
+                }
+            }
+        },
+        "transit_system": {
+            "_desc": "Complete public transportation operating costs and infrastructure",
+            "subway": {
+                "lines": {
+                    "red_line": {
+                        "route": [
+                            "neon_district",
+                            "harbor_quarter",
+                            "industrial_zone"
+                        ],
+                        "stations": 12,
+                        "length_km": 18,
+                        "daily_ridership": 8000,
+                        "frequency_min": {
+                            "peak": 5,
+                            "offpeak": 12,
+                            "night": 20
+                        }
+                    },
+                    "blue_line": {
+                        "route": [
+                            "tech_quarter",
+                            "neon_district",
+                            "temple_heights",
+                            "the_gardens"
+                        ],
+                        "stations": 15,
+                        "length_km": 22,
+                        "daily_ridership": 10000,
+                        "frequency_min": {
+                            "peak": 4,
+                            "offpeak": 10,
+                            "night": 18
+                        }
+                    },
+                    "green_line": {
+                        "route": [
+                            "old_town",
+                            "the_gardens",
+                            "outskirts"
+                        ],
+                        "stations": 8,
+                        "length_km": 14,
+                        "daily_ridership": 4000,
+                        "frequency_min": {
+                            "peak": 8,
+                            "offpeak": 15,
+                            "night": 30
+                        }
+                    }
+                },
+                "operating_costs": {
+                    "driver_salaries": {
+                        "per_driver": 160,
+                        "drivers_per_line": 8,
+                        "total_daily": 3840
+                    },
+                    "electricity": {
+                        "per_km_per_train": 5,
+                        "trains_per_line": 6,
+                        "total_daily": 1620
+                    },
+                    "maintenance": {
+                        "rolling_stock_daily": 800,
+                        "track_daily": 400,
+                        "station_daily": 300
+                    },
+                    "security": {
+                        "guards_per_station": 1,
+                        "salary_per_guard": 130,
+                        "total_daily": 4550
+                    },
+                    "cleaning": {
+                        "per_station_daily": 50,
+                        "total_daily": 1750
+                    },
+                    "_total_daily_estimate": 12260
+                },
+                "capital_schedule": {
+                    "train_replacement_years": 15,
+                    "station_renovation_years": 10,
+                    "track_resurfacing_years": 5,
+                    "annual_capital_budget": 500000
+                }
+            },
+            "bus_network": {
+                "routes": 15,
+                "buses": 40,
+                "daily_ridership": 6000,
+                "coverage": "all_8_districts",
+                "operating_costs": {
+                    "driver_salaries": {
+                        "per_driver": 120,
+                        "drivers": 50,
+                        "total_daily": 6000
+                    },
+                    "fuel": {
+                        "per_bus_daily": 40,
+                        "total_daily": 1600
+                    },
+                    "maintenance": {
+                        "per_bus_daily": 25,
+                        "total_daily": 1000
+                    },
+                    "depot_operations": {
+                        "daily": 500
+                    },
+                    "_total_daily_estimate": 9100
+                },
+                "schedule": {
+                    "first_bus": "05:30",
+                    "last_bus": "23:30",
+                    "night_service": [
+                        "route_1_neon_loop",
+                        "route_7_harbor_industrial"
+                    ],
+                    "frequency_min": {
+                        "peak": 8,
+                        "offpeak": 15,
+                        "night": 30
+                    }
+                }
+            },
+            "tram_line": {
+                "route": [
+                    "neon_district_loop"
+                ],
+                "stops": 6,
+                "length_km": 4,
+                "daily_ridership": 3000,
+                "operating_costs": {
+                    "driver_salaries": {
+                        "per_driver": 140,
+                        "drivers": 6,
+                        "total_daily": 840
+                    },
+                    "electricity": {
+                        "daily": 200
+                    },
+                    "maintenance": {
+                        "daily": 300
+                    },
+                    "_total_daily_estimate": 1340
+                },
+                "_note": "Heritage tram, also serves as tourist attraction"
+            },
+            "water_ferry": {
+                "route": [
+                    "harbor_quarter",
+                    "neon_district",
+                    "outskirts"
+                ],
+                "vessels": 3,
+                "daily_ridership": 1200,
+                "operating_costs": {
+                    "crew_salaries": {
+                        "per_vessel": 300,
+                        "total_daily": 900
+                    },
+                    "fuel": {
+                        "per_vessel_daily": 80,
+                        "total_daily": 240
+                    },
+                    "dock_maintenance": {
+                        "daily": 150
+                    },
+                    "_total_daily_estimate": 1290
+                },
+                "seasonal_schedule": {
+                    "Q1_winter": {
+                        "service_level": 0.60,
+                        "_note": "Reduced service, rough weather"
+                    },
+                    "Q2_spring": {
+                        "service_level": 0.90
+                    },
+                    "Q3_summer": {
+                        "service_level": 1.00,
+                        "_note": "Peak season"
+                    },
+                    "Q4_autumn": {
+                        "service_level": 0.80
+                    }
+                }
+            },
+            "total_transit_daily_cost": 23990,
+            "total_transit_daily_ridership": 22200,
+            "cost_recovery_from_fares": 0.55,
+            "subsidy_required": 0.45,
+            "_note": "Transit operates at 45% loss — subsidized by general fund as public service"
+        },
+        "expenditure_categories": {
+            "_desc": "9 budget categories with sub-items (now includes transit as separate line)",
+            "law_enforcement": {
+                "allocation_pct": 0.22,
+                "sub_items": {
+                    "street_patrol": {
+                        "pct": 0.35,
+                        "employees": 12,
+                        "avg_salary": 150,
+                        "shift_coverage": "24_7_three_shifts"
+                    },
+                    "detective_unit": {
+                        "pct": 0.15,
+                        "employees": 6,
+                        "avg_salary": 180,
+                        "clearance_rate": 0.35
+                    },
+                    "riot_control": {
+                        "pct": 0.15,
+                        "employees": 6,
+                        "avg_salary": 160,
+                        "equipment_budget": 500
+                    },
+                    "cyber_crime_unit": {
+                        "pct": 0.15,
+                        "employees": 6,
+                        "avg_salary": 200,
+                        "tech_budget": 800
+                    },
+                    "surveillance_drones": {
+                        "pct": 0.10,
+                        "units": 50,
+                        "per_unit_daily": 5
+                    },
+                    "evidence_and_forensics": {
+                        "pct": 0.10,
+                        "employees": 3,
+                        "avg_salary": 190
+                    }
+                }
+            },
+            "infrastructure": {
+                "allocation_pct": 0.18,
+                "sub_items": {
+                    "road_repair": {
+                        "pct": 0.25,
+                        "contractor": "Omnicorp",
+                        "seasonal": {
+                            "Q1": 0.5,
+                            "Q2": 1.5,
+                            "Q3": 1.2,
+                            "Q4": 0.8
+                        }
+                    },
+                    "power_grid": {
+                        "pct": 0.25,
+                        "contractor": "Omnicorp",
+                        "outage_rate_daily": 0.005
+                    },
+                    "water_treatment": {
+                        "pct": 0.20,
+                        "contractor": "Omnicorp",
+                        "capacity_utilization": 0.85
+                    },
+                    "sewer_maintenance": {
+                        "pct": 0.15,
+                        "contractor": "city_works"
+                    },
+                    "street_lighting": {
+                        "pct": 0.10,
+                        "led_conversion_pct": 0.60
+                    },
+                    "bridge_and_tunnel": {
+                        "pct": 0.05,
+                        "inspection_cycle_days": 90
+                    }
+                },
+                "decay_rate_without_funding": 0.01
+            },
+            "public_transit": {
+                "allocation_pct": 0.12,
+                "_note": "Subsidy to cover transit system operating losses — see transit_system section",
+                "sub_items": {
+                    "subway_subsidy": {
+                        "pct": 0.50,
+                        "_note": "Covers 45% loss on subway operations"
+                    },
+                    "bus_subsidy": {
+                        "pct": 0.30,
+                        "_note": "Covers 45% loss on bus network"
+                    },
+                    "tram_and_ferry": {
+                        "pct": 0.10
+                    },
+                    "capital_improvements": {
+                        "pct": 0.10,
+                        "_note": "Station upgrades, new vehicles"
+                    }
+                }
+            },
+            "healthcare": {
+                "allocation_pct": 0.12,
+                "sub_items": {
+                    "public_clinics": {
+                        "pct": 0.45,
+                        "employees": 8,
+                        "clinics": 3,
+                        "patients_per_day": 120
+                    },
+                    "emergency_response": {
+                        "pct": 0.25,
+                        "employees": 5,
+                        "ambulances": 4,
+                        "avg_response_min": 8
+                    },
+                    "disease_control": {
+                        "pct": 0.15,
+                        "employees": 2,
+                        "vaccination_programs": 3
+                    },
+                    "mental_health_services": {
+                        "pct": 0.15,
+                        "employees": 3,
+                        "_note": "Post-collapse PTSD epidemic"
+                    }
+                }
+            },
+            "sanitation": {
+                "allocation_pct": 0.08,
+                "sub_items": {
+                    "garbage_collection": {
+                        "pct": 0.45,
+                        "employees": 8,
+                        "trucks": 6,
+                        "coverage": "3x_weekly"
+                    },
+                    "street_cleaning": {
+                        "pct": 0.25,
+                        "employees": 5,
+                        "sweepers": 3
+                    },
+                    "hazmat_disposal": {
+                        "pct": 0.15,
+                        "employees": 2,
+                        "_note": "Industrial zone special handling"
+                    },
+                    "recycling_program": {
+                        "pct": 0.15,
+                        "recovery_rate": 0.25
+                    }
+                }
+            },
+            "education": {
+                "allocation_pct": 0.10,
+                "sub_items": {
+                    "public_schools": {
+                        "pct": 0.55,
+                        "employees": 15,
+                        "schools": 5,
+                        "students": 400
+                    },
+                    "vocational_training": {
+                        "pct": 0.25,
+                        "employees": 6,
+                        "programs": [
+                            "welding",
+                            "cybernetics_repair",
+                            "data_entry",
+                            "medical_assistant"
+                        ]
+                    },
+                    "temple_curriculum": {
+                        "pct": 0.10,
+                        "_note": "Temple controls moral/religious curriculum"
+                    },
+                    "adult_education": {
+                        "pct": 0.10,
+                        "night_classes": true
+                    }
+                }
+            },
+            "social_services": {
+                "allocation_pct": 0.08,
+                "sub_items": {
+                    "ubi_payments": {
+                        "pct": 0.45,
+                        "amount_per_person": 30,
+                        "eligibility": "registered_unemployed",
+                        "recipients_est": 200
+                    },
+                    "housing_assistance": {
+                        "pct": 0.25,
+                        "vouchers_per_month": 80,
+                        "avg_voucher_value": 200
+                    },
+                    "job_training": {
+                        "pct": 0.15,
+                        "program_length_days": 30,
+                        "placement_rate": 0.40
+                    },
+                    "food_assistance": {
+                        "pct": 0.15,
+                        "meal_programs": 2,
+                        "daily_meals_served": 150
+                    }
+                }
+            },
+            "administration": {
+                "allocation_pct": 0.05,
+                "sub_items": {
+                    "government_salaries": {
+                        "pct": 0.60,
+                        "employees": 10,
+                        "avg_salary": 180
+                    },
+                    "elections_civic": {
+                        "pct": 0.10,
+                        "election_cycle_days": 30,
+                        "cost_per_election": 5000
+                    },
+                    "corruption_overhead": {
+                        "pct": 0.15,
+                        "_note": "15% lost to corruption/inefficiency — structural, not budgeted"
+                    },
+                    "misc_operations": {
+                        "pct": 0.15,
+                        "includes": [
+                            "printing",
+                            "IT_systems",
+                            "building_maintenance"
+                        ]
+                    }
+                }
+            },
+            "emergency_fund": {
+                "allocation_pct": 0.05,
+                "target_reserve": 100000,
+                "drawdown_triggers": [
+                    "infrastructure_failure",
+                    "supply_shortage",
+                    "epidemic",
+                    "civil_unrest"
+                ],
+                "replenishment_rate": 0.02,
+                "_note": "Rainy day fund — city council vote required to draw > ◊10,000"
+            }
+        },
+        "procurement": {
+            "_desc": "Goods and services the city must purchase — organized by supply chain",
+            "direct_purchases": {
+                "fuel_energy": {
+                    "per_capita_daily": 3.0,
+                    "supplier": "Omnicorp_energy",
+                    "contract_term_years": 5,
+                    "price_lock": false
+                },
+                "medical_supplies": {
+                    "per_capita_daily": 2.0,
+                    "supplier": "Synthetica / imports",
+                    "strategic_reserve_days": 30
+                },
+                "road_materials": {
+                    "per_capita_daily": 1.5,
+                    "supplier": "local_mills + imports",
+                    "seasonal_Q2_surge": 2.5
+                },
+                "tech_equipment": {
+                    "per_capita_daily": 1.2,
+                    "supplier": "NexGen + imports",
+                    "refresh_cycle_years": 3
+                },
+                "vehicle_fleet": {
+                    "per_capita_daily": 1.0,
+                    "supplier": "local_dealers",
+                    "fleet_size": 35,
+                    "avg_age_years": 7
+                },
+                "food_services": {
+                    "per_capita_daily": 0.8,
+                    "supplier": "local_vendors",
+                    "school_meals": true
+                },
+                "office_supplies": {
+                    "per_capita_daily": 0.5,
+                    "supplier": "local_shops"
+                },
+                "uniforms_gear": {
+                    "per_capita_daily": 0.3,
+                    "supplier": "local_manufacturers",
+                    "replacement_cycle_months": 6
+                }
+            },
+            "contracted_services": {
+                "building_maintenance": {
+                    "annual_cost": 15000,
+                    "contractor": "various_local"
+                },
+                "IT_infrastructure": {
+                    "annual_cost": 25000,
+                    "contractor": "DataVault"
+                },
+                "legal_services": {
+                    "annual_cost": 10000,
+                    "contractor": "city_attorney_office"
+                },
+                "auditing": {
+                    "annual_cost": 8000,
+                    "contractor": "independent_firm",
+                    "frequency": "annual"
+                },
+                "insurance": {
+                    "annual_cost": 20000,
+                    "covers": [
+                        "liability",
+                        "property",
+                        "workers_comp"
+                    ]
+                }
+            }
+        },
+        "import_dependencies": {
+            "food": {
+                "local": 0.4,
+                "imported": 0.6,
+                "_risk": "supply_shortage_events",
+                "seasonal_variance": {
+                    "Q1": 0.65,
+                    "Q2": 0.55,
+                    "Q3": 0.50,
+                    "Q4": 0.60
+                }
+            },
+            "raw_materials": {
+                "local": 0.2,
+                "imported": 0.8,
+                "_risk": "price_volatility",
+                "trade_route": "coastal_shipping"
+            },
+            "luxury_goods": {
+                "local": 0.1,
+                "imported": 0.9,
+                "_risk": "tariff_wars",
+                "smuggling_rate": 0.15
+            },
+            "tech_components": {
+                "local": 0.5,
+                "imported": 0.5,
+                "_risk": "embargo",
+                "critical": true
+            },
+            "pharmaceuticals": {
+                "local": 0.3,
+                "imported": 0.7,
+                "_risk": "supply_chain_disruption",
+                "strategic_reserve_days": 45
+            }
+        },
+        "seasonal_modifiers": {
+            "_desc": "How seasons affect city finances — 1 year = 365 simulation days",
+            "Q1_winter": {
+                "heating_cost_multiplier": 1.40,
+                "road_repair_modifier": 0.50,
+                "transit_ridership_modifier": 0.85,
+                "outdoor_commerce_modifier": 0.60,
+                "crime_modifier": 0.80,
+                "tourism_modifier": 0.40,
+                "water_usage_modifier": 0.80,
+                "power_demand_modifier": 1.30
+            },
+            "Q2_spring": {
+                "heating_cost_multiplier": 0.80,
+                "road_repair_modifier": 1.50,
+                "transit_ridership_modifier": 1.00,
+                "outdoor_commerce_modifier": 1.10,
+                "crime_modifier": 1.00,
+                "tourism_modifier": 0.80,
+                "water_usage_modifier": 1.00,
+                "power_demand_modifier": 0.90
+            },
+            "Q3_summer": {
+                "heating_cost_multiplier": 0.20,
+                "cooling_cost_multiplier": 1.20,
+                "road_repair_modifier": 1.20,
+                "transit_ridership_modifier": 1.10,
+                "outdoor_commerce_modifier": 1.30,
+                "crime_modifier": 1.15,
+                "tourism_modifier": 1.50,
+                "water_usage_modifier": 1.40,
+                "power_demand_modifier": 1.10
+            },
+            "Q4_autumn": {
+                "heating_cost_multiplier": 1.00,
+                "road_repair_modifier": 0.80,
+                "transit_ridership_modifier": 0.95,
+                "outdoor_commerce_modifier": 0.90,
+                "crime_modifier": 0.95,
+                "tourism_modifier": 0.70,
+                "water_usage_modifier": 0.90,
+                "power_demand_modifier": 0.95
+            }
+        },
+        "crisis_thresholds": {
+            "healthy": {
+                "min_budget_ratio": 0.50,
+                "service_modifier": 1.0,
+                "bond_rating": "A"
+            },
+            "strained": {
+                "min_budget_ratio": 0.20,
+                "service_cuts": 0.10,
+                "hiring_freeze": true,
+                "bond_rating": "BBB"
+            },
+            "crisis": {
+                "min_budget_ratio": 0.05,
+                "service_cuts": 0.30,
+                "layoffs": 0.10,
+                "bond_rating": "B"
+            },
+            "collapse": {
+                "min_budget_ratio": 0.0,
+                "martial_law": true,
+                "service_cuts": 0.60,
+                "bond_rating": "D"
+            }
+        },
+        "debt_instruments": {
+            "municipal_bonds": {
+                "max_issuance": 500000,
+                "interest_rate": 0.06,
+                "term_years": 10,
+                "callable_after_years": 5,
+                "_note": "Used for infrastructure projects"
+            },
+            "short_term_notes": {
+                "max_outstanding": 100000,
+                "interest_rate": 0.08,
+                "term_days": 90,
+                "_note": "Bridge financing for cash flow gaps"
+            },
+            "omnicorp_credit_line": {
+                "available": 200000,
+                "interest_rate": 0.04,
+                "strings_attached": [
+                    "infrastructure_contract_preference",
+                    "data_access_rights"
+                ],
+                "_note": "Low interest but Omnicorp gets preferential contracts"
+            }
+        },
+        "plugin_schema": {
+            "_desc": "Schema for third-party economy plugins",
+            "interface": {
+                "on_tick": "Called each tick with (tick, state) → returns revenue/expense adjustments",
+                "on_event": "Called on economic events with (event_type, data) → returns modifications",
+                "get_extra_revenue": "Returns additional revenue line items {name: amount}",
+                "get_extra_expenses": "Returns additional expense line items {name: amount}"
+            },
+            "registration": "city_economy.register_plugin(MyPlugin())",
+            "hooks": {
+                "pre_budget_calculation": "Modify inputs before budget is calculated",
+                "post_budget_calculation": "React to calculated budget (e.g., trigger events)",
+                "on_quarter_change": "Called when fiscal quarter changes",
+                "on_fiscal_year_end": "Annual reconciliation hook"
+            },
+            "example_plugins": [
+                "tourism_revenue_plugin",
+                "seasonal_events_plugin",
+                "war_economy_plugin",
+                "plague_response_plugin",
+                "megacorp_bailout_plugin",
+                "public_transit_expansion_plugin"
+            ]
+        }
+    }
+}

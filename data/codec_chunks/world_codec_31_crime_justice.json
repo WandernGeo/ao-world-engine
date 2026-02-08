@@ -1,0 +1,191 @@
+{
+    "_chunk": {
+        "id": "chunk_31_crime_justice",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "simulation",
+        "prev_chunk": "chunk_30_dynamic_metrics",
+        "next_chunk": "chunk_32_education",
+        "description": "Crime types, criminality traits, investigation pipeline, and prison system. Drives the crime.lua plugin."
+    },
+    "crime_system": {
+        "_desc": "Per-tick crime simulation. NPCs with high criminality + economic desperation roll for crime. Police investigate, courts try, prisons hold.",
+        "crime_types": {
+            "petty": {
+                "code": "CRM01",
+                "severity": 1,
+                "examples": [
+                    "pickpocketing",
+                    "shoplifting",
+                    "vandalism",
+                    "trespassing"
+                ],
+                "district_happiness_impact": -0.02,
+                "victim_mood_impact": -0.08,
+                "investigation_ticks": 48,
+                "sentence_ticks": 240,
+                "fine_gep": 200,
+                "_note": "Minor crimes. Short investigation, small district impact."
+            },
+            "medium": {
+                "code": "CRM02",
+                "severity": 2,
+                "examples": [
+                    "robbery",
+                    "assault",
+                    "fraud",
+                    "black_market_trading"
+                ],
+                "district_happiness_impact": -0.05,
+                "victim_mood_impact": -0.15,
+                "investigation_ticks": 120,
+                "sentence_ticks": 720,
+                "fine_gep": 1000,
+                "_note": "Significant crimes. Longer investigation, material district impact."
+            },
+            "serious": {
+                "code": "CRM03",
+                "severity": 3,
+                "examples": [
+                    "murder",
+                    "terrorism",
+                    "kidnapping",
+                    "major_heist"
+                ],
+                "district_happiness_impact": -0.10,
+                "victim_mood_impact": -0.30,
+                "investigation_ticks": 240,
+                "sentence_ticks": 2400,
+                "fine_gep": 5000,
+                "_note": "Severe crimes. Extended investigation, major district destabilization."
+            }
+        },
+        "criminality_trait": {
+            "_desc": "Hidden per-NPC trait [0.0-1.0] seeded deterministically. Modified by economic conditions and personality.",
+            "base_formula": "hash(npc_id + 'criminality') % 100 / 100",
+            "modifiers": {
+                "unemployment": {
+                    "delta": 0.15,
+                    "condition": "npc has no job"
+                },
+                "low_income": {
+                    "delta": 0.10,
+                    "condition": "income < district_median * 0.5"
+                },
+                "low_safety_need": {
+                    "delta": 0.05,
+                    "condition": "safety need < 0.3"
+                },
+                "high_loyalty": {
+                    "delta": -0.20,
+                    "condition": "loyalty > 0.7"
+                },
+                "high_education": {
+                    "delta": -0.10,
+                    "condition": "education_level >= 2"
+                },
+                "witness_crime": {
+                    "delta": 0.03,
+                    "condition": "recently witnessed crime"
+                },
+                "substance_use": {
+                    "delta": 0.08,
+                    "condition": "alcohol/substance need active"
+                }
+            },
+            "cap": {
+                "min": 0.0,
+                "max": 1.0
+            }
+        },
+        "crime_probability": {
+            "formula": "criminality * (1 - employment_factor) * (1 - safety_factor) * base_rate",
+            "base_rate_per_tick": 0.001,
+            "time_of_day_modifier": {
+                "T01_deep_night": 2.0,
+                "T02_early_morning": 1.5,
+                "T03_morning": 0.5,
+                "T04_noon": 0.3,
+                "T05_afternoon": 0.4,
+                "T06_dusk": 0.8,
+                "T07_evening": 1.2,
+                "T08_night": 1.8,
+                "T09_late_night": 2.5,
+                "T10_dead_hour": 2.0
+            },
+            "district_modifier": {
+                "well_lit": -0.3,
+                "police_presence": -0.5,
+                "poverty_high": 0.4,
+                "undercity": 0.6
+            }
+        },
+        "investigation_pipeline": {
+            "stages": [
+                {
+                    "name": "crime_occurs",
+                    "action": "log crime event, notify nearby NPCs"
+                },
+                {
+                    "name": "police_dispatch",
+                    "action": "assign nearest police NPC, begin travel"
+                },
+                {
+                    "name": "evidence_gathering",
+                    "action": "investigation_ticks countdown, success_rate *= police_skill"
+                },
+                {
+                    "name": "suspect_identified",
+                    "probability": "0.6 + police_budget_efficiency * 0.3"
+                },
+                {
+                    "name": "court_trial",
+                    "duration_ticks": 48,
+                    "requires": "courthouse_capacity"
+                },
+                {
+                    "name": "sentencing",
+                    "action": "fine OR prison based on severity"
+                }
+            ],
+            "unsolved_crime_decay": {
+                "_desc": "Unsolved crimes persist and reduce district safety over time",
+                "safety_penalty_per_unsolved": 0.01,
+                "cold_case_after_ticks": 720,
+                "cold_case_safety_return": 0.005
+            }
+        },
+        "police_coverage": {
+            "officers_per_1000_population": 3,
+            "response_time_formula": "distance_to_station / 2 ticks",
+            "investigation_speed": "staff_level * budget_efficiency",
+            "patrol_coverage_formula": "min(1.0, officers_available / (district_area * 0.1))",
+            "corruption_factor": "reduces effectiveness by corruption_level * 0.5"
+        },
+        "prison": {
+            "capacity_per_facility": 200,
+            "prisoner_labor": {
+                "enabled": true,
+                "productivity_multiplier": 0.5,
+                "eligible_jobs": [
+                    "recycling",
+                    "fabrication",
+                    "cleaning"
+                ],
+                "_note": "Prisoners can work at reduced productivity. Reduces operational cost."
+            },
+            "overcrowding": {
+                "threshold": 0.9,
+                "effects": {
+                    "escape_risk_per_tick": 0.001,
+                    "violence_risk_per_tick": 0.002,
+                    "district_happiness_penalty": -0.03
+                }
+            },
+            "rehabilitation": {
+                "effect_per_sentence_tick": -0.001,
+                "_desc": "Criminality trait slowly decreases during imprisonment"
+            }
+        }
+    }
+}

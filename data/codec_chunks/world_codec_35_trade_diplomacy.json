@@ -1,0 +1,166 @@
+{
+    "_chunk": {
+        "id": "chunk_35_trade_diplomacy",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "economy",
+        "prev_chunk": "chunk_34_schedules_enhanced",
+        "next_chunk": null,
+        "description": "External trade, caravan events, merchant mood tracking, price volatility, and foreign worker contracts."
+    },
+    "trade_system": {
+        "_desc": "Inter-city trade via outside connections. Periodic caravan events bring goods. Merchant mood affects future trade quality. Price volatility from overproduction/scarcity.",
+        "outside_connections": {
+            "_desc": "Physical connections to the outside world. Each enables import/export with capacity limits.",
+            "types": {
+                "road": {
+                    "capacity_units_per_day": 100,
+                    "import_cost_mult": 1.2,
+                    "export_revenue_mult": 0.8,
+                    "_note": "Most common. Cheapest infrastructure but limited throughput."
+                },
+                "rail": {
+                    "capacity_units_per_day": 300,
+                    "import_cost_mult": 1.1,
+                    "export_revenue_mult": 0.85,
+                    "_note": "High capacity for bulk goods. Requires train infrastructure."
+                },
+                "port": {
+                    "capacity_units_per_day": 500,
+                    "import_cost_mult": 1.05,
+                    "export_revenue_mult": 0.9,
+                    "_note": "Highest capacity. Lowest margins. Enables overseas trade."
+                },
+                "air": {
+                    "capacity_units_per_day": 50,
+                    "import_cost_mult": 1.5,
+                    "export_revenue_mult": 0.7,
+                    "_note": "Low capacity, high cost. For luxury/urgent goods."
+                }
+            }
+        },
+        "caravans": {
+            "_desc": "Periodic trade caravan events. A caravan arrives, offers goods for exchange, and departs. Merchant mood determines quality/variety.",
+            "frequency_ticks": 2400,
+            "arrival_seed": "{tick}_caravan_arrival",
+            "types": {
+                "standard": {
+                    "code": "CRV01",
+                    "goods_variety": 10,
+                    "value_multiplier": 1.0,
+                    "min_population": 0
+                },
+                "luxury": {
+                    "code": "CRV02",
+                    "goods_variety": 5,
+                    "value_multiplier": 2.0,
+                    "min_population": 5000,
+                    "_note": "Rare goods only available to larger cities."
+                },
+                "black_market": {
+                    "code": "CRV03",
+                    "goods_variety": 8,
+                    "value_multiplier": 1.5,
+                    "legal": false,
+                    "detection_risk": 0.2,
+                    "_note": "Illegal goods. Risk of police interception."
+                },
+                "humanitarian": {
+                    "code": "CRV04",
+                    "goods_variety": 3,
+                    "value_multiplier": 0.5,
+                    "trigger": "crisis_level >= crisis",
+                    "_note": "Emergency supplies during economic collapse."
+                }
+            },
+            "merchant_mood": {
+                "_desc": "Persistent per-merchant relationship. Good trades improve future selection; bad trades/seizures shrink caravans.",
+                "initial_mood": 0.5,
+                "modifiers": {
+                    "fair_trade": 0.10,
+                    "generous_trade": 0.15,
+                    "underpayment": -0.10,
+                    "seizure_of_goods": -0.50,
+                    "tax_on_merchants": -0.05,
+                    "trade_agreement_honored": 0.20
+                },
+                "mood_effects": {
+                    "high_mood": {
+                        "threshold": 0.7,
+                        "effect": "larger caravan, better goods"
+                    },
+                    "neutral_mood": {
+                        "threshold": 0.3,
+                        "effect": "standard caravan"
+                    },
+                    "low_mood": {
+                        "threshold": 0.0,
+                        "effect": "smaller caravan, may skip visit"
+                    }
+                },
+                "stop_visiting_threshold": -0.3
+            }
+        },
+        "price_volatility": {
+            "_desc": "Prices fluctuate based on supply/demand, overproduction, and global events.",
+            "base_inflation_per_tick": 0.00001,
+            "overproduction_penalty": {
+                "threshold": "export_volume > 2x domestic_demand",
+                "price_drop_pct": 0.15,
+                "_note": "Flooding the market with one good crashes its price."
+            },
+            "scarcity_bonus": {
+                "threshold": "supply < 0.5x demand",
+                "price_increase_pct": 0.25
+            },
+            "global_events": {
+                "price_range_multiplier": [
+                    0.5,
+                    2.0
+                ],
+                "event_frequency_ticks": 7200,
+                "seed_template": "{tick}_price_event",
+                "event_types": [
+                    {
+                        "name": "trade_boom",
+                        "multiplier": 1.3,
+                        "duration_ticks": 480
+                    },
+                    {
+                        "name": "embargo",
+                        "multiplier": 0.5,
+                        "duration_ticks": 960
+                    },
+                    {
+                        "name": "resource_discovery",
+                        "multiplier": 0.7,
+                        "affects": "raw_materials"
+                    },
+                    {
+                        "name": "tech_breakthrough",
+                        "multiplier": 1.5,
+                        "affects": "finished_goods"
+                    }
+                ]
+            }
+        },
+        "foreign_workers": {
+            "_desc": "Temporary workers arriving via outside connections on contract.",
+            "arrive_via": "outside_connection",
+            "temporary": true,
+            "contract_duration_ticks": 4800,
+            "skill_level_distribution": {
+                "none": 0.2,
+                "basic": 0.4,
+                "university": 0.3,
+                "graduate": 0.1
+            },
+            "seed_template": "{tick}_foreign_worker",
+            "effects": {
+                "fills_labor_shortage": true,
+                "wage_pressure": -0.05,
+                "cultural_diversity_bonus": 0.02
+            }
+        }
+    }
+}

@@ -1,0 +1,155 @@
+{
+    "_chunk": {
+        "id": "chunk_33_pollution",
+        "version": "1.0.0",
+        "type": "world_codec_chunk",
+        "category": "environment",
+        "prev_chunk": "chunk_32_education",
+        "next_chunk": "chunk_34_schedules_enhanced",
+        "description": "Per-district pollution tracking, health cascade, air quality, and mitigation systems. Drives the pollution.lua plugin."
+    },
+    "pollution_system": {
+        "_desc": "Environmental contamination model. Industrial zones emit pollution, which spreads via wind, degrades health, and is cleaned by rain and parks.",
+        "sources": {
+            "industrial": {
+                "output_per_tick": 0.005,
+                "zone_types": [
+                    "ZONE_I2",
+                    "ZONE_I3"
+                ],
+                "scales_with": "active_workers_in_zone"
+            },
+            "traffic": {
+                "output_per_tick": 0.002,
+                "scales_with": "vehicle_count_in_district",
+                "_note": "Electric/hover vehicles produce 0 pollution."
+            },
+            "power_fossil": {
+                "output_per_tick": 0.003,
+                "applies_to": [
+                    "gas_plant",
+                    "coal_plant"
+                ],
+                "_note": "Nuclear and fusion produce negligible pollution."
+            },
+            "waste": {
+                "output_per_tick": 0.001,
+                "condition": "garbage_capacity_exceeded",
+                "_note": "Uncollected garbage generates ground pollution."
+            },
+            "construction": {
+                "output_per_tick": 0.002,
+                "condition": "active_construction_in_district",
+                "duration": "construction_time_ticks"
+            }
+        },
+        "natural_decay": {
+            "per_tick": 0.001,
+            "_desc": "Baseline natural dissipation of pollution each tick."
+        },
+        "wind_spread": {
+            "_desc": "Pollution drifts to adjacent districts based on deterministic wind direction.",
+            "direction_formula": "tick % 8 → maps to 8 compass directions",
+            "spread_factor": 0.3,
+            "max_spread_districts": 2,
+            "seed_template": "{tick}_wind_direction"
+        },
+        "health_cascade": {
+            "_desc": "Pollution level maps to health effects on NPCs living/working in the district.",
+            "thresholds": {
+                "clean": {
+                    "range": [
+                        0.0,
+                        0.2
+                    ],
+                    "health_effect_per_tick": 0.0,
+                    "label": "Fresh air"
+                },
+                "low": {
+                    "range": [
+                        0.2,
+                        0.4
+                    ],
+                    "health_effect_per_tick": -0.001,
+                    "label": "Mild irritation"
+                },
+                "medium": {
+                    "range": [
+                        0.4,
+                        0.6
+                    ],
+                    "health_effect_per_tick": -0.003,
+                    "label": "Respiratory issues",
+                    "outdoor_activity_penalty": -0.2
+                },
+                "high": {
+                    "range": [
+                        0.6,
+                        0.8
+                    ],
+                    "health_effect_per_tick": -0.005,
+                    "label": "Serious health risk",
+                    "outdoor_activity_penalty": -0.5,
+                    "land_value_penalty": -0.15
+                },
+                "severe": {
+                    "range": [
+                        0.8,
+                        1.0
+                    ],
+                    "health_effect_per_tick": -0.010,
+                    "label": "Toxic environment",
+                    "outdoor_activity_penalty": -0.8,
+                    "land_value_penalty": -0.30,
+                    "npc_escape_modifier": 0.10
+                }
+            }
+        },
+        "mitigation": {
+            "parks": {
+                "reduction_per_tick": 0.002,
+                "radius": "same_district",
+                "_note": "Green spaces absorb pollution. More parks = cleaner air."
+            },
+            "filters": {
+                "reduction_per_tick": 0.005,
+                "requires": "pollution_filter_building",
+                "_note": "Industrial filters at source. Requires tech research."
+            },
+            "rain": {
+                "reduction_per_tick": 0.003,
+                "condition": "weather_type == rain",
+                "_note": "Rain washes particulates from air. Acid rain does not clean."
+            },
+            "wind_clear": {
+                "reduction_per_tick": 0.002,
+                "condition": "wind_speed > 20",
+                "_note": "Strong winds disperse local pollution (but spread to neighbors)."
+            }
+        },
+        "monitoring": {
+            "pollution_sensor": {
+                "capacity": "1 per district",
+                "provides": "real-time pollution_level for district metrics",
+                "_note": "Without monitoring, pollution is estimated from zone types."
+            },
+            "alert_thresholds": {
+                "advisory": 0.4,
+                "warning": 0.6,
+                "emergency": 0.8
+            }
+        }
+    },
+    "radiation": {
+        "_desc": "Separate from pollution. Nuclear incidents create persistent radiation zones.",
+        "sources": [
+            "nuclear_meltdown",
+            "dirty_bomb",
+            "illegal_waste_dump"
+        ],
+        "decay_rate_per_tick": 0.0001,
+        "health_effect_multiplier": 3.0,
+        "cleanup_cost_gep": 50000,
+        "_note": "Radiation decays 10x slower than pollution and has 3x health impact."
+    }
+}
