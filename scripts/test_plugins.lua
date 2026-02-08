@@ -69,8 +69,8 @@ WorldTick = 100
 -- Load factions module
 dofile("ao-processes/factions.lua")
 
-test("Factions: init_reecho_factions creates 7 factions", function()
-    init_reecho_factions()
+test("Factions: init_default_factions creates 7 factions", function()
+    init_default_factions()
     local count = 0
     for _ in pairs(FACTIONS) do count = count + 1 end
     assert_eq(count, 7)

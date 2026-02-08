@@ -1,11 +1,18 @@
 --[[
-  RE:ECHO City - District Process
+  AO World Engine - District Process
   
   Each district handles ~10,000 NPCs with deterministic scheduling.
   
+  Config loaded from:
+  - world_codec_14_behaviors.json → archetype routines, reactions, schedule_system
+  - world_codec_29_commuting.json → transport modes, congestion, commute penalties
+  - world_codec_34_schedules_enhanced.json → 24-block schedule system
+  
   SECURITY NOTE: This file contains NO secrets, keys, or wallet data.
-  All wallet operations happen client-side via ArConnect.
 ]]--
+
+local json = require("json")
+local codec = require("codec_loader")
 
 -- State
 NPCs = NPCs or {}
@@ -343,8 +350,11 @@ function generate_npc(npc_id, archetypes)
   }
 end
 
-function get_archetype_routine(archetype)
-  local routines = {
+-- =============================================================================
+-- ARCHETYPE DATA (defaults — overridden by codec_14_behaviors when loaded)
+-- =============================================================================
+
+ARCHETYPE_ROUTINES = {
     merchant = {
       { start_hour = 8, end_hour = 18, location = "market", action = "T", probability = 0.9, interruptible = true },
       { start_hour = 18, end_hour = 22, location = "tavern", action = "R", probability = 0.6, interruptible = true },
@@ -361,28 +371,107 @@ function get_archetype_routine(archetype)
       { start_hour = 12, end_hour = 22, location = "territory", action = "patrol", probability = 0.9, interruptible = true },
       { start_hour = 22, end_hour = 6, location = "home", action = "R", probability = 0.7, interruptible = false }
     }
-  }
-  
-  return routines[archetype] or routines.merchant
-end
+}
 
-function get_archetype_reactions(archetype)
-  return {
-    ["event:fire"] = { action = "evacuate", probability = 0.99 },
-    ["event:blackout"] = { action = "opportunistic", probability = 0.3 },
-    ["event:festival"] = { action = "celebrate", probability = 0.5 }
-  }
-end
+ARCHETYPE_REACTIONS = {
+    default = {
+        ["event:fire"] = { action = "evacuate", probability = 0.99 },
+        ["event:blackout"] = { action = "opportunistic", probability = 0.3 },
+        ["event:festival"] = { action = "celebrate", probability = 0.5 }
+    }
+}
 
-function get_archetype_personality(archetype)
-  local personalities = {
+ARCHETYPE_PERSONALITIES = {
     merchant = { greed = 0.7, caution = 0.6, sociability = 0.8 },
     hacker_drone = { stealth = 0.9, greed = 0.7, paranoia = 0.8 },
     street_samurai = { honor = 0.8, aggression = 0.6, loyalty = 0.7 }
-  }
-  
-  return personalities[archetype] or { neutral = 0.5 }
+}
+
+-- =============================================================================
+-- COMMUTE CONFIG (from codec_29 when loaded)
+-- =============================================================================
+
+COMMUTE_CONFIG = {
+    transport_modes = {},
+    congestion = { peak_hours = {7, 8, 9, 17, 18}, congestion_multiplier = 1.4 }
+}
+
+function get_archetype_routine(archetype)
+  return ARCHETYPE_ROUTINES[archetype] or ARCHETYPE_ROUTINES.merchant or {}
 end
+
+function get_archetype_reactions(archetype)
+  return ARCHETYPE_REACTIONS[archetype] or ARCHETYPE_REACTIONS.default or {}
+end
+
+function get_archetype_personality(archetype)
+  return ARCHETYPE_PERSONALITIES[archetype] or { neutral = 0.5 }
+end
+
+-- Calculate commute time penalty using codec_29 config
+function calculate_commute_time(distance, hour, wealth)
+    local modes = COMMUTE_CONFIG.transport_modes
+    if not modes or not next(modes) then
+        return 1  -- No commute data loaded, default 1 tick
+    end
+    
+    -- Find best affordable mode
+    local best_mode = "walk"
+    local best_speed = 1.0
+    for mode_name, mode in pairs(modes) do
+        if (mode.max_distance or 999) >= distance then
+            if mode.cost_per_trip == 0 or (wealth and wealth >= mode.cost_per_trip * 10) then
+                if (mode.speed_factor or 1.0) > best_speed then
+                    best_speed = mode.speed_factor
+                    best_mode = mode_name
+                end
+            end
+        end
+    end
+    
+    -- Apply congestion during peak hours
+    local congestion = 1.0
+    for _, peak in ipairs(COMMUTE_CONFIG.congestion.peak_hours or {}) do
+        if hour == peak then
+            congestion = COMMUTE_CONFIG.congestion.congestion_multiplier or 1.4
+            break
+        end
+    end
+    
+    return math.ceil(distance / best_speed * congestion)
+end
+
+-- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_14_behaviors is loaded, extract archetype data
+codec.on("behaviors", function(data)
+    if data.archetype_routines then
+        ARCHETYPE_ROUTINES = codec.deep_merge(ARCHETYPE_ROUTINES, data.archetype_routines)
+    end
+    if data.archetype_reactions then
+        ARCHETYPE_REACTIONS = codec.deep_merge(ARCHETYPE_REACTIONS, data.archetype_reactions)
+    end
+    if data.archetype_personalities then
+        ARCHETYPE_PERSONALITIES = codec.deep_merge(ARCHETYPE_PERSONALITIES, data.archetype_personalities)
+    end
+end)
+
+-- When codec_29_commuting is loaded, extract transport data
+codec.on("commuting", function(data)
+    if data.commuting then
+        if data.commuting.transport_modes then
+            COMMUTE_CONFIG.transport_modes = data.commuting.transport_modes
+        end
+        if data.commuting.congestion then
+            COMMUTE_CONFIG.congestion = codec.deep_merge(COMMUTE_CONFIG.congestion, data.commuting.congestion)
+        end
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
 
 function persist_events()
   -- In production: Upload to Arweave via bundler
@@ -422,5 +511,11 @@ return {
   calculate_npc_location = calculate_npc_location,
   can_interact = can_interact,
   decide_action = decide_action,
-  get_bleed_manifestation = get_bleed_manifestation
+  get_bleed_manifestation = get_bleed_manifestation,
+  calculate_commute_time = calculate_commute_time,
+  -- Codec-backed config (access for external processes)
+  ARCHETYPE_ROUTINES = ARCHETYPE_ROUTINES,
+  ARCHETYPE_REACTIONS = ARCHETYPE_REACTIONS,
+  ARCHETYPE_PERSONALITIES = ARCHETYPE_PERSONALITIES,
+  COMMUTE_CONFIG = COMMUTE_CONFIG
 }

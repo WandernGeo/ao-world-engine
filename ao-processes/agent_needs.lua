@@ -1,17 +1,20 @@
 --[[
   AO World Engine - Agent Needs System
   
-  Egregoria-inspired need-based decision making for NPCs.
+  Need-based decision making for NPCs.
   Each NPC has needs that decay over time, driving autonomous behavior.
   
-  Source: Egregoria (Uriopass/Egregoria) - https://github.com/Uriopass/Egregoria
-  See: docs/CITY_SIMULATION_RESEARCH.md
+  Config loaded from:
+  - world_codec_14_behaviors.json → needs_config (decay rates, thresholds, satisfiers)
+  - world_codec_19_social.json → trust_modifiers
+  - world_codec_30_dynamic_metrics.json → morale, stress, thought system
 ]]--
 
 local json = require("json")
+local codec = require("codec_loader")
 
 -- =============================================================================
--- NEEDS CONFIGURATION
+-- NEEDS CONFIGURATION (defaults — overridden by codec_14_behaviors when loaded)
 -- =============================================================================
 
 NEEDS_CONFIG = {
@@ -296,7 +299,7 @@ function apply_activity(npc_id, activity_name)
 end
 
 -- =============================================================================
--- RELATIONSHIP INFLUENCE
+-- RELATIONSHIP INFLUENCE (defaults — overridden by codec_19_social when loaded)
 -- =============================================================================
 
 RELATIONSHIP_TRUST_MODIFIERS = {
@@ -312,6 +315,28 @@ RELATIONSHIP_TRUST_MODIFIERS = {
     enemy = 0.1,
     stranger = 0.4
 }
+
+-- =============================================================================
+-- MORALE & STRESS (from codec_30_dynamic_metrics when loaded)
+-- =============================================================================
+
+MORALE_CONFIG = {
+    sources = {},
+    requirement = { per_skill_cost = { basic = 1, advanced = 2, expert = 3, master = 5 } },
+    stress_rate_table = {}
+}
+
+THOUGHT_SYSTEM = {
+    categories = {},
+    duration_ticks = 240,
+    max_active_thoughts = 5
+}
+
+-- Per-NPC active thoughts: { npc_id: [{ category, impact, tick_added }, ...] }
+NPC_THOUGHTS = {}
+
+-- Per-NPC morale/stress: { npc_id: { morale = 0, stress = 0 } }
+NPC_MORALE = {}
 
 -- Calculate social satisfaction from interaction
 function calculate_social_gain(npc_id, other_npc_id, relationship_type)
@@ -374,6 +399,132 @@ end
 function reset_all_needs()
     NPC_NEEDS = {}
 end
+
+-- =============================================================================
+-- THOUGHT & MORALE FUNCTIONS
+-- =============================================================================
+
+-- Add a thought to an NPC
+function add_thought(npc_id, category, impact, tick)
+    if not NPC_THOUGHTS[npc_id] then NPC_THOUGHTS[npc_id] = {} end
+    local thoughts = NPC_THOUGHTS[npc_id]
+    
+    -- Enforce max_active_thoughts
+    local max_t = THOUGHT_SYSTEM.max_active_thoughts or 5
+    if #thoughts >= max_t then
+        -- Replace weakest thought if new is stronger
+        local weakest_idx = 1
+        local weakest_val = math.abs(thoughts[1].impact or 0)
+        for i = 2, #thoughts do
+            local v = math.abs(thoughts[i].impact or 0)
+            if v < weakest_val then
+                weakest_val = v
+                weakest_idx = i
+            end
+        end
+        if math.abs(impact) > weakest_val then
+            table.remove(thoughts, weakest_idx)
+        else
+            return -- New thought too weak to replace
+        end
+    end
+    
+    table.insert(thoughts, {
+        category = category,
+        impact = impact,
+        tick_added = tick or 0
+    })
+end
+
+-- Calculate thought mood modifier (sum of active thought impacts)
+function get_thought_modifier(npc_id, current_tick)
+    local thoughts = NPC_THOUGHTS[npc_id]
+    if not thoughts then return 0 end
+    
+    local modifier = 0
+    local duration = THOUGHT_SYSTEM.duration_ticks or 240
+    local i = 1
+    while i <= #thoughts do
+        local age = current_tick - (thoughts[i].tick_added or 0)
+        if age >= duration then
+            table.remove(thoughts, i)  -- Expired
+        else
+            -- Linear decay: full impact → 0 over duration_ticks
+            local decay_factor = 1.0 - (age / duration)
+            modifier = modifier + (thoughts[i].impact * decay_factor)
+            i = i + 1
+        end
+    end
+    return modifier
+end
+
+-- Update morale for an NPC based on codec_30 morale_system
+function update_morale(npc_id, morale_sources_total, skill_requirement)
+    if not NPC_MORALE[npc_id] then
+        NPC_MORALE[npc_id] = { morale = 0, stress = 0.0 }
+    end
+    local m = NPC_MORALE[npc_id]
+    m.morale = morale_sources_total
+    
+    local delta = m.morale - (skill_requirement or 0)
+    local rate_table = MORALE_CONFIG.stress_rate_table
+    local stress_change = 0
+    
+    if delta >= 3 then stress_change = rate_table.delta_plus_3_or_more or -0.20
+    elseif delta >= 2 then stress_change = rate_table.delta_plus_2 or -0.10
+    elseif delta >= 1 then stress_change = rate_table.delta_plus_1 or -0.05
+    elseif delta >= 0 then stress_change = rate_table.delta_0 or -0.02
+    elseif delta >= -1 then stress_change = rate_table.delta_minus_1 or 0.03
+    elseif delta >= -2 then stress_change = rate_table.delta_minus_2 or 0.05
+    else stress_change = rate_table.delta_minus_3_or_less or 0.08
+    end
+    
+    m.stress = math.max(0, math.min(1.0, m.stress + stress_change))
+    return m
+end
+
+-- =============================================================================
+-- CODEC CALLBACKS (wire config from JSON codec chunks)
+-- =============================================================================
+
+-- When codec_14_behaviors is loaded, extract needs_config
+codec.on("behaviors", function(data)
+    if data.needs_config then
+        NEEDS_CONFIG = codec.deep_merge(NEEDS_CONFIG, data.needs_config)
+    end
+    if data.schedule_system then
+        -- Make schedule data available for schedule-aware need decay
+        SCHEDULE_CONFIG = data.schedule_system
+    end
+end)
+
+-- When codec_19_social is loaded, extract trust modifiers
+codec.on("social", function(data)
+    if data.trust_modifiers then
+        RELATIONSHIP_TRUST_MODIFIERS = codec.deep_merge(RELATIONSHIP_TRUST_MODIFIERS, data.trust_modifiers)
+    end
+end)
+
+-- When codec_30_dynamic_metrics is loaded, extract morale/thought config
+codec.on("dynamic_metrics", function(data)
+    if data.morale_system then
+        if data.morale_system.morale_sources then
+            MORALE_CONFIG.sources = data.morale_system.morale_sources
+        end
+        if data.morale_system.morale_requirement then
+            MORALE_CONFIG.requirement = data.morale_system.morale_requirement
+        end
+        if data.morale_system.stress_rate_table then
+            MORALE_CONFIG.stress_rate_table = data.morale_system.stress_rate_table
+        end
+    end
+    if data.thought_system then
+        THOUGHT_SYSTEM = codec.deep_merge(THOUGHT_SYSTEM, data.thought_system)
+    end
+end)
+
+-- Register the standard LoadCodec handler
+codec.register_handler()
 
 -- =============================================================================
 -- AO MESSAGE HANDLERS
@@ -457,9 +608,13 @@ Handlers.add("DecayNeeds", Handlers.utils.hasMatchingTag("Action", "DecayNeeds")
 return {
     -- Configuration
     NEEDS_CONFIG = NEEDS_CONFIG,
+    MORALE_CONFIG = MORALE_CONFIG,
+    THOUGHT_SYSTEM = THOUGHT_SYSTEM,
     
     -- State
     NPC_NEEDS = NPC_NEEDS,
+    NPC_THOUGHTS = NPC_THOUGHTS,
+    NPC_MORALE = NPC_MORALE,
     
     -- Core functions
     init_npc_needs = init_npc_needs,
@@ -475,6 +630,11 @@ return {
     -- Activities
     apply_activity = apply_activity,
     calculate_social_gain = calculate_social_gain,
+    
+    -- Thought & Morale
+    add_thought = add_thought,
+    get_thought_modifier = get_thought_modifier,
+    update_morale = update_morale,
     
     -- Batch operations
     get_mood_distribution = get_mood_distribution,

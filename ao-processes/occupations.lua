@@ -6,9 +6,13 @@
   - Schedules and routines
   - City services (police, security, maintenance)
   - Job-specific behaviors
+
+  Config loaded from:
+  - world_codec_15_occupations.json → occupation definitions
 ]]--
 
 local json = require("json")
+local codec = require("codec_loader")
 
 -- =============================================================================
 -- OCCUPATION REGISTRY (Pluggable)
@@ -59,7 +63,7 @@ function register_occupation(occupation_id, definition)
 end
 
 -- =============================================================================
--- DEFAULT CITY OCCUPATIONS
+-- DEFAULT CITY OCCUPATIONS (fallback — overridden by codec_15 when loaded)
 -- =============================================================================
 
 function init_city_occupations()
@@ -402,6 +406,22 @@ Handlers.add("GetAllOccupations", Handlers.utils.hasMatchingTag("Action", "GetAl
         })
     end
 )
+
+-- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_15_occupations is loaded, register occupations from JSON
+codec.on("occupations", function(data)
+    if data.occupations then
+        for occ_id, definition in pairs(data.occupations) do
+            register_occupation(occ_id, definition)
+        end
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
 
 -- =============================================================================
 -- EXPORT

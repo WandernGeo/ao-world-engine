@@ -1,18 +1,21 @@
 --[[
   AO World Engine - Social Dynamics Process
   
-  Lua port of social_dynamics.py for on-chain relationship tracking.
-  Handles:
+  On-chain relationship tracking:
   - Trust and relationship tracking
   - Meeting history and frequency
   - Group formation and social networks
   - Gossip propagation
+  
+  Config loaded from:
+  - world_codec_19_social.json → trust, thresholds, groups, gossip
   
   Uses deterministic computation for verifiable state.
 ]]--
 
 local json = json or require("json")
 local crypto = crypto or require("crypto")
+local codec = require("codec_loader")
 
 -- =============================================================================
 -- GLOBAL STATE
@@ -30,7 +33,7 @@ Groups = Groups or {}
 -- Gossip: { gossip_id: { content, origin, spread_to, tick } }
 ActiveGossip = ActiveGossip or {}
 
--- Configuration from codec_19
+-- Configuration (defaults — overridden by codec_19_social when loaded)
 TRUST_BASE = 0.1
 TRUST_PER_MEETING = 0.01
 TRUST_MAX = 1.0
@@ -508,6 +511,36 @@ Handlers.add("cron-social", Handlers.utils.hasMatchingTag("Action", "Cron"), fun
 end)
 
 -- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_19_social is loaded, extract all social config
+codec.on("social", function(data)
+    if data.trust then
+        if data.trust.base then TRUST_BASE = data.trust.base end
+        if data.trust.per_meeting then TRUST_PER_MEETING = data.trust.per_meeting end
+        if data.trust.max then TRUST_MAX = data.trust.max end
+        if data.trust.decay_rate then TRUST_DECAY_RATE = data.trust.decay_rate end
+    end
+    if data.meeting_thresholds then
+        MEETING_THRESHOLDS = codec.deep_merge(MEETING_THRESHOLDS, data.meeting_thresholds)
+    end
+    if data.relationship_thresholds then
+        RELATIONSHIP_THRESHOLDS = codec.deep_merge(RELATIONSHIP_THRESHOLDS, data.relationship_thresholds)
+    end
+    if data.group_types then
+        GROUP_TYPES = codec.deep_merge(GROUP_TYPES, data.group_types)
+    end
+    if data.gossip then
+        if data.gossip.spread_chance then GOSSIP_SPREAD_CHANCE = data.gossip.spread_chance end
+        if data.gossip.decay_ticks then GOSSIP_DECAY_TICKS = data.gossip.decay_ticks end
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
+
+-- =============================================================================
 -- MODULE EXPORT
 -- =============================================================================
 
@@ -520,5 +553,9 @@ return {
     create_gossip = create_gossip,
     spread_gossip = spread_gossip,
     get_reputation = get_reputation,
-    modify_reputation = modify_reputation
+    modify_reputation = modify_reputation,
+    -- Codec-backed config
+    MEETING_THRESHOLDS = MEETING_THRESHOLDS,
+    RELATIONSHIP_THRESHOLDS = RELATIONSHIP_THRESHOLDS,
+    GROUP_TYPES = GROUP_TYPES
 }

@@ -1,9 +1,15 @@
 --[[
   AO World Engine - Master World Process
   
-  The central coordinator for the RE:ECHO City simulation.
+  The central coordinator for the city simulation.
   Runs autonomously via CRON messages, advancing ticks and 
   coordinating all district processes.
+
+  Config loaded from:
+  - world_codec_20_economy.json → shop items, wages
+  - world_codec_14_behaviors.json → archetype shifts, shift definitions
+  - world_codec_04_characters.json → stat definitions
+  - world_codec_24_action_durations.json → travel durations
   
   CRON SETUP:
   - Spawned with Cron-Interval: "1-minute" (or "10-minutes" for prod)
@@ -14,6 +20,7 @@
 ]]--
 
 local json = json or require("json")
+local codec = require("codec_loader")
 
 -- Crypto module optional (not available in all AOS environments)
 local crypto_available, crypto = pcall(require, "crypto")
@@ -139,7 +146,7 @@ NPCProperty = NPCProperty or {}
 ItemTransactionLog = ItemTransactionLog or {}
 MAX_ITEM_TRANSACTION_LOG = 500
 
--- Available items in shops (prices in GEP)
+-- Available items in shops (defaults — overridden by codec_20 shop_inventory when loaded)
 SHOP_ITEMS = {
     -- Food and consumables
     food = {
@@ -196,7 +203,7 @@ MAX_GEOECHO_MESSAGES = 200
 -- NPC stats: { npc_id: { int, cha, con, str, dex, wis } }
 NPCStats = NPCStats or {}
 
--- Stat definitions
+-- NPC stat definitions (defaults — overridden by codec_04 when loaded)
 STAT_DEFINITIONS = {
     intelligence = { min = 3, max = 18, desc = "Problem solving, hacking" },
     charisma = { min = 3, max = 18, desc = "Social skills, persuasion" },
@@ -207,7 +214,7 @@ STAT_DEFINITIONS = {
 }
 
 
--- Base wages per shift (paid once per day at shift end)
+-- Base wages per shift (defaults — overridden by codec_20 archetype_wages when loaded)
 -- Values in GEP (game currency)
 ARCHETYPE_WAGES = {
     -- High earners
@@ -235,7 +242,7 @@ ARCHETYPE_WAGES = {
     ["default"] = 150
 }
 
--- Archetype-to-shift mapping for auto-assignment
+-- Archetype-to-shift mapping (defaults — overridden by codec_14 archetype_shifts when loaded)
 -- When loading schedules without explicit shift, derive from archetype/role
 ARCHETYPE_SHIFTS = {
     -- Day shift (9-17)
@@ -410,7 +417,7 @@ end
 -- TRAVEL DURATION CALCULATION (from codec_24_action_durations)
 -- =============================================================================
 
--- Travel durations in ticks (1 tick = 6 minutes)
+-- Travel durations in ticks (defaults — overridden by codec_24 when loaded)
 TRAVEL_DURATIONS = {
     same_building = 0,
     adjacent_building = 1,
@@ -487,8 +494,7 @@ end
 -- NPC MOVEMENT BEHAVIORS
 -- =============================================================================
 
--- Shift definitions: each shift defines work hours
--- Shift types: day, night, graveyard, evening, flexible, always_on
+-- Shift definitions (defaults — overridden by codec_14 when loaded)
 SHIFT_DEFINITIONS = {
     day = { start = 9, finish = 17 },           -- Standard office hours
     night = { start = 22, finish = 6 },          -- Night security, bars
@@ -2408,6 +2414,50 @@ function table_length(t)
 end
 
 -- =============================================================================
+-- CODEC CALLBACKS (wire config from JSON codec chunks)
+-- =============================================================================
+
+-- When codec_20_economy is loaded, extract shop/wage data
+codec.on("economy", function(data)
+    if data.shop_inventory then
+        SHOP_ITEMS = codec.deep_merge(SHOP_ITEMS, data.shop_inventory)
+    end
+    if data.archetype_wages then
+        ARCHETYPE_WAGES = codec.deep_merge(ARCHETYPE_WAGES, data.archetype_wages)
+    end
+    if data.shop_locations then
+        SHOP_LOCATIONS = codec.deep_merge(SHOP_LOCATIONS, data.shop_locations)
+    end
+end)
+
+-- When codec_14_behaviors is loaded, extract shift/schedule data
+codec.on("behaviors", function(data)
+    if data.archetype_shifts then
+        ARCHETYPE_SHIFTS = codec.deep_merge(ARCHETYPE_SHIFTS, data.archetype_shifts)
+    end
+    if data.shift_definitions then
+        SHIFT_DEFINITIONS = codec.deep_merge(SHIFT_DEFINITIONS, data.shift_definitions)
+    end
+end)
+
+-- When codec_04_characters is loaded, extract stat definitions
+codec.on("characters", function(data)
+    if data.attributes then
+        STAT_DEFINITIONS = codec.deep_merge(STAT_DEFINITIONS, data.attributes)
+    end
+end)
+
+-- When codec_24_action_durations is loaded, extract travel data
+codec.on("action_durations", function(data)
+    if data.travel_durations then
+        TRAVEL_DURATIONS = codec.deep_merge(TRAVEL_DURATIONS, data.travel_durations)
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
+
+-- =============================================================================
 -- MODULE EXPORT (for testing)
 -- =============================================================================
 
@@ -2417,5 +2467,12 @@ return {
     collect_taxes = collect_taxes,
     hash_to_number = hash_to_number,
     seeded_choice = seeded_choice,
-    is_owner = is_owner
+    is_owner = is_owner,
+    -- Codec-backed config
+    SHOP_ITEMS = SHOP_ITEMS,
+    ARCHETYPE_WAGES = ARCHETYPE_WAGES,
+    ARCHETYPE_SHIFTS = ARCHETYPE_SHIFTS,
+    SHIFT_DEFINITIONS = SHIFT_DEFINITIONS,
+    STAT_DEFINITIONS = STAT_DEFINITIONS,
+    TRAVEL_DURATIONS = TRAVEL_DURATIONS
 }

@@ -6,9 +6,14 @@
   - Bus routes and schedules
   - Vehicle specifications
   - NPC transportation between locations
+
+  Config loaded from:
+  - world_codec_16_vehicles.json → vehicle types, routes
+  - world_codec_29_commuting.json → transport modes
 ]]--
 
 local json = require("json")
+local codec = require("codec_loader")
 
 -- =============================================================================
 -- VEHICLE TYPE REGISTRY (Pluggable)
@@ -65,7 +70,7 @@ function register_vehicle_type(type_id, spec)
 end
 
 -- =============================================================================
--- DEFAULT VEHICLES
+-- DEFAULT VEHICLES (fallback — overridden by codec_16 when loaded)
 -- =============================================================================
 
 function init_default_vehicles()
@@ -550,6 +555,38 @@ Handlers.add("ProcessSpawnQueue", Handlers.utils.hasMatchingTag("Action", "Proce
         })
     end
 )
+
+-- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_16_vehicles is loaded, register vehicle types and routes
+codec.on("vehicles", function(data)
+    if data.vehicle_types then
+        for type_id, spec in pairs(data.vehicle_types) do
+            register_vehicle_type(type_id, spec)
+        end
+    end
+    if data.routes then
+        for route_id, config in pairs(data.routes) do
+            register_route(route_id, config)
+        end
+    end
+end)
+
+-- When codec_29_commuting is loaded, extract transport mode data
+codec.on("commuting", function(data)
+    if data.transport_modes then
+        for type_id, spec in pairs(data.transport_modes) do
+            if not VEHICLE_TYPES[type_id] then
+                register_vehicle_type(type_id, spec)
+            end
+        end
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
 
 -- =============================================================================
 -- EXPORT

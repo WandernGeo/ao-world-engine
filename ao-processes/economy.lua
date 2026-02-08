@@ -1,7 +1,7 @@
 --[[
   AO World Engine - Economy Process (v2)
   
-  Cities: Skylines-level economy with RE:ECHO noir elements:
+  Comprehensive city economy:
   - Zoning and land value
   - Production chains and supply/demand
   - Megacorporation influence
@@ -11,11 +11,17 @@
   - Economic events and crises
   - Black market economy
   
+  Config loaded from:
+  - world_codec_20_economy.json → taxes, zones, wages, megacorps
+  - world_codec_27_city_finance.json → budget allocation, UBI
+  - world_codec_35_trade_diplomacy.json → trade, price volatility
+  
   Designed for millions of NPCs across thousands of job types.
 ]]--
 
 local json = json or require("json")
 local crypto = crypto or require("crypto")
+local codec = require("codec_loader")
 
 -- =============================================================================
 -- GLOBAL STATE
@@ -37,7 +43,7 @@ EconomicIndicators = EconomicIndicators or {
     black_market_share = 0.25
 }
 
--- Tax Configuration (from codec_20)
+-- Tax Configuration (defaults — overridden by codec_20 when loaded)
 TaxConfig = TaxConfig or {
     income_brackets = {
         { min = 0, max = 500, rate = 0.00 },
@@ -78,7 +84,7 @@ ServiceLevels = ServiceLevels or {
 -- District Economies
 DistrictEconomies = DistrictEconomies or {}
 
--- Zones (from codec_20)
+-- Zones (defaults — overridden by codec_20 when loaded)
 Zones = Zones or {}
 
 -- Production Chain Status
@@ -199,6 +205,7 @@ end
 -- LAND VALUE CALCULATION
 -- =============================================================================
 
+-- Land Value Zone Multipliers (defaults — overridden by codec_20 when loaded)
 local ZONE_MULTIPLIERS = {
     ZONE_R4 = 5.0,  -- Luxury Arcology
     ZONE_C3 = 4.0,  -- Corporate Plaza
@@ -212,6 +219,21 @@ local ZONE_MULTIPLIERS = {
     ZONE_I2 = 0.3,  -- Heavy Industry
     ZONE_I3 = 0.1,  -- Hazardous Processing
     ZONE_U = 0.05   -- Undercity
+}
+
+-- Wage Ranges (defaults — overridden by codec_20 when loaded)
+WAGE_RANGES = {
+    low_skill = { min = 40, max = 80 },
+    mid_skill = { min = 80, max = 150 },
+    high_skill = { min = 150, max = 300 },
+    elite = { min = 300, max = 1000 }
+}
+
+-- Price Volatility (from codec_35 when loaded)
+PRICE_VOLATILITY = {
+    base_inflation_per_tick = 0.00001,
+    overproduction_threshold = 2.0,
+    scarcity_threshold = 0.5
 }
 
 function calculate_land_value(parcel)
@@ -239,12 +261,7 @@ end
 -- EMPLOYMENT SYSTEM
 -- =============================================================================
 
-local WAGE_RANGES = {
-    low_skill = { min = 40, max = 80 },
-    mid_skill = { min = 80, max = 150 },
-    high_skill = { min = 150, max = 300 },
-    elite = { min = 300, max = 1000 }
-}
+
 
 function calculate_npc_income(job_code, skill_level, tick)
     local range = WAGE_RANGES[skill_level] or WAGE_RANGES.low_skill
@@ -862,6 +879,49 @@ Handlers.add("get-npc-income", Handlers.utils.hasMatchingTag("Action", "get-npc-
 end)
 
 -- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_20_economy is loaded, extract config
+codec.on("economy", function(data)
+    if data.taxation then
+        TaxConfig = codec.deep_merge(TaxConfig, data.taxation)
+    end
+    if data.land_value and data.land_value.base_factors and data.land_value.base_factors.zone_type_multiplier then
+        ZONE_MULTIPLIERS = codec.deep_merge(ZONE_MULTIPLIERS, data.land_value.base_factors.zone_type_multiplier)
+    end
+    if data.wages then
+        WAGE_RANGES = codec.deep_merge(WAGE_RANGES, data.wages)
+    end
+    if data.megacorporations then
+        Megacorps = codec.deep_merge(Megacorps, data.megacorporations)
+    end
+    if data.zoning then
+        Zones = codec.deep_merge(Zones, data.zoning)
+    end
+end)
+
+-- When codec_27_city_finance is loaded, extract budget allocation
+codec.on("city_finance", function(data)
+    if data.city_finance and data.city_finance.budget_allocation then
+        BudgetAllocation = codec.deep_merge(BudgetAllocation, data.city_finance.budget_allocation)
+    end
+    if data.city_finance and data.city_finance.ubi then
+        UBI = codec.deep_merge(UBI, data.city_finance.ubi)
+    end
+end)
+
+-- When codec_35_trade_diplomacy is loaded, extract price volatility
+codec.on("trade_diplomacy", function(data)
+    if data.trade_system and data.trade_system.price_volatility then
+        PRICE_VOLATILITY = codec.deep_merge(PRICE_VOLATILITY, data.trade_system.price_volatility)
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
+
+-- =============================================================================
 -- MODULE EXPORT
 -- =============================================================================
 
@@ -872,5 +932,10 @@ return {
     calculate_land_value = calculate_land_value,
     calculate_npc_income = calculate_npc_income,
     trigger_economic_event = trigger_economic_event,
-    get_crisis_level = get_crisis_level
+    get_crisis_level = get_crisis_level,
+    -- Codec-backed config
+    TaxConfig = TaxConfig,
+    ZONE_MULTIPLIERS = ZONE_MULTIPLIERS,
+    WAGE_RANGES = WAGE_RANGES,
+    PRICE_VOLATILITY = PRICE_VOLATILITY
 }

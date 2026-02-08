@@ -6,11 +6,13 @@
   - Rivalries and alliances
   - Reputation tracking
   - Faction rules and ideology
-  
-  RE:ECHO Chronicles lore integration
+
+  Config loaded from:
+  - world_codec_17_factions.json → faction definitions
 ]]--
 
 local json = require("json")
+local codec = require("codec_loader")
 
 -- =============================================================================
 -- FACTION REGISTRY (Pluggable)
@@ -58,10 +60,10 @@ function register_faction(faction_id, definition)
 end
 
 -- =============================================================================
--- DEFAULT RE:ECHO FACTIONS
+-- DEFAULT FACTIONS (fallback — overridden by codec_17 when loaded)
 -- =============================================================================
 
-function init_reecho_factions()
+function init_default_factions()
     -- THE RESISTANCE
     register_faction("resistance", {
         name = "The Resistance",
@@ -454,6 +456,22 @@ Handlers.add("CheckRivalry", Handlers.utils.hasMatchingTag("Action", "CheckRival
 )
 
 -- =============================================================================
+-- CODEC CALLBACKS
+-- =============================================================================
+
+-- When codec_17_factions is loaded, register factions from JSON
+codec.on("factions", function(data)
+    if data.factions then
+        for faction_id, definition in pairs(data.factions) do
+            register_faction(faction_id, definition)
+        end
+    end
+end)
+
+-- Register standard LoadCodec handler
+codec.register_handler()
+
+-- =============================================================================
 -- EXPORT
 -- =============================================================================
 
@@ -461,7 +479,7 @@ return {
     -- Registry
     FACTIONS = FACTIONS,
     register_faction = register_faction,
-    init_reecho_factions = init_reecho_factions,
+    init_default_factions = init_default_factions,
     
     -- Queries
     get_faction = get_faction,
