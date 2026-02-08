@@ -96,3 +96,40 @@ node scripts/deploy_ao_mainnet.mjs
 # 3. Your world runs autonomously forever
 # All data persisted on Arweave at zero ongoing cost
 ```
+
+## Failsafe Architecture
+
+Your world data lives permanently on Arweave. The AO Compute Unit (CU) is just a compute layer that reads it — like a browser rendering HTML. If the CU goes down, your data is never lost.
+
+### Three Built-In Safeguards
+
+| Safeguard | What It Does | How It Works |
+|---|---|---|
+| **CU Failover** | Auto-switches to backup Compute Unit | 3 CU endpoints configured. If primary times out (5s), transparently tries backups. Resets to primary on recovery. |
+| **State Cache** | Shows last known state when AO is down | `getWorldState()` caches every successful response in `localStorage` (10 min TTL). If all CUs fail, returns cached data instead of zeros. |
+| **Stale Tick Detector** | Warns when simulation freezes | Tracks last tick-change timestamp. If unchanged for 5+ minutes, shows ⚠️ warning banner with force-advance button. |
+
+### What Happens When Things Fail
+
+```
+CU goes down?
+  → Failover to backup CU (automatic, transparent)
+  → If all CUs down, show cached state from localStorage
+  → Yellow banner: "Simulation stale — tick unchanged for N+ minutes"
+  → Manual "Force Advance" button to unstick
+
+CRON stops firing?
+  → All past state is preserved on Arweave
+  → Stale tick detector alerts the operator
+  → Manual advance-tick catches up any missed ticks
+  → Resume CRON normally — nothing is lost
+
+Frontend offline for days?
+  → Reconnect, query get-state, get current tick
+  → localStorage cache provides instant display while AO responds
+  → Full state reconstructed from Arweave transaction log
+```
+
+### Why This Works
+
+AO processes are deterministic state machines. The "state" isn't stored on a server — it's the result of replaying every Arweave transaction in order. Any CU can reconstruct the full state at any time. Your simulation is as permanent as Arweave itself.
