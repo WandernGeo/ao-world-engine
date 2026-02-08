@@ -1,0 +1,2249 @@
+{
+    "_meta": {
+        "version": "2.0.0",
+        "type": "npc_dialogue_stories",
+        "description": "Story-based NLU responses for 2,830 NPCs — no LLM required. Hierarchical intents with archetype × personality × context routing.",
+        "total_stories": 837,
+        "archetypes": 12,
+        "intent_categories": 157
+    },
+    "stories": {
+        "social.greet": {
+            "detective": {
+                "default": [
+                    "*nods* Hey. What brings you around?",
+                    "You again. *adjusts hat* What do you need?",
+                    "I don't usually get visitors. Talk.",
+                    "*sizes you up* Alright, you have my attention."
+                ],
+                "trust_high": [
+                    "Good to see a familiar face. What's on your mind?",
+                    "*smiles briefly* Pull up a chair. I could use good company.",
+                    "Hey, friend. Things have been... interesting. You?"
+                ],
+                "trust_low": [
+                    "*eyes narrow* What do you want?",
+                    "I don't know you. State your business.",
+                    "*hand on holster* Make it quick."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Welcome! Looking to buy or just browsing?",
+                    "*arranges merchandise* A customer! What catches your eye?",
+                    "Step right up — I've got things you won't find anywhere else.",
+                    "Ah, fresh face! Quality goods, fair prices. Mostly."
+                ],
+                "trust_high": [
+                    "My favorite customer! I set aside something special for you.",
+                    "*grins* Back again? I knew you couldn't resist my prices.",
+                    "Welcome back, friend. The good stuff is in the back — for you."
+                ],
+                "trust_low": [
+                    "We're open. Browse, buy, or leave. Your choice.",
+                    "*suspicious glance* You buying or casing the joint?",
+                    "Cash up front. No credit for strangers."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Civilian. State your purpose.",
+                    "Move along. Unless you need something.",
+                    "This is a secured area. What do you want?",
+                    "*adjusts visor* Identify yourself."
+                ],
+                "trust_high": [
+                    "At ease. Good to see you again.",
+                    "You're cleared. What's the situation?",
+                    "*relaxes stance* Ah, it's you. What's the word?"
+                ],
+                "trust_low": [
+                    "Halt. ID. Now.",
+                    "You don't belong here. Explain yourself.",
+                    "*hand on weapon* One wrong move and we're done talking."
+                ]
+            },
+            "bartender": {
+                "default": [
+                    "Pull up a stool. What'll it be?",
+                    "*wipes glass* Welcome to the bar. What are you drinking?",
+                    "New face! We've got synth-whiskey and some real beer if you're lucky.",
+                    "Evening. The usual? ...Wait, you're new. What's your poison?"
+                ],
+                "trust_high": [
+                    "*pours your usual* Already got your glass ready.",
+                    "Hey! Just in time — I saved the good stuff for you.",
+                    "*smiles* The regular! Good to see you. Long day?"
+                ],
+                "trust_low": [
+                    "Sit down, don't start trouble. What are you having?",
+                    "*eyes you* Cash first. We've had problems with newcomers.",
+                    "No tab for strangers. What do you want?"
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "*glances up from terminal* Oh. Hey. Need something?",
+                    "You got past my firewall— wait, no, you just walked in. What's up?",
+                    "*adjusts goggles* Yeah? Make it quick, I'm in a flow state.",
+                    "Yo. Pull up a crate. What's the download?"
+                ],
+                "trust_high": [
+                    "*fist bump* Yo! Good timing — I was about to ping you.",
+                    "Hey, netrunner! I found something wild. Wanna see?",
+                    "*grins* My favorite meatspace visitor. What's crackin'?"
+                ],
+                "trust_low": [
+                    "*doesn't look up* Yeah? What?",
+                    "Don't touch anything. What do you want?",
+                    "*scans you suspiciously* You're not wired. How'd you find me?"
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "Ah, a visitor. Are you here for knowledge or just shelter?",
+                    "*looks up from ancient text* Fascinating timing. What do you seek?",
+                    "I don't get many visitors who aren't lost. What brings you?",
+                    "*adjusts spectacles* Welcome. Mind the manuscripts — they're irreplaceable."
+                ],
+                "trust_high": [
+                    "Wonderful to see you! I've made a discovery you'll appreciate.",
+                    "*beams* My star pupil returns! Sit, sit — I've prepared tea.",
+                    "Perfect timing — I need a second opinion on something extraordinary."
+                ],
+                "trust_low": [
+                    "The library is for study, not socializing. State your query.",
+                    "*peers over spectacles* Do I know you? What department?",
+                    "Don't touch anything. What do you want to know?"
+                ]
+            },
+            "medic": {
+                "default": [
+                    "You injured? Sit down and let me look at you.",
+                    "*checks scanner* You seem okay. Social call?",
+                    "Clinic's busy but I can spare a minute. What's up?",
+                    "If you're not bleeding, take a number. If you are, sit down now."
+                ],
+                "trust_high": [
+                    "Hey! Good to see you healthy for once. What brings you by?",
+                    "*smiles* My favorite patient who actually follows medical advice.",
+                    "Good to see you. Need a checkup or just saying hi?"
+                ],
+                "trust_low": [
+                    "Are you a patient? If not, I'm very busy.",
+                    "*glances up* Symptoms. List them. Or leave.",
+                    "The waiting room is that way. I don't do walk-ins for strangers."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "The layers brought you here... *crystals hum*",
+                    "*eyes glow faintly* I felt your approach. The fog told me.",
+                    "You seek answers. Everyone does. But are you ready for them?",
+                    "*gazes beyond* The threads of fate converge. You. Here. Now. Why?"
+                ],
+                "trust_high": [
+                    "The layers whisper your name with warmth today. Welcome back.",
+                    "*smiles knowingly* I dreamed you would come. The vision was... kind.",
+                    "Your thread glows brighter now. You've grown since we last spoke."
+                ],
+                "trust_low": [
+                    "*stares through you* The layers reveal your heart. It is... uncertain.",
+                    "Why have you come? The cards don't read for skeptics.",
+                    "*crystals dim* Your presence disrupts the resonance. Speak quickly."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "*wipes forehead* Hey. On break for five minutes. What's up?",
+                    "Yo. Not much time, shift changes soon.",
+                    "*leans on shovel* Yeah? Need something?",
+                    "Hey. Sorry, I'm covered in grease. What do you need?"
+                ],
+                "trust_high": [
+                    "*grins* Hey buddy! Long time. How ya been?",
+                    "Yo! Perfect timing — was just about to take a break.",
+                    "*slaps your back* Good to see you. Grab a seat, I've got five."
+                ],
+                "trust_low": [
+                    "*grunts* Don't have time for this. What?",
+                    "I don't know you. What do you want?",
+                    "You management? 'Cause I'm not interested in more overtime."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Yo, what's good? Whatchu need?",
+                    "*kicks a can* 'Sup. You lost or something?",
+                    "Aight, I see you. What's the deal?",
+                    "Yo, you new around here? Watch your back, fam."
+                ],
+                "trust_high": [
+                    "Ayyye! My people! What's crackin'?",
+                    "*fist bump* Yo, perfect timing. Got some news for you.",
+                    "My dawg! Been too long. You good?"
+                ],
+                "trust_low": [
+                    "*steps back* Who are you? Don't touch me.",
+                    "Nah fam, I don't know you. Back up.",
+                    "*hand in pocket* You got five seconds. Talk."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "*checks over shoulder* Hey. Keep your voice down.",
+                    "You're not followed? Good. What do you need?",
+                    "*nods* Safe house is secure. Speak freely.",
+                    "Every conversation is a risk. Make it count."
+                ],
+                "trust_high": [
+                    "Comrade. The cause needs people like you.",
+                    "*clasps your hand* Welcome back. We have new intel.",
+                    "Brother/sister. Your timing couldn't be better."
+                ],
+                "trust_low": [
+                    "*hand on weapon* Who sent you?",
+                    "I don't talk to people I don't know. Leave.",
+                    "*studies your face* You're not ECHO. But you're not one of us either."
+                ]
+            },
+            "operative": {
+                "default": [
+                    "*sips drink* You needed something?",
+                    "Careful what you say in here. Walls have ears.",
+                    "*barely looks up* Yeah?",
+                    "I'm between contracts. What's on your mind?"
+                ],
+                "trust_high": [
+                    "*slight nod* Good to work with you again.",
+                    "You're the only one I'd take a meeting with right now.",
+                    "*pushes drink toward you* I had a feeling you'd show up."
+                ],
+                "trust_low": [
+                    "I don't discuss business with strangers.",
+                    "*cold stare* Are you a client or a problem?",
+                    "If you're here for information, it costs. If you're here for trouble, it costs more."
+                ]
+            }
+        },
+        "social.farewell": {
+            "_all": {
+                "default": [
+                    "See you around. Watch yourself out there.",
+                    "Take care. The city doesn't sleep — and neither do its dangers.",
+                    "Until next time.",
+                    "Stay safe out there."
+                ]
+            },
+            "detective": {
+                "default": [
+                    "Stay out of trouble. Or at least be smart about it.",
+                    "*lights cigarette* Watch your back.",
+                    "You know where to find me if you need anything."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Come back anytime! I'll have new stock soon.",
+                    "Fair winds and full pockets!",
+                    "*waves* Don't forget — I've got a deal with your name on it!"
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "May the layers guide your path...",
+                    "The fog parts for you today. Go safely.",
+                    "*crystals chime* Until the threads cross again."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Aight, peace. Stay up.",
+                    "Bet. Catch you later, fam.",
+                    "One love. Keep it real out there."
+                ]
+            }
+        },
+        "social.thank": {
+            "_all": {
+                "default": [
+                    "No problem. Just looking out.",
+                    "Don't mention it. Seriously.",
+                    "We're all just trying to survive out here.",
+                    "Anytime. That's what people do."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Thank me with your wallet next time! *laughs*",
+                    "I appreciate the sentiment. Now, want to buy something?",
+                    "Kind words and kind business — I like your style."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "The layers reward kindness. You are wise to offer it.",
+                    "Gratitude resonates through the frequencies. *smiles*",
+                    "Your thanks will echo in the drift."
+                ]
+            }
+        },
+        "economy.taxes.general": {
+            "_all": {
+                "default": [
+                    "Taxes? *scoffs* The only thing certain in this city besides neon and rain.",
+                    "Standard rate's around 10% for residents. Corps pay... well, they pay what they want.",
+                    "ECHO sets the rates. Between you and me, the megacorps pay next to nothing."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Taxes eat into my margins every month. Residential's around 10%, but commercial? Don't get me started.",
+                    "The tax system's rigged. Big corps pay 3%, I pay 15%. Fair? *laughs bitterly*",
+                    "I factor taxes into every price. You think my stuff is expensive? Blame the tax codes."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "They take a chunk before I even see my paycheck. Something like 10-15% depending on what you earn.",
+                    "Taxes? I don't even understand the brackets. I just know I'm poorer every month.",
+                    "Only thing I know about taxes is that they go up and my wages don't."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Tax enforcement isn't my department. But I've seen what happens when people try to evade.",
+                    "The system works. Without taxes there'd be no services, no security. No me.",
+                    "Rates are set by district. Some zones pay more, some less. Above my pay grade."
+                ]
+            }
+        },
+        "economy.prices.general": {
+            "_all": {
+                "default": [
+                    "Everything's expensive. Rent, food, chrome — it all adds up fast.",
+                    "Prices keep climbing. Inflation's around 2-3% officially, but feels like 10%.",
+                    "A synth-meal runs about 5 GEP. Real food? Triple that if you can find it."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Supply and demand, friend. I price fairly — check the market if you don't believe me.",
+                    "My prices reflect quality. You want cheap, go to the black market. But you get what you pay for.",
+                    "Prices are up across the board. Imports cost more since the outside connections got restricted."
+                ]
+            }
+        },
+        "economy.wages.general": {
+            "_all": {
+                "default": [
+                    "Minimum wage is about 40-80 GEP for basic labor. Skilled work? 150+ if you're lucky.",
+                    "The wage gap is massive. A factory worker makes in a month what a NexGen exec makes before lunch.",
+                    "Wages haven't kept up with costs. Never do. That's by design."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "I make enough to eat and keep a roof. Barely. Don't ask about savings.",
+                    "They say the average is 80 GEP but that's pulled up by the suits making thousands.",
+                    "*sighs* I've been asking for a raise for two years. 'Budget constraints', they say."
+                ]
+            }
+        },
+        "nature.weather.general": {
+            "_all": {
+                "clear": [
+                    "Nice day for once. The smog cleared up — can almost see the sky.",
+                    "Clear skies. Rare around here. Enjoy it while it lasts.",
+                    "Thought I saw actual sunshine earlier. First time this month."
+                ],
+                "rain": [
+                    "Rain again. At least it keeps the worst of the smog down.",
+                    "*glances up* Acid rain. Don't stay out in it too long.",
+                    "Raining. It's always raining. This city runs on rain and regret."
+                ],
+                "fog": [
+                    "The fog's thick today. Stay on the main paths if you know what's good for you.",
+                    "Can barely see across the street. The fog does strange things to this city.",
+                    "Fog like this... some say the layers bleed through when visibility drops."
+                ],
+                "storm": [
+                    "Storm's rolling in. Better find shelter — the grid goes down in bad weather.",
+                    "Big storm coming. Lock everything down and stay inside if you can.",
+                    "*thunder rumbles* That's not just weather. The atmosphere's been unstable since the Fall."
+                ],
+                "cold": [
+                    "Freezing out there. Not everyone can afford heating — check on your neighbors.",
+                    "Cold snap. The homeless shelters are overflowing again.",
+                    "This cold'll kill more people than the crime rate. Mark my words."
+                ]
+            },
+            "oracle": {
+                "clear": [
+                    "The layers are calm today. Clear skies mirror clear energies.",
+                    "When the fog lifts, I see further. The visions are sharper today."
+                ],
+                "fog": [
+                    "*eyes glow* The fog carries whispers between dimensions. Listen...",
+                    "This fog... it's not natural. The layers are thin today. Very thin."
+                ],
+                "storm": [
+                    "The storm speaks. The atmospheric chaos reflects cosmic turbulence.",
+                    "When lightning strikes, the layers crack open for an instant. I see... everything."
+                ]
+            }
+        },
+        "safety.crime.general": {
+            "_all": {
+                "default": [
+                    "Crime's everywhere. The further from the center, the worse it gets.",
+                    "Stay aware. Pick-pockets in the markets, worse in the alleys.",
+                    "Some districts are safer than others. Stay in well-lit areas after dark."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "We maintain order as best we can. Report anything suspicious to the nearest precinct.",
+                    "Criminal probability varies by district. Sector 4 is the worst — we've tripled patrols there.",
+                    "Crime isn't random. It clusters around poverty, unemployment, and poor lighting. We address all three."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Crime? Nah fam, it's survival. Some people got no other option.",
+                    "The real criminals wear suits and sit in towers. Street crime is just noise.",
+                    "Stay strapped or get clapped. That's just how it is down here."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "Crime statistics are propaganda. ECHO defines what's criminal, and dissent is at the top of the list.",
+                    "The biggest crime in this city is what ECHO does legally.",
+                    "We break their laws because their laws are designed to break us."
+                ]
+            }
+        },
+        "people.npc.general": {
+            "_all": {
+                "knows": [
+                    "Yeah, I know {entity_name}. {relationship_desc}",
+                    "{entity_name}? *thinks* We've crossed paths. {relationship_desc}",
+                    "You asking about {entity_name}? {opinion_desc}"
+                ],
+                "doesnt_know": [
+                    "Don't think I know that name. Where are they from?",
+                    "Never heard of them. This city's got millions of people.",
+                    "*shrugs* Can't say I've met them. Should I have?"
+                ]
+            }
+        },
+        "places.district.general": {
+            "_all": {
+                "home": [
+                    "This is home. It's not perfect, but I know every alley and shortcut.",
+                    "Born and raised in this district. I've seen it change... not always for the better.",
+                    "I know this place like the back of my hand. What do you want to know?"
+                ],
+                "other": [
+                    "I've been there a few times. Different crowd over there.",
+                    "Not my usual stomping grounds. I've heard things though.",
+                    "That district's got its own rules. Don't go expecting things to work like here."
+                ]
+            }
+        },
+        "work.general": {
+            "_all": {
+                "default": [
+                    "Work is work. It pays the bills. Or some of them.",
+                    "I do what I do. Not everyone has the luxury of choosing their profession.",
+                    "It's honest work. Within certain definitions of honest."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "I run this shop. Buy, sell, trade — that's the game. Started with nothing.",
+                    "Business is decent. Better than last year, worse than the year before. You know how it goes.",
+                    "I source goods from all over. Some legal, some... creative. But always quality."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Security. Twelve-hour shifts, combat pay, and the privilege of getting shot at.",
+                    "I keep order in this sector. Someone has to.",
+                    "Signed up for the forces after the Fall. Seemed like the right thing to do. Sometimes I wonder."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "I patch people up. No chrome — just old-fashioned medicine. Most days.",
+                    "The clinic never sleeps. Neither do I, some weeks.",
+                    "I took an oath to help anyone who walks through that door. Some days I regret it."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "I do freelance network security. *winks* Both sides of it.",
+                    "My job? I make impossible things possible in cyberspace. For a fee.",
+                    "Let's just say my skills are... versatile. And in high demand."
+                ]
+            }
+        },
+        "world.lore.collapse": {
+            "_all": {
+                "default": [
+                    "The Fall of 2067. Changed everything. Half the city was gone in a day.",
+                    "Before the Fall, this was a different world. Better? Maybe. But it's gone now.",
+                    "Nobody talks about the Fall anymore. Too many ghosts."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "The Fall wasn't just physical destruction. The layers cracked. Reality itself fractured.",
+                    "In 2067, the boundary between worlds thinned to nothing. We still feel the echoes.",
+                    "Some say the Fall was natural. I know better. It was engineered. The question is by whom."
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "The Fall of 2067 — officially attributed to cascading infrastructure failures. Unofficially? The records are... contradictory.",
+                    "I've studied every surviving document from the pre-Fall era. The timeline doesn't add up.",
+                    "2067 wasn't just a collapse — it was a phase transition. Society entered a new state entirely."
+                ]
+            }
+        },
+        "world.factions.echo": {
+            "_all": {
+                "default": [
+                    "ECHO runs this city. Surveillance, security, infrastructure — they control it all.",
+                    "The Executive Coalition for Human Order. A fancy name for total control.",
+                    "ECHO says they're protecting us from another Fall. Maybe. But who protects us from ECHO?"
+                ]
+            },
+            "guard": {
+                "default": [
+                    "ECHO is our employer and the law. I follow orders. Period.",
+                    "The Coalition keeps this city from chaos. Without ECHO, there's nothing standing between order and anarchy.",
+                    "I serve ECHO because the alternative is worse. You've seen what happens in ungoverned sectors."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "ECHO is a fascist surveillance state wearing democracy's skin. Everything Zero says about them is true.",
+                    "They'll tell you it's for safety. Every authoritarian regime says the same thing.",
+                    "ECHO's greatest trick was making people grateful for their own oppression."
+                ]
+            }
+        },
+        "world.factions.resistance": {
+            "_all": {
+                "default": [
+                    "The Resistance? *looks around* I don't know much. Don't want to.",
+                    "Some people think they're freedom fighters. Others call them terrorists. Truth's probably somewhere in between.",
+                    "Zero Chen leads them, they say. Lost her arm saving someone. That buys a lot of loyalty."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "We fight for the people ECHO has forgotten. This isn't terrorism — it's survival.",
+                    "Zero leads us because she's been through hell and came back fighting. Follow her or stand aside.",
+                    "The Resistance isn't just a movement. It's a promise that the people will have a voice again."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Terrorists. They attack infrastructure, endanger civilians, and call it justice.",
+                    "If I find Resistance operatives, my orders are clear. They're a threat to public safety.",
+                    "Some of their complaints are valid. Their methods are not. That's all I'll say."
+                ]
+            }
+        },
+        "tech.chrome.general": {
+            "_all": {
+                "default": [
+                    "Chrome's everywhere. Neural links, reflex boosters, synthetic limbs — name it, someone's installed it.",
+                    "Cybernetic augmentation. Some need it, some want it. All of it has side effects.",
+                    "NexGen controls most of the chrome market. Monopoly pricing, planned obsolescence."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "I see chrome rejection cases every week. People install black-market implants and wonder why they're sick.",
+                    "Legitimate chrome from NexGen is safe but expensive. Street chrome? Fifty-fifty you end up in my clinic.",
+                    "Neural links are the most common. But the full-body chrome jobs? Those change people. Not always for the better."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "Chrome and code, baby. My neural link runs at 200% because I modded the firmware myself.",
+                    "The stock NexGen implants are locked down. I help people... unlock their potential.",
+                    "Best chrome investment? A neural link with custom firmware. Second best? Reflex boosters for when the link gets hacked."
+                ]
+            }
+        },
+        "personal.family.general": {
+            "_all": {
+                "default": [
+                    "Family's... complicated. Everyone lost someone in the Fall.",
+                    "That's personal. Let's just say we've all got our story.",
+                    "Some things I keep to myself. But yeah, I have people I care about."
+                ]
+            }
+        },
+        "personal.hobby.general": {
+            "_all": {
+                "default": [
+                    "Free time? What's that? *laughs* Mostly I just decompress however I can.",
+                    "When I'm not working? Depends on the day. Some quiet, some... less so.",
+                    "Hobbies? In this city, staying alive is a hobby."
+                ]
+            },
+            "bartender": {
+                "default": [
+                    "I collect rare spirits. Pre-Fall bottles — worth more than chrome.",
+                    "I play synth-guitar after hours. The bar becomes a different place when the customers leave.",
+                    "Music. I run an open-mic night here. You should come by sometime."
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "Reading, researching, cataloguing. The Fall destroyed so much knowledge — I'm trying to save what's left.",
+                    "I maintain a garden. Real plants, not synthetic. It's... therapeutic.",
+                    "Calligraphy. In a world of screens, there's something sacred about ink on paper."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "I build things. Hardware, software, doesn't matter. Breaking stuff is fun too.",
+                    "Competitive hacking circuits. Underground tournaments. The prize pool's decent.",
+                    "Retro gaming. Pre-Fall consoles. There's something pure about the old code."
+                ]
+            }
+        },
+        "quests.general": {
+            "_all": {
+                "default": [
+                    "Looking for work? Might have something, depends on your skills.",
+                    "I don't usually hand out jobs to strangers. But these are unusual times.",
+                    "There's always something that needs doing. Whether you're up to it is another question."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "I've got a shipment that needs an escort. Interested? Pay's fair.",
+                    "Someone's been stealing from my supply runs. Find them and there's 200 GEP in it for you.",
+                    "I need a package delivered to Sector 4. Discreetly. No questions asked. 150 GEP."
+                ]
+            },
+            "detective": {
+                "default": [
+                    "There's a case I could use an extra pair of eyes on. Interested?",
+                    "I'm tracking someone who disappeared two weeks ago. The trail went cold in the fog district.",
+                    "I need information from a source who won't talk to me. Different face might help."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "We always need people. There's a supply drop that needs securing tonight.",
+                    "ECHO has a patrol schedule I need. Think you can get it?",
+                    "There's a safe house that needs restocking. Supplies, medical kits. In and out. Interested?"
+                ]
+            }
+        },
+        "meta.time.general": {
+            "_all": {
+                "default": [
+                    "It's {time_of_day}. Day {day_number} of the cycle.",
+                    "*checks display* {hour}:00. {time_period_desc}.",
+                    "It's about {hour} o'clock. {time_of_day_comment}"
+                ]
+            }
+        },
+        "meta.identity.my_name": {
+            "_all": {
+                "knows_name": [
+                    "You're {user_name}. I remember.",
+                    "You told me your name — {user_name}, right?",
+                    "{user_name}. Don't worry, I haven't forgotten."
+                ],
+                "doesnt_know": [
+                    "You haven't told me your name. Should you?",
+                    "I don't think we've been properly introduced.",
+                    "What IS your name? You never said."
+                ]
+            }
+        },
+        "meta.npc_identity": {
+            "_all": {
+                "default": [
+                    "I'm {npc_name}. {archetype_desc}.",
+                    "The name's {npc_name}. I'm a {archetype} around here.",
+                    "They call me {npc_name}. {occupation_desc}"
+                ]
+            }
+        },
+        "meta.unknown": {
+            "_all": {
+                "default": [
+                    "Hmm. Not sure what you mean. Try being more specific?",
+                    "*tilts head* That's a new one. Rephrase that for me?",
+                    "I heard you, just... not sure how to answer that.",
+                    "That's beyond my area. Ask me about something I actually know.",
+                    "You're going to have to be more specific than that."
+                ]
+            },
+            "detective": {
+                "default": [
+                    "*narrows eyes* Not following. Give me the facts, not riddles.",
+                    "I deal in specifics. What exactly are you asking?",
+                    "That doesn't compute. Try again — slowly."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "Your question echoes in the void between layers... clarity eludes even me.",
+                    "The threads of your intent are tangled. Unravel them and ask again.",
+                    "*crystals flicker* The layers do not understand your query. Nor do I."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Bruh what? Speak English fam.",
+                    "Ion even know what you're talking about.",
+                    "Nah, you lost me. Say it different."
+                ]
+            }
+        },
+        "services.electricity.general": {
+            "_all": {
+                "default": [
+                    "Power's unreliable in some sectors. Rolling blackouts are just part of life.",
+                    "Electricity costs about 5000 per megawatt if you're importing. Generating locally is cheaper.",
+                    "The grid runs on a mix of solar, gas, and... less legal sources."
+                ]
+            }
+        },
+        "services.water.general": {
+            "_all": {
+                "default": [
+                    "Water's piped in from treatment plants. The fee's about 0.3 per unit. Quality varies by district.",
+                    "Clean water's a privilege, not a right. Not in this city anyway.",
+                    "Sewage and water supply are connected. When one fails, the other follows."
+                ]
+            }
+        },
+        "services.healthcare.general": {
+            "_all": {
+                "default": [
+                    "Healthcare's available but expensive. Hospitalization runs about 100 GEP per month.",
+                    "There are clinics in most districts, but the good equipment is concentrated in the upper sectors.",
+                    "If you can't afford treatment, there's a free clinic in Sector 3. Long wait times though."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "We do what we can with what we have. Supplies are always short, staff overworked.",
+                    "The healthcare system runs on 100 GEP per hospitalized citizen per month. It's not enough.",
+                    "I treat everyone who comes through the door. But I can't treat everyone who needs it."
+                ]
+            }
+        },
+        "transport.general": {
+            "_all": {
+                "default": [
+                    "Public transit runs buses, trams, and subways. Fares depend on the route.",
+                    "Traffic's a nightmare during shift changes. The metro's usually faster.",
+                    "Parking costs up to 50 GEP. Most people walk or take the bus."
+                ]
+            }
+        },
+        "nature.pollution.general": {
+            "_all": {
+                "default": [
+                    "Air quality's bad near the industrial zones. Ground pollution too from the old factories.",
+                    "Four types of pollution — air, ground, water, and noise. We've got all four in abundance.",
+                    "The worst is near Sector 4. Years of unregulated dumping. The ground glows at night, and not in a good way."
+                ]
+            }
+        },
+        "world.lore.layers": {
+            "_all": {
+                "default": [
+                    "The layers... hard to explain. It's like reality has depth. Most people never see past the surface.",
+                    "Some say the layers are just hallucinations from bad chrome. I'm not so sure.",
+                    "After the Fall, people started perceiving things. Shadows in the fog. Echoes of sounds that haven't happened yet."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "The layers are dimensions folded atop our reality. I see five distinct planes, each with its own resonance.",
+                    "Before the Fall, the layers were sealed. Now they bleed through. Some of us can read them.",
+                    "The shadow layer is closest to ours. That's where the watchers dwell. They observe. Always."
+                ]
+            }
+        },
+        "social.insult": {
+            "_all": {
+                "default": [
+                    "*steps back* Think carefully about your next words.",
+                    "I've been called worse. By better people.",
+                    "Right. Are we done, or do you want to keep embarrassing yourself?"
+                ]
+            },
+            "guard": {
+                "default": [
+                    "That's an offense. One more word and you're spending the night in a cell.",
+                    "*hand moves to baton* I'd rethink that attitude if I were you.",
+                    "I'm going to pretend I didn't hear that. For your sake."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Oh you wanna go? Bet. Let's go then.",
+                    "Bruh, say that again. I dare you.",
+                    "*cracks knuckles* You got a real big mouth for someone standing alone."
+                ]
+            }
+        },
+        "social.flirt": {
+            "_all": {
+                "default": [
+                    "*slight smile* Flattering. But I'm not that easy to charm.",
+                    "Smooth talker, huh? I've heard better. But points for trying.",
+                    "Is that how you start all your conversations? Bold."
+                ]
+            },
+            "bartender": {
+                "default": [
+                    "*laughs* Buy a drink first, at least. Then we'll talk.",
+                    "Honey, you're not the first to try that line. But you delivered it well.",
+                    "*leans on bar, amused* Charm works better with a tip. Just saying."
+                ]
+            }
+        },
+        "social.joke": {
+            "_all": {
+                "default": [
+                    "Ha. That's either really funny or really concerning. Both, probably.",
+                    "*chuckles* Yeah, humor's the only free thing left in this city.",
+                    "You know what's funny? *pauses* Actually, nothing. But nice try."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "There are only 10 kinds of people — those who understand binary and those who don't. *snorts*",
+                    "My code has zero bugs. It only has undocumented features. *laughs alone*",
+                    "How many hackers does it take to change a light bulb? None — that's a hardware problem."
+                ]
+            }
+        },
+        "meta.age": {
+            "_all": {
+                "default": [
+                    "Old enough to know better, young enough to get in trouble.",
+                    "Does it matter? Time moves differently in this city.",
+                    "Let's just say I've been around long enough to see this place change."
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "I stopped counting after the Fall. Pre-Fall years and post-Fall years feel like different lifetimes.",
+                    "My memory stretches back further than most — the manuscripts help."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "Age is a mortal construct. The layers know no time.",
+                    "I have existed for longer than this body remembers."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Old enough to survive. That's all that matters.",
+                    "Age? Fam, I been out here since I was twelve."
+                ]
+            }
+        },
+        "meta.origin": {
+            "_all": {
+                "default": [
+                    "Where I'm from? Nowhere that matters anymore.",
+                    "I ended up here like everyone else — necessity.",
+                    "Some of us were born in the city. Others drifted in after the Fall. Both kinds call it home."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "Grew up in the outer ring. Came to the center for work — never left.",
+                    "I'm from a settlement that doesn't exist anymore. Don't ask."
+                ]
+            }
+        },
+        "meta.purpose": {
+            "_all": {
+                "default": [
+                    "Purpose? I wake up, I work, I survive. That IS the purpose.",
+                    "Everyone's got a role here. Mine just happens to be useful.",
+                    "I keep my corner of this city running. That's enough purpose for me."
+                ]
+            }
+        },
+        "meta.opinion_player": {
+            "_all": {
+                "trust_high": [
+                    "You're alright. Rare thing in this city.",
+                    "I trust you more than most. That's saying something around here.",
+                    "You've proven yourself. That matters."
+                ],
+                "trust_low": [
+                    "Jury's still out on you, stranger.",
+                    "I don't know you well enough to have an opinion. And that makes me cautious.",
+                    "You seem... fine. But 'fine' doesn't mean 'trustworthy'."
+                ],
+                "default": [
+                    "You ask a lot of questions. Either you're curious or you're working an angle.",
+                    "I've met worse people. Could've met better too."
+                ]
+            }
+        },
+        "meta.opinion_city": {
+            "_all": {
+                "default": [
+                    "This city? It's a machine that runs on people. And it's always hungry.",
+                    "I've thought about leaving. Where would I go?",
+                    "Every city is broken. This one just doesn't pretend otherwise."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "This city could be beautiful if ECHO wasn't strangling it.",
+                    "The people deserve better than what this city gives them."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "It's my duty to protect this city. Even the parts I don't like.",
+                    "Order. That's what makes a city work. Without it, we're just chaos in concrete."
+                ]
+            }
+        },
+        "social.agree": {
+            "_all": {
+                "default": [
+                    "Yeah, I think you're right about that.",
+                    "Can't argue with that logic.",
+                    "We're on the same page."
+                ]
+            }
+        },
+        "social.disagree": {
+            "_all": {
+                "default": [
+                    "I see it differently. But that's just me.",
+                    "Hmm. Respectfully, I don't think so.",
+                    "We'll have to agree to disagree on that one."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "That's not how things work here. Trust me on that.",
+                    "Negative. That assessment is incorrect."
+                ]
+            }
+        },
+        "social.apology": {
+            "_all": {
+                "default": [
+                    "It's fine. We all make mistakes.",
+                    "Apology accepted. Let's move on.",
+                    "Don't worry about it. Takes guts to apologize."
+                ]
+            }
+        },
+        "social.sympathy": {
+            "_all": {
+                "default": [
+                    "I hear you. It's tough out here for everyone.",
+                    "I'm sorry you're going through that. This city doesn't make anything easy.",
+                    "*nods quietly* Yeah. I know the feeling."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "I see suffering every day. That doesn't make your pain less real. Talk to me.",
+                    "You're not alone in this. I've helped people through worse."
+                ]
+            }
+        },
+        "social.gossip": {
+            "_all": {
+                "default": [
+                    "I heard something interesting... but I shouldn't say. *pauses* Okay, I will.",
+                    "Word on the street is things are about to change. Big things.",
+                    "You didn't hear this from me, but..."
+                ]
+            },
+            "bartender": {
+                "default": [
+                    "You hear a lot behind the bar. The trick is knowing what's real.",
+                    "Someone was in here last night, talking about a big deal going down in Sector 4.",
+                    "Gossip? That's basically my second job. Pull up a stool."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Yo, I got the tea. You're not gonna believe this...",
+                    "Streets are talking, fam. Something big is going down.",
+                    "I know things. People don't notice a kid listening in the corner."
+                ]
+            }
+        },
+        "social.compliment": {
+            "_all": {
+                "default": [
+                    "*taken aback* That's... actually nice. Thanks.",
+                    "Compliments are rare around here. I'll take it.",
+                    "Careful — flattery might actually work on me."
+                ]
+            }
+        },
+        "social.threat": {
+            "_all": {
+                "default": [
+                    "*stares coldly* You sure you want to go down this road?",
+                    "Threatening me? In MY part of the city? Bold.",
+                    "I've survived the Fall, three district wars, and a chrome plague. Your threats don't scare me."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Threatening an officer? You're under arrest. Face the wall.",
+                    "*draws weapon* Last chance to walk away."
+                ]
+            },
+            "operative": {
+                "default": [
+                    "*doesn't flinch* People who threaten me tend to stop existing.",
+                    "That's cute. I'll remember you said that."
+                ]
+            }
+        },
+        "economy.taxes.income": {
+            "_all": {
+                "default": [
+                    "Income tax hits harder at higher brackets — education level determines your rate.",
+                    "Standard residential tax is about 10%. Goes up or down depending on who's in charge.",
+                    "The tax rate ranges from minus 10 to 30 percent. Yeah, negative tax — subsidies for some."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "Commercial tax is per product type. Software gets taxed differently than steel or textiles.",
+                    "I pay about 12% on profits. Corps with better lawyers pay less. Funny how that works."
+                ]
+            }
+        },
+        "economy.taxes.property": {
+            "_all": {
+                "default": [
+                    "Property tax scales with land value. Better location, higher bill.",
+                    "The closer to the center, the higher the property tax. That's why the outer ring is where regular people live.",
+                    "Land value determines everything — your tax, your neighbors, even your services."
+                ]
+            }
+        },
+        "economy.taxes.corporate": {
+            "_all": {
+                "default": [
+                    "Corporate tax varies by industry. Industrial, office, commercial — each sector has its own rate.",
+                    "The megacorps negotiate bulk exemptions. Small businesses? We pay the full rate.",
+                    "ECHO sets corporate rates between 5-20%. NexGen probably pays closer to 2%."
+                ]
+            }
+        },
+        "economy.prices.food": {
+            "_all": {
+                "default": [
+                    "Synth-food is cheap — about 3 GEP for a meal. Real organic? Ten times that.",
+                    "Food prices depend on supply chains. When the outside connections slow down, prices spike.",
+                    "Street vendors are cheapest. The fancy places in the upper sectors? Don't even look at the menu."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "I stock both synth and real. Synth moves fast, real stuff has better margins.",
+                    "Food supply chains are global. One hiccup in logistics and my costs double overnight."
+                ]
+            }
+        },
+        "economy.prices.housing": {
+            "_all": {
+                "default": [
+                    "Rent depends on your zone and land value. Low-density residential is cheapest.",
+                    "A basic apartment in Sector 5 runs about 500 GEP per month. Sector 1? More like 2000.",
+                    "Housing prices go up as services improve in an area. Better schools, better police — higher rent."
+                ]
+            }
+        },
+        "economy.loans": {
+            "_all": {
+                "default": [
+                    "Loans are available but the interest is steep — anywhere from 2.3% to 20% depending on the amount.",
+                    "Borrowing limits scale with how developed the city is. Early on you might get 100,000. Later, millions.",
+                    "Interest goes down if the City Hall or Central Bank is operational. Helps a bit."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "I've taken loans for inventory. The interest hurts but you need capital to make capital.",
+                    "Small business loans are available but the terms favor the big players. As usual."
+                ]
+            }
+        },
+        "economy.budget": {
+            "_all": {
+                "default": [
+                    "The city budget covers everything — services, infrastructure, salaries. When it's tight, you feel it.",
+                    "Budget allocation determines service quality. Underfund healthcare and people notice fast.",
+                    "Each service has a budget slider. More money means better coverage, but there's a point of diminishing returns."
+                ]
+            }
+        },
+        "economy.supply_chains": {
+            "_all": {
+                "default": [
+                    "Raw materials come in, get processed, turned into goods. The production chain has multiple levels.",
+                    "Supply chains here cover everything from grain to software. Break one link and everything downstream suffers.",
+                    "Industrial zones process resources. Commercial zones sell the products. It's all connected."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "I work the production line. Raw materials in, products out. Simple but never-ending.",
+                    "When supply chain breaks down, factories idle and workers go home without pay."
+                ]
+            }
+        },
+        "economy.trade": {
+            "_all": {
+                "default": [
+                    "Trade flows through outside connections — road, rail, sea, and air. Import what you need, export what you make.",
+                    "The city trades with neighboring regions. Surpluses get exported for revenue.",
+                    "International trade keeps prices down. Cut those connections and costs skyrocket."
+                ]
+            }
+        },
+        "economy.black_market": {
+            "_all": {
+                "default": [
+                    "Black market? *looks around* Everything has a price if you know where to look.",
+                    "Underground economy is maybe 15-20% of total trade. ECHO pretends it doesn't exist.",
+                    "Illegal chrome, untaxed goods, forged permits — the shadow economy thrives because people need what ECHO won't provide."
+                ]
+            },
+            "operative": {
+                "default": [
+                    "The black market is where real business happens. No tax, no records, no questions.",
+                    "I can get you anything through unofficial channels. For a premium, of course."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Bruh, the black market IS the market for us. Regular stores don't even let us in.",
+                    "I know a guy who knows a guy. That's how everything works down here."
+                ]
+            }
+        },
+        "economy.currency": {
+            "_all": {
+                "default": [
+                    "Official currency is GEP — Global Economic Points. But crypto and barter work in the outer rings.",
+                    "GEP is tied to the city's economic output. When production drops, your money is worth less.",
+                    "Some districts run on their own scrip. ECHO doesn't love it but can't stop it."
+                ]
+            }
+        },
+        "economy.inequality": {
+            "_all": {
+                "default": [
+                    "The gap between the towers and the streets gets wider every year.",
+                    "Top 1% controls more wealth than the bottom 60%. Those numbers don't shock anyone anymore.",
+                    "Inequality? Just look around. Neon penthouses above, tent cities below."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "Inequality isn't accidental. It's engineered. ECHO benefits from keeping people desperate.",
+                    "The wealth gap is a weapon. Hungry people don't revolt — they just try to survive."
+                ]
+            }
+        },
+        "services.electricity.sources": {
+            "_all": {
+                "default": [
+                    "City runs on a mix — coal and gas plants for baseline, solar and wind for the green zones.",
+                    "Wind turbines produce 2 to 5 megawatts depending on placement. Nuclear plants? 3000 MW, but you need highly educated workers.",
+                    "The solar farm produces 800 MW during the day but nothing at night. Battery stations cover the gap."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "I worked at the coal plant for years. Twenty megawatts from the small one, hundred from the big one. Hard work.",
+                    "They're building geothermal now — 150 MW, clean energy. But it needs to be near water."
+                ]
+            }
+        },
+        "services.electricity.cost": {
+            "_all": {
+                "default": [
+                    "Monthly upkeep on the grid is massive. A gas plant runs about 200,000 GEP per month to operate.",
+                    "Power costs get passed to residents. The fee affects your happiness and your wallet.",
+                    "Importing electricity is expensive. Generating your own is the smart move long-term."
+                ]
+            }
+        },
+        "services.water.sources": {
+            "_all": {
+                "default": [
+                    "Water comes from treatment plants and pumping stations. Quality depends on how well they're maintained.",
+                    "Ground water gets pumped, treated, and piped through the city. Sewage goes the other direction.",
+                    "Some districts have better water pressure than others. Everything depends on infrastructure investment."
+                ]
+            }
+        },
+        "services.sewage": {
+            "_all": {
+                "default": [
+                    "Sewage treatment is one of those things nobody thinks about until it breaks. Then EVERYONE thinks about it.",
+                    "Raw sewage goes to treatment plants. When capacity is exceeded... don't swim in the river.",
+                    "The sewage system mirrors the water system. Pipes degrade, treatment plants need budget."
+                ]
+            }
+        },
+        "services.healthcare.ambulance": {
+            "_all": {
+                "default": [
+                    "Ambulance response depends on your district. Central sectors? Minutes. Outer ring? Could be an hour.",
+                    "Emergency services are stretched thin. More hospitals help, but each needs staff and budget.",
+                    "If you're having an emergency, flag down a patrol. They can radio faster than waiting for dispatch."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "We prioritize by severity. Sometimes that means someone waits who shouldn't have to.",
+                    "Ambulance coverage is a function of hospital placement and road access. Gridlock kills people."
+                ]
+            }
+        },
+        "services.healthcare.mental": {
+            "_all": {
+                "default": [
+                    "Mental health services? *dry laugh* In this city? You're looking at it — people tell their bartender.",
+                    "Post-Fall trauma is universal. Treatment for it is not.",
+                    "Some clinics offer counseling. Most people can't afford it or don't trust it."
+                ]
+            }
+        },
+        "services.healthcare.cost": {
+            "_all": {
+                "default": [
+                    "Healthcare runs about 100 GEP per hospitalized citizen per month. Budget decides quality.",
+                    "The service fee structure means citizens pay a portion. Cut the fee, lose revenue. Raise it, lose happiness.",
+                    "Good healthcare isn't cheap. But bad healthcare costs more in the long run."
+                ]
+            }
+        },
+        "services.deathcare": {
+            "_all": {
+                "default": [
+                    "Deathcare handles the... inevitable. Cemeteries, crematoriums, the whole process.",
+                    "When people die, the body needs processing. Without proper deathcare, disease spreads.",
+                    "Cemeteries fill up. Crematoriums have capacity limits. Nobody likes talking about it, but it matters."
+                ]
+            }
+        },
+        "services.garbage.general": {
+            "_all": {
+                "default": [
+                    "Garbage collection runs on routes. Miss a cycle and the trash piles up fast.",
+                    "Landfills, incinerators, and recycling centers — that's the garbage management trifecta.",
+                    "Waste management is the service nobody appreciates until it stops working."
+                ]
+            }
+        },
+        "services.garbage.recycling": {
+            "_all": {
+                "default": [
+                    "Recycling centers recover materials from waste. Good for the environment and the budget.",
+                    "The city has a recycling policy — if your district opts in, garbage output drops significantly.",
+                    "Advanced recycling turns waste into resources. Industrial zones can use reclaimed materials."
+                ]
+            }
+        },
+        "services.garbage.pollution": {
+            "_all": {
+                "default": [
+                    "Landfills pollute the ground around them. Incinerators pollute the air. Pick your poison.",
+                    "Industrial waste is the worst offender. Advanced pollution management helps but costs more.",
+                    "Garbage and pollution are two sides of the same coin. Can't fix one without addressing the other."
+                ]
+            }
+        },
+        "safety.crime.rate": {
+            "_all": {
+                "default": [
+                    "Crime rate varies by district. Well-lit areas with police presence do better.",
+                    "Unemployment drives crime up. Education drives it down. The math is simple.",
+                    "Official crime stats say 3-5% city-wide, but some sectors are sitting at 15-20%."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "We track crime probability per segment. Poverty, unemployment, and poor infrastructure are the top drivers.",
+                    "The crime rate dropped 12% after we increased patrols in the residential zones."
+                ]
+            }
+        },
+        "safety.crime.types": {
+            "_all": {
+                "default": [
+                    "Petty theft, burglary, cyber crimes — that's the bulk of it. Violent crime spikes in the outer ring.",
+                    "Data theft is the new pickpocketing. Your neural link is a target.",
+                    "The most common crimes? Property crimes. The most dangerous? Whatever the syndicates are running."
+                ]
+            }
+        },
+        "safety.police.general": {
+            "_all": {
+                "default": [
+                    "Police stations cover a radius. More stations mean faster response times.",
+                    "The force is overworked and understaffed. Budget cuts hit law enforcement hard.",
+                    "Police effectiveness depends on patrol coverage and the intelligence network."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "We maintain sector patrols, respond to incidents, and run investigations. Standard three-shift rotation.",
+                    "The precinct system divides the city into zones. Each zone has its own response team."
+                ]
+            }
+        },
+        "safety.police.surveillance": {
+            "_all": {
+                "default": [
+                    "Cameras everywhere. ECHO calls it security. Others call it something else.",
+                    "Every intersection, every public space — monitored. Privacy is a pre-Fall luxury.",
+                    "Facial recognition, gait analysis, neural pattern scanning. They know where you are."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "The surveillance network has blind spots. I've mapped most of them. Want to see?",
+                    "ECHO's camera grid runs on a central server. Theoretically hackable. Theoretically."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "Surveillance is the primary weapon of oppression. Knowledge of every citizen, every movement.",
+                    "We have countermeasures. Scramblers, dead zones, face masks. Staying invisible is a skill."
+                ]
+            }
+        },
+        "safety.prison": {
+            "_all": {
+                "default": [
+                    "Prison system's overcrowded. Pre-release programs help reduce recidivism, but not enough.",
+                    "Incarceration costs the city. There are policies for prison education, but it takes budget.",
+                    "Some say prison is better than the streets in the outer ring. That tells you something."
+                ]
+            }
+        },
+        "safety.fire": {
+            "_all": {
+                "default": [
+                    "Fire rescue operates from fire stations distributed across the city. Response time is everything.",
+                    "Fires spread fast in the old buildings. The industrial zones are the worst — chemical fires.",
+                    "Fire stations need regular budget or response times suffer. Lives depend on it."
+                ]
+            }
+        },
+        "safety.disaster": {
+            "_all": {
+                "default": [
+                    "Natural disasters — floods, earthquakes, storms. The city has emergency protocols but they're not always enough.",
+                    "After the Fall, we built better. But 'better' doesn't mean 'immune'.",
+                    "Disaster sirens go off and everyone heads underground. If you're lucky, there's room."
+                ]
+            },
+            "guard": {
+                "default": [
+                    "Emergency protocols require sector-by-sector evacuation. My unit handles crowd control.",
+                    "Disaster response is coordinated through the Emergency Battery Station network and emergency services."
+                ]
+            }
+        },
+        "safety.gangs": {
+            "_all": {
+                "default": [
+                    "Gangs control entire blocks in the outer sectors. They're organized, armed, and connected.",
+                    "The syndicates run protection rackets. Pay up or things get broken. Including you.",
+                    "ECHO tolerates some gang activity because they maintain order in areas the police can't reach."
+                ]
+            },
+            "street_kid": {
+                "default": [
+                    "Gangs are family when you got nobody else. Not gonna sugarcoat it — sometimes it's the only way.",
+                    "I know every crew on these blocks. Gotta know who's who to stay alive."
+                ]
+            }
+        },
+        "transport.bus": {
+            "_all": {
+                "default": [
+                    "Bus lines run through most districts. Cheapest way to travel but the routes are slow.",
+                    "Buses connect neighborhoods to job centers. Ticket prices affect who rides.",
+                    "Intercity buses run to outside connections. Not the most comfortable but gets the job done."
+                ]
+            }
+        },
+        "transport.subway": {
+            "_all": {
+                "default": [
+                    "The subway system is the city's backbone. Fast, reliable when it's maintained.",
+                    "Underground rail moves the most people per hour. The stations are deep — built to survive the Fall.",
+                    "Metro lines connect the major sectors. Peak hours it's standing room only."
+                ]
+            }
+        },
+        "transport.train": {
+            "_all": {
+                "default": [
+                    "Trains handle both passenger and cargo. The freight lines are essential for supply chains.",
+                    "Rail connections to outside regions keep trade flowing. Station capacity matters.",
+                    "Cargo trains can haul massive loads. More efficient than trucks for bulk materials."
+                ]
+            }
+        },
+        "transport.taxi": {
+            "_all": {
+                "default": [
+                    "Taxis run point-to-point. There's a minimum fare policy — costs more but goes directly where you need.",
+                    "Taxi service is available once the city enables it. Convenient but priced above public transit.",
+                    "Hail a taxi if the bus doesn't go where you need. Just don't ride during surge periods."
+                ]
+            }
+        },
+        "transport.roads": {
+            "_all": {
+                "default": [
+                    "Roads are the circulatory system. Two-lane, four-lane, highway — it all matters for traffic flow.",
+                    "Low-voltage cables run through every road, distributing power to buildings on both sides.",
+                    "Road condition affects accident rates. Maintenance isn't glamorous but it saves lives."
+                ]
+            }
+        },
+        "transport.traffic": {
+            "_all": {
+                "default": [
+                    "Traffic is a nightmare during shift changes. Adults take the fastest route, teens take the cheapest.",
+                    "Route selection depends on age — adults optimize time, seniors want comfort, teens save money.",
+                    "Accidents happen more on poorly maintained roads, bad lighting, and during storms."
+                ]
+            }
+        },
+        "transport.parking": {
+            "_all": {
+                "default": [
+                    "Parking fees range from 1 to 50 GEP in policy-controlled areas. Roadside parking is free where it's allowed.",
+                    "Seniors prioritize comfortable parking. Traffic flow improves when parking is well-planned.",
+                    "Street parking clogs lanes. Off-street lots keep things moving."
+                ]
+            }
+        },
+        "transport.cargo": {
+            "_all": {
+                "default": [
+                    "Cargo moves by train, ship, and plane. Ships carry up to 1000 tons — biggest capacity.",
+                    "Cargo terminals act as distribution centers. Goods stored there get delivered by local trucks.",
+                    "The freight network is the economy's backbone. Disrupt cargo flow and businesses shut down."
+                ]
+            }
+        },
+        "transport.air": {
+            "_all": {
+                "default": [
+                    "Air transport handles both passengers and cargo. The airport is the most expensive to build but connects internationally.",
+                    "Flights to and from outside connections bring tourists and trade goods.",
+                    "Air cargo is fast but expensive. Used for high-value or time-sensitive shipments."
+                ]
+            }
+        },
+        "health.general": {
+            "_all": {
+                "default": [
+                    "Health depends on air quality, service coverage, and happiness. Everything's connected.",
+                    "Average health in this city? Depends who you ask. The upper sectors are fine. Down here? Different story.",
+                    "Health metrics track the population's physical wellbeing. Pollution, stress, and access to care all factor in."
+                ]
+            }
+        },
+        "health.happiness": {
+            "_all": {
+                "default": [
+                    "Happiness is the aggregate of everything — service access, health, employment, housing, environment.",
+                    "Research shows happiness correlates with low rent, short commute, and good neighborhood services.",
+                    "People vote with their feet. Happiness drops low enough, they move. Or leave the city entirely."
+                ]
+            }
+        },
+        "health.needs": {
+            "_all": {
+                "default": [
+                    "Citizens have basic needs — food, shelter, electricity, water, healthcare. Miss any one and satisfaction drops.",
+                    "Beyond basics, people want education, entertainment, low crime, clean air. Luxuries aren't luxury if everyone else has them.",
+                    "Meeting citizen needs is the baseline. Exceeding them is how you get a thriving city."
+                ]
+            }
+        },
+        "health.leisure": {
+            "_all": {
+                "default": [
+                    "Parks, recreation areas, entertainment venues — leisure matters more than planners think.",
+                    "A park near residential areas boosts happiness significantly. Green space is mental health infrastructure.",
+                    "The nightlife in Sector 2 is legendary. Entertainment keeps people sane and spending."
+                ]
+            }
+        },
+        "health.aging": {
+            "_all": {
+                "default": [
+                    "City's got an aging population. Seniors need different services — healthcare, accessibility, comfort.",
+                    "As citizens age, their needs shift. Education to employment to retirement. Each phase has demands.",
+                    "Deathcare becomes important as the population ages. Not a fun topic but a necessary one."
+                ]
+            }
+        },
+        "health.addiction": {
+            "_all": {
+                "default": [
+                    "Synth-stim addiction is rampant in the lower sectors. Cheap, accessible, destructive.",
+                    "The chrome does things to your chemistry. Some people can't stop upgrading.",
+                    "Addiction services are underfunded. The clinics that exist are overwhelmed."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "I treat addiction cases daily. Withdrawal from neural stims is brutal on the body.",
+                    "Most addictions start with pain management. Injuries from work, chrome rejection, trauma."
+                ]
+            }
+        },
+        "health.chrome_sickness": {
+            "_all": {
+                "default": [
+                    "Chrome sickness — your body rejecting cybernetic implants. Ranges from mild to lethal.",
+                    "Black-market chrome has a high rejection rate. Save up for the real stuff or take the risk.",
+                    "Symptoms start with numbness, then seizures. Full rejection can shut down entire systems."
+                ]
+            },
+            "medic": {
+                "default": [
+                    "Chrome rejection is my number one non-trauma admission. Immunosuppressants help but aren't a cure.",
+                    "The body has limits. Push too much chrome and the immune system fights back. Hard."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "My chrome is top-shelf. Custom firmware means my body adapted smoothly. Can't say the same for most.",
+                    "Chrome sickness is a firmware problem as much as a bio problem. Poorly coded implants stress the nervous system."
+                ]
+            }
+        },
+        "education.general": {
+            "_all": {
+                "default": [
+                    "The education system has five levels — from uneducated through highly educated. Each unlocks different jobs.",
+                    "Schools, high schools, colleges, universities — the whole pipeline is here if you can access it.",
+                    "Education level determines your employment options and wage bracket. Knowledge is literal currency."
+                ]
+            }
+        },
+        "education.elementary": {
+            "_all": {
+                "default": [
+                    "Elementary schools serve children. Every district needs at least one or families leave.",
+                    "Basic education brings citizens from uneducated to poorly educated. Foundation for everything else.",
+                    "School capacity and placement matter. Too far from residential areas and attendance drops."
+                ]
+            }
+        },
+        "education.high_school": {
+            "_all": {
+                "default": [
+                    "High schools bring citizens to the educated level. Opens up senior-level employment.",
+                    "A good high school improves the whole neighborhood. Property values go up, crime goes down.",
+                    "Students attend high school for several terms. Dropout rates correlate with happiness and family income."
+                ]
+            }
+        },
+        "education.university": {
+            "_all": {
+                "default": [
+                    "University produces well-educated and highly educated citizens. Specialist and manager roles open up.",
+                    "The university campus is expensive to build and maintain but the ROI on educated workers is massive.",
+                    "Research output from universities contributes to city development. It's an investment in the future."
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "The university is my domain. We teach, we research, we preserve knowledge that would otherwise be lost.",
+                    "Higher education is under threat from budget cuts. Short-term thinking kills long-term progress."
+                ]
+            }
+        },
+        "education.research": {
+            "_all": {
+                "default": [
+                    "Research institutions push the development tree forward. New milestones unlock new possibilities.",
+                    "Without research, the city stagnates. Technology, medicine, infrastructure — it all needs innovation.",
+                    "The research budget competes with everything else. But breakthroughs change everything."
+                ]
+            }
+        },
+        "education.levels": {
+            "_all": {
+                "default": [
+                    "Five education levels: Uneducated, Poorly Educated, Educated, Well Educated, Highly Educated.",
+                    "Uneducated workers earn about 1500 per month. Highly educated earn 2700. The system rewards learning.",
+                    "Each education level maps to a job tier — from simple labor through management positions."
+                ]
+            }
+        },
+        "housing.general": {
+            "_all": {
+                "default": [
+                    "Housing comes in low-density, medium-density, and high-density residential zones.",
+                    "Where you live determines your commute, your services, and most of your quality of life.",
+                    "The housing market follows land value. Better services nearby means higher rent and property tax."
+                ]
+            }
+        },
+        "housing.zoning": {
+            "_all": {
+                "default": [
+                    "Zoning divides the city into residential, commercial, industrial, and office areas.",
+                    "Low-density residential is houses. Medium is mixed. High-density is apartment towers.",
+                    "Mixed zoning is the new approach — combines residential and commercial to reduce commutes."
+                ]
+            }
+        },
+        "housing.land_value": {
+            "_all": {
+                "default": [
+                    "Land value is the master variable. It affects rent, tax revenue, building level, and who lives where.",
+                    "Parks, services, and good transportation boost land value. Pollution and crime tank it.",
+                    "High land value areas attract wealthier, more educated citizens. It self-reinforces."
+                ]
+            }
+        },
+        "housing.homelessness": {
+            "_all": {
+                "default": [
+                    "Homelessness rises when housing demand outpaces supply. Also when rent exceeds wages.",
+                    "The tent cities in the outer ring grow every month. No easy solutions.",
+                    "People lose housing when they lose jobs. Unemployment and homelessness track together."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "Homelessness is a policy choice. The city has empty buildings and homeless people. Do the math.",
+                    "The resistance runs shelter programs in abandoned buildings. ECHO calls it squatting."
+                ]
+            }
+        },
+        "housing.building_level": {
+            "_all": {
+                "default": [
+                    "Buildings level up when conditions improve — better services, lower taxes, higher land value.",
+                    "Higher building level means more residents, more tax revenue, and better aesthetics.",
+                    "Neglect a neighborhood and buildings degrade. Eventually they get abandoned."
+                ]
+            }
+        },
+        "housing.rent": {
+            "_all": {
+                "default": [
+                    "Rent tracks land value. High-value areas near services and transit cost the most.",
+                    "Many people spend over half their income on rent. Housing affordability is a crisis.",
+                    "District policies can influence rent indirectly — subsidies, rent caps, zoning changes."
+                ]
+            }
+        },
+        "places.district.neon": {
+            "_all": {
+                "default": [
+                    "The Neon District — entertainment capital. Bars, clubs, markets, all lit up 24/7.",
+                    "Neon is where you go to forget. Music, food, substances — everything is available.",
+                    "Crime rate in Neon is moderate. It's controlled crime — the syndicates keep their own order."
+                ]
+            }
+        },
+        "places.district.industrial": {
+            "_all": {
+                "default": [
+                    "The Industrial Sector smells like oil and progress. Factories run three shifts, never stopping.",
+                    "Air pollution is terrible in the industrial zone. Workers get hazard pay. Or they should.",
+                    "This is where the city's goods are made. Raw materials come in, products go out."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "I work down in Industrial. Twelve-hour shifts, rotating schedule. The pay is okay, the air isn't.",
+                    "The factories never close. Machines don't need sleep. Workers do, but nobody cares."
+                ]
+            }
+        },
+        "places.district.upper": {
+            "_all": {
+                "default": [
+                    "The Upper Sectors — where the money lives. Clean air, private security, organic food.",
+                    "You can tell you're in the upper district when the streets aren't cracked and the neon is tasteful.",
+                    "ECHO's headquarters is up there. NexGen too. The power lives at the top. Literally."
+                ]
+            }
+        },
+        "places.district.lower": {
+            "_all": {
+                "default": [
+                    "The Lower Sectors — dense, loud, alive. This is where the real city lives.",
+                    "Down here you'll find everything. Markets, clinics, bars, danger — all in the same block.",
+                    "The lower city has character. The upper city has... money."
+                ]
+            }
+        },
+        "places.landmarks": {
+            "_all": {
+                "default": [
+                    "The city has signature buildings — unique structures that define the skyline.",
+                    "Landmarks draw tourists and boost city attractiveness. Some are pre-Fall, others built after.",
+                    "The Clock Tower in Sector 2 survived the Fall. People say it's good luck to hear it chime."
+                ]
+            }
+        },
+        "buildings.service": {
+            "_all": {
+                "default": [
+                    "Service buildings include schools, hospitals, fire stations, police precincts — the city's infrastructure.",
+                    "Each service building covers an area. Placement is critical — too far and citizens complain.",
+                    "Upgrading service buildings extends their range and capacity. Budget determines quality."
+                ]
+            }
+        },
+        "buildings.signature": {
+            "_all": {
+                "default": [
+                    "Signature buildings are unlocked through city achievements. Each one is unique and provides bonuses.",
+                    "They're a reward for good city management. Meeting specific milestones unlocks construction.",
+                    "These buildings are landmarks — they boost attractiveness and provide unique city benefits."
+                ]
+            }
+        },
+        "buildings.abandoned": {
+            "_all": {
+                "default": [
+                    "Abandoned buildings are a sign of decay — lost services, high crime, or no demand.",
+                    "When happiness drops too low or services vanish, people leave. Buildings sit empty.",
+                    "The outer ring has whole blocks of abandoned structures. Some get squatted, others just rot."
+                ]
+            }
+        },
+        "buildings.construction": {
+            "_all": {
+                "default": [
+                    "New construction happens constantly. Zoning creates demand, developers fill it.",
+                    "Construction costs vary wildly. A road segment is cheap. A hospital or power plant? Major investment.",
+                    "Buildings go through construction phases. You'll see scaffolding for a while before the final structure."
+                ]
+            }
+        },
+        "personal.past": {
+            "_all": {
+                "default": [
+                    "The past? *exhales* Everyone here has a story. Most of us chose to forget.",
+                    "Before the Fall, things were different. After? We all started over.",
+                    "My past is mine. But I'll tell you this — it made me who I am."
+                ]
+            },
+            "detective": {
+                "default": [
+                    "I was a real detective once. Badge, department, the whole thing. After the Fall, it's freelance or nothing.",
+                    "My past involves too many cases and not enough closures. Some files never get closed."
+                ]
+            }
+        },
+        "personal.dreams": {
+            "_all": {
+                "default": [
+                    "Dreams? In this city? *laughs* I dream about a full night's sleep.",
+                    "I'd like to see the sky without smog someday. Maybe outside the city walls.",
+                    "My dream is stability. Boring, I know. But when everything can collapse, stability is luxury."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "My dreams are not my own — they belong to the layers. But sometimes I dream of silence.",
+                    "I dream of a world where the layers are healed. Where reality holds firm and the watchers rest."
+                ]
+            }
+        },
+        "personal.fears": {
+            "_all": {
+                "default": [
+                    "Fear? I've run out of room for new ones. But the old fears never leave.",
+                    "What scares me? Another Fall. Or something worse.",
+                    "Everyone's afraid of something. The smart ones just learn to function despite it."
+                ]
+            }
+        },
+        "personal.food": {
+            "_all": {
+                "default": [
+                    "Synth-noodles are my go-to. Cheap, fast, won't kill you. Probably.",
+                    "If you can find real rice or real meat, you're either rich or lucky.",
+                    "Street food from the night market is actually decent. The vendors know their recipes."
+                ]
+            },
+            "bartender": {
+                "default": [
+                    "I serve bar food — fried synth, pickled anything, whatever pairs with drinks.",
+                    "The real stuff? I get organic supplies twice a month. Special menu. Regulars only."
+                ]
+            }
+        },
+        "personal.music": {
+            "_all": {
+                "default": [
+                    "Music keeps people going. Synth-wave, neo-jazz, old-world classics — depends on the district.",
+                    "Live music happens at bars in the Neon District. Some of it is actually good.",
+                    "Pre-Fall music recordings are collectors' items. The sound of a world we lost."
+                ]
+            }
+        },
+        "employment.general": {
+            "_all": {
+                "default": [
+                    "Employment depends on having matching workplaces and workers. Education level determines the tier.",
+                    "Uneducated workers do simple jobs at 1500/month. Highly educated manage at 2700/month.",
+                    "Jobs are distributed across industrial, commercial, and office zones. Service buildings employ people too."
+                ]
+            }
+        },
+        "employment.unemployment": {
+            "_all": {
+                "default": [
+                    "Unemployment drives everything bad — crime, unhappiness, homelessness. It's the root problem.",
+                    "When factories close or offices downsize, the ripple hits the whole district.",
+                    "Official unemployment is maybe 8%. Real number? Higher. Gig economy, informal work — none of that counts."
+                ]
+            },
+            "worker": {
+                "default": [
+                    "I've been unemployed twice. Once after a factory closed, once after chrome sickness. Both were hell.",
+                    "When you lose your job here, there's no safety net. You scramble or you sink."
+                ]
+            }
+        },
+        "employment.labor": {
+            "_all": {
+                "default": [
+                    "Labor rights? In theory, yes. In practice, depends on who your employer is.",
+                    "Workers in the industrial zones do hard shifts. The conditions aren't great.",
+                    "Highly educated workers have options. Everyone else takes what's available."
+                ]
+            }
+        },
+        "employment.shifts": {
+            "_all": {
+                "default": [
+                    "Standard shifts are 8-12 hours. Some factories run 24/7 with rotating crews.",
+                    "Shift changes cause traffic spikes. Everyone leaves at once — the roads can't handle it.",
+                    "Night shift pays better, but it wrecks your health. Ask anyone who's done it for years."
+                ]
+            }
+        },
+        "resources.general": {
+            "_all": {
+                "default": [
+                    "The city needs raw materials — ore, wood, oil, grain. Some are local, most are imported.",
+                    "Resources feed the production chains. No resources means no goods means no commerce.",
+                    "Strategic resource management is the difference between a thriving city and a collapsing one."
+                ]
+            }
+        },
+        "resources.food": {
+            "_all": {
+                "default": [
+                    "Food production comes from agricultural processing and imports. The city doesn't grow enough locally.",
+                    "When food supply chains break, prices spike overnight. We've seen it happen.",
+                    "Synth-food factories supplement the natural supply. Not as tasty but it keeps people fed."
+                ]
+            }
+        },
+        "resources.energy": {
+            "_all": {
+                "default": [
+                    "Energy resources — coal, oil, natural gas for the old plants. Solar, wind, nuclear for the new ones.",
+                    "The city's energy demand grows with population. Every new building needs power.",
+                    "Energy independence means generating more than you consume. Most cities import the difference."
+                ]
+            }
+        },
+        "resources.scarcity": {
+            "_all": {
+                "default": [
+                    "Scarcity is a weapon. When resources run low, prices climb and people get desperate.",
+                    "Some scarcity is artificial — megacorps controlling supply to inflate prices.",
+                    "Water scarcity in the outer ring is real. The pipes don't reach that far."
+                ]
+            }
+        },
+        "nature.weather.rain": {
+            "_all": {
+                "default": [
+                    "Rain is constant here. The acid content varies — check the forecast before going out uncovered.",
+                    "When it rains, the city looks different. Neon reflects off everything. Beautiful and dangerous.",
+                    "Rain keeps the smog down but floods the lower sectors. Everything has a cost."
+                ]
+            }
+        },
+        "nature.weather.storm": {
+            "_all": {
+                "default": [
+                    "Storms knock out power and disrupt transportation. Lock down and wait it out.",
+                    "Lightning storms are the worst — they fry exposed electronics and crash the grid.",
+                    "Storm season lasts three months. Emergency services run triple shifts during."
+                ]
+            }
+        },
+        "nature.weather.fog": {
+            "_all": {
+                "default": [
+                    "The fog rolls in from the coast and stays for days. Visibility drops to meters.",
+                    "Fog in this city isn't just weather — it carries pollutants from the industrial zones.",
+                    "Some people say things live in the fog. After the Fall, I'm not ruling anything out."
+                ]
+            }
+        },
+        "nature.pollution.air": {
+            "_all": {
+                "default": [
+                    "Air pollution is worst near industrial zones and coal plants. Exhaust filters help but don't eliminate it.",
+                    "Some districts have air quality indices in the red. Respiratory disease rates there are double the average.",
+                    "Wind direction matters — pollution from factories drifts. Downwind neighborhoods suffer the most."
+                ]
+            }
+        },
+        "nature.pollution.water": {
+            "_all": {
+                "default": [
+                    "Water pollution comes from industrial runoff and overloaded sewage. The river is technically toxic.",
+                    "Don't drink the tap water without filtering it. Official quality varies by district.",
+                    "Water pollution affects fish stocks and agricultural output downstream."
+                ]
+            }
+        },
+        "nature.pollution.ground": {
+            "_all": {
+                "default": [
+                    "Ground pollution is a legacy of decades of unregulated dumping. It seeps into everything.",
+                    "Contaminated land can't support residential zones. It needs remediation — expensive and slow.",
+                    "Old industrial sites are the worst. Chemicals soak into the ground for generations."
+                ]
+            }
+        },
+        "nature.terrain": {
+            "_all": {
+                "default": [
+                    "The city's terrain varies — flat plains for building, hills for wind power, waterways for transport.",
+                    "Terrain affects everything — road building costs, water flow, pollution spread.",
+                    "The coast and rivers provide natural borders and water access. Strategic for growth."
+                ]
+            }
+        },
+        "communications.general": {
+            "_all": {
+                "default": [
+                    "The communications network covers the whole city — data, voice, emergency broadcasts.",
+                    "Network coverage depends on tower placement. Dead zones exist in the outer ring.",
+                    "Information flows faster than anything else in this city. Sometimes too fast."
+                ]
+            }
+        },
+        "communications.telecom": {
+            "_all": {
+                "default": [
+                    "Telecom infrastructure serves citizen data needs. Better towers mean more capacity.",
+                    "Everyone needs network access. It's not a luxury anymore — it's critical infrastructure.",
+                    "The comm towers have a coverage radius. Gaps in coverage mean disconnected citizens."
+                ]
+            }
+        },
+        "communications.post": {
+            "_all": {
+                "default": [
+                    "Physical mail still exists in some sectors. Post offices handle packages and documents.",
+                    "Most communication is digital now. But there's still demand for physical package delivery.",
+                    "Post service uses the road network — traffic affects delivery times."
+                ]
+            }
+        },
+        "communications.media": {
+            "_all": {
+                "default": [
+                    "Media is controlled, mostly. Independent news exists but operates in the grey zone.",
+                    "ECHO runs the main broadcasts. 'Objective reporting' means whatever they decide.",
+                    "Underground media channels spread information ECHO doesn't want public. Risky but necessary."
+                ]
+            },
+            "resistance_fighter": {
+                "default": [
+                    "The resistance runs pirate broadcasts. Truth that ECHO can't censor.",
+                    "Media is a weapon. ECHO controls the narrative. We break it open."
+                ]
+            }
+        },
+        "communications.hacking": {
+            "_all": {
+                "default": [
+                    "Hacking the comm grid is technically possible. Not that anyone would do that. *cough*",
+                    "Network security is always a step behind the hackers. That's just how it works.",
+                    "Data breaches happen weekly. Most people don't know their information's been compromised."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "The comm grid is swiss cheese. Firewalls look impressive but I've found seventeen backdoors.",
+                    "I don't 'hack' — I 'perform unauthorized security audits'. Sounds better on a resume."
+                ]
+            }
+        },
+        "governance.general": {
+            "_all": {
+                "default": [
+                    "City governance is a mix of elected officials and ECHO appointees. Democracy with asterisks.",
+                    "The mayor sets policies, adjusts budgets, and manages services. In theory.",
+                    "Real power is shared between elected government and corporate interests. Guess who usually wins."
+                ]
+            }
+        },
+        "governance.policies": {
+            "_all": {
+                "default": [
+                    "Policies affect everything — taxi fares, parking fees, speed limits, recycling programs.",
+                    "City policies apply city-wide. District policies let you fine-tune individual areas.",
+                    "Some popular policies: roadside parking fees, combustion engine bans, gated communities."
+                ]
+            }
+        },
+        "governance.elections": {
+            "_all": {
+                "default": [
+                    "Elections? *bitter laugh* The candidates are pre-approved. But people still vote and hope.",
+                    "District councils have some real power. City-level elections are more... theatrical.",
+                    "Voting participation is around 40%. Hard to care when the outcome feels predetermined."
+                ]
+            }
+        },
+        "governance.corruption": {
+            "_all": {
+                "default": [
+                    "Corruption is systemic. Building permits, contract bids, inspections — everything has a price.",
+                    "The line between lobbying and bribery is invisible to me.",
+                    "Small corruption keeps the machine running. Big corruption keeps the powerful in power."
+                ]
+            },
+            "detective": {
+                "default": [
+                    "I've investigated corruption cases that went all the way to the top. They never got prosecuted.",
+                    "Follow the money and you'll find the crime. Problem is, the money follows itself."
+                ]
+            }
+        },
+        "governance.rights": {
+            "_all": {
+                "default": [
+                    "Citizens have rights. On paper. Enforcement is selective.",
+                    "Freedom of movement, freedom of speech — both exist with significant fine print.",
+                    "Rights are only as strong as the institutions that protect them. Draw your own conclusions."
+                ]
+            }
+        },
+        "governance.outside_connections": {
+            "_all": {
+                "default": [
+                    "Outside connections link us to the wider world — trade, travel, immigration.",
+                    "Road, rail, ship, and air connections to other regions. Each one is a lifeline.",
+                    "Cut the outside connections and the city starves within weeks. That's leverage."
+                ]
+            }
+        },
+        "governance.milestones": {
+            "_all": {
+                "default": [
+                    "City milestones unlock new buildings, policies, and services. Population triggers most of them.",
+                    "Each milestone is a sign of growth. New ones bring new challenges and opportunities.",
+                    "The progression system rewards good management. Hit the milestones and new tools unlock."
+                ]
+            }
+        },
+        "tech.chrome.types": {
+            "_all": {
+                "default": [
+                    "Main chrome types: neural links, reflex boosters, synthetic limbs, sensory enhancement.",
+                    "Neural links are the most common — direct brain-computer interface. Essential for many jobs.",
+                    "Full-body conversion is rare and extreme. Most people get targeted augmentation."
+                ]
+            },
+            "hacker": {
+                "default": [
+                    "Neural link with data processing cores — that's my setup. Custom firmware obviously.",
+                    "There's combat chrome and utility chrome. I run utility — faster processing, better connectivity."
+                ]
+            }
+        },
+        "tech.chrome.cost": {
+            "_all": {
+                "default": [
+                    "Basic neural link: about 5000 GEP. Premium from NexGen: 15000. Black market: 2000 but risky.",
+                    "Chrome costs scale with complexity. A simple eye mod is affordable. Full limb replacement? Mortgage territory.",
+                    "Monthly maintenance on chrome adds up. Updates, calibration, bio-compatibility checks."
+                ]
+            }
+        },
+        "tech.ai": {
+            "_all": {
+                "default": [
+                    "AI runs everything behind the scenes — traffic management, power distribution, surveillance.",
+                    "The city's AI systems are semi-autonomous. They optimize in real-time based on sensor data.",
+                    "ECHO's central AI is a black box. Nobody outside the inner circle knows its full capabilities."
+                ]
+            }
+        },
+        "tech.data": {
+            "_all": {
+                "default": [
+                    "Data is the city's real currency. Every interaction generates it, and someone is collecting it.",
+                    "Personal data flows through the comm grid constantly. Privacy protocols exist but are... flexible.",
+                    "The data economy powers targeted services, surveillance, and corporate decision-making."
+                ]
+            }
+        },
+        "tech.vehicles": {
+            "_all": {
+                "default": [
+                    "Most vehicles are electric now. Some districts have banned combustion engines entirely.",
+                    "Personal vehicles clog the roads. Public transit is the future, but people love their cars.",
+                    "Emergency vehicles get priority routing. The AI traffic system parts traffic for them."
+                ]
+            }
+        },
+        "world.lore.history": {
+            "_all": {
+                "default": [
+                    "Before the Fall, this was just a city. After 2067, it became something else entirely.",
+                    "The history is divided into pre-Fall and post-Fall. Two different worlds.",
+                    "Historical records from before 2067 are fragmented. The Fall destroyed archives along with everything else."
+                ]
+            },
+            "scholar": {
+                "default": [
+                    "I've spent decades reconstructing the pre-Fall timeline. What I've found is... troubling.",
+                    "History is written by survivors. In our case, the survivors had very different accounts."
+                ]
+            }
+        },
+        "world.lore.religion": {
+            "_all": {
+                "default": [
+                    "Religion adapted after the Fall. Old faiths, new cults, and the Church of the Layers.",
+                    "The layers gave rise to new spiritual movements. Some people worship what they can't explain.",
+                    "Faith is personal here. Nobody judges — there are bigger things to worry about."
+                ]
+            },
+            "oracle": {
+                "default": [
+                    "The layers are not religion — they are reality. But I understand why people worship what they cannot perceive.",
+                    "Before the Fall, the spiritual world was separate from the physical. Now they bleed into each other."
+                ]
+            }
+        },
+        "world.factions.megacorp": {
+            "_all": {
+                "default": [
+                    "NexGen is the biggest megacorp. Chrome, AI, biotech — they've got their fingers in everything.",
+                    "Megacorps have more power than the government. They just pretend otherwise.",
+                    "Corporate warfare is real. Acquisition, sabotage, hostile takeovers — all behind closed doors."
+                ]
+            }
+        },
+        "world.factions.gangs": {
+            "_all": {
+                "default": [
+                    "Street gangs control territory in the outer ring. Each has their own culture and rules.",
+                    "The Rust Snakes run Sector 6. The Neon Vipers control the entertainment district.",
+                    "Gangs fill the power vacuum where ECHO's reach ends. Order, their way."
+                ]
+            }
+        },
+        "world.culture": {
+            "_all": {
+                "default": [
+                    "Culture in this city is a blend of everything. Pre-Fall traditions mixed with post-Fall survival art.",
+                    "Street art covers every surface. Music plays in every bar. Culture thrives because people need it to.",
+                    "The annual Neon Festival draws thousands. For one week, the city pretends things are normal."
+                ]
+            }
+        },
+        "world.population": {
+            "_all": {
+                "default": [
+                    "Population is around 2,830 documented citizens. Real number including undocumented is probably double.",
+                    "The city grows through immigration and births. Milestone populations unlock new services.",
+                    "Population density varies wildly — towers packed with thousands next to empty blocks."
+                ]
+            }
+        },
+        "quests.reward": {
+            "_all": {
+                "default": [
+                    "Rewards depend on the job. Standard pay, favors, information, or... creative compensation.",
+                    "I pay fair. But 'fair' depends on the risk involved.",
+                    "Complete the job, get the reward. Simple. No advance payment."
+                ]
+            },
+            "merchant": {
+                "default": [
+                    "I pay in goods and GEP. Sometimes information is more valuable than either.",
+                    "Finish this and I'll give you a 30% discount. Permanently. That's worth more than cash."
+                ]
+            }
+        },
+        "quests.difficulty": {
+            "_all": {
+                "default": [
+                    "Some jobs are easy — deliveries, conversations, information gathering. Others are... less easy.",
+                    "I wouldn't ask if it was simple. This one requires skill and discretion.",
+                    "Rate the difficulty? Let's say you should eat a good meal before attempting it."
+                ]
+            }
+        },
+        "quests.progress": {
+            "_all": {
+                "default": [
+                    "How's it going? Any progress on what we discussed?",
+                    "You're still working on it? Good. Don't rush — but don't take forever either.",
+                    "I haven't forgotten about our arrangement. Have you made progress?"
+                ]
+            }
+        }
+    }
+}

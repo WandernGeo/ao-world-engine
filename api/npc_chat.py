@@ -676,9 +676,103 @@ def get_npc_state(npc_id: str, tick: int) -> dict:
 @app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({
-        "status": "ok", 
-        "vertex_ai": HAS_VERTEX,
-        "arweave_gateway": ARWEAVE_GATEWAY
+        "status": "ok",
+        "simulation_api": True,
+        "chat_proxy": {
+            "status": "ok",
+            "vertex_ai": HAS_VERTEX,
+            "arweave_gateway": ARWEAVE_GATEWAY,
+        },
+        "total_npcs": len(FOUNDING_NPCS) + 800,
+    })
+
+
+@app.route("/api/world-state", methods=["GET"])
+def world_state_api():
+    """Aggregated world state for the monitor — one call replaces 6 AO CU queries.
+
+    Query params:
+        tick (int): current simulation tick (optional, defaults to 0)
+    """
+    tick = request.args.get("tick", 0, type=int)
+
+    # 1. Tick / time state
+    ts = get_tick_state(tick)
+
+    # 2. NPC locations (schedule-based, deterministic)
+    npc_locations = {}
+    for npc_id in FOUNDING_NPCS:
+        loc, activity = get_scheduled_location(npc_id, tick)
+        time_period = get_time_period(tick)
+        activity_moods = {
+            "sleeping": "peaceful", "training": "focused",
+            "mission": "alert", "debriefing": "serious",
+            "socializing": "relaxed", "personal_time": "contemplative",
+        }
+        mood_seed = int(hashlib.md5(f"{npc_id}_mood_{tick // 20}".encode()).hexdigest(), 16)
+        moods = [activity_moods.get(activity, "neutral"), "contemplative", "wary", "restless", "focused"]
+        npc_locations[npc_id] = {
+            "location": loc,
+            "state": activity,
+            "mood": moods[mood_seed % len(moods)],
+            "name": FOUNDING_NPCS[npc_id]["name"],
+            "archetype": FOUNDING_NPCS[npc_id]["archetype"],
+            "time_period": time_period,
+        }
+
+    # 3. Deterministic economy (varies with tick to feel alive)
+    economy_seed = int(hashlib.md5(f"economy_{tick // 24}".encode()).hexdigest(), 16)
+    base_budget = 996_000
+    # Vary budget ±5% based on day — taxes in, services out
+    daily_tax_revenue = 12_400 + (economy_seed % 3_200) - 1_600      # 10,800..14,000
+    daily_service_cost = 11_800 + ((economy_seed >> 8) % 2_800) - 1_400  # 10,400..13,200
+    hour = tick % 24
+    day = (tick // 24) + 1
+    # Budget accumulates over days
+    budget = base_budget + (day - 1) * (daily_tax_revenue - daily_service_cost)
+    # Intra-day: services cost more during day hours
+    if 6 <= hour < 18:
+        budget -= int(daily_service_cost * hour / 48)
+    else:
+        budget += int(daily_tax_revenue * 0.02)  # Small overnight revenue (fines, fees)
+
+    gdp_base = 920_000
+    inflation = 0.018 + (economy_seed % 200) / 10000  # 1.8% - 3.8%
+    unemployment = 0.11 + (economy_seed % 80) / 1000   # 11% - 19%
+    gini = 0.68 + (economy_seed % 100) / 1000          # 0.68 - 0.78
+    black_market = 0.18 + (economy_seed % 80) / 1000   # 18% - 26%
+
+    population = len(FOUNDING_NPCS) + 800  # founding + generated
+
+    return jsonify({
+        "tick": tick,
+        "day": day,
+        "year": ts.get("day", 1) // 365 + 2087,
+        "hour": hour,
+        "weather": ts.get("weather", "clear"),
+        "time_period": ts.get("time_of_day", "night"),
+        "population": population,
+        "budget": budget,
+        "economy": {
+            "gdp": gdp_base + day * 120,
+            "inflation": round(inflation, 4),
+            "unemployment_rate": round(unemployment, 3),
+            "gini_coefficient": round(gini, 3),
+            "black_market_share": round(black_market, 3),
+            "crisis_level": "healthy" if budget > 900_000 else "strained" if budget > 700_000 else "critical",
+            "daily_tax_revenue": daily_tax_revenue,
+            "daily_service_cost": daily_service_cost,
+            "service_levels": {
+                "law_enforcement": round(0.80 + (economy_seed % 15) / 100, 2),
+                "infrastructure": round(0.82 + (economy_seed % 12) / 100, 2),
+                "healthcare": round(0.75 + (economy_seed % 18) / 100, 2),
+                "sanitation": round(0.70 + (economy_seed % 20) / 100, 2),
+            },
+        },
+        "npc_locations": npc_locations,
+        "npc_count": len(npc_locations),
+        "ao_live": True,  # Backend is always "live" — it IS the fallback
+        "source": "backend_api",
     })
 
 
@@ -1185,496 +1279,106 @@ CRITICAL CORRECTIONS (always enforce these):
                 history_lines.append(f"{npc_state_data['name']}: {content}")
         history_context = "\n\nRECENT CONVERSATION:\n" + "\n".join(history_lines)
     
-    if HAS_VERTEX and model:
+    # ================================================================
+    # NLU ENGINE — Primary response path (no LLM required)
+    # Story-based dialogue: intent matching → story lookup → template fill
+    # ================================================================
+    from api.nlu_engine import generate_nlu_response
+    
+    # Check if LLM fallback is explicitly requested
+    use_llm = data.get('use_llm', False)
+    
+    # Build known NPC lookup for entity extraction
+    known_npc_lookup = {}
+    for other_id, other_prof in FOUNDING_NPCS.items():
+        if other_id != npc_id:
+            other_name = other_prof.get('name', other_id)
+            rel = npc_relationships.get(other_id, {})
+            known_npc_lookup[other_name] = {
+                'id': other_id,
+                'relationship': rel.get('history', f"We know each other from around {npc_state_data.get('location_desc', 'the city')}"),
+                'opinion': rel.get('type', 'acquaintance'),
+            }
+    
+    # Build user memory dict for the engine
+    user_memory_dict = {'name': user_name} if user_name else None
+    
+    # Generate NLU response
+    nlu_result = generate_nlu_response(
+        message=message,
+        npc_id=npc_id,
+        npc_state=npc_state_data,
+        tick_state=npc_state_data.get('tick_state', {}),
+        npc_profile=profile,
+        known_npcs=known_npc_lookup,
+        user_id=user_id,
+        user_memory=user_memory_dict,
+    )
+    
+    npc_response = nlu_result['response']
+    nlu_intent = nlu_result['intent']
+    nlu_confidence = nlu_result['confidence']
+    nlu_context = nlu_result['context']
+    
+    # LLM fallback: only if explicitly requested AND confidence is low
+    if use_llm and nlu_confidence < 0.5 and HAS_VERTEX and model:
         try:
             full_prompt = f"{system_prompt}{history_context}\n\nUser says: {message}\n\nRespond as {npc_state_data['name']}:"
             response = model.generate_content(full_prompt)
             npc_response = response.text
+            nlu_intent = 'llm_fallback'
+            nlu_confidence = 0.8
         except Exception as e:
-            npc_response = f"[Error: {e}]"
-    else:
-        # ================================================================
-        # SMART OFFLINE NLU - No LLM required
-        # NPCs can answer common questions using their profile data
-        # ================================================================
-        import random
-        import re
+            # LLM failed — stick with NLU response
+            logging.warning(f"LLM fallback failed: {e}")
         
-        msg_lower = message.lower().strip()
+    
+    # Name extraction from current message (feeds into NLU context)
+    msg_lower = message.lower().strip()
+    extracted_name = None
+    if "my name is" in msg_lower:
+        name_part = msg_lower.split("my name is")[-1].strip()
+        words = name_part.split()
+        if words and len(words[0]) > 1:
+            extracted_name = words[0].title()
+            remember_user(user_id, extracted_name, tick)
+            user_name = extracted_name
+    elif "i'm " in msg_lower:
+        name_part = msg_lower.split("i'm ")[-1].strip()
+        words = name_part.split()
+        if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
+            extracted_name = words[0].title()
+            remember_user(user_id, extracted_name, tick)
+            user_name = extracted_name
+    elif "i am " in msg_lower:
+        name_part = msg_lower.split("i am ")[-1].strip()
+        words = name_part.split()
+        if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
+            extracted_name = words[0].title()
+            remember_user(user_id, extracted_name, tick)
+            user_name = extracted_name
+    elif "call me " in msg_lower:
+        name_part = msg_lower.split("call me ")[-1].strip()
+        words = name_part.split()
+        if words and len(words[0]) > 1:
+            extracted_name = words[0].title()
+            remember_user(user_id, extracted_name, tick)
+            user_name = extracted_name
+    
+    # If user just introduced themselves, override with a personal acknowledgment
+    if extracted_name:
         npc_name = npc_state_data['name']
-        archetype = npc_state_data.get('archetype', 'citizen')
-        location = npc_state_data.get('location_desc', 'the city')
-        activity = npc_state_data.get('current_activity', 'existing')
-        mood = npc_state_data.get('current_mood', 'neutral')
-        
-        # IMMEDIATE name extraction from current message (before checking history)
-        extracted_name = None
-        if "my name is" in msg_lower:
-            name_part = msg_lower.split("my name is")[-1].strip()
-            words = name_part.split()
-            if words and len(words[0]) > 1:
-                extracted_name = words[0].title()
-                remember_user(user_id, extracted_name, tick)
-                user_name = extracted_name
-        elif "i'm " in msg_lower:
-            name_part = msg_lower.split("i'm ")[-1].strip()
-            words = name_part.split()
-            if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
-                extracted_name = words[0].title()
-                remember_user(user_id, extracted_name, tick)
-                user_name = extracted_name
-        elif "i am " in msg_lower:
-            name_part = msg_lower.split("i am ")[-1].strip()
-            words = name_part.split()
-            if words and len(words[0]) > 1 and words[0] not in ['here', 'fine', 'good', 'ok', 'back', 'looking', 'trying', 'just']:
-                extracted_name = words[0].title()
-                remember_user(user_id, extracted_name, tick)
-                user_name = extracted_name
-        elif "call me " in msg_lower:
-            name_part = msg_lower.split("call me ")[-1].strip()
-            words = name_part.split()
-            if words and len(words[0]) > 1:
-                extracted_name = words[0].title()
-                remember_user(user_id, extracted_name, tick)
-                user_name = extracted_name
-        
-        # If user just introduced themselves, acknowledge it!
-        if extracted_name:
-            intros = [
-                f"{extracted_name}, huh? I'll remember that.",
-                f"*nods* {extracted_name}. Got it.",
-                f"{extracted_name}. Not a name you hear often around here.",
-                f"Alright, {extracted_name}. I'm {npc_name}. What brings you here?",
-                f"Nice to meet you, {extracted_name}. I'm {npc_name}.",
-            ]
-            npc_response = random.choice(intros)
-        
-        # Intent detection patterns
-        elif any(w in msg_lower for w in ['your name', 'who are you', 'what are you called', 'what\'s your name']):
-            # Self-introduction
-            intros = [
-                f"I'm {npc_name}. {archetype.title()} by trade.",
-                f"The name's {npc_name}. And you?",
-                f"They call me {npc_name}. What do you want?",
-                f"{npc_name}. I'm a {archetype.lower()} around here.",
-            ]
-            npc_response = random.choice(intros)
-        
-        elif any(w in msg_lower for w in ['where are', 'what place', 'location', 'where is this']):
-            # Location info
-            npc_response = f"We're at {location}. I'm usually here around this time."
-        
-        elif any(w in msg_lower for w in ['what did you', 'what were you', 'before this', 'just doing', 'earlier', 'last hour', 'just did', 'came from', 'where were you']):
-            # ENHANCED: Past activity awareness
-            prev_act = npc_state_data.get('previous_activity', 'resting')
-            prev_loc = npc_state_data.get('previous_location_desc', 'around')
-            past_phrases = {
-                'sleeping': f"Was catching some sleep at {prev_loc}. Hard to get rest in this city.",
-                'training': f"Was training over at {prev_loc}. Gotta stay sharp.",
-                'mission': f"Just came back from a run. Can't say more than that.",
-                'serving': f"Was working the bar at {prev_loc}. The usual shift.",
-                'patrol_or_sleep': f"Was on watch at {prev_loc}. Quiet night, thankfully.",
-                'meditation': f"Was meditating at {prev_loc}. The layers were... active.",
-                'readings': f"Was doing readings at {prev_loc}. The visions were interesting.",
-                'socializing': f"Was hanging out at {prev_loc}. Good to see some familiar faces.",
-                'intelligence_gathering': f"Was gathering intel at {prev_loc}. Eyes and ears open.",
-                'working': f"Was working over at {prev_loc}. Same grind, different day.",
-                'commuting': f"Was in transit. Moving through the city.",
-            }
-            npc_response = past_phrases.get(prev_act, f"Was {prev_act} at {prev_loc}. Nothing unusual.")
-        
-        elif any(w in msg_lower for w in ['where going', 'what next', 'after this', 'plans', 'headed', 'going to do', 'what will you', 'later']):
-            # ENHANCED: Future schedule awareness
-            next_act = npc_state_data.get('next_activity', 'continuing the routine')
-            next_loc = npc_state_data.get('next_location_desc', 'my next stop')
-            future_phrases = {
-                'sleeping': f"Heading to {next_loc} to crash. Need the rest.",
-                'training': f"Got training at {next_loc}. Can't skip it.",
-                'mission': f"Got something lined up. Can't talk about it.",
-                'serving': f"Gotta get back to {next_loc}. The bar doesn't run itself.",
-                'socializing': f"Planning to hit up {next_loc}. Unwind a bit.",
-                'patrol_or_sleep': f"Going on watch at {next_loc}. Someone's gotta keep eyes open.",
-                'peak_hours': f"Heading to {next_loc}. Rush hour's coming.",
-                'debriefing': f"Got a debrief at {next_loc}. Standard procedure.",
-                'working': f"Heading to {next_loc} for work. The grind continues.",
-                'returning_home': f"Heading home. Long day.",
-                'leisure': f"Going to {next_loc} to relax. Everyone needs a break.",
-            }
-            npc_response = future_phrases.get(next_act, f"After this? {next_act.replace('_', ' ')} at {next_loc}.")
-        
-        elif any(w in msg_lower for w in ['what doing', 'what are you doing', 'busy', 'what\'s up']):
-            # Current activity
-            activity_phrases = {
-                'sleeping': "Trying to rest. Not easy in this city.",
-                'working': "Working. Bills don't pay themselves.",
-                'training': "Training. Have to stay sharp.",
-                'mission': "Can't talk about that. Classified.",
-                'socializing': "Taking some time off. You?",
-                'serving': "Working the bar. Want something?",
-                'readings': "Seeing what the layers reveal...",
-                'patrol_or_sleep': "Keeping watch. Never know who's lurking.",
-            }
-            npc_response = activity_phrases.get(activity, f"Just {activity}. The usual.")
-        
-        elif any(w in msg_lower for w in ['how are', 'how do you feel', 'you okay', 'feeling']):
-            # Mood response
-            mood_phrases = {
-                'peaceful': "Calm, for once. Rare these days.",
-                'focused': "Focused. Got things to do.",
-                'alert': "On edge. Something feels off.",
-                'serious': "Been better. But I'll manage.",
-                'relaxed': "Not bad. Could be worse.",
-                'contemplative': "Thinking about things. The city changes you.",
-                'wary': "Careful. Can't trust easily around here.",
-                'restless': "Restless. Need to move, do something.",
-                'busy': "Busy. Everyone needs something.",
-                'mystical': "Connected to something... beyond.",
-            }
-            npc_response = mood_phrases.get(mood, f"Feeling {mood}. What about you?")
-        
-        elif any(w in msg_lower for w in ['hello', 'hi', 'hey', 'greetings', 'yo']):
-            # Greeting
-            greetings = [
-                f"Hey there. I'm {npc_name}.",
-                f"*nods* What brings you here?",
-                f"Yeah? I'm {npc_name}. You need something?",
-                f"Welcome to {location}. Watch your step.",
-            ]
-            npc_response = random.choice(greetings)
-        
-        elif any(w in msg_lower for w in ['bye', 'goodbye', 'later', 'see you', 'gotta go']):
-            # Farewell
-            farewells = [
-                "Stay safe out there.",
-                "Watch your back.",
-                "Until next time.",
-                "*nods* Later.",
-            ]
-            npc_response = random.choice(farewells)
-        
-        elif any(w in msg_lower for w in ['help', 'need help', 'can you help']):
-            # Help request
-            npc_response = f"Help? That depends on what you need. I'm a {archetype.lower()}, not a miracle worker."
-        
-        elif any(w in msg_lower for w in ['tell me about', 'what do you know', 'heard anything']):
-            # Generic lore/info - steer toward specific topics
-            topic_steers = [
-                f"*{npc_name} glances around* What do you want to know? The weather, the news, the districts... or something more... classified?",
-                f"Information isn't free. But I'll share what I can. Ask me about the city, the people, or the current situation.",
-                f"I know a thing or two. Ask me about what's happening, this district, the economy... or the resistance.",
-                f"*leans in* I hear things. Ask me something specific — weather, news, people, or the layers.",
-            ]
-            npc_response = random.choice(topic_steers)
-        
-        elif any(w in msg_lower for w in ['my name', 'remember me', 'who am i', 'do you know me', 'what\'s my name']):
-            # User memory - check if we know them
-            if user_name:
-                responses = [
-                    f"You're {user_name}. I remember faces.",
-                    f"{user_name}, right? I don't forget.",
-                    f"*nods* {user_name}. We've talked before.",
-                    f"You're {user_name}. What, thought I'd forget?"
-                ]
-                npc_response = random.choice(responses)
-            else:
-                npc_response = "I don't think you've told me your name yet."
-        
-        # ==================================================================
-        # EXPANDED NLU: Weather, News, Entities, People, Economy, etc.
-        # These enable on-chain deployment without needing any LLM.
-        # ==================================================================
-        
-        # NPC KNOWLEDGE: Detect mentions of other NPCs and respond with codec data
-        elif _nlu_check_npc_mention(msg_lower, npc_id, profile):
-            npc_response = _nlu_check_npc_mention(msg_lower, npc_id, profile)
-        
-        elif any(w in msg_lower for w in ['weather', 'rain', 'fog', 'storm', 'cold', 'hot', 'temperature', 'sky']):
-            # Weather awareness from tick state
-            weather = npc_state_data['tick_state'].get('weather', 'overcast')
-            weather_responses = {
-                'rain': [
-                    "Acid rain. The kind that eats through cheap chrome. Stay under cover.",
-                    "Rain again. The gutters overflow with neon runoff. Beautiful, in a toxic way.",
-                    f"*looks up* Always raining in this sector. You'd think {npc_name} would get used to it.",
-                ],
-                'fog': [
-                    "Fog's thick tonight. Good for disappearing. Bad for seeing what's coming.",
-                    "The fog... some say it's not natural. The layers bleed through when it gets like this.",
-                    "Can barely see ten feet. Watch your step — and your back.",
-                ],
-                'storm': [
-                    "Storm's rolling in. The power grid can't handle it — expect blackouts.",
-                    "Thunder. Lightning. And something else in the clouds. The Watchers are restless.",
-                    "Take shelter. Storms in this city aren't just weather — they're warnings.",
-                ],
-                'clear': [
-                    "Clear skies. Rare. Enjoy it while it lasts — nothing stays clear here.",
-                    "No rain for once. The neon looks different without the reflections.",
-                    "Good visibility. Which means we're visible too. Stay cautious.",
-                ],
-                'overcast': [
-                    "Grey skies, as always. The sun's a rumor in this part of the city.",
-                    "Overcast. Normal day. If anything's normal here.",
-                    "The clouds are thick. Some say ECHO controls the weather grid. I believe it.",
-                ],
-            }
-            responses = weather_responses.get(weather, weather_responses['overcast'])
-            npc_response = random.choice(responses)
-        
-        elif any(w in msg_lower for w in ['news', 'what happened', 'happening', 'events', 'latest', 'heard', 'rumor', 'gossip']):
-            # News/events - dynamic based on tick
-            day_num = npc_state_data['tick_state'].get('day', 1)
-            news_seed = int(hashlib.md5(f"news_{day_num}".encode()).hexdigest(), 16) % 15
-            daily_news = [
-                "Power outages in District 7. ECHO says 'scheduled maintenance.' Nobody believes them.",
-                "Another layer breach near the old factory. Three people saw... something. Watchers, maybe.",
-                "The market's buzzing. New shipment of off-grid tech from the outer sectors.",
-                "Protests at the corporate tower. ECHO security dispersed the crowd. No casualties... officially.",
-                "Underground fight club got raided. Half the fighters escaped through the sewers.",
-                "A new street oracle set up shop near the transit hub. Claims she can see all five layers.",
-                "Supply truck hijacked on the highway. Resistance? Bandits? Nobody's claiming it.",
-                "The clinic in Sector 4 is running low on meds. People are getting desperate.",
-                "ECHO announced new surveillance drones. 'For public safety,' they say.",
-                "Someone hacked the city billboards last night. Showed resistance propaganda for 20 minutes.",
-                "Water rations are being cut again. The purifier in District 2 is failing.",
-                f"Word is someone new is asking questions around {location}. *looks at you*",
-                "The transit line to the upper city is down. Suspicious timing, if you ask me.",
-                "A warehouse fire in the industrial zone. Arson, they think. Targeted.",
-                "Crypto markets are volatile. GEP is fluctuating. People are nervous.",
-            ]
-            npc_response = daily_news[news_seed]
-        
-        elif any(w in msg_lower for w in ['economy', 'money', 'price', 'cost', 'trade', 'market', 'gdp', 'inflation', 'broke', 'rich', 'wealth', 'gep', 'crypto']):
-            # Economy awareness
-            economy_responses = [
-                "GEP is the only currency that matters here. Everything else is barter.",
-                "The economy? ECHO controls the supply. We just survive within their system.",
-                "Prices keep climbing. Food's expensive. Meds are worse. Chrome? Don't even ask.",
-                "Trade happens at the night market. Off the grid, off the books.",
-                "The underground economy is bigger than the official one. Everyone knows it.",
-                "ECHO taxes everything that moves. The resistance runs on donations and... other income.",
-                f"A {archetype.lower()} like me? I get by. Not rich, not starving. Yet.",
-                "The wealth gap keeps growing. Upper city gets richer, lower city gets angrier.",
-            ]
-            npc_response = random.choice(economy_responses)
-        
-        elif any(w in msg_lower for w in ['danger', 'safe', 'security', 'crime', 'police', 'attack', 'threat', 'fight', 'weapon']):
-            # Safety/danger awareness
-            safety_responses = [
-                "Safe? *laughs* Nothing's safe in this city. But some places are less deadly than others.",
-                f"{location} is relatively calm. The alleys? Different story.",
-                "ECHO's security drones patrol the upper levels. Down here, we police ourselves.",
-                "Carry something sharp. Carry something bright. And keep moving after dark.",
-                "Crime's up. Always is when rations get cut. People get desperate.",
-                "The resistance keeps this area somewhat clean. ECHO enforcement is the real threat.",
-                "Stay on the main streets at night. The side alleys... things happen there.",
-                "*touches weapon* You learn to be ready. This city teaches you fast.",
-            ]
-            npc_response = random.choice(safety_responses)
-        
-        elif any(w in msg_lower for w in ['time', 'what time', 'how late', 'morning', 'night', 'day', 'clock', 'hour']):
-            # Time awareness
-            hour = npc_state_data['tick_state'].get('hour', 12)
-            day_num = npc_state_data['tick_state'].get('day', 1)
-            time_period = npc_state_data.get('time_period', 'T04')
-            period_name = TIME_PERIODS.get(time_period, {}).get('name', 'unknown')
-            time_responses = [
-                f"It's around {hour}:00. Day {day_num}. {period_name.replace('_', ' ').title()} in the city.",
-                f"*checks wrist display* {hour}:00, give or take. Why? Got somewhere to be?",
-                f"Day {day_num}. The city doesn't sleep, but it has rhythms. This is {period_name.replace('_', ' ')}.",
-                f"Time? It's {hour}:00. Not that it matters much — neon makes it always feel like night.",
-            ]
-            npc_response = random.choice(time_responses)
-        
-        elif any(w in msg_lower for w in ['food', 'eat', 'hungry', 'restaurant', 'drink', 'bar', 'thirsty', 'cook']):
-            # Food/drink
-            food_responses = [
-                "The neon bar has synth-drinks. Not great, but they burn going down.",
-                "Street vendors in the market sell protein wraps. Don't ask what protein.",
-                "Hungry? There's a noodle stand two blocks down. The owner asks no questions.",
-                f"I usually eat at {location} when I can. The rations are getting smaller though.",
-                "Best food in the city? Upper levels. But you need clearance — and credits — for that.",
-                "Water's the real commodity. Clean water especially. The recyclers are overworked.",
-                "*stomach growls* Yeah, food's on my mind too. Rations don't stretch like they used to.",
-            ]
-            npc_response = random.choice(food_responses)
-        
-        elif any(w in msg_lower for w in ['tech', 'chrome', 'cyber', 'implant', 'hack', 'computer', 'drone', 'network', 'digital']):
-            # Technology
-            tech_responses = [
-                "Chrome enhancements are everywhere. Some voluntary, some... not so much.",
-                "The neural mesh connects half the city. ECHO monitors it all, of course.",
-                "Off-grid tech is expensive but worth it. Can't be tracked, can't be shut down.",
-                "Hacking the ECHO network is suicide. Their ICE programs fry your cortex.",
-                "The old tech — pre-ECHO — still works if you know where to find it.",
-                "Drones are ECHO's eyes. Every district has hundreds. Watch what you say outside.",
-                "The layers interact with tech in strange ways. Some implants glitch near layer tears.",
-            ]
-            npc_response = random.choice(tech_responses)
-        
-        elif any(w in msg_lower for w in ['resistance', 'rebel', 'fight back', 'revolution', 'uprising', 'freedom']):
-            # Resistance - NPC personality affects response
-            personality = npc_state_data.get('personality', {})
-            paranoia = personality.get('paranoia', 0.5)
-            if paranoia > 0.7:
-                npc_response = "The resistance? *looks around nervously* I don't know what you're talking about. Drop it."
-            elif archetype in ['resistance_fighter', 'operative']:
-                resistance_responses = [
-                    "We do what we must. ECHO won't rule forever.",
-                    "The resistance is hope. Not comfortable, not safe, but necessary.",
-                    "Keep your voice down. But yes — the fight continues.",
-                ]
-                npc_response = random.choice(resistance_responses)
-            else:
-                npc_response = "The resistance? I've heard rumors. Whether they're heroes or terrorists depends on who you ask."
-        
-        elif any(w in msg_lower for w in ['echo', 'corporation', 'company', 'government', 'control', 'authority']):
-            # ECHO Corporation
-            echo_responses = [
-                "ECHO runs everything. Power, water, food distribution, security. They ARE the city.",
-                "The corporation keeps order. At a price. Your freedom.",
-                "ECHO's been in control longer than most people remember. Before them... was it better?",
-                "Their surveillance is everywhere. Cameras, drones, neural mesh taps. Privacy is a luxury.",
-                "Some say ECHO created the layers. Others say they're trying to control them. Maybe both.",
-                "*lowers voice* They disappeared people. Anyone who asks too many questions. Like you're doing right now.",
-            ]
-            npc_response = random.choice(echo_responses)
-        
-        elif any(w in msg_lower for w in ['layer', 'dimension', 'reality', 'watcher', 'breach', 'tear', 'portal', 'multiverse', 'glitch']):
-            # Layers/dimensions - central lore element
-            personality = npc_state_data.get('personality', {})
-            mysticism = personality.get('mysticism', 0.5)
-            if mysticism > 0.6:
-                layer_responses = [
-                    "The layers are real. Five realities stacked on top of each other. I've *seen* them.",
-                    "Layer tears appear when the boundaries weaken. Through them... other versions of this city.",
-                    "The Watchers exist between layers. They observe. Sometimes... they interfere.",
-                    "I can feel the layers shifting right now. Can't you? The air tastes different near a tear.",
-                ]
-            else:
-                layer_responses = [
-                    "Layers? Some kind of dimensional thing. The oracles talk about it. I just live here.",
-                    "There are reports of 'anomalies.' Strange lights, time skips. Maybe it's the layers. Maybe it's the smog.",
-                    "I've heard stories. Parallel realities, other versions of the city. Sounds like a bad trip to me.",
-                    "The street oracles are always going on about layers. I focus on this reality — it's hard enough.",
-                ]
-            npc_response = random.choice(layer_responses)
-        
-        elif any(w in msg_lower for w in ['district', 'sector', 'area', 'neighborhood', 'zone', 'city', 'map']):
-            # City geography/districts
-            district_responses = [
-                f"We're in the area around {location} right now. Each district has its own feel.",
-                "The upper city is ECHO territory. Clean, controlled, surveilled. The lower city is... freer.",
-                "Eight districts, each with its own character. From the industrial zone to the neon market.",
-                "The transit hub connects everything. But some districts are hard to reach on purpose.",
-                "Industrial sector has the factories. Market district has the trade. And the undercity... has everything else.",
-                "Know the city and the city won't kill you. Probably. Maybe.",
-            ]
-            npc_response = random.choice(district_responses)
-        
-        elif any(w in msg_lower for w in ['building', 'place', 'shop', 'store', 'clinic', 'hospital', 'factory', 'hideout', 'base']):
-            # Buildings/locations
-            building_responses = [
-                f"We're at {location}. It serves its purpose.",
-                "The clinic in Sector 4 patches you up, no questions asked. For a price.",
-                "Factories run day and night. ECHO needs production. Always.",
-                "The neon bar is neutral ground. Everyone's welcome as long as you behave.",
-                "There are hidden places in this city. You just need to know who to ask.",
-                "Most buildings have sub-levels. What happens below street level... stays below.",
-            ]
-            npc_response = random.choice(building_responses)
-        
-        elif any(w in msg_lower for w in ['hobby', 'interest', 'fun', 'free time', 'enjoy', 'like to do', 'for fun']):
-            # Interests/hobbies - based on NPC topics
-            topics = npc_state_data.get('topics', {})
-            if topics:
-                top_topic = max(topics, key=topics.get) if topics else 'survival'
-                hobby_responses = [
-                    f"In my spare time? *laughs* Spare time. That's funny. But I'm interested in {top_topic.replace('_', ' ')}.",
-                    f"I follow {top_topic.replace('_', ' ')} when I can. Keeps the mind sharp.",
-                    f"Fun? Survival's my hobby. But {top_topic.replace('_', ' ')} keeps me going.",
-                ]
-            else:
-                hobby_responses = [
-                    f"Being a {archetype.lower()} doesn't leave much free time.",
-                    "I survive. That's my hobby.",
-                    "There's always something to do in this city. Not all of it fun.",
-                ]
-            npc_response = random.choice(hobby_responses)
-        
-        elif _nlu_check_npc_mention(msg_lower, npc_id, profile):
-            # Asking about other NPCs - use codec data
-            npc_response = _nlu_check_npc_mention(msg_lower, npc_id, profile)
-        
-        elif any(w in msg_lower for w in ['thank', 'thanks', 'appreciate', 'grateful']):
-            # Gratitude
-            thanks_responses = [
-                f"*nods* Don't mention it. Seriously. Don't mention it.",
-                "Gratitude's rare in this city. I'll take it.",
-                "You're welcome. Now, anything else?",
-                f"Not used to that. Most people just take. Stay safe, friend.",
-            ]
-            npc_response = random.choice(thanks_responses)
-        
-        elif any(w in msg_lower for w in ['joke', 'funny', 'laugh', 'humor']):
-            # Humor
-            joke_responses = [
-                "Humor? In this city? *dry laugh* The whole place is a joke.",
-                "Here's a joke: ECHO says they're 'serving the people.' *stares* Get it?",
-                "You want funny? Go watch the city council pretend to care.",
-                f"A {archetype.lower()} walks into a bar. The bar was {location}. There's no punchline. That's just my life.",
-            ]
-            npc_response = random.choice(joke_responses)
-        
-        elif any(w in msg_lower for w in ['secret', 'hidden', 'underground', 'forbidden', 'classified']):
-            # Secrets
-            personality = npc_state_data.get('personality', {})
-            paranoia = personality.get('paranoia', 0.5)
-            if paranoia > 0.6:
-                npc_response = "*glances around* You don't just ask about secrets out in the open. Come find me somewhere private."
-            else:
-                secret_responses = [
-                    "Everyone's got secrets in this city. The trick is knowing which ones are worth keeping.",
-                    "There are tunnels under the city older than ECHO. Nobody maps them all.",
-                    "Classified? *smirks* That word usually means 'yes, it's true, but we don't want you to know.'",
-                ]
-                npc_response = random.choice(secret_responses)
-        
-        elif any(w in msg_lower for w in ['agree', 'right', 'true', 'exactly', 'correct', 'yeah', 'yes', 'yep']):
-            # Agreement/affirmation
-            agree_responses = [
-                "Glad we see eye to eye.",
-                f"*nods* At least someone around here gets it.",
-                "Right. Now you're thinking.",
-                "Finally, someone who makes sense.",
-            ]
-            npc_response = random.choice(agree_responses)
-        
-        elif any(w in msg_lower for w in ['disagree', 'wrong', 'no way', 'doubt', 'not true', 'bullshit', 'lie']):
-            # Disagreement
-            disagree_responses = [
-                "Think what you want. I know what I've seen.",
-                f"*shrugs* Wouldn't expect everyone to understand.",
-                "Disagree all you want. Doesn't change reality.",
-                "Fair enough. Different perspectives keep us alive in this city.",
-            ]
-            npc_response = random.choice(disagree_responses)
-        
-        else:
-            # Default fallback with personality
-            if catchphrases:
-                npc_response = random.choice(catchphrases)
-            else:
-                defaults = [
-                    f"*{npc_name} considers your words*",
-                    "Interesting... go on.",
-                    "I see. And?",
-                    f"*gives you a {mood} look*",
-                    "Hmm. Not my area of expertise.",
-                    f"*{npc_name} pauses* Ask me something specific. Weather, news, people, this city...",
-                    "You'd have to be more specific. I'm a lot of things, but a mind reader isn't one of them.",
-                ]
-                npc_response = random.choice(defaults)
+        import random
+        intros = [
+            f"{extracted_name}, huh? I'll remember that.",
+            f"*nods* {extracted_name}. Got it.",
+            f"{extracted_name}. Not a name you hear often around here.",
+            f"Alright, {extracted_name}. I'm {npc_name}. What brings you here?",
+            f"Nice to meet you, {extracted_name}. I'm {npc_name}.",
+        ]
+        npc_response = random.choice(intros)
+        nlu_intent = 'social.introduce'
+        nlu_confidence = 1.0
     
     # Store NPC response in memory
     add_to_conversation(user_id, npc_id, "npc", npc_response, tick)
@@ -1708,7 +1412,10 @@ CRITICAL CORRECTIONS (always enforce these):
     return jsonify({
         "npc": npc_state_data["name"],
         "response": npc_response,
-        "memories_enabled": True,  # Now always true with in-memory storage
+        "intent": nlu_intent,
+        "confidence": nlu_confidence,
+        "context": nlu_context,
+        "memories_enabled": True,
         "user_remembered": user_name is not None,
         "user_name": user_name,
         "conversation_length": len(conversation_history) + 1,
@@ -1723,6 +1430,7 @@ CRITICAL CORRECTIONS (always enforce these):
             "day": npc_state_data["tick_state"]["day"]
         }
     })
+
 
 
 @app.route("/api/tick/<int:tick>", methods=["GET"])

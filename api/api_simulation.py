@@ -25,6 +25,7 @@ import hashlib
 import os
 import random
 import requests
+from city_economy import get_economy_summary, calculate_city_economy
 
 app = Flask(__name__)
 CORS(app)
@@ -2198,6 +2199,88 @@ def proxy_npc_state_chat(npc_id, tick):
         return (resp.text, resp.status_code, {"Content-Type": "application/json"})
     except Exception as e:
         return jsonify({"error": f"Chat service unavailable: {e}"}), 503
+
+@app.route("/api/world-state", methods=["GET"])
+def world_state_api():
+    """Aggregated world state for the monitor — one call replaces 6 AO CU queries.
+
+    Query params:
+        tick (int): current simulation tick (optional, defaults to 100)
+    """
+    tick = int(request.args.get("tick", 100))
+    time_info = get_time_info(tick)
+    npcs = get_npcs()
+    population = len(npcs)
+
+    # NPC locations and activities — ALL NPCs, not just 50
+    npc_locations = {}
+    activity_counts = {}
+    location_counts = {}
+    for npc in npcs:
+        state = get_npc_state(npc, tick)
+        npc_locations[npc["id"]] = {
+            "location": state["location"],
+            "state": state["activity"],
+            "mood": state.get("mood", "neutral"),
+            "name": npc.get("name", npc["id"]),
+            "archetype": npc.get("archetype", "citizen"),
+            "time_period": time_info["period"],
+        }
+        act = state["activity"]
+        activity_counts[act] = activity_counts.get(act, 0) + 1
+        loc = state["location"]
+        location_counts[loc] = location_counts.get(loc, 0) + 1
+
+    # Intricate economy engine (12 revenue streams, 8 expenditure categories)
+    eco = get_economy_summary(tick, population)
+    events = generate_events(tick, location_counts)
+    day = time_info["day"]
+    hour = time_info["hour"]
+
+    return jsonify({
+        "tick": tick,
+        "day": day,
+        "year": day // 365 + 2087,
+        "hour": hour,
+        "weather": time_info.get("weather", "clear"),
+        "time_period": time_info["period"],
+        "population": population,
+        "budget": eco["budget"],
+        "economy": {
+            "gdp": eco["gdp"],
+            "inflation": eco["inflation"],
+            "unemployment_rate": eco["unemployment_rate"],
+            "gini_coefficient": eco["gini_coefficient"],
+            "black_market_share": eco["black_market_share"],
+            "crisis_level": eco["crisis_level"],
+            "daily_tax_revenue": eco["daily_revenue"],
+            "daily_service_cost": eco["daily_expense"],
+            "net_daily": eco["net_daily"],
+            "service_levels": eco["service_levels"],
+            "revenue_breakdown": eco["revenue_breakdown"],
+        },
+        "npc_locations": npc_locations,
+        "npc_count": len(npc_locations),
+        "activity_summary": activity_counts,
+        "location_summary": location_counts,
+        "events": events,
+        "ao_live": True,
+        "source": "backend_api",
+    })
+
+
+@app.route("/api/economy", methods=["GET"])
+def economy_detail_api():
+    """Detailed city economy — full revenue/expenditure breakdown.
+
+    Query params:
+        tick (int): simulation tick (optional, defaults to 100)
+    """
+    tick = int(request.args.get("tick", 100))
+    population = len(get_npcs())
+    eco = calculate_city_economy(tick, population)
+    return jsonify(eco)
+
 
 @app.route("/api/health", methods=["GET"])
 def proxy_health():

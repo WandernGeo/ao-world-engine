@@ -1,0 +1,2569 @@
+{
+    "_meta": {
+        "version": "3.0.0",
+        "description": "Hierarchical intent definitions — 150+ intents covering all city simulation categories with keyword patterns, entity extraction, and priority ordering. Matched top-to-bottom; first match wins.",
+        "total_intents": 155,
+        "categories": [
+            "social",
+            "meta",
+            "economy",
+            "services",
+            "safety",
+            "transport",
+            "health",
+            "education",
+            "housing",
+            "buildings",
+            "resources",
+            "nature",
+            "communications",
+            "governance",
+            "employment",
+            "tech",
+            "world",
+            "personal",
+            "quests"
+        ]
+    },
+    "intents": [
+        {
+            "id": "meta.npc_identity",
+            "keywords": [
+                "your name",
+                "who are you",
+                "what are you called",
+                "what's your name",
+                "whats your name",
+                "introduce yourself"
+            ],
+            "patterns": [
+                "\\b(your name|who are you|introduce yourself)\\b"
+            ],
+            "priority": 10
+        },
+        {
+            "id": "meta.identity.my_name",
+            "keywords": [
+                "my name",
+                "what is my name",
+                "do you know my name",
+                "remember my name",
+                "what's my name",
+                "whats my name",
+                "who am i"
+            ],
+            "patterns": [
+                "\\b(my name|who am i|remember me)\\b"
+            ],
+            "priority": 11,
+            "context_key": "user_name"
+        },
+        {
+            "id": "meta.age",
+            "keywords": [
+                "how old are you",
+                "your age",
+                "when were you born",
+                "birthday"
+            ],
+            "patterns": [
+                "\\b(how old|your age|born|birthday)\\b"
+            ],
+            "priority": 12
+        },
+        {
+            "id": "meta.origin",
+            "keywords": [
+                "where are you from",
+                "hometown",
+                "where did you grow up",
+                "birthplace",
+                "native"
+            ],
+            "patterns": [
+                "\\b(where .* from|hometown|birthplace|grew up)\\b"
+            ],
+            "priority": 13
+        },
+        {
+            "id": "meta.purpose",
+            "keywords": [
+                "what do you want",
+                "your goal",
+                "what drives you",
+                "purpose",
+                "motivation",
+                "ambition"
+            ],
+            "patterns": [
+                "\\b(what do you want|your goal|your purpose|what drives|ambition)\\b"
+            ],
+            "priority": 14
+        },
+        {
+            "id": "meta.opinion_player",
+            "keywords": [
+                "what do you think of me",
+                "your opinion of me",
+                "how do you feel about me",
+                "trust me"
+            ],
+            "patterns": [
+                "\\b(think of me|opinion of me|feel about me|trust me)\\b"
+            ],
+            "priority": 15
+        },
+        {
+            "id": "meta.opinion_city",
+            "keywords": [
+                "what do you think of this city",
+                "like this city",
+                "opinion of the city",
+                "this place"
+            ],
+            "patterns": [
+                "\\b(think of .* city|like .* city|opinion .* city|this place)\\b"
+            ],
+            "priority": 16
+        },
+        {
+            "id": "meta.time.general",
+            "keywords": [
+                "what time",
+                "time is it",
+                "what hour",
+                "how late",
+                "what day",
+                "current time"
+            ],
+            "patterns": [
+                "\\b(what time|time is it|what day|what hour)\\b"
+            ],
+            "priority": 45,
+            "template_vars": [
+                "hour",
+                "time_of_day",
+                "day_number",
+                "time_period_desc"
+            ]
+        },
+        {
+            "id": "social.greet",
+            "keywords": [
+                "hello",
+                "hey",
+                "hi",
+                "greetings",
+                "what's up",
+                "whats up",
+                "sup",
+                "yo",
+                "howdy",
+                "good morning",
+                "good evening",
+                "good afternoon"
+            ],
+            "patterns": [
+                "^(hey|hi|hello|yo|sup)\\b"
+            ],
+            "priority": 50,
+            "context_key": "trust"
+        },
+        {
+            "id": "social.farewell",
+            "keywords": [
+                "bye",
+                "goodbye",
+                "see you",
+                "later",
+                "gotta go",
+                "peace",
+                "catch you",
+                "i'm out",
+                "leaving",
+                "take care"
+            ],
+            "patterns": [
+                "\\b(bye|goodbye|leaving|gotta go)\\b"
+            ],
+            "priority": 55
+        },
+        {
+            "id": "social.thank",
+            "keywords": [
+                "thanks",
+                "thank you",
+                "appreciate",
+                "grateful",
+                "thx",
+                "ty"
+            ],
+            "patterns": [
+                "\\b(thanks|thank you|thx|ty|appreciate)\\b"
+            ],
+            "priority": 60
+        },
+        {
+            "id": "social.insult",
+            "keywords": [
+                "stupid",
+                "idiot",
+                "shut up",
+                "hate you",
+                "ugly",
+                "dumb",
+                "useless",
+                "annoying",
+                "jerk",
+                "moron",
+                "scum",
+                "worthless",
+                "pathetic",
+                "fool",
+                "trash",
+                "loser"
+            ],
+            "patterns": [
+                "\\b(shut up|hate you|you suck|go away|get lost)\\b"
+            ],
+            "priority": 65
+        },
+        {
+            "id": "social.flirt",
+            "keywords": [
+                "cute",
+                "beautiful",
+                "handsome",
+                "gorgeous",
+                "pretty",
+                "attractive",
+                "single",
+                "date",
+                "marry"
+            ],
+            "patterns": [
+                "\\b(you're (cute|beautiful|gorgeous|hot|pretty))\\b",
+                "\\b(go on a date|single)\\b"
+            ],
+            "priority": 66
+        },
+        {
+            "id": "social.joke",
+            "keywords": [
+                "joke",
+                "funny",
+                "laugh",
+                "humor",
+                "tell me a joke",
+                "make me laugh",
+                "comedy"
+            ],
+            "patterns": [
+                "\\b(tell .* joke|make me laugh|say something funny)\\b"
+            ],
+            "priority": 67
+        },
+        {
+            "id": "social.agree",
+            "keywords": [
+                "i agree",
+                "you're right",
+                "exactly",
+                "correct",
+                "true",
+                "yes definitely",
+                "absolutely"
+            ],
+            "patterns": [
+                "\\b(i agree|you're right|exactly|absolutely right)\\b"
+            ],
+            "priority": 68
+        },
+        {
+            "id": "social.disagree",
+            "keywords": [
+                "i disagree",
+                "you're wrong",
+                "that's not true",
+                "incorrect",
+                "no way",
+                "nonsense",
+                "bullshit"
+            ],
+            "patterns": [
+                "\\b(i disagree|you're wrong|not true|no way|nonsense)\\b"
+            ],
+            "priority": 69
+        },
+        {
+            "id": "social.apology",
+            "keywords": [
+                "sorry",
+                "apologize",
+                "my bad",
+                "forgive me",
+                "pardon",
+                "excuse me",
+                "my fault"
+            ],
+            "patterns": [
+                "\\b(sorry|apologize|my bad|forgive|pardon|my fault)\\b"
+            ],
+            "priority": 70
+        },
+        {
+            "id": "social.sympathy",
+            "keywords": [
+                "that's sad",
+                "i'm sorry to hear",
+                "that's terrible",
+                "condolences",
+                "feel bad",
+                "poor thing"
+            ],
+            "patterns": [
+                "\\b(that's (sad|terrible|awful)|sorry to hear|condolences|feel bad)\\b"
+            ],
+            "priority": 71
+        },
+        {
+            "id": "social.gossip",
+            "keywords": [
+                "gossip",
+                "rumor",
+                "heard anything",
+                "any news",
+                "what's happening",
+                "word on the street",
+                "have you heard"
+            ],
+            "patterns": [
+                "\\b(gossip|rumor|heard anything|word on the street|any news|what's happening)\\b"
+            ],
+            "priority": 72
+        },
+        {
+            "id": "social.compliment",
+            "keywords": [
+                "you're great",
+                "you're cool",
+                "impressive",
+                "i like you",
+                "awesome",
+                "amazing",
+                "wonderful"
+            ],
+            "patterns": [
+                "\\b(you're (great|cool|awesome|amazing)|i like you|impressive)\\b"
+            ],
+            "priority": 73
+        },
+        {
+            "id": "social.threat",
+            "keywords": [
+                "i'll kill you",
+                "fight me",
+                "watch your back",
+                "you'll pay",
+                "threatening",
+                "i'll hurt you"
+            ],
+            "patterns": [
+                "\\b(kill you|fight me|watch your back|you'll pay|hurt you)\\b"
+            ],
+            "priority": 74
+        },
+        {
+            "id": "economy.taxes.general",
+            "keywords": [
+                "tax",
+                "taxes",
+                "taxation",
+                "tax rate",
+                "paying taxes",
+                "income tax",
+                "corporate tax"
+            ],
+            "patterns": [
+                "\\b(tax|taxes|taxation)\\b"
+            ],
+            "priority": 100
+        },
+        {
+            "id": "economy.taxes.income",
+            "keywords": [
+                "income tax",
+                "payroll tax",
+                "tax bracket",
+                "tax on salary",
+                "how much tax on income"
+            ],
+            "patterns": [
+                "\\b(income tax|payroll tax|tax bracket)\\b"
+            ],
+            "priority": 99
+        },
+        {
+            "id": "economy.taxes.property",
+            "keywords": [
+                "property tax",
+                "land tax",
+                "house tax",
+                "real estate tax",
+                "tax on property"
+            ],
+            "patterns": [
+                "\\b(property tax|land tax|house tax|real estate tax)\\b"
+            ],
+            "priority": 99
+        },
+        {
+            "id": "economy.taxes.corporate",
+            "keywords": [
+                "corporate tax",
+                "business tax",
+                "company tax",
+                "megacorp tax",
+                "tax on business"
+            ],
+            "patterns": [
+                "\\b(corporate tax|business tax|company tax|megacorp tax)\\b"
+            ],
+            "priority": 99
+        },
+        {
+            "id": "economy.prices.general",
+            "keywords": [
+                "price",
+                "prices",
+                "cost",
+                "expensive",
+                "cheap",
+                "afford",
+                "inflation",
+                "how much"
+            ],
+            "patterns": [
+                "\\b(price|cost|expensive|cheap|afford|inflation|how much)\\b"
+            ],
+            "priority": 101
+        },
+        {
+            "id": "economy.prices.food",
+            "keywords": [
+                "food price",
+                "cost of food",
+                "groceries",
+                "meal cost",
+                "food expensive"
+            ],
+            "patterns": [
+                "\\b(food (price|cost|expensive)|groceries|meal cost)\\b"
+            ],
+            "priority": 98
+        },
+        {
+            "id": "economy.prices.housing",
+            "keywords": [
+                "rent",
+                "housing cost",
+                "apartment price",
+                "cost of living",
+                "mortgage",
+                "housing market"
+            ],
+            "patterns": [
+                "\\b(rent|housing cost|apartment|cost of living|mortgage)\\b"
+            ],
+            "priority": 98
+        },
+        {
+            "id": "economy.wages.general",
+            "keywords": [
+                "wage",
+                "wages",
+                "salary",
+                "income",
+                "pay",
+                "earn",
+                "paycheck",
+                "minimum wage"
+            ],
+            "patterns": [
+                "\\b(wage|salary|income|paycheck|earn|pay rate|minimum wage)\\b"
+            ],
+            "priority": 102
+        },
+        {
+            "id": "economy.loans",
+            "keywords": [
+                "loan",
+                "loans",
+                "borrow",
+                "credit",
+                "debt",
+                "interest rate",
+                "lending",
+                "repay"
+            ],
+            "patterns": [
+                "\\b(loan|borrow|credit|debt|interest rate|lending|repay)\\b"
+            ],
+            "priority": 103
+        },
+        {
+            "id": "economy.budget",
+            "keywords": [
+                "city budget",
+                "budget",
+                "spending",
+                "fiscal",
+                "treasury",
+                "municipal funds",
+                "surplus",
+                "deficit"
+            ],
+            "patterns": [
+                "\\b(city budget|budget|fiscal|treasury|municipal|surplus|deficit)\\b"
+            ],
+            "priority": 104
+        },
+        {
+            "id": "economy.supply_chains",
+            "keywords": [
+                "supply chain",
+                "supply",
+                "production chain",
+                "raw materials",
+                "goods",
+                "manufacturing",
+                "imports",
+                "exports"
+            ],
+            "patterns": [
+                "\\b(supply chain|production chain|raw materials|manufacturing|imports|exports)\\b"
+            ],
+            "priority": 105
+        },
+        {
+            "id": "economy.trade",
+            "keywords": [
+                "trade",
+                "trading",
+                "market",
+                "marketplace",
+                "commerce",
+                "merchants",
+                "buying",
+                "selling"
+            ],
+            "patterns": [
+                "\\b(trade|trading|marketplace|commerce|merchants)\\b"
+            ],
+            "priority": 106
+        },
+        {
+            "id": "economy.black_market",
+            "keywords": [
+                "black market",
+                "underground economy",
+                "illegal trade",
+                "smuggling",
+                "contraband",
+                "bootleg"
+            ],
+            "patterns": [
+                "\\b(black market|underground economy|illegal trade|smuggling|contraband)\\b"
+            ],
+            "priority": 95
+        },
+        {
+            "id": "economy.currency",
+            "keywords": [
+                "currency",
+                "money",
+                "GEP",
+                "credits",
+                "coin",
+                "cash",
+                "wealth"
+            ],
+            "patterns": [
+                "\\b(currency|money|GEP|credits|cash|wealth)\\b"
+            ],
+            "priority": 107
+        },
+        {
+            "id": "economy.inequality",
+            "keywords": [
+                "inequality",
+                "gap between rich and poor",
+                "wealth gap",
+                "poverty",
+                "gini",
+                "class divide"
+            ],
+            "patterns": [
+                "\\b(inequality|wealth gap|poverty|class divide|rich and poor)\\b"
+            ],
+            "priority": 108
+        },
+        {
+            "id": "services.electricity.general",
+            "keywords": [
+                "electricity",
+                "power",
+                "blackout",
+                "grid",
+                "energy",
+                "generator",
+                "power outage"
+            ],
+            "patterns": [
+                "\\b(electricity|power grid|blackout|power outage|energy supply)\\b"
+            ],
+            "priority": 130
+        },
+        {
+            "id": "services.electricity.sources",
+            "keywords": [
+                "power plant",
+                "solar",
+                "wind turbine",
+                "nuclear",
+                "coal plant",
+                "gas plant",
+                "geothermal",
+                "fusion"
+            ],
+            "patterns": [
+                "\\b(power plant|solar|wind turbine|nuclear|coal plant|geothermal|fusion)\\b"
+            ],
+            "priority": 129
+        },
+        {
+            "id": "services.electricity.cost",
+            "keywords": [
+                "electricity bill",
+                "power bill",
+                "energy cost",
+                "electricity fee",
+                "utility bill"
+            ],
+            "patterns": [
+                "\\b(electricity (bill|cost|fee)|power bill|utility bill|energy cost)\\b"
+            ],
+            "priority": 128
+        },
+        {
+            "id": "services.water.general",
+            "keywords": [
+                "water supply",
+                "water quality",
+                "sewage",
+                "plumbing",
+                "water treatment",
+                "drinking water",
+                "clean water",
+                "tap water",
+                "water safe",
+                "water clean"
+            ],
+            "patterns": [
+                "\\b(water (supply|quality|clean|safe|treatment)|sewage|drinking water|plumbing|is the water)\\b"
+            ],
+            "priority": 131
+        },
+        {
+            "id": "services.water.sources",
+            "keywords": [
+                "water pump",
+                "reservoir",
+                "groundwater",
+                "well",
+                "river water",
+                "desalination"
+            ],
+            "patterns": [
+                "\\b(water pump|reservoir|groundwater|well water|desalination)\\b"
+            ],
+            "priority": 130
+        },
+        {
+            "id": "services.sewage",
+            "keywords": [
+                "sewage",
+                "sewage treatment",
+                "wastewater",
+                "sewage outlet",
+                "sewage overflow",
+                "drain"
+            ],
+            "patterns": [
+                "\\b(sewage|wastewater|sewer|drain|sewage treatment)\\b"
+            ],
+            "priority": 131
+        },
+        {
+            "id": "services.healthcare.general",
+            "keywords": [
+                "healthcare",
+                "hospital",
+                "clinic",
+                "medical",
+                "doctor",
+                "medicine",
+                "treatment",
+                "sick",
+                "illness",
+                "disease"
+            ],
+            "patterns": [
+                "\\b(healthcare|hospital|clinic|medical|doctor|medicine|treatment)\\b"
+            ],
+            "priority": 132
+        },
+        {
+            "id": "services.healthcare.ambulance",
+            "keywords": [
+                "ambulance",
+                "emergency medical",
+                "paramedic",
+                "first responder",
+                "emergency room"
+            ],
+            "patterns": [
+                "\\b(ambulance|paramedic|first responder|emergency (medical|room))\\b"
+            ],
+            "priority": 131
+        },
+        {
+            "id": "services.healthcare.mental",
+            "keywords": [
+                "mental health",
+                "therapy",
+                "therapist",
+                "counseling",
+                "depression",
+                "anxiety",
+                "stress",
+                "trauma"
+            ],
+            "patterns": [
+                "\\b(mental health|therapy|therapist|counseling|depression|anxiety|stress|trauma)\\b"
+            ],
+            "priority": 131
+        },
+        {
+            "id": "services.healthcare.cost",
+            "keywords": [
+                "healthcare cost",
+                "medical bill",
+                "hospital fee",
+                "treatment cost",
+                "medicine cost"
+            ],
+            "patterns": [
+                "\\b((healthcare|medical|hospital|medicine) (cost|bill|fee|price))\\b"
+            ],
+            "priority": 130
+        },
+        {
+            "id": "services.deathcare",
+            "keywords": [
+                "cemetery",
+                "crematorium",
+                "funeral",
+                "burial",
+                "death",
+                "morgue",
+                "hearse",
+                "deceased"
+            ],
+            "patterns": [
+                "\\b(cemetery|crematorium|funeral|burial|morgue|hearse|deceased)\\b"
+            ],
+            "priority": 133
+        },
+        {
+            "id": "services.garbage.general",
+            "keywords": [
+                "garbage",
+                "trash",
+                "waste",
+                "recycling",
+                "landfill",
+                "garbage truck",
+                "rubbish",
+                "litter"
+            ],
+            "patterns": [
+                "\\b(garbage|trash|waste|recycling|landfill|rubbish|litter)\\b"
+            ],
+            "priority": 134
+        },
+        {
+            "id": "services.garbage.recycling",
+            "keywords": [
+                "recycling",
+                "recycle",
+                "recyclable",
+                "recycling center",
+                "sort waste",
+                "reuse"
+            ],
+            "patterns": [
+                "\\b(recycl|sort waste|reuse)\\b"
+            ],
+            "priority": 133
+        },
+        {
+            "id": "services.garbage.pollution",
+            "keywords": [
+                "garbage pollution",
+                "dump site",
+                "waste pollution",
+                "incineration",
+                "burning waste"
+            ],
+            "patterns": [
+                "\\b(dump site|waste pollution|incineration|burning waste)\\b"
+            ],
+            "priority": 133
+        },
+        {
+            "id": "safety.crime.general",
+            "keywords": [
+                "crime",
+                "criminal",
+                "robbery",
+                "theft",
+                "murder",
+                "dangerous",
+                "safe",
+                "safety",
+                "police",
+                "law"
+            ],
+            "patterns": [
+                "\\b(crime|criminal|robbery|safe|safety|dangerous|police)\\b"
+            ],
+            "priority": 120
+        },
+        {
+            "id": "safety.crime.rate",
+            "keywords": [
+                "crime rate",
+                "how much crime",
+                "crime statistics",
+                "crime level"
+            ],
+            "patterns": [
+                "\\b(crime rate|crime (statistics|level))\\b"
+            ],
+            "priority": 119
+        },
+        {
+            "id": "safety.crime.types",
+            "keywords": [
+                "theft",
+                "arson",
+                "assault",
+                "murder",
+                "vandalism",
+                "burglary",
+                "carjacking",
+                "hacking"
+            ],
+            "patterns": [
+                "\\b(theft|arson|assault|murder|vandalism|burglary|carjacking|hacking)\\b"
+            ],
+            "priority": 119
+        },
+        {
+            "id": "safety.police.general",
+            "keywords": [
+                "police station",
+                "police force",
+                "cops",
+                "law enforcement",
+                "patrol",
+                "officer"
+            ],
+            "patterns": [
+                "\\b(police (station|force|officer)|cops|law enforcement|patrol)\\b"
+            ],
+            "priority": 121
+        },
+        {
+            "id": "safety.police.surveillance",
+            "keywords": [
+                "surveillance",
+                "cameras",
+                "monitoring",
+                "spying",
+                "big brother",
+                "being watched",
+                "privacy"
+            ],
+            "patterns": [
+                "\\b(surveillance|cameras|monitoring|spying|being watched|privacy|big brother)\\b"
+            ],
+            "priority": 118
+        },
+        {
+            "id": "safety.prison",
+            "keywords": [
+                "prison",
+                "jail",
+                "incarceration",
+                "locked up",
+                "doing time",
+                "inmate",
+                "prisoner"
+            ],
+            "patterns": [
+                "\\b(prison|jail|incarcerat|locked up|doing time|inmate|prisoner)\\b"
+            ],
+            "priority": 122
+        },
+        {
+            "id": "safety.fire",
+            "keywords": [
+                "fire",
+                "fire department",
+                "fire station",
+                "firefighter",
+                "fire engine",
+                "fire hazard",
+                "burning"
+            ],
+            "patterns": [
+                "\\b(fire (department|station|engine|fighter|hazard)|burning building)\\b"
+            ],
+            "priority": 123
+        },
+        {
+            "id": "safety.disaster",
+            "keywords": [
+                "disaster",
+                "earthquake",
+                "flood",
+                "tornado",
+                "storm damage",
+                "emergency shelter",
+                "evacuation"
+            ],
+            "patterns": [
+                "\\b(disaster|earthquake|flood|tornado|evacuation|emergency shelter)\\b"
+            ],
+            "priority": 117
+        },
+        {
+            "id": "safety.gangs",
+            "keywords": [
+                "gang",
+                "gangs",
+                "organized crime",
+                "mafia",
+                "syndicate",
+                "cartel",
+                "mob"
+            ],
+            "patterns": [
+                "\\b(gang|organized crime|mafia|syndicate|cartel|mob)\\b"
+            ],
+            "priority": 118
+        },
+        {
+            "id": "transport.general",
+            "keywords": [
+                "transport",
+                "transportation",
+                "bus",
+                "metro",
+                "subway",
+                "train",
+                "tram",
+                "traffic",
+                "commute",
+                "parking",
+                "get around",
+                "travel",
+                "taxi",
+                "ride"
+            ],
+            "patterns": [
+                "\\b(transport|bus|metro|subway|train|tram|traffic|commute|parking|get around|travel|taxi)\\b"
+            ],
+            "priority": 140
+        },
+        {
+            "id": "transport.bus",
+            "keywords": [
+                "bus",
+                "bus line",
+                "bus stop",
+                "bus route",
+                "bus schedule",
+                "bus fare"
+            ],
+            "patterns": [
+                "\\b(bus (line|stop|route|schedule|fare))\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "transport.subway",
+            "keywords": [
+                "subway",
+                "metro",
+                "underground",
+                "subway line",
+                "metro station",
+                "subway stop"
+            ],
+            "patterns": [
+                "\\b(subway|metro|underground (line|station|stop))\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "transport.train",
+            "keywords": [
+                "train",
+                "railway",
+                "rail",
+                "train station",
+                "railroad",
+                "locomotive"
+            ],
+            "patterns": [
+                "\\b(train|railway|rail|railroad|locomotive|train station)\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "transport.taxi",
+            "keywords": [
+                "taxi",
+                "cab",
+                "uber",
+                "ride share",
+                "hail a cab",
+                "taxi fare"
+            ],
+            "patterns": [
+                "\\b(taxi|cab|uber|ride share|hail a cab)\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "transport.roads",
+            "keywords": [
+                "road",
+                "roads",
+                "highway",
+                "street",
+                "avenue",
+                "road condition",
+                "road maintenance",
+                "pothole"
+            ],
+            "patterns": [
+                "\\b(road|highway|street|avenue|road (condition|maintenance)|pothole)\\b"
+            ],
+            "priority": 141
+        },
+        {
+            "id": "transport.traffic",
+            "keywords": [
+                "traffic jam",
+                "congestion",
+                "rush hour",
+                "stuck in traffic",
+                "traffic light",
+                "intersection"
+            ],
+            "patterns": [
+                "\\b(traffic (jam|light)|congestion|rush hour|stuck in traffic|intersection)\\b"
+            ],
+            "priority": 138
+        },
+        {
+            "id": "transport.parking",
+            "keywords": [
+                "parking",
+                "parking lot",
+                "parking garage",
+                "parking fee",
+                "parking ticket",
+                "finding parking"
+            ],
+            "patterns": [
+                "\\b(parking (lot|garage|fee|ticket)|finding parking)\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "transport.cargo",
+            "keywords": [
+                "cargo",
+                "freight",
+                "shipping",
+                "delivery",
+                "cargo train",
+                "cargo ship",
+                "logistics"
+            ],
+            "patterns": [
+                "\\b(cargo|freight|shipping|delivery|logistics)\\b"
+            ],
+            "priority": 142
+        },
+        {
+            "id": "transport.air",
+            "keywords": [
+                "airport",
+                "airplane",
+                "flight",
+                "flying",
+                "airline",
+                "aviation"
+            ],
+            "patterns": [
+                "\\b(airport|airplane|flight|flying|airline|aviation)\\b"
+            ],
+            "priority": 139
+        },
+        {
+            "id": "health.general",
+            "keywords": [
+                "health",
+                "healthy",
+                "unhealthy",
+                "wellbeing",
+                "well-being",
+                "wellness",
+                "fitness"
+            ],
+            "patterns": [
+                "\\b(health|healthy|unhealthy|wellbeing|well-being|wellness|fitness)\\b"
+            ],
+            "priority": 144
+        },
+        {
+            "id": "health.happiness",
+            "keywords": [
+                "happiness",
+                "happy",
+                "unhappy",
+                "morale",
+                "satisfaction",
+                "quality of life",
+                "content",
+                "miserable"
+            ],
+            "patterns": [
+                "\\b(happiness|happy|unhappy|morale|satisfaction|quality of life|miserable)\\b"
+            ],
+            "priority": 143
+        },
+        {
+            "id": "health.needs",
+            "keywords": [
+                "citizen needs",
+                "basic needs",
+                "necessities",
+                "shelter",
+                "food and water",
+                "survival needs"
+            ],
+            "patterns": [
+                "\\b(citizen needs|basic needs|necessities|survival needs)\\b"
+            ],
+            "priority": 145
+        },
+        {
+            "id": "health.leisure",
+            "keywords": [
+                "leisure",
+                "recreation",
+                "entertainment",
+                "relaxation",
+                "free time activities",
+                "bored",
+                "boredom"
+            ],
+            "patterns": [
+                "\\b(leisure|recreation|entertainment|relaxation|bored|boredom)\\b"
+            ],
+            "priority": 145
+        },
+        {
+            "id": "health.aging",
+            "keywords": [
+                "aging",
+                "old age",
+                "elderly",
+                "senior",
+                "retirement",
+                "life expectancy",
+                "growing old"
+            ],
+            "patterns": [
+                "\\b(aging|old age|elderly|senior|retirement|life expectancy|growing old)\\b"
+            ],
+            "priority": 146
+        },
+        {
+            "id": "health.addiction",
+            "keywords": [
+                "addiction",
+                "drugs",
+                "substance abuse",
+                "overdose",
+                "rehabilitation",
+                "detox"
+            ],
+            "patterns": [
+                "\\b(addiction|drugs|substance abuse|overdose|rehabilitation|detox)\\b"
+            ],
+            "priority": 143
+        },
+        {
+            "id": "health.chrome_sickness",
+            "keywords": [
+                "chrome sickness",
+                "implant rejection",
+                "cyber psychosis",
+                "augment failure",
+                "chrome poisoning"
+            ],
+            "patterns": [
+                "\\b(chrome (sickness|rejection|poisoning)|cyber ?psychosis|implant (rejection|failure)|augment failure)\\b"
+            ],
+            "priority": 142
+        },
+        {
+            "id": "education.general",
+            "keywords": [
+                "education",
+                "school",
+                "learning",
+                "study",
+                "student",
+                "teacher",
+                "literacy"
+            ],
+            "patterns": [
+                "\\b(education|school|learning|study|student|teacher|literacy)\\b"
+            ],
+            "priority": 150
+        },
+        {
+            "id": "education.elementary",
+            "keywords": [
+                "elementary school",
+                "primary school",
+                "children school",
+                "kids school"
+            ],
+            "patterns": [
+                "\\b(elementary|primary) school\\b"
+            ],
+            "priority": 149
+        },
+        {
+            "id": "education.high_school",
+            "keywords": [
+                "high school",
+                "secondary school",
+                "teen school",
+                "teenager education"
+            ],
+            "patterns": [
+                "\\b(high school|secondary school)\\b"
+            ],
+            "priority": 149
+        },
+        {
+            "id": "education.university",
+            "keywords": [
+                "university",
+                "college",
+                "higher education",
+                "degree",
+                "professor",
+                "campus",
+                "academic"
+            ],
+            "patterns": [
+                "\\b(university|college|higher education|degree|professor|campus|academic)\\b"
+            ],
+            "priority": 149
+        },
+        {
+            "id": "education.research",
+            "keywords": [
+                "research",
+                "science",
+                "laboratory",
+                "experiment",
+                "discovery",
+                "innovation",
+                "research facility"
+            ],
+            "patterns": [
+                "\\b(research|science|laboratory|experiment|discovery|innovation)\\b"
+            ],
+            "priority": 152
+        },
+        {
+            "id": "education.levels",
+            "keywords": [
+                "education level",
+                "uneducated",
+                "well educated",
+                "highly educated",
+                "poorly educated",
+                "literacy rate"
+            ],
+            "patterns": [
+                "\\b(education level|uneducated|(well|highly|poorly) educated|literacy rate)\\b"
+            ],
+            "priority": 148
+        },
+        {
+            "id": "housing.general",
+            "keywords": [
+                "housing",
+                "home",
+                "house",
+                "apartment",
+                "dwelling",
+                "residence",
+                "shelter",
+                "where do you live",
+                "where to live"
+            ],
+            "patterns": [
+                "\\b(housing|apartment|dwelling|residence|where (do you|to) live)\\b"
+            ],
+            "priority": 155
+        },
+        {
+            "id": "housing.zoning",
+            "keywords": [
+                "zoning",
+                "zone",
+                "residential zone",
+                "commercial zone",
+                "industrial zone",
+                "mixed use",
+                "rezoning"
+            ],
+            "patterns": [
+                "\\b(zoning|residential zone|commercial zone|industrial zone|mixed use|rezoning)\\b"
+            ],
+            "priority": 154
+        },
+        {
+            "id": "housing.land_value",
+            "keywords": [
+                "land value",
+                "property value",
+                "real estate",
+                "gentrification",
+                "property prices",
+                "land price"
+            ],
+            "patterns": [
+                "\\b(land value|property (value|prices)|real estate|gentrification)\\b"
+            ],
+            "priority": 154
+        },
+        {
+            "id": "housing.homelessness",
+            "keywords": [
+                "homeless",
+                "homelessness",
+                "no home",
+                "living on the street",
+                "shelter",
+                "sleeping rough"
+            ],
+            "patterns": [
+                "\\b(homeless|no home|living on the street|sleeping rough)\\b"
+            ],
+            "priority": 153
+        },
+        {
+            "id": "housing.building_level",
+            "keywords": [
+                "building level",
+                "upgrade building",
+                "building condition",
+                "building quality",
+                "high-rise",
+                "skyscraper"
+            ],
+            "patterns": [
+                "\\b(building (level|condition|quality|upgrade)|high-rise|skyscraper)\\b"
+            ],
+            "priority": 156
+        },
+        {
+            "id": "housing.rent",
+            "keywords": [
+                "rent",
+                "rent control",
+                "paying rent",
+                "landlord",
+                "tenant",
+                "eviction",
+                "lease"
+            ],
+            "patterns": [
+                "\\b(rent|landlord|tenant|eviction|lease)\\b"
+            ],
+            "priority": 153
+        },
+        {
+            "id": "places.district.general",
+            "keywords": [
+                "district",
+                "sector",
+                "neighborhood",
+                "area",
+                "zone",
+                "part of town"
+            ],
+            "patterns": [
+                "\\b(district|sector|neighborhood|zone \\d)\\b"
+            ],
+            "priority": 160,
+            "entity_type": "district"
+        },
+        {
+            "id": "places.district.neon",
+            "keywords": [
+                "neon district",
+                "red light district",
+                "entertainment district",
+                "nightlife district"
+            ],
+            "patterns": [
+                "\\b(neon district|red light|entertainment district|nightlife)\\b"
+            ],
+            "priority": 159
+        },
+        {
+            "id": "places.district.industrial",
+            "keywords": [
+                "industrial district",
+                "factory area",
+                "manufacturing zone",
+                "warehouse district"
+            ],
+            "patterns": [
+                "\\b(industrial (district|zone)|factory area|warehouse district)\\b"
+            ],
+            "priority": 159
+        },
+        {
+            "id": "places.district.upper",
+            "keywords": [
+                "upper district",
+                "rich district",
+                "wealthy area",
+                "affluent neighborhood",
+                "upper city"
+            ],
+            "patterns": [
+                "\\b(upper (district|city)|rich district|wealthy area|affluent)\\b"
+            ],
+            "priority": 159
+        },
+        {
+            "id": "places.district.lower",
+            "keywords": [
+                "lower district",
+                "poor district",
+                "slums",
+                "warrens",
+                "undercity",
+                "lower city"
+            ],
+            "patterns": [
+                "\\b(lower (district|city)|poor district|slums|warrens|undercity)\\b"
+            ],
+            "priority": 159
+        },
+        {
+            "id": "places.landmarks",
+            "keywords": [
+                "landmark",
+                "famous place",
+                "tourist attraction",
+                "monument",
+                "statue",
+                "notable building"
+            ],
+            "patterns": [
+                "\\b(landmark|famous place|tourist attraction|monument|statue|notable building)\\b"
+            ],
+            "priority": 161
+        },
+        {
+            "id": "buildings.service",
+            "keywords": [
+                "service building",
+                "city building",
+                "public building",
+                "municipal building",
+                "government building"
+            ],
+            "patterns": [
+                "\\b(service|city|public|municipal|government) building\\b"
+            ],
+            "priority": 165
+        },
+        {
+            "id": "buildings.signature",
+            "keywords": [
+                "signature building",
+                "unique building",
+                "special building",
+                "iconic building"
+            ],
+            "patterns": [
+                "\\b(signature|unique|special|iconic) building\\b"
+            ],
+            "priority": 164
+        },
+        {
+            "id": "buildings.abandoned",
+            "keywords": [
+                "abandoned building",
+                "derelict",
+                "ruins",
+                "abandoned",
+                "condemned",
+                "falling apart"
+            ],
+            "patterns": [
+                "\\b(abandoned (building)?|derelict|ruins|condemned|falling apart)\\b"
+            ],
+            "priority": 164
+        },
+        {
+            "id": "buildings.construction",
+            "keywords": [
+                "construction",
+                "building under construction",
+                "being built",
+                "development",
+                "renovation"
+            ],
+            "patterns": [
+                "\\b(construction|being built|development|renovation|under construction)\\b"
+            ],
+            "priority": 166
+        },
+        {
+            "id": "personal.hobby.general",
+            "keywords": [
+                "hobby",
+                "hobbies",
+                "free time",
+                "fun",
+                "for fun",
+                "spare time",
+                "pastime",
+                "enjoy",
+                "interests"
+            ],
+            "patterns": [
+                "\\b(hobby|hobbies|free time|for fun|spare time|enjoy doing|your interests|do .* fun)\\b"
+            ],
+            "priority": 168
+        },
+        {
+            "id": "personal.family.general",
+            "keywords": [
+                "family",
+                "parents",
+                "mother",
+                "father",
+                "siblings",
+                "brother",
+                "sister",
+                "kids",
+                "children",
+                "wife",
+                "husband"
+            ],
+            "patterns": [
+                "\\b(family|parents|mother|father|sibling|brother|sister|children|wife|husband)\\b"
+            ],
+            "priority": 169
+        },
+        {
+            "id": "personal.past",
+            "keywords": [
+                "your past",
+                "your history",
+                "your story",
+                "your background",
+                "what happened to you",
+                "before all this"
+            ],
+            "patterns": [
+                "\\b(your (past|history|story|background)|happened to you)\\b"
+            ],
+            "priority": 170
+        },
+        {
+            "id": "personal.dreams",
+            "keywords": [
+                "dream",
+                "dreams",
+                "aspiration",
+                "wish",
+                "hope for the future",
+                "what do you dream of"
+            ],
+            "patterns": [
+                "\\b(dream|aspiration|wish|hope for the future)\\b"
+            ],
+            "priority": 171
+        },
+        {
+            "id": "personal.fears",
+            "keywords": [
+                "fear",
+                "afraid",
+                "scared",
+                "nightmare",
+                "phobia",
+                "what scares you",
+                "worried about"
+            ],
+            "patterns": [
+                "\\b(fear|afraid|scared|nightmare|phobia|what scares|worried about)\\b"
+            ],
+            "priority": 171
+        },
+        {
+            "id": "personal.food",
+            "keywords": [
+                "favorite food",
+                "what do you eat",
+                "restaurant",
+                "cooking",
+                "hungry",
+                "meal",
+                "dinner"
+            ],
+            "patterns": [
+                "\\b(favorite food|what .* eat|restaurant|cooking|hungry|meal|dinner)\\b"
+            ],
+            "priority": 172
+        },
+        {
+            "id": "personal.music",
+            "keywords": [
+                "music",
+                "song",
+                "singing",
+                "instrument",
+                "band",
+                "concert",
+                "listen to"
+            ],
+            "patterns": [
+                "\\b(music|song|singing|instrument|band|concert|listen to)\\b"
+            ],
+            "priority": 173
+        },
+        {
+            "id": "work.general",
+            "keywords": [
+                "work",
+                "job",
+                "occupation",
+                "profession",
+                "career",
+                "employment",
+                "what do you do",
+                "your job"
+            ],
+            "patterns": [
+                "\\b(your (job|work|occupation)|what do you do|what's your profession)\\b"
+            ],
+            "priority": 175
+        },
+        {
+            "id": "employment.general",
+            "keywords": [
+                "employment",
+                "getting a job",
+                "job market",
+                "hiring",
+                "recruitment",
+                "labor market"
+            ],
+            "patterns": [
+                "\\b(employment|job market|hiring|recruitment|labor market)\\b"
+            ],
+            "priority": 176
+        },
+        {
+            "id": "employment.unemployment",
+            "keywords": [
+                "unemployment",
+                "unemployed",
+                "jobless",
+                "no work",
+                "laid off",
+                "fired",
+                "out of work"
+            ],
+            "patterns": [
+                "\\b(unemployment|unemployed|jobless|no work|laid off|fired|out of work)\\b"
+            ],
+            "priority": 175
+        },
+        {
+            "id": "employment.labor",
+            "keywords": [
+                "labor",
+                "workers",
+                "workforce",
+                "union",
+                "strike",
+                "working conditions",
+                "labor rights"
+            ],
+            "patterns": [
+                "\\b(labor|workforce|union|strike|working conditions|labor rights)\\b"
+            ],
+            "priority": 177
+        },
+        {
+            "id": "employment.shifts",
+            "keywords": [
+                "shift",
+                "night shift",
+                "overtime",
+                "working hours",
+                "schedule",
+                "long hours"
+            ],
+            "patterns": [
+                "\\b(shift|night shift|overtime|working hours|long hours)\\b"
+            ],
+            "priority": 178
+        },
+        {
+            "id": "resources.general",
+            "keywords": [
+                "resources",
+                "materials",
+                "raw materials",
+                "ore",
+                "minerals",
+                "lumber",
+                "steel"
+            ],
+            "patterns": [
+                "\\b(resources|materials|raw materials|ore|minerals|lumber|steel)\\b"
+            ],
+            "priority": 180
+        },
+        {
+            "id": "resources.food",
+            "keywords": [
+                "food supply",
+                "farming",
+                "agriculture",
+                "harvest",
+                "crops",
+                "food shortage",
+                "famine"
+            ],
+            "patterns": [
+                "\\b(food supply|farming|agriculture|harvest|crops|food shortage|famine)\\b"
+            ],
+            "priority": 179
+        },
+        {
+            "id": "resources.energy",
+            "keywords": [
+                "energy resources",
+                "fuel",
+                "fossil fuel",
+                "renewable energy",
+                "energy crisis",
+                "oil"
+            ],
+            "patterns": [
+                "\\b(energy (resources|crisis)|fuel|fossil fuel|renewable energy|oil)\\b"
+            ],
+            "priority": 179
+        },
+        {
+            "id": "resources.scarcity",
+            "keywords": [
+                "scarcity",
+                "shortage",
+                "running out",
+                "rationing",
+                "limited supply",
+                "scarce"
+            ],
+            "patterns": [
+                "\\b(scarcity|shortage|running out|rationing|limited supply|scarce)\\b"
+            ],
+            "priority": 178
+        },
+        {
+            "id": "nature.weather.general",
+            "keywords": [
+                "weather",
+                "rain",
+                "raining",
+                "sunny",
+                "storm",
+                "cold",
+                "hot",
+                "fog",
+                "foggy",
+                "climate",
+                "temperature"
+            ],
+            "patterns": [
+                "\\b(weather|rain|storm|fog|climate|temperature)\\b"
+            ],
+            "priority": 185,
+            "context_key": "weather"
+        },
+        {
+            "id": "nature.weather.rain",
+            "keywords": [
+                "rain",
+                "raining",
+                "rainy",
+                "downpour",
+                "drizzle",
+                "wet"
+            ],
+            "patterns": [
+                "\\b(rain|raining|rainy|downpour|drizzle)\\b"
+            ],
+            "priority": 184
+        },
+        {
+            "id": "nature.weather.storm",
+            "keywords": [
+                "storm",
+                "thunder",
+                "lightning",
+                "hurricane",
+                "typhoon",
+                "tempest"
+            ],
+            "patterns": [
+                "\\b(storm|thunder|lightning|hurricane|typhoon|tempest)\\b"
+            ],
+            "priority": 184
+        },
+        {
+            "id": "nature.weather.fog",
+            "keywords": [
+                "fog",
+                "foggy",
+                "mist",
+                "haze",
+                "visibility",
+                "smog"
+            ],
+            "patterns": [
+                "\\b(fog|foggy|mist|haze|visibility|smog)\\b"
+            ],
+            "priority": 184
+        },
+        {
+            "id": "nature.pollution.general",
+            "keywords": [
+                "pollution",
+                "polluted",
+                "smog",
+                "toxic",
+                "contaminated",
+                "air quality",
+                "waste",
+                "dump"
+            ],
+            "patterns": [
+                "\\b(pollution|polluted|smog|toxic|contaminated|air quality)\\b"
+            ],
+            "priority": 186
+        },
+        {
+            "id": "nature.pollution.air",
+            "keywords": [
+                "air pollution",
+                "smog",
+                "emissions",
+                "exhaust",
+                "air quality index",
+                "breathing"
+            ],
+            "patterns": [
+                "\\b(air pollution|emissions|exhaust|air quality index|breathing .* hard)\\b"
+            ],
+            "priority": 185
+        },
+        {
+            "id": "nature.pollution.water",
+            "keywords": [
+                "water pollution",
+                "contaminated water",
+                "toxic waste",
+                "river pollution",
+                "chemical spill"
+            ],
+            "patterns": [
+                "\\b(water pollution|contaminated water|toxic waste|chemical spill)\\b"
+            ],
+            "priority": 185
+        },
+        {
+            "id": "nature.pollution.ground",
+            "keywords": [
+                "ground pollution",
+                "soil contamination",
+                "toxic soil",
+                "radiation",
+                "fallout"
+            ],
+            "patterns": [
+                "\\b(ground pollution|soil contamination|toxic soil|radiation|fallout)\\b"
+            ],
+            "priority": 185
+        },
+        {
+            "id": "nature.terrain",
+            "keywords": [
+                "terrain",
+                "landscape",
+                "mountains",
+                "hills",
+                "river",
+                "coast",
+                "ocean",
+                "geography"
+            ],
+            "patterns": [
+                "\\b(terrain|landscape|mountains|hills|river|coast|ocean|geography)\\b"
+            ],
+            "priority": 187
+        },
+        {
+            "id": "communications.general",
+            "keywords": [
+                "communications",
+                "internet",
+                "network",
+                "signal",
+                "bandwidth",
+                "connectivity"
+            ],
+            "patterns": [
+                "\\b(communications|internet|network|signal|bandwidth|connectivity)\\b"
+            ],
+            "priority": 190
+        },
+        {
+            "id": "communications.telecom",
+            "keywords": [
+                "telecom",
+                "phone",
+                "cellular",
+                "cell tower",
+                "5G",
+                "mobile",
+                "wireless"
+            ],
+            "patterns": [
+                "\\b(telecom|phone|cellular|cell tower|5G|mobile|wireless)\\b"
+            ],
+            "priority": 189
+        },
+        {
+            "id": "communications.post",
+            "keywords": [
+                "mail",
+                "post office",
+                "postal",
+                "package",
+                "letter",
+                "delivery",
+                "postman"
+            ],
+            "patterns": [
+                "\\b(mail|post office|postal|package|letter|postman)\\b"
+            ],
+            "priority": 191
+        },
+        {
+            "id": "communications.media",
+            "keywords": [
+                "news",
+                "media",
+                "newspaper",
+                "broadcast",
+                "channel",
+                "journalism",
+                "reporter"
+            ],
+            "patterns": [
+                "\\b(news|media|newspaper|broadcast|journalism|reporter)\\b"
+            ],
+            "priority": 191
+        },
+        {
+            "id": "communications.hacking",
+            "keywords": [
+                "hacking",
+                "hacker",
+                "cyber attack",
+                "data breach",
+                "firewall",
+                "encryption",
+                "malware"
+            ],
+            "patterns": [
+                "\\b(hacking|hacker|cyber attack|data breach|firewall|encryption|malware)\\b"
+            ],
+            "priority": 188
+        },
+        {
+            "id": "governance.general",
+            "keywords": [
+                "government",
+                "mayor",
+                "council",
+                "policies",
+                "law",
+                "regulation",
+                "governance"
+            ],
+            "patterns": [
+                "\\b(government|mayor|council|policies|regulation|governance)\\b"
+            ],
+            "priority": 195
+        },
+        {
+            "id": "governance.policies",
+            "keywords": [
+                "policy",
+                "policies",
+                "ordinance",
+                "mandate",
+                "decree",
+                "legislation",
+                "law"
+            ],
+            "patterns": [
+                "\\b(policy|policies|ordinance|mandate|decree|legislation)\\b"
+            ],
+            "priority": 194
+        },
+        {
+            "id": "governance.elections",
+            "keywords": [
+                "election",
+                "vote",
+                "voting",
+                "ballot",
+                "candidate",
+                "campaign",
+                "democracy"
+            ],
+            "patterns": [
+                "\\b(election|vote|voting|ballot|candidate|campaign|democracy)\\b"
+            ],
+            "priority": 194
+        },
+        {
+            "id": "governance.corruption",
+            "keywords": [
+                "corruption",
+                "corrupt",
+                "bribery",
+                "kickback",
+                "crooked",
+                "embezzlement",
+                "fraud"
+            ],
+            "patterns": [
+                "\\b(corruption|corrupt|bribery|kickback|crooked|embezzlement|fraud)\\b"
+            ],
+            "priority": 193
+        },
+        {
+            "id": "governance.rights",
+            "keywords": [
+                "rights",
+                "civil rights",
+                "freedom",
+                "liberty",
+                "oppression",
+                "censorship",
+                "protest"
+            ],
+            "patterns": [
+                "\\b(rights|civil rights|freedom|liberty|oppression|censorship|protest)\\b"
+            ],
+            "priority": 194
+        },
+        {
+            "id": "governance.outside_connections",
+            "keywords": [
+                "outside connections",
+                "other cities",
+                "neighboring city",
+                "borders",
+                "immigration",
+                "emigration"
+            ],
+            "patterns": [
+                "\\b(outside connections|other cities|neighboring city|borders|immigration|emigration)\\b"
+            ],
+            "priority": 196
+        },
+        {
+            "id": "governance.milestones",
+            "keywords": [
+                "milestone",
+                "achievement",
+                "city milestone",
+                "progress",
+                "city level",
+                "city growth"
+            ],
+            "patterns": [
+                "\\b(milestone|achievement|city (milestone|level|growth)|progress)\\b"
+            ],
+            "priority": 197
+        },
+        {
+            "id": "tech.chrome.general",
+            "keywords": [
+                "chrome",
+                "cybernetic",
+                "implant",
+                "augment",
+                "neural",
+                "prosthetic",
+                "modification",
+                "body mod",
+                "nexgen"
+            ],
+            "patterns": [
+                "\\b(chrome|cybernetic|implant|augment|neural link|prosthetic)\\b"
+            ],
+            "priority": 200
+        },
+        {
+            "id": "tech.chrome.types",
+            "keywords": [
+                "arm implant",
+                "eye implant",
+                "neural link",
+                "reflex booster",
+                "subdermal armor",
+                "mantis blades"
+            ],
+            "patterns": [
+                "\\b(arm|eye|leg) implant|neural link|reflex booster|subdermal|mantis blade\\b"
+            ],
+            "priority": 199
+        },
+        {
+            "id": "tech.chrome.cost",
+            "keywords": [
+                "implant cost",
+                "augmentation price",
+                "chrome price",
+                "how much for implant"
+            ],
+            "patterns": [
+                "\\b(implant|augmentation|chrome) (cost|price)\\b"
+            ],
+            "priority": 199
+        },
+        {
+            "id": "tech.ai",
+            "keywords": [
+                "artificial intelligence",
+                "AI",
+                "machine learning",
+                "neural network",
+                "sentient",
+                "autonomous"
+            ],
+            "patterns": [
+                "\\b(artificial intelligence|\\bAI\\b|machine learning|neural network|sentient|autonomous)\\b"
+            ],
+            "priority": 201
+        },
+        {
+            "id": "tech.data",
+            "keywords": [
+                "data",
+                "data mining",
+                "personal data",
+                "data broker",
+                "information",
+                "digital footprint"
+            ],
+            "patterns": [
+                "\\b(data|data mining|personal data|data broker|digital footprint)\\b"
+            ],
+            "priority": 202
+        },
+        {
+            "id": "tech.vehicles",
+            "keywords": [
+                "vehicle",
+                "car",
+                "motorcycle",
+                "drone",
+                "hover car",
+                "autonomous vehicle",
+                "mech"
+            ],
+            "patterns": [
+                "\\b(vehicle|car|motorcycle|drone|hover car|autonomous vehicle|mech)\\b"
+            ],
+            "priority": 203
+        },
+        {
+            "id": "world.lore.collapse",
+            "keywords": [
+                "the fall",
+                "2067",
+                "collapse",
+                "before the fall",
+                "great collapse",
+                "what happened"
+            ],
+            "patterns": [
+                "\\b(the fall|2067|collapse|before the fall|great collapse)\\b"
+            ],
+            "priority": 210
+        },
+        {
+            "id": "world.lore.layers",
+            "keywords": [
+                "layers",
+                "dimensions",
+                "parallel",
+                "alternate reality",
+                "layer bleeding",
+                "shadow layer"
+            ],
+            "patterns": [
+                "\\b(layers|dimensions|parallel|shadow layer|layer bleed)\\b"
+            ],
+            "priority": 211
+        },
+        {
+            "id": "world.lore.history",
+            "keywords": [
+                "history",
+                "the past",
+                "old world",
+                "before the war",
+                "ancient",
+                "historical"
+            ],
+            "patterns": [
+                "\\b(history|the past|old world|before the war|ancient|historical)\\b"
+            ],
+            "priority": 212
+        },
+        {
+            "id": "world.lore.religion",
+            "keywords": [
+                "religion",
+                "faith",
+                "god",
+                "gods",
+                "temple",
+                "worship",
+                "prayer",
+                "belief",
+                "church"
+            ],
+            "patterns": [
+                "\\b(religion|faith|god|temple|worship|prayer|belief|church)\\b"
+            ],
+            "priority": 213
+        },
+        {
+            "id": "world.factions.echo",
+            "keywords": [
+                "echo",
+                "coalition",
+                "government",
+                "surveillance",
+                "the authorities",
+                "the state"
+            ],
+            "patterns": [
+                "\\b(echo|coalition|surveillance state|the authorities)\\b"
+            ],
+            "priority": 220
+        },
+        {
+            "id": "world.factions.resistance",
+            "keywords": [
+                "resistance",
+                "rebels",
+                "revolution",
+                "zero chen",
+                "freedom fighters",
+                "uprising"
+            ],
+            "patterns": [
+                "\\b(resistance|rebels|revolution|zero chen|freedom fight|uprising)\\b"
+            ],
+            "priority": 221
+        },
+        {
+            "id": "world.factions.megacorp",
+            "keywords": [
+                "megacorp",
+                "corporation",
+                "nexgen",
+                "corporate",
+                "conglomerate",
+                "business empire"
+            ],
+            "patterns": [
+                "\\b(megacorp|nexgen|corporation|conglomerate|business empire)\\b"
+            ],
+            "priority": 219
+        },
+        {
+            "id": "world.factions.gangs",
+            "keywords": [
+                "gang",
+                "underground",
+                "criminal organization",
+                "syndicate",
+                "black hand",
+                "shadow network"
+            ],
+            "patterns": [
+                "\\b(gang|underground|criminal organization|syndicate|black hand|shadow network)\\b"
+            ],
+            "priority": 219
+        },
+        {
+            "id": "world.culture",
+            "keywords": [
+                "culture",
+                "tradition",
+                "customs",
+                "heritage",
+                "cultural",
+                "art",
+                "festival"
+            ],
+            "patterns": [
+                "\\b(culture|tradition|customs|heritage|cultural|festival)\\b"
+            ],
+            "priority": 214
+        },
+        {
+            "id": "world.population",
+            "keywords": [
+                "population",
+                "how many people",
+                "citizens",
+                "inhabitants",
+                "demographics",
+                "census"
+            ],
+            "patterns": [
+                "\\b(population|how many people|citizens|inhabitants|demographics|census)\\b"
+            ],
+            "priority": 215
+        },
+        {
+            "id": "quests.general",
+            "keywords": [
+                "quest",
+                "mission",
+                "task",
+                "job for me",
+                "work for me",
+                "need help",
+                "anything to do",
+                "errand"
+            ],
+            "patterns": [
+                "\\b(quest|mission|(any|got a?) (job|task|work|mission) for me)\\b",
+                "\\b(anything .* do|need.*help)\\b"
+            ],
+            "priority": 230
+        },
+        {
+            "id": "quests.reward",
+            "keywords": [
+                "reward",
+                "payment",
+                "what do i get",
+                "compensation",
+                "loot",
+                "prize"
+            ],
+            "patterns": [
+                "\\b(reward|payment|what do i get|compensation|loot|prize)\\b"
+            ],
+            "priority": 229
+        },
+        {
+            "id": "quests.difficulty",
+            "keywords": [
+                "how hard",
+                "difficulty",
+                "how dangerous",
+                "risk",
+                "is it safe",
+                "challenging"
+            ],
+            "patterns": [
+                "\\b(how (hard|dangerous)|difficulty|risk|is it safe|challenging)\\b"
+            ],
+            "priority": 229
+        },
+        {
+            "id": "quests.progress",
+            "keywords": [
+                "quest progress",
+                "how am i doing",
+                "quest status",
+                "am i close",
+                "done yet"
+            ],
+            "patterns": [
+                "\\b(quest (progress|status)|how am i doing|am i close|done yet)\\b"
+            ],
+            "priority": 229
+        },
+        {
+            "id": "people.npc.general",
+            "keywords": [],
+            "patterns": [],
+            "priority": 300,
+            "entity_type": "npc_name",
+            "note": "Matched dynamically via NPC name lookup in the codec"
+        }
+    ],
+    "context_extractors": {
+        "trust": {
+            "source": "npc_state",
+            "field": "trust_level",
+            "mapping": {
+                "0-30": "trust_low",
+                "31-65": "default",
+                "66-100": "trust_high"
+            }
+        },
+        "weather": {
+            "source": "tick_state",
+            "field": "weather",
+            "mapping": {
+                "clear": "clear",
+                "rain": "rain",
+                "fog": "fog",
+                "storm": "storm",
+                "cold": "cold",
+                "default": "default"
+            }
+        },
+        "user_name": {
+            "source": "user_memory",
+            "field": "name",
+            "mapping": {
+                "known": "knows_name",
+                "unknown": "doesnt_know"
+            }
+        }
+    },
+    "template_vars": {
+        "npc_name": {
+            "source": "npc_state",
+            "field": "name"
+        },
+        "archetype": {
+            "source": "npc_state",
+            "field": "archetype"
+        },
+        "archetype_desc": {
+            "source": "npc_profile",
+            "field": "archetype_description"
+        },
+        "occupation_desc": {
+            "source": "npc_profile",
+            "field": "occupation_description"
+        },
+        "location": {
+            "source": "npc_state",
+            "field": "location_desc"
+        },
+        "hour": {
+            "source": "tick_state",
+            "field": "hour"
+        },
+        "day_number": {
+            "source": "tick_state",
+            "field": "day"
+        },
+        "time_of_day": {
+            "source": "tick_state",
+            "field": "time_of_day"
+        },
+        "time_period_desc": {
+            "source": "tick_state",
+            "field": "time_period_desc"
+        },
+        "time_of_day_comment": {
+            "source": "computed",
+            "field": "time_of_day_comment"
+        },
+        "user_name": {
+            "source": "user_memory",
+            "field": "name"
+        },
+        "entity_name": {
+            "source": "extracted_entity",
+            "field": "name"
+        },
+        "relationship_desc": {
+            "source": "extracted_entity",
+            "field": "relationship"
+        },
+        "opinion_desc": {
+            "source": "extracted_entity",
+            "field": "opinion"
+        }
+    }
+}
