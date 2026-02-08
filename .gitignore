@@ -56,3 +56,21 @@ kill_switch.py
 # Runtime data (user memories, Arweave export batches)
 api/arweave_batches/
 api/npc_memories/
+
+# CS2 wiki reference data (development only)
+docs/cs2_wiki/
+
+# Game research wiki data (development reference only, not engine code)
+docs/dwarf_fortress_wiki/
+docs/oni_wiki/
+docs/workers_resources_wiki/
+docs/cs1_wiki/
+
+# Scraping scripts (contain API keys — NEVER commit)
+scripts/scrape_cs2_firecrawl.py
+scripts/scrape_cs2_wiki.py
+
+# Test result artifacts (generated at runtime)
+*_test_results.json
+conversation_test_results.json
+deployment_results.json
