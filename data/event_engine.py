@@ -228,10 +228,11 @@ def get_npc_memory_context(npc_id: str, tick: int) -> str:
         if tick_diff <= 0:
             return "just now"
         
-        # 1 tick = 1 hour, 24 ticks = 1 day
-        hours = tick_diff
-        days = tick_diff // 24
-        remaining_hours = tick_diff % 24
+        # 1 tick = 6 minutes, 10 ticks = 1 hour, 240 ticks = 1 day
+        hours = tick_diff // 10
+        remaining_minutes = (tick_diff % 10) * 6
+        days = tick_diff // 240
+        remaining_hours = (tick_diff % 240) // 10
         
         if days == 0:
             if hours == 1:

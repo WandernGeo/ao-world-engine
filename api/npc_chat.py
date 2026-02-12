@@ -29,6 +29,64 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)
 
+# =============================================================================
+# SERVER-SIDE TICK TRACKING — deterministic across all Cloud Run instances
+#
+# Uses a fixed epoch (Feb 7, 2026 00:00:00 UTC) so that every instance
+# computes the SAME tick at the SAME wall-clock moment.
+# =============================================================================
+import time as _time
+
+# Fixed epoch: Feb 7, 2026 00:00:00 UTC — the simulation deployment date
+_SIMULATION_EPOCH = 1770422400
+
+# Manual offset (only used when someone clicks "+10 Ticks" in the UI)
+_manual_tick_offset = 0
+
+def get_server_tick() -> int:
+    """Deterministic tick: seconds since fixed epoch.  Same on every instance."""
+    return int(_time.time() - _SIMULATION_EPOCH) + _manual_tick_offset
+
+def advance_server_tick(ticks: int) -> int:
+    """Manually advance by N ticks (persists for this instance's lifetime)."""
+    global _manual_tick_offset
+    _manual_tick_offset += ticks
+    return get_server_tick()
+
+# =============================================================================
+# LOAD 800 NPC POPULATION from first_800_npcs.json
+# =============================================================================
+_data_dir_local = os.path.join(os.path.dirname(__file__), '..', 'data')
+_data_dir_docker = '/app/data'
+DATA_DIR = _data_dir_docker if os.path.exists(_data_dir_docker) else _data_dir_local
+
+POPULATION_NPCS = []  # 800 generated NPCs
+try:
+    _pop_file = os.path.join(DATA_DIR, 'npc_chunks', 'first_800_npcs.json')
+    if os.path.exists(_pop_file):
+        with open(_pop_file, 'r') as f:
+            _pop_data = json.load(f)
+            POPULATION_NPCS = _pop_data.get('npcs', _pop_data) if isinstance(_pop_data, dict) else _pop_data
+        print(f'\u2705 Loaded {len(POPULATION_NPCS)} population NPCs from first_800_npcs.json')
+    else:
+        # Try chunk files
+        _chunks_dir = os.path.join(DATA_DIR, 'npc_chunks')
+        if os.path.exists(_chunks_dir):
+            import glob
+            for chunk_file in sorted(glob.glob(os.path.join(_chunks_dir, 'npc_chunk_*.json'))):
+                with open(chunk_file, 'r') as f:
+                    chunk_data = json.load(f)
+                    POPULATION_NPCS.extend(chunk_data.get('npcs', []))
+                if len(POPULATION_NPCS) >= 800:
+                    POPULATION_NPCS = POPULATION_NPCS[:800]
+                    break
+            print(f'\u2705 Loaded {len(POPULATION_NPCS)} population NPCs from chunk files')
+        else:
+            print('\u26a0\ufe0f No population NPC data found — using founding NPCs only')
+except Exception as e:
+    print(f'\u26a0\ufe0f Failed to load population NPCs: {e}')
+
+
 # Vertex AI setup
 HAS_VERTEX = False
 model = None
@@ -37,8 +95,9 @@ try:
     import vertexai
     from vertexai.generative_models import GenerativeModel
     
-    project = os.environ.get("GCP_PROJECT", "your-gcp-project")
+    project = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT", "wandern-project-startup")
     location = os.environ.get("GCP_LOCATION", "us-central1")
+    print(f"🔧 Vertex AI init: project={project}, location={location}")
     
     vertexai.init(project=project, location=location)
     model = GenerativeModel("gemini-2.0-flash")
@@ -553,11 +612,18 @@ except ImportError:
 
 
 def get_tick_state(tick: int) -> dict:
-    """Calculate deterministic world state from tick."""
-    hour = tick % 24
-    day = (tick // 24) + 1
+    """Calculate deterministic world state from tick.
     
-    # Deterministic weather from tick
+    Aligned with Lua's TICKS_PER_DAY = 240 (10 ticks per in-game hour).
+    With 1-minute CRON: 1 in-game day = 240 minutes = 4 real hours.
+    """
+    TICKS_PER_DAY = 240
+    TICKS_PER_HOUR = 10
+    
+    day = (tick // TICKS_PER_DAY) + 1
+    hour = (tick % TICKS_PER_DAY) // TICKS_PER_HOUR
+    
+    # Deterministic weather from tick (changes every ~36 minutes)
     weather_types = ["clear", "rain", "storm", "fog"]
     weather_seed = int(hashlib.md5(f"weather_{tick // 6}".encode()).hexdigest(), 16)
     weather = weather_types[weather_seed % 4]
@@ -687,28 +753,276 @@ def health():
     })
 
 
+# =============================================================================
+# AO PROCESS EVENT PASSTHROUGH
+# Query real events from the on-chain AO process via CU dryrun
+# =============================================================================
+
+import urllib.request
+
+_AO_CU_URL = "https://cu64.ao-testnet.xyz"
+_AO_PROCESS_ID = "FaYphsc8GASaJEBhg4X3ZZV7jQ5hGci9klFY90mLf0E"
+
+# Custom redirect handler that preserves POST body on 307/308 redirects
+class _RedirectHandler(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if code in (307, 308):
+            new_req = urllib.request.Request(
+                newurl, data=req.data,
+                headers={k: v for k, v in req.header_items()},
+                method=req.get_method(),
+            )
+            return new_req
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+_ao_opener = urllib.request.build_opener(_RedirectHandler)
+
+# Cache AO events (CU queries are slow → cache 30s)
+_ao_events_cache = {"events": [], "ao_tick": 0, "source": "none", "ts": 0}
+
+# Human-readable labels + icons for AO event types
+AO_EVENT_LABELS = {
+    "tax_collection": {"label": "Tax revenue collected", "icon": "💰", "severity": "minor"},
+    "city_expenses": {"label": "City services paid", "icon": "🏛️", "severity": "minor"},
+    "weather_change": {"label": "Weather shift detected", "icon": "🌧️", "severity": "minor"},
+    "market_peak": {"label": "Market activity peak", "icon": "📈", "severity": "minor"},
+    "power_fluctuation": {"label": "Power grid fluctuation", "icon": "⚡", "severity": "major"},
+    "protest": {"label": "Protest in district", "icon": "✊", "severity": "major"},
+    "suspicious_activity": {"label": "Suspicious activity reported", "icon": "🔍", "severity": "major"},
+}
+
+
+def _get_ao_events() -> dict:
+    """Fetch recent events from the AO process. Cached 30s."""
+    global _ao_events_cache
+
+    now = _time.time()
+    if now - _ao_events_cache["ts"] < 30:
+        return _ao_events_cache
+
+    try:
+        # CU dryrun: POST to /dry-run?process-id=...
+        payload = json.dumps({
+            "Id": "0",
+            "Target": _AO_PROCESS_ID,
+            "Owner": "0",
+            "Data": "{}",
+            "Tags": [{"name": "Action", "value": "get-state"}],
+        }).encode("utf-8")
+
+        req = urllib.request.Request(
+            f"{_AO_CU_URL}/dry-run?process-id={_AO_PROCESS_ID}",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with _ao_opener.open(req, timeout=15) as resp:
+            result = json.loads(resp.read().decode("utf-8"))
+
+        # Parse the response — AO returns Messages[0].Data
+        messages = result.get("Messages", [])
+        if messages and messages[0].get("Data"):
+            data = json.loads(messages[0]["Data"])
+            raw_events = data.get("recent_events", [])
+            ao_tick = data.get("tick", 0)
+
+            # Enrich events with labels/icons for frontend display
+            enriched = []
+            for evt in raw_events:
+                evt_type = evt.get("type", "unknown")
+                meta = AO_EVENT_LABELS.get(evt_type, {
+                    "label": evt_type.replace("_", " ").title(),
+                    "icon": "📋",
+                    "severity": "minor",
+                })
+
+                # Build description from event data
+                desc_parts = []
+                if evt.get("amount"):
+                    desc_parts.append(f"◊{evt['amount']:,}")
+                if evt.get("new_budget"):
+                    desc_parts.append(f"Budget → ◊{evt['new_budget']:,}")
+                if evt.get("weather"):
+                    desc_parts.append(evt["weather"].replace("_", " ").title())
+                if evt.get("location"):
+                    desc_parts.append(evt["location"].replace("_", " ").title())
+                if evt.get("severity"):
+                    desc_parts.append(f"Severity: {evt['severity']}")
+                if evt.get("breakdown"):
+                    parts = [f"{k}: ◊{v:,}" for k, v in evt["breakdown"].items()]
+                    desc_parts.append(" | ".join(parts))
+
+                enriched.append({
+                    "type": evt_type,
+                    "tick": evt.get("tick", ao_tick),
+                    "label": meta["label"],
+                    "icon": meta["icon"],
+                    "severity": meta["severity"],
+                    "description": " — ".join(desc_parts) if desc_parts else meta["label"],
+                    "source": "ao_process",
+                    "day": evt.get("day"),
+                })
+
+            _ao_events_cache = {
+                "events": enriched,
+                "ao_tick": ao_tick,
+                "source": "ao_process",
+                "ts": now,
+            }
+            print(f"✅ AO events fetched: {len(enriched)} events at tick {ao_tick}")
+            return _ao_events_cache
+
+    except Exception as e:
+        print(f"⚠️ AO CU query failed: {e}")
+
+    # Return cached (even if stale) or empty
+    return _ao_events_cache
+
+
+# =============================================================================
+# SERVER-SIDE EVENT GENERATION — keeps the monitor feed alive
+# AO CRON fires every 10 min → only ~6 events/hour on-chain.
+# These deterministic events give the monitor a live, breathing feel.
+# =============================================================================
+
+_SIM_EVENT_CATALOGUE = [
+    {"type": "npc_training", "label": "Training session in progress", "icon": "⚔️", "severity": "minor"},
+    {"type": "npc_patrol", "label": "Security patrol underway", "icon": "🛡️", "severity": "minor"},
+    {"type": "npc_social", "label": "Social gathering observed", "icon": "🍻", "severity": "minor"},
+    {"type": "npc_market", "label": "Market transaction recorded", "icon": "🛒", "severity": "minor"},
+    {"type": "npc_investigation", "label": "Investigation in progress", "icon": "🔍", "severity": "minor"},
+    {"type": "npc_transport", "label": "Transit movement logged", "icon": "🚇", "severity": "minor"},
+    {"type": "npc_medical", "label": "Medical check-up at clinic", "icon": "🏥", "severity": "minor"},
+    {"type": "suspicious_activity", "label": "Suspicious activity reported", "icon": "⚠️", "severity": "major"},
+    {"type": "infrastructure_check", "label": "Infrastructure maintenance", "icon": "🔧", "severity": "minor"},
+    {"type": "comm_intercept", "label": "Communications intercept", "icon": "📡", "severity": "major"},
+]
+
+_SIM_LOCATIONS = [
+    {"id": "neon_market", "name": "Neon Market", "district": "Neon District"},
+    {"id": "shadow_grid", "name": "Shadow Grid", "district": "Shadow District"},
+    {"id": "hab_block_7", "name": "Hab Block 7", "district": "Residential Sector"},
+    {"id": "transit_hub", "name": "Transit Hub", "district": "Central"},
+    {"id": "clinic", "name": "Street Clinic", "district": "Medical Quarter"},
+    {"id": "temple_district", "name": "Old Temple", "district": "Temple District"},
+    {"id": "data_nexus", "name": "Data Nexus", "district": "Tech Quarter"},
+    {"id": "factory_floor", "name": "Factory Floor", "district": "Industrial Zone"},
+]
+
+
+def _generate_sim_events(tick: int, time_period: str, npc_locations: dict) -> list:
+    """Generate deterministic NPC activity events for the current tick.
+    
+    Same tick = same events regardless of which instance serves it.
+    Returns 2-4 events per tick to keep the monitor feed alive.
+    """
+    events = []
+    
+    # Deterministic seed from tick
+    seed = int(hashlib.md5(f"sim_event_{tick}".encode()).hexdigest(), 16)
+    
+    # How many events this tick? 2-4
+    num_events = 2 + (seed % 3)
+    
+    # Get some NPC names for the events
+    npc_ids = list(npc_locations.keys())
+    
+    for i in range(num_events):
+        evt_seed = int(hashlib.md5(f"evt_{tick}_{i}".encode()).hexdigest(), 16)
+        
+        # Pick event type (weighted by time period)
+        if time_period in ("T01", "T02", "T10"):  # Night
+            # More surveillance, fewer social events
+            catalogue_idx = evt_seed % min(len(_SIM_EVENT_CATALOGUE), 6)
+            if evt_seed % 5 < 2:
+                catalogue_idx = 7  # suspicious_activity more likely at night
+        elif time_period in ("T04", "T05"):  # Work hours
+            catalogue_idx = evt_seed % len(_SIM_EVENT_CATALOGUE)
+        else:
+            catalogue_idx = evt_seed % len(_SIM_EVENT_CATALOGUE)
+        
+        evt_template = _SIM_EVENT_CATALOGUE[catalogue_idx % len(_SIM_EVENT_CATALOGUE)]
+        loc = _SIM_LOCATIONS[evt_seed % len(_SIM_LOCATIONS)]
+        
+        # Pick random NPCs for involvement
+        npc1_idx = evt_seed % len(npc_ids) if npc_ids else 0
+        npc2_idx = (evt_seed >> 8) % len(npc_ids) if npc_ids else 0
+        
+        involved = []
+        if npc_ids:
+            npc1_id = npc_ids[npc1_idx]
+            npc1_name = npc_locations[npc1_id].get("name", npc1_id)
+            involved.append(npc1_name)
+            if npc1_idx != npc2_idx:
+                npc2_id = npc_ids[npc2_idx]
+                npc2_name = npc_locations[npc2_id].get("name", npc2_id)
+                involved.append(npc2_name)
+        
+        # Build description
+        desc = f"{evt_template['label']} at {loc['name']}"
+        if involved:
+            desc += f" — {', '.join(involved[:2])}"
+
+        events.append({
+            "type": evt_template["type"],
+            "tick": tick,
+            "label": evt_template["label"],
+            "icon": evt_template["icon"],
+            "severity": evt_template["severity"],
+            "description": desc,
+            "source": "simulation",
+            "location_name": loc["name"],
+            "location_id": loc["id"],
+            "district": loc["district"],
+            "involved_npcs": involved,
+        })
+    
+    return events
+
+
 @app.route("/api/world-state", methods=["GET"])
 def world_state_api():
     """Aggregated world state for the monitor — one call replaces 6 AO CU queries.
 
+    The AO tick (1 per minute via CRON) is the canonical tick.
+    Falls back to elapsed-minutes-since-epoch when CU is unreachable.
+
     Query params:
-        tick (int): current simulation tick (optional, defaults to 0)
+        tick (int): simulation tick.  0 or absent → use AO tick.
     """
-    tick = request.args.get("tick", 0, type=int)
+    # 0. Get real AO events + tick from the on-chain process (cached 30s)
+    ao_events = _get_ao_events()
+    ao_tick = ao_events.get("ao_tick", 0)
+
+    raw_tick = request.args.get("tick", None)
+    if raw_tick is not None and int(raw_tick) > 0:
+        tick = int(raw_tick)
+    elif ao_tick > 0:
+        # Primary: use AO tick from CU query (canonical, on-chain)
+        tick = ao_tick + _manual_tick_offset
+    else:
+        # Fallback: minutes since epoch (only when CU unreachable)
+        tick = int((_time.time() - _SIMULATION_EPOCH) / 60) + _manual_tick_offset
 
     # 1. Tick / time state
     ts = get_tick_state(tick)
+    time_period = get_time_period(tick)
 
-    # 2. NPC locations (schedule-based, deterministic)
+    # 2. NPC locations — founding NPCs (detailed schedules)
     npc_locations = {}
+    activity_counts = {}
+    location_counts = {}
+
+    activity_moods = {
+        "sleeping": "peaceful", "training": "focused",
+        "mission": "alert", "debriefing": "serious",
+        "socializing": "relaxed", "personal_time": "contemplative",
+        "working": "focused", "commuting": "neutral",
+        "leisure": "relaxed", "waking": "groggy",
+    }
+
     for npc_id in FOUNDING_NPCS:
         loc, activity = get_scheduled_location(npc_id, tick)
-        time_period = get_time_period(tick)
-        activity_moods = {
-            "sleeping": "peaceful", "training": "focused",
-            "mission": "alert", "debriefing": "serious",
-            "socializing": "relaxed", "personal_time": "contemplative",
-        }
         mood_seed = int(hashlib.md5(f"{npc_id}_mood_{tick // 20}".encode()).hexdigest(), 16)
         moods = [activity_moods.get(activity, "neutral"), "contemplative", "wary", "restless", "focused"]
         npc_locations[npc_id] = {
@@ -719,38 +1033,97 @@ def world_state_api():
             "archetype": FOUNDING_NPCS[npc_id]["archetype"],
             "time_period": time_period,
         }
+        activity_counts[activity] = activity_counts.get(activity, 0) + 1
+        location_counts[loc] = location_counts.get(loc, 0) + 1
+
+    # 2b. Population NPCs (800 generated from first_800_npcs.json)
+    # Use deterministic schedule based on NPC attributes
+    _pop_locations = ["home", "workplace", "neon_market", "transit", "neon_bar",
+                      "park", "clinic", "temple", "factory", "school"]
+    _pop_activities_by_period = {
+        "T01": "sleeping", "T02": "sleeping", "T03": "waking",
+        "T04": "working", "T05": "working", "T06": "commuting",
+        "T07": "leisure", "T08": "socializing", "T09": "returning_home",
+        "T10": "sleeping",
+    }
+    base_activity = _pop_activities_by_period.get(time_period, "idle")
+
+    for i, pop_npc in enumerate(POPULATION_NPCS):
+        npc_id_pop = pop_npc.get("id", f"pop_{i}")
+        npc_name = pop_npc.get("name", f"Citizen {i}")
+        npc_role = pop_npc.get("role", pop_npc.get("archetype", "citizen"))
+        npc_district = pop_npc.get("district", "neon_district")
+
+        # Deterministic location/activity variation per NPC
+        loc_seed = int(hashlib.md5(f"{npc_id_pop}_{tick // 24}".encode()).hexdigest(), 16)
+        # 70% follow default schedule, 30% do something different
+        if loc_seed % 10 < 7:
+            activity = base_activity
+        else:
+            alt_activities = ["shopping", "socializing", "exploring", "working_late", "exercising"]
+            activity = alt_activities[loc_seed % len(alt_activities)]
+
+        loc_idx = loc_seed % len(_pop_locations)
+        location = _pop_locations[loc_idx]
+        mood_idx = loc_seed % 5
+        moods_list = ["neutral", "content", "busy", "relaxed", "focused"]
+
+        npc_locations[npc_id_pop] = {
+            "location": location,
+            "state": activity,
+            "mood": moods_list[mood_idx],
+            "name": npc_name,
+            "archetype": npc_role,
+            "time_period": time_period,
+        }
+        activity_counts[activity] = activity_counts.get(activity, 0) + 1
+        location_counts[location] = location_counts.get(location, 0) + 1
 
     # 3. Deterministic economy (varies with tick to feel alive)
-    economy_seed = int(hashlib.md5(f"economy_{tick // 24}".encode()).hexdigest(), 16)
-    base_budget = 996_000
-    # Vary budget ±5% based on day — taxes in, services out
-    daily_tax_revenue = 12_400 + (economy_seed % 3_200) - 1_600      # 10,800..14,000
-    daily_service_cost = 11_800 + ((economy_seed >> 8) % 2_800) - 1_400  # 10,400..13,200
-    hour = tick % 24
-    day = (tick // 24) + 1
-    # Budget accumulates over days
-    budget = base_budget + (day - 1) * (daily_tax_revenue - daily_service_cost)
-    # Intra-day: services cost more during day hours
+    # Use day/hour from tick_state (aligned with Lua's TICKS_PER_DAY=240)
+    day = ts.get("day", 1)
+    hour = ts.get("hour", 0)
+    economy_seed = int(hashlib.md5(f"economy_{day}".encode()).hexdigest(), 16)
+    
+    # Budget: sinusoidal annual cycle — oscillates realistically between ~850K - ~1.15M
+    # Avoids the old formula's compounding-to-negative-infinity problem
+    import math
+    day_in_year = day % 365
+    annual_cycle = math.sin(2 * math.pi * day_in_year / 365)  # -1 to 1
+    base_budget = 1_000_000
+    annual_amplitude = 150_000  # ±150K variation over the year
+    daily_noise = (economy_seed % 20_000) - 10_000  # ±10K daily jitter
+    budget = base_budget + int(annual_cycle * annual_amplitude) + daily_noise
+    
+    # Intra-day variation: services draw budget down during work hours
     if 6 <= hour < 18:
-        budget -= int(daily_service_cost * hour / 48)
-    else:
-        budget += int(daily_tax_revenue * 0.02)  # Small overnight revenue (fines, fees)
+        budget -= int(2_000 * (hour - 6) / 12)  # Max -2K during peak hours
+    
+    daily_tax_revenue = 12_400 + (economy_seed % 3_200) - 1_600
+    daily_service_cost = 11_800 + ((economy_seed >> 8) % 2_800) - 1_400
 
     gdp_base = 920_000
-    inflation = 0.018 + (economy_seed % 200) / 10000  # 1.8% - 3.8%
-    unemployment = 0.11 + (economy_seed % 80) / 1000   # 11% - 19%
-    gini = 0.68 + (economy_seed % 100) / 1000          # 0.68 - 0.78
-    black_market = 0.18 + (economy_seed % 80) / 1000   # 18% - 26%
+    inflation = 0.018 + (economy_seed % 200) / 10000
+    unemployment = 0.11 + (economy_seed % 80) / 1000
+    gini = 0.68 + (economy_seed % 100) / 1000
+    black_market = 0.18 + (economy_seed % 80) / 1000
 
-    population = len(FOUNDING_NPCS) + 800  # founding + generated
+    population = len(FOUNDING_NPCS) + len(POPULATION_NPCS)
+
+    # 4. AO events already fetched above (ao_events from step 0)
+
+    # 5. Generate live simulation events at backend tick rate
+    #    AO CRON fires every 10 min → only ~6 events/hour on-chain.
+    #    These server-generated events keep the monitor feed alive.
+    sim_events = _generate_sim_events(tick, time_period, npc_locations)
 
     return jsonify({
         "tick": tick,
         "day": day,
-        "year": ts.get("day", 1) // 365 + 2087,
+        "year": day // 365 + 2087,
         "hour": hour,
         "weather": ts.get("weather", "clear"),
-        "time_period": ts.get("time_of_day", "night"),
+        "time_period": time_period,
         "population": population,
         "budget": budget,
         "economy": {
@@ -771,8 +1144,16 @@ def world_state_api():
         },
         "npc_locations": npc_locations,
         "npc_count": len(npc_locations),
-        "ao_live": True,  # Backend is always "live" — it IS the fallback
+        "activity_summary": activity_counts,
+        "location_summary": location_counts,
+        "ao_live": True,
         "source": "backend_api",
+        # Real AO events from the on-chain process
+        "ao_events": ao_events.get("events", []),
+        "ao_tick": ao_events.get("ao_tick", 0),
+        "ao_events_source": ao_events.get("source", "none"),
+        # Server-generated NPC activity events (live feel between AO CRON ticks)
+        "sim_events": sim_events,
     })
 
 

@@ -24,11 +24,113 @@ import json
 import hashlib
 import os
 import random
+import time as _time
 import requests
 from city_economy import get_economy_summary, calculate_city_economy
 
 app = Flask(__name__)
 CORS(app)
+
+# =============================================================================
+# SERVER-SIDE TICK TRACKING
+# =============================================================================
+# The AO CRON is the AUTHORITATIVE tick source.  The backend queries AO on
+# each /api/world-state call and adopts its tick.  When AO is unreachable
+# (CU timeout, rate-limit, etc.) we fall back to a wall-clock auto-advance
+# so the Monitor page still shows a moving simulation.
+#
+# • Tick mapping: 1 tick = 6 minutes, 240 ticks = 1 day
+# • Override:  when AO CU responds with a real tick, we adopt it.
+# =============================================================================
+
+_SERVER_TICK_START = 100          # Initial tick on cold start (fallback only)
+_SERVER_TICK_RATE  = 1.0          # ticks per wall-clock second (fallback only)
+_server_tick_epoch = _time.time() # wall-clock origin
+_server_tick_offset = _SERVER_TICK_START  # base tick at epoch
+
+def get_server_tick() -> int:
+    """Return the current auto-advancing server tick (fallback when AO is down)."""
+    elapsed = _time.time() - _server_tick_epoch
+    return int(_server_tick_offset + elapsed * _SERVER_TICK_RATE)
+
+def advance_server_tick(ticks: int) -> int:
+    """Manually jump the server tick forward."""
+    global _server_tick_offset, _server_tick_epoch
+    current = get_server_tick()
+    _server_tick_offset = current + ticks
+    _server_tick_epoch = _time.time()
+    return get_server_tick()
+
+def override_server_tick(ao_tick: int):
+    """Adopt a tick value from the AO process (when CRON is running)."""
+    global _server_tick_offset, _server_tick_epoch
+    if ao_tick > get_server_tick():
+        _server_tick_offset = ao_tick
+        _server_tick_epoch = _time.time()
+
+# =============================================================================
+# AO COMPUTE UNIT — AUTHORITATIVE TICK SOURCE
+# =============================================================================
+
+AO_PROCESS_ID = "FaYphsc8GASaJEBhg4X3ZZV7jQ5hGci9klFY90mLf0E"
+AO_CU_ENDPOINTS = [
+    "https://cu.ao-testnet.xyz",
+    "https://cu2.ao-testnet.xyz",
+]
+_ao_tick_cache = {"tick": 0, "ts": 0.0}  # Simple time-based cache
+_AO_TICK_CACHE_TTL = 30  # seconds — don't hammer the CU
+
+def fetch_ao_tick() -> int:
+    """Query the AO CU for the authoritative world tick.
+    
+    Returns the AO tick if reachable, or 0 if all CUs fail.
+    Results are cached for 30s to avoid rate-limiting.
+    """
+    now = _time.time()
+    if now - _ao_tick_cache["ts"] < _AO_TICK_CACHE_TTL and _ao_tick_cache["tick"] > 0:
+        return _ao_tick_cache["tick"]
+    
+    for cu_url in AO_CU_ENDPOINTS:
+        try:
+            # AO CU dryrun endpoint
+            resp = requests.post(
+                f"{cu_url}/dry-run?process-id={AO_PROCESS_ID}",
+                json={
+                    "Id": "0000000000000000000000000000000000000000001",
+                    "Target": AO_PROCESS_ID,
+                    "Owner": "0000000000000000000000000000000000000000001",
+                    "Data": "{}",
+                    "Tags": [
+                        {"name": "Action", "value": "get-time"},
+                        {"name": "Data-Protocol", "value": "ao"},
+                        {"name": "Type", "value": "Message"},
+                        {"name": "Variant", "value": "ao.TN.1"},
+                    ],
+                },
+                timeout=6,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                # AO returns Messages array; first message Data is JSON
+                messages = data.get("Messages", [])
+                if messages and messages[0].get("Data"):
+                    ao_data = json.loads(messages[0]["Data"])
+                    ao_tick = int(ao_data.get("tick", 0))
+                    if ao_tick > 0:
+                        _ao_tick_cache["tick"] = ao_tick
+                        _ao_tick_cache["ts"] = now
+                        # Sync server tick so fallback stays close
+                        override_server_tick(ao_tick)
+                        return ao_tick
+            elif resp.status_code == 429:
+                _time.sleep(1)  # Brief pause before trying next CU
+        except Exception as e:
+            print(f"[AO CU] {cu_url} failed: {e}")
+            continue
+    
+    return 0  # All CUs failed
+
+
 
 # =============================================================================
 # DATA LOADING
@@ -1543,27 +1645,123 @@ def get_headlines():
 
 
 def generate_events(tick: int, location_counts: dict) -> list:
-    """Generate random events based on tick (deterministic)."""
+    """Generate deterministic events based on tick with proper fields for Monitor UI."""
     events = []
-    
-    event_types = [
-        {"name": "street_argument", "probability": 0.05},
-        {"name": "temple_patrol", "probability": 0.1},
-        {"name": "vendor_sale", "probability": 0.08},
-        {"name": "suspicious_activity", "probability": 0.03},
-        {"name": "power_flicker", "probability": 0.02},
+    time_info = get_time_info(tick)
+    hour = time_info["hour"]
+    day = time_info["day"]
+    weather = time_info.get("weather", "clear")
+
+    # NPC action events — these happen frequently
+    npc_action_templates = [
+        {"type": "patrol", "label": "Temple Guard Patrol", "icon": "🛡️", "severity": "low",
+         "description": "Temple guards sweep through {district}, checking identifications",
+         "districts": ["Temple Quarter", "Neon District"]},
+        {"type": "training", "label": "Combat Training", "icon": "⚔️", "severity": "low",
+         "description": "{npc} runs combat drills at {location}",
+         "districts": ["Iron District", "Undercity"]},
+        {"type": "trade", "label": "Black Market Exchange", "icon": "💰", "severity": "medium",
+         "description": "Contraband changes hands in the shadows of {location}",
+         "districts": ["Undercity", "Harbor District"]},
+        {"type": "social", "label": "Social Gathering", "icon": "🍻", "severity": "low",
+         "description": "Citizens gather at {location} to share rumors and drink",
+         "districts": ["Neon District", "Old Quarter"]},
+        {"type": "hacking", "label": "Data Breach Attempt", "icon": "💻", "severity": "high",
+         "description": "Unauthorized access detected on {district} subnet",
+         "districts": ["Data Spine", "Neon Heights"]},
+        {"type": "prayer", "label": "Temple Ceremony", "icon": "🕯️", "severity": "low",
+         "description": "Digital monks perform evening rites at Aether Temple",
+         "districts": ["Temple Quarter"]},
+        {"type": "smuggling", "label": "Cargo Movement", "icon": "📦", "severity": "medium",
+         "description": "Unmarked crates being moved through {district} loading docks",
+         "districts": ["Harbor District", "Undercity"]},
+        {"type": "street_art", "label": "New Street Art", "icon": "🎨", "severity": "low",
+         "description": "Fresh resistance graffiti appears on {district} walls",
+         "districts": ["Old Quarter", "Undercity"]},
     ]
-    
-    for event in event_types:
-        seed = f"{event['name']}_{tick}"
-        h = int(hashlib.md5(seed.encode()).hexdigest(), 16) % 1000
-        if h < event["probability"] * 1000:
+
+    # World events — less frequent
+    world_event_templates = [
+        {"type": "power_flicker", "label": "Power Fluctuation", "icon": "⚡", "severity": "medium",
+         "description": "Grid instability detected in {district} sector"},
+        {"type": "weather_shift", "label": f"Weather: {weather.capitalize()}", "icon": "🌧️", "severity": "low",
+         "description": f"Atmospheric conditions shift to {weather} across the city"},
+        {"type": "market_shift", "label": "Market Price Shift", "icon": "📊", "severity": "medium",
+         "description": "Cybernetic implant prices fluctuate in the Iron Market"},
+        {"type": "ai_anomaly", "label": "AI Anomaly Detected", "icon": "🤖", "severity": "high",
+         "description": "Unusual AI activity in the Data Spine neural network"},
+    ]
+
+    # Named NPCs for event involvement
+    npc_names = ["Charlie", "Felix", "Zero Chen", "Pixel", "Kai Vance", "Nova Chen",
+                 "Orion Thane", "Aiche", "Sister Mira", "Mama Indira", "Cipher", "Selene Voss"]
+    locations = ["Cascade Lounge", "Grid Hub", "Market Square", "Charlie's Office",
+                 "Free Clinic", "The Depths", "Aether Temple", "Central Station",
+                 "Iron Market", "Harbor Docks", "Data Spine Core", "Ghost Sector"]
+    districts = ["Neon District", "Temple Quarter", "Undercity", "Iron District",
+                 "Harbor District", "Old Quarter", "Data Spine", "Neon Heights"]
+
+    # Generate 3-6 NPC action events per tick (deterministic)
+    for i, template in enumerate(npc_action_templates):
+        seed = f"{template['type']}_{tick}_{i}"
+        h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+        # Higher probability: ~40-60% chance per template
+        if (h % 100) < 50:
+            district = seeded_choice(template["districts"], seed + "_d")
+            location = seeded_choice(locations, seed + "_l")
+            npc = seeded_choice(npc_names, seed + "_n")
+            npc2 = seeded_choice([n for n in npc_names if n != npc], seed + "_n2")
             events.append({
-                "type": event["name"],
+                "type": template["type"],
+                "label": template["label"],
+                "icon": template["icon"],
+                "severity": template["severity"],
+                "description": template["description"].format(
+                    district=district, location=location, npc=npc),
+                "source": "simulation",
                 "tick": tick,
-                "id": f"EVT_{tick}_{event['name'][:3]}"
+                "day": day,
+                "location_name": location,
+                "district": district,
+                "involved_npcs": [npc, npc2],
             })
-    
+
+    # Generate 1-2 world events (less frequent, ~20-30% chance each)
+    for i, template in enumerate(world_event_templates):
+        seed = f"world_{template['type']}_{tick}_{i}"
+        h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+        if (h % 100) < 25:
+            district = seeded_choice(districts, seed + "_d")
+            events.append({
+                "type": template["type"],
+                "label": template["label"],
+                "icon": template["icon"],
+                "severity": template["severity"],
+                "description": template["description"].format(district=district),
+                "source": "simulation",
+                "tick": tick,
+                "day": day,
+                "location_name": seeded_choice(locations, seed + "_l"),
+                "district": district,
+                "involved_npcs": [],
+            })
+
+    # Time-based events
+    if hour == 6:
+        events.append({
+            "type": "dawn", "label": "Dawn Breaks", "icon": "🌅", "severity": "low",
+            "description": "Pale light filters through the smog — another day begins in RE:ECHO City",
+            "source": "simulation", "tick": tick, "day": day,
+            "location_name": "Skyline", "district": "City-wide", "involved_npcs": [],
+        })
+    elif hour == 22:
+        events.append({
+            "type": "curfew", "label": "Curfew Warning", "icon": "🔔", "severity": "medium",
+            "description": "Temple Guard broadcasts curfew reminder across all districts",
+            "source": "simulation", "tick": tick, "day": day,
+            "location_name": "All Districts", "district": "City-wide", "involved_npcs": [],
+        })
+
     return events
 
 
@@ -2205,9 +2403,23 @@ def world_state_api():
     """Aggregated world state for the monitor — one call replaces 6 AO CU queries.
 
     Query params:
-        tick (int): current simulation tick (optional, defaults to 100)
+        tick (int): simulation tick.  0 or absent → use server auto-advancing tick.
     """
-    tick = int(request.args.get("tick", 100))
+    raw_tick = request.args.get("tick", None)
+    ao_tick = 0
+    ao_live = False
+    if raw_tick is None or int(raw_tick) <= 0:
+        # Primary: query AO CRON for authoritative tick
+        ao_tick = fetch_ao_tick()
+        if ao_tick > 0:
+            tick = ao_tick
+            ao_live = True
+        else:
+            # Fallback: server auto-advancing tick
+            tick = get_server_tick()
+    else:
+        tick = int(raw_tick)
+
     time_info = get_time_info(tick)
     npcs = get_npcs()
     population = len(npcs)
@@ -2264,9 +2476,22 @@ def world_state_api():
         "activity_summary": activity_counts,
         "location_summary": location_counts,
         "events": events,
-        "ao_live": True,
-        "source": "backend_api",
+        "sim_events": events,
+        "ao_events": [],
+        "ao_tick": ao_tick,
+        "ao_live": ao_live,
+        "source": "ao_cron" if ao_live else "backend_fallback",
+        "server_tick": get_server_tick(),
     })
+
+
+@app.route("/api/world-state/advance", methods=["POST"])
+def world_state_advance():
+    """Manually advance the server tick (used by the Advance Sim button)."""
+    data = request.get_json(silent=True) or {}
+    ticks = min(int(data.get("ticks", 10)), 10000)
+    new_tick = advance_server_tick(ticks)
+    return jsonify({"success": True, "new_tick": new_tick, "advanced": ticks})
 
 
 @app.route("/api/economy", methods=["GET"])
@@ -2297,6 +2522,341 @@ def proxy_health():
         "total_npcs": len(get_npcs()),
     })
 
+
+# =============================================================================
+# SCENE GENERATION (Lightweight — Gemini text + optional Imagen)
+# =============================================================================
+
+_gemini_model = None
+_imagen_model = None
+
+def _get_gemini():
+    global _gemini_model
+    if _gemini_model is None:
+        try:
+            import vertexai
+            from vertexai.generative_models import GenerativeModel
+            project = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT", "wandern-project-startup")
+            vertexai.init(project=project, location="us-central1")
+            _gemini_model = GenerativeModel("gemini-2.0-flash")
+            print(f"✅ Gemini loaded for scene generation (project={project})")
+        except Exception as e:
+            print(f"⚠️ Gemini not available for scene gen: {e}")
+    return _gemini_model
+
+def _get_imagen():
+    global _imagen_model
+    if _imagen_model is None:
+        try:
+            from vertexai.preview.vision_models import ImageGenerationModel
+            _imagen_model = ImageGenerationModel.from_pretrained("imagen-3.0-generate-002")
+            print("✅ Imagen 3 loaded for scene generation")
+        except Exception as e:
+            print(f"⚠️ Imagen not available: {e}")
+    return _imagen_model
+
+# Signal Noir scene locations
+_SCENE_LOCATIONS = {
+    "undercity": "The Undercity — sprawling underground district of smugglers, black markets, and neon-lit back alleys beneath the city surface",
+    "temple_ward": "Temple Ward — ancient district where holo-shrines glow cyan and monks maintain the city's spiritual firewalls",
+    "iron_market": "Iron Market — massive industrial bazaar where cybernetic parts and contraband change hands",
+    "neon_heights": "Neon Heights — upper-city district of gleaming towers, corporate glass, and privileged elite",
+    "harbor_district": "Harbor District — fog-shrouded waterfront of smuggler docks, old warehouses, and salt-corroded infrastructure",
+    "old_quarter": "Old Quarter — crumbling pre-war architecture, street artists, and resistance safe houses",
+    "data_spine": "Data Spine — the city's central data corridor, humming server farms and restricted access zones",
+    "ghost_district": "Ghost District — abandoned sector rumored to be haunted by rogue AIs and memory leaks",
+}
+
+@app.route("/api/scene/generate", methods=["POST", "OPTIONS"])
+def scene_generate():
+    """Generate a scene description and optionally an image."""
+    if request.method == "OPTIONS":
+        return "", 200
+
+    data = request.get_json(silent=True) or {}
+    location_id = data.get("location_id", data.get("location", "undercity"))
+    tick = data.get("tick", get_server_tick())
+    style = data.get("style", "signal_noir")
+
+    # Get time info
+    time_info = get_time_info(tick)
+    hour = time_info["hour"]
+    day = time_info["day"]
+    weather = time_info.get("weather", "clear")
+
+    if 6 <= hour < 12:
+        time_desc = f"Morning, {hour}:00 — city waking from restless sleep"
+    elif 12 <= hour < 18:
+        time_desc = f"Afternoon, {hour}:00 — shadows pooling in the alleys"
+    elif 18 <= hour < 22:
+        time_desc = f"Evening, {hour}:00 — neon awakening, streets filling"
+    else:
+        time_desc = f"Night, {hour}:00 — the city's true face revealed"
+
+    weather_desc = {
+        "clear": "Clear sky, neon signs cutting through darkness",
+        "rain": "Rain slicks the streets, reflections shimmering everywhere",
+        "storm": "Thunder rumbles, lightning illuminates the skyline",
+        "fog": "Thick fog rolls through, obscuring everything beyond arm's reach",
+        "smog": "Toxic smog hangs low, filtering light into sickly yellows"
+    }.get(weather, "Dark, oppressive atmosphere")
+
+    location_desc = _SCENE_LOCATIONS.get(location_id, f"A district of RE:ECHO City known as {location_id}")
+
+    # Get NPCs at this location
+    npcs = get_npcs()
+    npcs_here = []
+    for npc in npcs[:50]:  # Check first 50
+        state = get_npc_state(npc, tick)
+        if state.get("location", "").lower().replace(" ", "_") == location_id.lower().replace(" ", "_"):
+            npcs_here.append(f"{npc.get('name', npc['id'])}: {npc.get('archetype', 'citizen')}, {state.get('activity', 'idle')}")
+
+    npcs_text = "\n".join(npcs_here[:8]) if npcs_here else "Sparse population, a few shadows moving in the dark."
+
+    # Generate scene description with Gemini
+    scene_prompt = f"""Describe this Signal Noir cyberpunk scene in 3-4 vivid, cinematic sentences:
+
+LOCATION: {location_desc}
+WEATHER: {weather_desc}
+TIME: Day {day}, {time_desc}
+
+CHARACTERS PRESENT:
+{npcs_text}
+
+Style: Signal Noir — high contrast grayscale with cyan (#00CED1) accents, dark moody noir aesthetic.
+Art deco meets cyberpunk dystopia. Describe what a viewer would see entering this scene.
+Keep it atmospheric and cinematic. Mention specific details of the environment."""
+
+    description = ""
+    gemini = _get_gemini()
+    if gemini:
+        try:
+            response = gemini.generate_content(scene_prompt)
+            description = response.text.strip()
+        except Exception as e:
+            description = f"[Scene generation error: {e}]"
+    else:
+        description = f"*{location_desc}. {weather_desc}. {time_desc}.*"
+
+    result = {
+        "location": location_id,
+        "location_desc": location_desc,
+        "tick": tick,
+        "day": day,
+        "hour": hour,
+        "weather": weather,
+        "npcs_present": [n.split(":")[0] for n in npcs_here[:8]],
+        "description": description,
+        "image_generated": False,
+    }
+
+    # Generate image if Imagen is available
+    imagen = _get_imagen()
+    if imagen:
+        image_prompt = f"""Signal Noir cyberpunk scene:
+
+{location_desc} at {time_desc}. {weather_desc}.
+
+MANDATORY STYLE:
+- 85% grayscale, high contrast noir
+- ONLY cyan (#00CED1) for neon and tech accents
+- Deep black shadows, art deco architecture
+- Cinematic composition, dramatic lighting
+- NO bright colors except cyan
+- Dark, moody, atmospheric"""
+
+        try:
+            images = imagen.generate_images(
+                prompt=image_prompt,
+                number_of_images=1,
+                aspect_ratio="16:9",
+                safety_filter_level="block_only_high"
+            )
+            if images.images:
+                import io as _io
+                buffered = _io.BytesIO()
+                images.images[0]._pil_image.save(buffered, format="PNG")
+                import base64 as _b64
+                result["image_base64"] = _b64.b64encode(buffered.getvalue()).decode()
+                result["image_generated"] = True
+        except Exception as e:
+            result["image_error"] = str(e)
+
+    return jsonify(result)
+
+
+@app.route("/api/scene/describe", methods=["POST", "OPTIONS"])
+def scene_describe():
+    """Generate only a text description of a scene (no image)."""
+    if request.method == "OPTIONS":
+        return "", 200
+
+    data = request.get_json(silent=True) or {}
+    location_id = data.get("location_id", data.get("location", "undercity"))
+    tick = data.get("tick", get_server_tick())
+
+    time_info = get_time_info(tick)
+    location_desc = _SCENE_LOCATIONS.get(location_id, f"A district known as {location_id}")
+
+    gemini = _get_gemini()
+    if gemini:
+        try:
+            prompt = f"In 2-3 sentences, describe the atmosphere of {location_desc} at hour {time_info['hour']}:00, day {time_info['day']}, weather: {time_info.get('weather', 'clear')}. Style: Signal Noir cyberpunk noir with cyan accents."
+            response = gemini.generate_content(prompt)
+            description = response.text.strip()
+        except Exception as e:
+            description = f"[Error: {e}]"
+    else:
+        description = f"*{location_desc}.*"
+
+    return jsonify({"description": description, "location": location_id, "tick": tick})
+
+
+# ─── Veo 3 Video Generation ─────────────────────────────────────
+
+_veo_model = None
+
+def _get_veo():
+    """Lazy-load Veo 3 for video generation."""
+    global _veo_model
+    if _veo_model is None:
+        try:
+            from google import genai
+            from google.genai import types
+            _veo_model = genai.Client(vertexai=True)
+            print("✅ Veo 3 client loaded for video generation")
+        except Exception as e:
+            print(f"⚠️ Veo not available: {e}")
+    return _veo_model
+
+
+@app.route("/api/scene/video", methods=["POST", "OPTIONS"])
+def scene_video():
+    """Generate a short Signal Noir video clip for a location."""
+    if request.method == "OPTIONS":
+        return "", 200
+
+    data = request.get_json(silent=True) or {}
+    location_id = data.get("location_id", data.get("location", "undercity"))
+    tick = data.get("tick", get_server_tick())
+    duration = min(data.get("duration", 4), 8)  # Cap at 8 seconds
+    style = data.get("style", "signal_noir")
+
+    # Get time info
+    time_info = get_time_info(tick)
+    hour = time_info["hour"]
+    day = time_info["day"]
+    weather = time_info.get("weather", "clear")
+
+    if 6 <= hour < 12:
+        time_desc = f"Morning, {hour}:00 — city waking"
+    elif 12 <= hour < 18:
+        time_desc = f"Afternoon, {hour}:00 — shadows pooling"
+    elif 18 <= hour < 22:
+        time_desc = f"Evening, {hour}:00 — neon awakening"
+    else:
+        time_desc = f"Night, {hour}:00 — the city's true face"
+
+    weather_desc = {
+        "clear": "Clear sky, neon cutting through darkness",
+        "rain": "Rain slicks the streets, shimmering reflections",
+        "storm": "Thunder, lightning across the skyline",
+        "fog": "Thick fog rolling through, obscuring distance",
+        "smog": "Toxic smog filtering light to sickly yellow",
+    }.get(weather, "Dark, oppressive atmosphere")
+
+    location_desc = _SCENE_LOCATIONS.get(location_id, f"A district known as {location_id}")
+
+    # Get NPCs at this location
+    npcs = get_npcs()
+    npcs_here = []
+    for npc in npcs[:50]:
+        state = get_npc_state(npc, tick)
+        if state.get("location", "").lower().replace(" ", "_") == location_id.lower().replace(" ", "_"):
+            npcs_here.append(f"{npc.get('name', npc['id'])}: {state.get('activity', 'idle')}")
+
+    npcs_text = ", ".join(npcs_here[:5]) if npcs_here else "sparse population, shadows"
+
+    # Build video prompt
+    video_prompt = f"""Signal Noir cyberpunk cinematic video:
+
+{location_desc} at {time_desc}. {weather_desc}.
+
+Characters visible: {npcs_text}
+
+MANDATORY STYLE:
+- 85% grayscale, high contrast noir
+- ONLY cyan (#00CED1) for neon and tech accents
+- Deep black shadows, art deco architecture
+- Slow camera movement, cinematic composition
+- Atmospheric volumetric lighting
+- Rain-slicked streets, neon reflections
+- NO bright colors except cyan
+- Dark, moody, atmospheric, {duration} seconds"""
+
+    result = {
+        "location": location_id,
+        "location_desc": location_desc,
+        "tick": tick,
+        "day": day,
+        "hour": hour,
+        "weather": weather,
+        "npcs_present": [n.split(":")[0] for n in npcs_here[:5]],
+        "video_generated": False,
+        "duration": duration,
+    }
+
+    # Generate description with Gemini
+    gemini = _get_gemini()
+    if gemini:
+        try:
+            desc_prompt = f"In 2-3 cinematic sentences, describe this scene: {location_desc} at {time_desc}. {weather_desc}. Style: Signal Noir."
+            response = gemini.generate_content(desc_prompt)
+            result["description"] = response.text.strip()
+        except Exception as e:
+            result["description"] = f"[Description error: {e}]"
+    else:
+        result["description"] = f"*{location_desc}. {weather_desc}.*"
+
+    # Generate video with Veo 3
+    veo = _get_veo()
+    if veo:
+        try:
+            from google.genai import types
+
+            operation = veo.models.generate_videos(
+                model="veo-3.0-generate-preview",
+                prompt=video_prompt,
+                generate_video_config=types.GenerateVideoConfig(
+                    aspect_ratio="16:9",
+                    number_of_videos=1,
+                ),
+            )
+
+            # Poll for completion (Veo is async)
+            import time as _time
+            while not operation.done:
+                _time.sleep(5)
+                operation = veo.operations.get(operation)
+
+            if operation.result and operation.result.generated_videos:
+                video = operation.result.generated_videos[0]
+                # Download the video
+                video_data = veo.files.download(file=video.video)
+                video_bytes = b"".join(chunk for chunk in video_data)
+
+                import base64 as _b64
+                result["video_base64"] = _b64.b64encode(video_bytes).decode()
+                result["video_generated"] = True
+            else:
+                result["video_error"] = "Veo returned no videos"
+
+        except Exception as e:
+            result["video_error"] = str(e)
+    else:
+        result["video_error"] = "Veo 3 not available"
+
+    return jsonify(result)
 
 # =============================================================================
 # MAIN

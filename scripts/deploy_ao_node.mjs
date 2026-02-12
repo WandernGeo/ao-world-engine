@@ -56,8 +56,12 @@ async function deployWorldProcess() {
     console.log(`  - init_bootstrap.lua: ${initBootstrapLua.length} bytes`);
     console.log("✓ Lua modules loaded\n");
 
-    // Connect to AO
-    const ao = connect();
+    // Connect to AO with explicit gateway URLs (bypass CDN issues)
+    const ao = connect({
+        MU_URL: "https://mu.ao-testnet.xyz",
+        CU_URL: "https://cu.ao-testnet.xyz",
+        GATEWAY_URL: "https://arweave.net",
+    });
 
     // Spawn world process with CRON
     console.log("Spawning world process on AO...");
@@ -69,7 +73,7 @@ async function deployWorldProcess() {
             tags: [
                 { name: "App-Name", value: "AO-World-Engine" },
                 { name: "App-Version", value: "1.0.0" },
-                { name: "Cron-Interval", value: "10-minutes" },
+                { name: "Cron-Interval", value: "1-minute" },
                 { name: "Cron-Tag-Action", value: "Cron" }
             ]
         });
