@@ -14,25 +14,25 @@
 
 ## 📸 Screenshots
 
-| Visualizer | Graph Network |
-|:----------:|:-------------:|
-| ![Visualizer](docs/screenshots/visualizer.png) | ![Graph](docs/screenshots/graph_network.png) |
-| District overview with buildings & NPCs | Neural network view of NPC-building connections |
+| 3D City Explorer | World Monitor |
+|:----------------:|:-------------:|
+| ![Explorer](docs/screenshots/studio_explore.png) | ![Monitor](docs/screenshots/studio_monitor.png) |
+| Live 3D map with districts, NPCs & vehicles | Economy, events & simulation metrics |
 
-| Chat Interface | API Documentation |
-|:--------------:|:-----------------:|
-| ![Chat](docs/screenshots/chat.png) | ![API](docs/screenshots/api.png) |
-| Talk to NPCs with LLM-powered dialogue | RESTful API for integration |
+| NPC Registry |
+|:------------:|
+| ![NPCs](docs/screenshots/studio_npcs.png) |
+| 823 NPCs with personality, faction & location |
 
 ## 🚀 Get Started
 
 | Option | Description | Link |
 |--------|-------------|------|
-| 🎮 **Test the Simulation** | Try our live demo with 800+ NPCs | [**Launch Demo →**](https://ao-world-engine-1071951656531.us-central1.run.app) |
+| 🎮 **Explore the City** | Live 3D map with 823 NPCs, vehicles & districts | [**Launch Studio →**](https://ao-world-engine-studio-1071951656531.us-central1.run.app/explore) |
 | 🛠️ **Build Your Own** | Fork the repo and create your world | [**GitHub Repo →**](https://github.com/WandernGeo/ao-world-engine) |
 | 🎨 **Frontend Only** | Just want the visualizer? | [**Frontend Docs →**](docs/FRONTEND_GUIDE.md) |
 | ☁️ **Cloud Deployment** | Deploy on Cloud Run or your infra | [**Deploy Guide →**](docs/DEPLOYMENT.md) |
-| 🤝 **Have Us Build It** | Custom world development services | [**Contact Us →**](mailto:contact@wandern.geo) |
+| 🤝 **Have Us Build It** | Custom world development services | [**Contact Us →**](mailto:contact@geoechoes.com) |
 
 ---
 
