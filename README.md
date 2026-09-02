@@ -233,6 +233,7 @@ This protects the community while allowing you to build proprietary worlds **on 
 | [AI_NPC_SYSTEM.md](./docs/AI_NPC_SYSTEM.md) | LLM chat integration |
 | [BUILDING_YOUR_WORLD.md](./docs/BUILDING_YOUR_WORLD.md) | Create your own world |
 | [ARWEAVE_TRANSACTION_LOG.md](./docs/ARWEAVE_TRANSACTION_LOG.md) | Arweave upload history |
+| [STUDIO_MODEL_TRAINING_PLAN.md](./docs/STUDIO_MODEL_TRAINING_PLAN.md) | Plan for training StudioRam's own style/character/keyframe model stack |
 
 ---
 

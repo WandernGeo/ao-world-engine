@@ -1,0 +1,269 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Keyframe Conditioning Descriptor",
+    "description": "Formal contract between the deterministic world simulation and any rendering backend. Produced from computeWorldState(tick, npcs). Consumed at inference by the renderer, and used as the label side of training pairs for structural-control training. See docs/STUDIO_MODEL_TRAINING_PLAN.md.",
+    "version": "0.1.0",
+    "status": "draft",
+    "design_notes": {
+        "determinism": "A given (world_id, layer, tick, camera) MUST produce a byte-identical descriptor. This is what makes rendering reproducible across sessions.",
+        "why_not_a_prompt": "A prompt string cannot carry spatial layout, character identity, or exact lighting state. This descriptor carries all three as structured data so the renderer can be conditioned rather than asked.",
+        "prompt_field": "The optional prompt_hint is a fallback for prompt-only backends such as the current hosted Imagen path. Adapter-stack backends should ignore it."
+    },
+    "type": "object",
+    "required": [
+        "schema_version",
+        "world_id",
+        "layer",
+        "tick",
+        "location",
+        "atmosphere",
+        "subjects"
+    ],
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "const": "0.1.0"
+        },
+        "world_id": {
+            "type": "string",
+            "description": "Which world plugin supplies the style. Selects the style adapter at render time.",
+            "examples": ["signal-noir"]
+        },
+        "layer": {
+            "type": "string",
+            "description": "Echo layer being observed. Layer 0 is prime canon.",
+            "default": "prime"
+        },
+        "tick": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Simulation tick. Day = tick / 24, hour = tick % 24."
+        },
+        "location": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+                "id": { "type": "string", "examples": ["B006"] },
+                "name": { "type": "string", "examples": ["The Rusty Anchor Bar"] },
+                "district": { "type": "string", "examples": ["Undercity"] },
+                "interior": { "type": "boolean" },
+                "depth_hint_uri": {
+                    "type": "string",
+                    "description": "Optional depth or geometry map for this location, used as a structural conditioning channel."
+                }
+            }
+        },
+        "atmosphere": {
+            "type": "object",
+            "description": "Lighting and weather conditioning. Derived from tick and world state, never authored by hand.",
+            "properties": {
+                "hour": { "type": "integer", "minimum": 0, "maximum": 23 },
+                "period": {
+                    "type": "string",
+                    "enum": ["morning", "afternoon", "evening", "night"]
+                },
+                "weather": { "type": "string", "examples": ["rain", "clear", "fog", "smog"] },
+                "light_direction": {
+                    "type": "string",
+                    "enum": ["front", "back", "left", "right", "top", "ambient"]
+                },
+                "light_intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+                "mood": {
+                    "type": "string",
+                    "description": "Aggregate emotional tone of the tick, drawn from event severity and NPC moods.",
+                    "examples": ["tense", "calm", "chaotic", "melancholy"]
+                }
+            }
+        },
+        "subjects": {
+            "type": "array",
+            "description": "Characters in frame. Order is significant: index 0 is the primary subject. Each entry drives a character identity adapter when one exists for that NPC.",
+            "items": {
+                "type": "object",
+                "required": ["npc_id", "position"],
+                "properties": {
+                    "npc_id": { "type": "string", "examples": ["npc_0042"] },
+                    "name": { "type": "string" },
+                    "archetype": {
+                        "type": "string",
+                        "description": "Fallback conditioning when no identity adapter exists for this NPC. Crowd characters render from archetype alone.",
+                        "examples": ["street_oracle"]
+                    },
+                    "identity_adapter": {
+                        "type": ["string", "null"],
+                        "description": "Adapter reference for this character, or null to fall back to archetype. Null is expected for most of the 823 NPCs."
+                    },
+                    "position": {
+                        "type": "object",
+                        "description": "World-space position from the simulation, projected to frame space by the camera.",
+                        "properties": {
+                            "x": { "type": "number" },
+                            "y": { "type": "number" },
+                            "z": { "type": "number" }
+                        }
+                    },
+                    "facing": {
+                        "type": "number",
+                        "description": "Heading in degrees, 0 to 360."
+                    },
+                    "action": {
+                        "type": "string",
+                        "description": "Current action from the action dictionary. Selects a pose skeleton.",
+                        "examples": ["drinking", "fleeing", "arguing", "walking"]
+                    },
+                    "pose_skeleton_uri": {
+                        "type": "string",
+                        "description": "Optional explicit pose conditioning. Overrides the action-derived default pose."
+                    },
+                    "expression": { "type": "string", "examples": ["angry", "wary", "neutral"] },
+                    "prominence": {
+                        "type": "string",
+                        "enum": ["primary", "secondary", "background"],
+                        "default": "background"
+                    }
+                }
+            }
+        },
+        "event": {
+            "type": "object",
+            "description": "The simulation event this frame depicts, when the frame is event-driven rather than ambient.",
+            "properties": {
+                "type": { "type": "string", "examples": ["bar_fight"] },
+                "severity": {
+                    "type": "string",
+                    "enum": ["minor", "moderate", "major", "critical"]
+                },
+                "participants": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                }
+            }
+        },
+        "camera": {
+            "type": "object",
+            "description": "Shot framing. Part of the determinism key: changing the camera changes the frame.",
+            "properties": {
+                "shot": {
+                    "type": "string",
+                    "enum": ["extreme_wide", "wide", "medium", "close", "extreme_close", "over_shoulder"]
+                },
+                "angle": {
+                    "type": "string",
+                    "enum": ["eye_level", "low", "high", "dutch", "birds_eye"]
+                },
+                "aspect_ratio": { "type": "string", "default": "16:9" },
+                "focal_subject": {
+                    "type": "string",
+                    "description": "NPC id the shot is composed around."
+                }
+            }
+        },
+        "sequence": {
+            "type": "object",
+            "description": "Present only for animated output. Absent for a single still keyframe.",
+            "properties": {
+                "role": {
+                    "type": "string",
+                    "enum": ["key", "inbetween", "hold"],
+                    "description": "Whether this descriptor is a key drawing, a generated inbetween, or a held frame."
+                },
+                "key_pair": {
+                    "type": "array",
+                    "description": "For an inbetween: the two bounding keyframe ids.",
+                    "items": { "type": "string" },
+                    "minItems": 2,
+                    "maxItems": 2
+                },
+                "frame_index": { "type": "integer" },
+                "frame_count": { "type": "integer" },
+                "timing_curve": {
+                    "type": "string",
+                    "enum": ["linear", "ease_in", "ease_out", "ease_in_out", "snap"],
+                    "default": "linear"
+                }
+            }
+        },
+        "style_override": {
+            "type": "object",
+            "description": "Optional per-scene deviation from the world's default style. Used sparingly, for example during a layer-bleed event.",
+            "properties": {
+                "style_adapter": { "type": "string" },
+                "strength": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+        },
+        "prompt_hint": {
+            "type": "string",
+            "description": "Human-readable fallback for prompt-only backends. Adapter-stack backends ignore this field entirely."
+        },
+        "provenance": {
+            "type": "object",
+            "description": "Required on any descriptor used as training data. Never populated at inference time.",
+            "properties": {
+                "source": { "type": "string", "examples": ["engine_generated", "studio_licensed", "commissioned"] },
+                "license": { "type": "string" },
+                "contract_ref": { "type": "string" },
+                "acquired_at": { "type": "string", "format": "date" },
+                "rights_term": { "type": "string" }
+            }
+        }
+    },
+    "example": {
+        "schema_version": "0.1.0",
+        "world_id": "signal-noir",
+        "layer": "prime",
+        "tick": 500,
+        "location": {
+            "id": "B006",
+            "name": "The Rusty Anchor Bar",
+            "district": "Undercity",
+            "interior": true
+        },
+        "atmosphere": {
+            "hour": 20,
+            "period": "evening",
+            "weather": "rain",
+            "light_direction": "back",
+            "light_intensity": 0.3,
+            "mood": "tense"
+        },
+        "subjects": [
+            {
+                "npc_id": "npc_0042",
+                "name": "Zero Chen",
+                "archetype": "fixer",
+                "identity_adapter": "signal-noir/char/npc_0042",
+                "position": { "x": 12.4, "y": 0, "z": 8.1 },
+                "facing": 210,
+                "action": "arguing",
+                "expression": "angry",
+                "prominence": "primary"
+            },
+            {
+                "npc_id": "npc_0108",
+                "archetype": "dock_worker",
+                "identity_adapter": null,
+                "position": { "x": 14.0, "y": 0, "z": 8.6 },
+                "facing": 30,
+                "action": "arguing",
+                "prominence": "secondary"
+            }
+        ],
+        "event": {
+            "type": "bar_fight",
+            "severity": "major",
+            "participants": ["npc_0042", "npc_0108"]
+        },
+        "camera": {
+            "shot": "medium",
+            "angle": "low",
+            "aspect_ratio": "16:9",
+            "focal_subject": "npc_0042"
+        },
+        "sequence": {
+            "role": "key",
+            "frame_index": 0,
+            "frame_count": 12,
+            "timing_curve": "ease_out"
+        }
+    }
+}
